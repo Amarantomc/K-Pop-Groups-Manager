@@ -63,11 +63,14 @@ model Concepto{
   descripcion String
 
   Grupo Grupo[]
+  ConceptoVisual ConceptoVisual[]
 }
 
 model ConceptoVisual{
-  id Int @id @default(autoincrement())
+  idConcepto Int @id
   imagen String
+
+  concepto Concepto @relation(fields: [idConcepto], references: [id])
 }
 
 model Grupo{
