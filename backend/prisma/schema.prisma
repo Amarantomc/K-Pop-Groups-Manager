@@ -19,5 +19,113 @@ model User{
   name String
   email String @unique
   password String  
+}
 
+model Agencia{
+  id Int @id @default(autoincrement())
+  nombre String
+  ubicacion String
+  fechaFundacion DateTime 
+}
+model Aprendiz{
+  id Int @id @default(autoincrement())
+  nombreCompleto String
+  fechaNacimiento DateTime @default(now())
+  edad Int
+  nivelEntrenamiento Int
+  estadoAprendiz String
+
+  Artista Artista[]
+}
+model Actividad{
+  id Int @id @default(autoincrement())
+  responsable String
+  lugar String
+  fecha DateTime @default(now())
+  tipoActividad String
+
+  Ingreso Ingreso[]
+}
+
+model Ingreso{
+  idIng Int @default(autoincrement())
+  idAct Int
+  monto Decimal
+  fecha DateTime @default(now())
+  descripcion String
+  actividad Actividad @relation(fields: [idAct], references: [id])
+  
+  @@id([idIng,idAct])
+}
+
+model Concepto{
+  id Int @id @default(autoincrement())
+  descripcion String
+
+  Grupo Grupo[]
+  ConceptoVisual ConceptoVisual[]
+}
+
+model ConceptoVisual{
+  idConcepto Int @id
+  imagen String
+
+  concepto Concepto @relation(fields: [idConcepto], references: [id])
+}
+
+model Grupo{
+  id Int @id @default(autoincrement())
+  nombreCompleto String
+  fechaDebut DateTime
+  estadoGrupo String
+  idConcepto Int
+  Nomiembros Int
+  concepto Concepto @relation(fields: [idConcepto], references: [id])
+
+  Album Album[]
+  Artista Artista[]
+}
+
+model Album{
+  id Int @id @default(autoincrement())
+  idGrupo Int
+  idArt Int
+  titulo String
+  fechaLanzamiento DateTime @default(now())
+  productor String
+  NoCanciones Int
+  NoCopiasVendidas Int
+  grupo Grupo @relation(fields: [idGrupo], references: [id])
+}
+model Artista {
+  idAp Int
+  idGr Int
+  nombreArtistico String
+  fsechaDebut DateTime
+  estadoArtista String
+  grupo Grupo @relation(fields: [idGr], references: [id])
+  aprendiz Aprendiz @relation(fields: [idAp], references: [id])
+  @@id([idAp,idGr])
+}
+model Solicitud{
+  id Int @id @default(autoincrement())
+  descripcion String
+  fechaSolicitud DateTime @default(now())
+}
+model ListaPopularidad{
+  id Int @id @default(autoincrement())
+  nombre String
+  tipoLista String
+}
+model Cancion{
+  id Int @id @default(autoincrement())
+  titulo String
+  genero String
+  productor String
+  fechaLanzamiento DateTime
+}
+model Premio{
+  id Int @id @default(autoincrement())
+  tituloPremio String
+  nombreAcademia String
 }
