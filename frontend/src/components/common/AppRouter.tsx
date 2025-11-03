@@ -3,7 +3,6 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import Login from '../auth/Login';
-import Register from '../auth/Register';
 import Dashboard from '../dashboard/Dashboard';
 
 
@@ -23,10 +22,6 @@ const AppRouter: React.FC = () => {
       <Route 
         path="/login" 
         element={!user ? <Login /> : <Navigate to="/dashboard" replace />} 
-      />
-      <Route 
-        path="/register" 
-        element={!user ? <Register /> : <Navigate to="/dashboard" replace />} 
       />
       <Route 
         path="/dashboard" 
