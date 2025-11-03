@@ -23,11 +23,17 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    
+    // Validación cliente: email debe ser Gmail
+    const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/i;
+    if (!gmailRegex.test(formData.email)) {
+      setError('Por favor usa una dirección Gmail válida (ej: usuario@gmail.com)');
+      return;
+    }
+
     try {
       await login(formData);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : 'Ocurrió un error');
     }
   };
 
@@ -73,7 +79,7 @@ const Login: React.FC = () => {
 
         <div className="auth-links">
           <a href="/forgot-password">¿Olvidaste tu contraseña?</a>
-          <a href="/register">¿No tienes cuenta? Regístrate</a>
+          {/* Link to register removed per request */}
         </div>
       </div>
     </div>

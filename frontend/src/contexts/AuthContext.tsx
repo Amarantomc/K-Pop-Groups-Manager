@@ -62,6 +62,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const register = async (data: RegisterFormData): Promise<void> => {
     try {
       setIsLoading(true);
+      // Validación: email debe ser formato Gmail
+      const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/i;
+      if (!gmailRegex.test(data.email)) {
+        throw new Error('El correo debe ser una dirección Gmail válida (ej: usuario@gmail.com)');
+      }
+
       // Simulación de API call - reemplazar con tu backend real
       await mockRegisterAPI(data);
       
@@ -113,8 +119,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 const mockLoginAPI = async (data: LoginFormData): Promise<AuthResponse> => {
   await new Promise(resolve => setTimeout(resolve, 1000));
   
-  // Simulación de validación
-  if (data.email === 'user@example.com' && data.password === 'password') {
+  // Rechazar correos que no sean Gmail
+  const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/i;
+  if (!gmailRegex.test(data.email)) {
+    throw new Error('El correo debe ser una dirección Gmail válida (ej: usuario@gmail.com)');
+  }
+
+  // Simulación de validación: credenciales de prueba (solo gmail)
+  if (data.email === 'user@gmail.com' && data.password === 'password') {
     return {
       user: {
         id: '1',
@@ -125,7 +137,7 @@ const mockLoginAPI = async (data: LoginFormData): Promise<AuthResponse> => {
       token: 'mock-jwt-token',
     };
   } else {
-    throw new Error('Invalid credentials');
+    throw new Error('Credenciales inválidas');
   }
 };
 

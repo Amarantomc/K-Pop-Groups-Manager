@@ -25,7 +25,18 @@ const Register: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    
+    // Validación cliente: email exclusivamente Gmail
+    const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/i;
+    if (!gmailRegex.test(formData.email)) {
+      setError('Por favor ingresa una dirección de correo Gmail válida (ej: usuario@gmail.com)');
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('Las contraseñas no coinciden');
+      return;
+    }
+
     try {
       await register(formData);
     } catch (err) {
