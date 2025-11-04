@@ -1,0 +1,6 @@
+.dashboard-sidebar {
+    display: flex;
+}
+.dashboard-navbar{
+    flex : 6;
+}
