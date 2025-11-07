@@ -3,12 +3,12 @@ import type { Role } from "../enums/Role"
 
 export default class User{
        readonly id: number
-       readonly name:String
-       readonly email: String
-       readonly password: String
+       readonly name:string
+       readonly email: string
+       readonly password: string
        readonly rol: Role
        
-       constructor(attrs:{id:number,name:String,email:String,password:String,rol:Role})
+       constructor(attrs:{id:number,name:string,email:string,password:string,rol:Role})
        {
               
               this.id=attrs.id
