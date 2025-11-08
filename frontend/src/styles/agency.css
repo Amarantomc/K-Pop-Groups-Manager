@@ -22,7 +22,8 @@
     font-style: oblique;
 }
 h1 {
-    font-size: 24px;
+    font-size: 28px;
+    font-weight: 700 !important;
     font-weight: 600;
     color: #333;
     margin-bottom: 10px;
@@ -63,3 +64,37 @@ h1 {
 }
 
 .agency-form button:hover{ background-color: #0056b3; }
+
+/* Botones principales en la cabecera del formulario */
+.agency-form-container > div > button[type="button"]{
+  background: #0d6efd;
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.agency-form-container > div > button[type="button"]:hover{
+  background: #0b5ed7;
+}
+
+/* Área del miembro */
+.member-area{
+  background: #fafafa;
+  padding: 14px;
+  border-radius: 8px;
+  margin-top: 12px;
+  border: 1px solid #eee;
+}
+
+.member-area select{ max-width: 320px; }
+
+/* Mejor separación entre filas de formulario */
+.form-row{ margin-bottom: 12px; }
+
+/* Ajuste responsive */
+@media (max-width: 720px){
+  .agency-form-container{ padding: 12px; }
+  .agency-form-container > div{ flex-direction: column; }
+}

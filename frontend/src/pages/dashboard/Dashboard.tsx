@@ -16,7 +16,7 @@ const Dashboard : React.FC = () =>{
           <div className='welcome-card'>
             <img src={logo} alt='IS-K Pop' className='welcome-logo' />
             <div className='welcome-text'>
-              <h2>Bienvenido a IS-K Pop</h2>
+              <h2>Bienvenido a Gestión de Agencias del K-Pop</h2>
               <p>Administra agencias, artistas y actividades desde este panel. Aquí tienes un resumen rápido para comenzar.</p>
             </div>
           </div>
