@@ -1,0 +1,33 @@
+form{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    justify-content: space-between;
+}
+.form-group{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 40%;
+}
+label{
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+button{
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input{
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
