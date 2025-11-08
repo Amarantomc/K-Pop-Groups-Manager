@@ -19,5 +19,312 @@ model User{
   name String
   email String @unique
   password String  
-
+  role String
 }
+
+model Agencia{
+  id Int @id @default(autoincrement())
+  nombre String
+  ubicacion String
+  fechaFundacion DateTime 
+  Contrato Contrato []
+  Aprendices AprendizEnAgencia[]
+  Evaluaciones EvaluacionAprendiz[]
+  SolicitudesAprendiz AprendizSolicitaGrupo[]
+  SolicitudesArtistas ArtistaSolicitaGrupo[]
+  Grupos Grupo[]
+}
+model Aprendiz{
+  id Int @id @default(autoincrement())
+  nombreCompleto String
+  fechaNacimiento DateTime @default(now())
+  edad Int
+  nivelEntrenamiento Int
+  estadoAprendiz String
+  Agencia AprendizEnAgencia[]
+  Evaluacion EvaluacionAprendiz[]
+  Artista Artista[]
+  SolicitudGrupo AprendizSolicitaGrupo[]
+}
+model Actividad{
+  id Int @id @default(autoincrement())
+  responsable String
+  lugar String
+  fecha DateTime @default(now())
+  tipoActividad String
+  Artistas ArtistaEnActividad[]
+  Grupos GrupoEnActividad[]
+  Ingreso Ingreso[]
+}
+
+model Ingreso{
+  idIng Int @default(autoincrement())
+  idAct Int
+  monto Decimal
+  fecha DateTime @default(now())
+  descripcion String
+  actividad Actividad @relation(fields: [idAct], references: [id])
+  
+  @@id([idIng,idAct])
+}
+
+model Concepto{
+  id Int @id @default(autoincrement())
+  descripcion String
+
+  Grupo Grupo[]
+  ConceptoVisual ConceptoVisual[]
+}
+
+model ConceptoVisual{
+  idConcepto Int @id
+  imagen String
+
+  concepto Concepto @relation(fields: [idConcepto], references: [id])
+  AlbumArtista ArtistaLanzaAlbum[]
+  AlbumGrupo GrupoLanzaAlbum[]
+}
+
+model Grupo{
+  id Int @id @default(autoincrement())
+  nombreCompleto String
+  fechaDebut DateTime
+  estadoGrupo String
+  idConcepto Int
+  Nomiembros Int
+  concepto Concepto @relation(fields: [idConcepto], references: [id])
+  Actividades GrupoEnActividad[]
+  Album Album[]
+  Artista Artista[]
+  HistorialArtistas ArtistaEnGrupo[]
+  Lanzamiento GrupoLanzaAlbum[]
+  Agencias Agencia[]
+}
+
+model Album{
+  id Int @id @default(autoincrement())
+  idGrupo Int
+  idArt Int
+  titulo String
+  fechaLanzamiento DateTime @default(now())
+  productor String
+  NoCanciones Int
+  NoCopiasVendidas Int
+  Canciones Cancion[]
+  grupo Grupo @relation(fields: [idGrupo], references: [id])
+  Premios AlbumPremiado[]
+  LanzamientoArtista ArtistaLanzaAlbum[]
+  LanzamientoGrupo GrupoLanzaAlbum[]
+  
+}
+model Artista {
+  idAp Int
+  idGr Int
+  nombreArtistico String
+  fsechaDebut DateTime
+  estadoArtista String
+  grupo Grupo @relation(fields: [idGr], references: [id])
+  aprendiz Aprendiz @relation(fields: [idAp], references: [id])
+  Contrato Contrato []
+  HistorialGrupos ArtistaEnGrupo []
+  Actividades ArtistaEnActividad[]
+  Lanzamientos ArtistaLanzaAlbum[]
+  SolicitudGrupo ArtistaSolicitaGrupo[]
+
+  @@id([idAp,idGr])
+}
+model Solicitud{
+  id Int @id @default(autoincrement())
+  descripcion String
+  fechaSolicitud DateTime @default(now())
+  SolicitudGrupoAprendiz AprendizSolicitaGrupo[]
+  SolicitudGrupoArtista ArtistaSolicitaGrupo[]
+}
+model ListaPopularidad{
+  id Int @id @default(autoincrement())
+  nombre String
+  tipoLista String
+  Canciones CancionEnListaDePopularidad[]
+}
+model Cancion{
+  id Int @id @default(autoincrement())
+  titulo String
+  genero String
+  productor String
+  fechaLanzamiento DateTime
+  ListaDePopularidad CancionEnListaDePopularidad[]
+  Albums Album[]
+}
+model Premio{
+  id Int @id @default(autoincrement())
+  tituloPremio String
+  nombreAcademia String
+  Albums  AlbumPremiado[]
+}
+
+model Contrato {
+  idAg                 Int
+  idAp                 Int
+  idGr                  Int
+  fechaInicio           DateTime
+  fechaFinalizacion     DateTime?
+  estado                String
+  condicionesIniciales  String
+  distribuciónIngresos  String
+
+  Artista Artista @relation(fields: [idAp, idGr], references: [idAp, idGr])
+  Agencia Agencia @relation(fields: [idAg], references: [id])
+
+  @@id([idAg, idAp, idGr, fechaInicio])
+  @@map("Contrato")
+}
+
+model ArtistaEnGrupo {
+  idAp              Int
+  idGrupoDebut      Int
+  idGr               Int
+  fechaInicio       DateTime
+  fechaFinalizacion DateTime?
+  rol               String
+
+  artista Artista @relation(fields: [idAp, idGrupoDebut], references: [idAp, idGr])
+  grupo   Grupo   @relation(fields: [idGr], references: [id])
+
+  @@id([idAp, idGrupoDebut, idGr, fechaInicio])
+  @@map("ArtistaEnGrupo")
+}
+
+model AlbumPremiado {
+  idAlb    Int
+  idPremio Int
+  año      Int
+
+  album  Album  @relation(fields: [idAlb], references: [id])
+  premio Premio @relation(fields: [idPremio], references: [id])
+
+  @@id([idAlb, idPremio])
+  @@map("AlbúmPremiado")
+}
+
+model CancionEnListaDePopularidad {
+  idCa      Int
+  idLista   Int
+  posicion  Int
+  año       Int
+
+  cancion Cancion @relation(fields: [idCa], references: [id])
+  listaPopularidad ListaPopularidad @relation(fields: [idLista], references: [id])
+
+  @@id([idCa, idLista])
+  @@map("CanciónEnListaDePopularidad")
+}
+
+model AprendizEnAgencia {
+  idAp              Int
+  idAg              Int
+  fechaInicio       DateTime
+  fechaFinalizacion DateTime?
+
+  aprendiz Aprendiz @relation(fields: [idAp], references: [id])
+  agencia  Agencia  @relation(fields: [idAg], references: [id])
+
+  @@id([idAp, idAg, fechaInicio])
+  @@map("AprendizEnAgencia")
+}
+
+model EvaluacionAprendiz {
+  idAp            Int
+  idAg            Int
+  fechaEvaluacion DateTime
+  evaluacion      Int
+
+  aprendiz Aprendiz @relation(fields: [idAp], references: [id])
+  agencia  Agencia  @relation(fields: [idAg], references: [id])
+
+  @@id([idAp, idAg, fechaEvaluacion])
+  @@map("EvaluaciónAprendiz")
+}
+
+model ArtistaEnActividad {
+  idAp     Int
+  idGr     Int
+  idAct    Int
+  aceptado Boolean
+
+  artista   Artista   @relation(fields: [idAp, idGr], references: [idAp, idGr])
+  actividad Actividad @relation(fields: [idAct], references: [id])
+
+  @@id([idAp, idGr, idAct])
+  @@map("ArtistaEnActividad")
+}
+
+model GrupoEnActividad {
+  idGr      Int
+  idAct    Int
+  aceptado Boolean
+
+  grupo Grupo @relation(fields: [idGr], references: [id])
+  actividadGrupal Actividad @relation(fields: [idAct], references: [id])
+
+  @@id([idGr, idAct])
+  @@map("GrupoEnActividad")
+}
+
+model ArtistaLanzaAlbum {
+  idAp             Int
+  idGr             Int
+  idAlb            Int
+  idConceptoVisual Int
+
+  artista Artista @relation(fields: [idAp, idGr], references: [idAp, idGr])
+  album Album @relation(fields: [idAlb], references: [id])
+  conceptoVisual ConceptoVisual @relation(fields: [idConceptoVisual], references: [idConcepto])
+
+  @@id([idAp, idGr, idAlb])
+  @@map("ArtistaLanzaÁlbum")
+}
+
+model GrupoLanzaAlbum {
+  idGr              Int
+  idAlb            Int
+  idConceptoVisual Int
+
+  grupo Grupo @relation(fields: [idGr], references: [id])
+  album Album @relation(fields: [idAlb], references: [id])
+  conceptoVisual ConceptoVisual @relation(fields: [idConceptoVisual], references: [idConcepto])
+
+  @@id([idGr, idAlb])
+  @@map("GrupoLanzaÁlbum")
+}
+
+
+
+model AprendizSolicitaGrupo {
+  idAp        Int
+  idAg        Int
+  idSolicitud Int
+  aprobada    Boolean
+
+  aprendiz  Aprendiz  @relation(fields: [idAp], references: [id])
+  agencia   Agencia   @relation(fields: [idAg], references: [id])
+  solicitud Solicitud @relation(fields: [idSolicitud], references: [id])
+
+  @@id([idAp, idAg, idSolicitud])
+  @@map("AprendizSolicitaGrupo")
+}
+
+model ArtistaSolicitaGrupo {
+  idAp        Int
+  idGr         Int
+  idAg        Int
+  idSolicitud Int
+  aprobada    Boolean
+
+  artista   Artista   @relation(fields: [idAp, idGr], references: [idAp, idGr])
+  agencia   Agencia   @relation(fields: [idAg], references: [id])
+  solicitud Solicitud @relation(fields: [idSolicitud], references: [id])
+
+  @@id([idAp, idGr, idAg, idSolicitud])
+  @@map("ArtistaSolicitaGrupo")
+}
+

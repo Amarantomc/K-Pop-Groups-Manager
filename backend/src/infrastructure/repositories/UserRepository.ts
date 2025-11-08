@@ -1,0 +1,59 @@
+import type { CreateUserDto } from "../../application/dtos/user/CreateUserDto";
+import { UserResponseDto } from "../../application/dtos/user/UserResponseDto";
+ 
+import type { IUserRepository } from "../../application/interfaces/repositories/IUserRepository";
+import type { User } from "../../domain";
+import type { UnitOfWork } from "../PrismaUnitOfWork";
+ 
+
+export class UserRepository implements IUserRepository
+{   
+    constructor(
+    private prisma: any,
+    private unitOfWork: UnitOfWork
+  ) {}
+
+     private get db() {
+    return this.unitOfWork.getTransaction();
+  }
+    
+   async create(data: CreateUserDto): Promise<User> {
+         
+         
+
+        const user= await this.db.user.create({
+            data:{
+                
+                email:data.email,
+                name:data.name,
+                password:data.password,
+                role:data.rol
+            }
+        })
+         
+        return UserResponseDto.toEntity(user)
+
+    }
+    async findById(id: any): Promise<User | null> {
+         id=(Number)(id)
+        const user=await this.db.user.findUnique({
+           where:{id}
+        })
+        return user ? UserResponseDto.toEntity(user) : null
+    }
+    update(id: string, data: any): Promise<User> {
+        throw new Error("Method not implemented.");
+    }
+    delete(id: string): Promise<void> {
+        throw new Error("Method not implemented.");
+    }
+
+ 
+
+  findByEmail(email: string): Promise<UserResponseDto | null> {
+        throw new Error("Method not implemented.");
+    }
+    
+    
+    
+}
