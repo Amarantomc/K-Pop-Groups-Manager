@@ -1,0 +1,65 @@
+.Agency-sidebar {
+  display: flex;
+  width: 100%;
+  min-height: 100vh; /* asegurar que ocupa toda la ventana */
+  background-color: #f5f5f5; /* fondo claro para cubrir el fondo global oscuro */
+  align-items: stretch;
+}
+
+.Agency-navbar {
+  flex: 6;
+  min-height: 100vh; /* emparejar altura con el sidebar */
+  padding: 20px;
+}
+.top,.bottom {
+    background-color: #fff;
+    border-radius: 10px;
+ -webkit-box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.47);
+    box-shadow: 0px 2px 4px -1px rgba(201,201,201,0.47);
+    padding: 10px;
+    margin: 0 0 20px 0;
+    display: flex;
+    font-style: oblique;
+}
+h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Estilos del formulario de la página Agency: fondo claro para inputs */
+.agency-form-container{
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  max-width: 900px;
+}
+
+.agency-form input,
+.agency-form textarea,
+.agency-form select{
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.agency-form textarea{ min-height: 100px; resize: vertical; }
+
+.agency-form input[type="file"]{ padding: 6px 0; }
+
+.agency-form button{
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.agency-form button:hover{ background-color: #0056b3; }

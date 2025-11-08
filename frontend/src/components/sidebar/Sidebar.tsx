@@ -14,6 +14,8 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import logo from "../../assets/k-pop-logo.png"
 import {useAuth} from "../../contexts/AuthContext"
+import { Link } from "react-router-dom";
+
 const Sidebar : React.FC = () => {
     const {logout} = useAuth();
     return (
@@ -26,13 +28,17 @@ const Sidebar : React.FC = () => {
                 <ul>
                     <p className="title">INICIO</p>
                     <li>
-                        <DashboardIcon className="icon"/>
-                        <span>Inicio</span>
+                        <Link to="/dashboard" style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <DashboardIcon className="icon"/>
+                            <span>Inicio</span>
+                        </Link>
                     </li>
                     <p className="title">AGENCIA</p>
                     <li>
-                        <PersonAddIcon className="icon"/>
-                        <span>Añadir Miembro</span>
+                        <Link to="/agency" style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <PersonAddIcon className="icon"/>
+                            <span>Agencias</span>
+                        </Link>
                     </li>
                     <li>
                         <PendingActionsIcon className="icon"/>
