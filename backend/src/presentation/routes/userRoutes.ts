@@ -1,5 +1,7 @@
 import  { Router } from "express";
 import  { UserController } from "../../presentation/controllers/UserController";
+import { container } from "../../infrastructure/di/Container";
+import { Types } from "../../infrastructure/di/Types";
  
 
 export class UserRoutes {
@@ -9,7 +11,7 @@ export class UserRoutes {
 
   constructor() {
     this.router = Router();
-    this.userController = new UserController();
+    this.userController =container.get<UserController>(Types.UserController)
     this.setupRoutes();
   }
 

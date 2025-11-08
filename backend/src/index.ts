@@ -9,5 +9,5 @@ const prismaCliente=new PrismaClient({
     log:['query']
 })
 app.use(express.json())
- app.use('/api',rootRouter)
+app.use('/api',rootRouter)
 app.listen(PORT, ()=>{console.log("Working Server")})
