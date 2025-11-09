@@ -1,0 +1,7 @@
+.listUsersSideBar{
+    display: flex;
+    width: 100%;
+}
+.listUsersNavBar{
+    flex: 6;
+}

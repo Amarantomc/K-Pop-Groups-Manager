@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Sidebar from '../../components/sidebar/Sidebar';
-import NavBar from '../../components/navbar/Navbar';
+// import NavBar from '../../components/navbar/Navbar';
 import '../../styles/profile.css';
 import Form from '../../components/form/Form';
 import formFieldsByEntity from '../../formSource';
@@ -34,7 +34,7 @@ const Profile: React.FC = () => {
     <div className="Profile-sidebar">
       <Sidebar />
       <div className="Profile-navbar">
-        <NavBar />
+        {/* <NavBar /> */}
 
         <div className="Profile-content">
           <div className='welcome-card'>

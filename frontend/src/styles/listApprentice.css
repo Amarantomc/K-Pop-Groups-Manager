@@ -1,0 +1,7 @@
+.listApprenticeSideBar{
+    display: flex;
+    width: 100%;
+}
+.listApprenticeNavBar{
+    flex: 6;
+}

@@ -1,14 +1,14 @@
 import "../../styles/sidebar.css"
 import React from "react";
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import PersonIcon from '@mui/icons-material/Person';
-import PendingActionsIcon from '@mui/icons-material/PendingActions';
-import QuizIcon from '@mui/icons-material/Quiz';
-import CelebrationIcon from '@mui/icons-material/Celebration';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import HistoryIcon from '@mui/icons-material/History';
-import DescriptionIcon from '@mui/icons-material/Description';
+// import PersonIcon from '@mui/icons-material/Person';
+// import PendingActionsIcon from '@mui/icons-material/PendingActions';
+// import QuizIcon from '@mui/icons-material/Quiz';
+// import CelebrationIcon from '@mui/icons-material/Celebration';
+// import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+// import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+// import HistoryIcon from '@mui/icons-material/History';
+// import DescriptionIcon from '@mui/icons-material/Description';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -37,10 +37,27 @@ const Sidebar : React.FC = () => {
                     <li>
                         <Link to="/agency" style={{ textDecoration: 'none', color: 'inherit' }}>
                             <PersonAddIcon className="icon"/>
-                            <span>Agencias</span>
+                            <span>Añadir Agencia</span>
                         </Link>
                     </li>
                     <li>
+                        <Link to="/listAgency" style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <PersonAddIcon className="icon"/>
+                            <span>Mostrar Agencias</span>
+                        </Link>
+                    </li>
+                    <p className="title">APRENDIZ</p>
+                    <li>
+                            <PersonAddIcon className="icon"/>
+                            <span>Añadir Aprendiz</span>
+                    </li>
+                    <li>
+                        <Link to="/listApprentice" style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <PersonAddIcon className="icon"/>
+                            <span>Mostrar Aprendices</span>
+                        </Link>
+                    </li>
+                    {/* <li>
                         <PendingActionsIcon className="icon"/>
                         <span>Ver Solicitudes</span>
                     </li>
@@ -85,12 +102,18 @@ const Sidebar : React.FC = () => {
                     <li>
                         <DescriptionIcon className="icon"/>
                         <span>Solicitud Manager</span>
-                    </li>
+                    </li> */}
                     <p className="title">CUENTA</p>
                     <li>
                         <Link to="/profile" style={{ textDecoration: 'none', color: 'inherit' }}>
                             <AccountCircleIcon className="icon"/>
                             <span>Perfil</span>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/listUsers" style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <AccountCircleIcon className="icon"/>
+                            <span>Usuarios Registrados</span>
                         </Link>
                     </li>
                     <li onClick={logout}>
