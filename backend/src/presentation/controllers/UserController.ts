@@ -6,14 +6,17 @@ import { CreateUserDto } from '../../application/dtos/user/CreateUserDto';
 import { GetUserUseCase } from '../../application/usesCase/user/GetUserUseCase';
 import { inject, injectable } from 'inversify';
 import { Types } from '../../infrastructure/di/Types';
+import type { GetUsersUseCase } from "../../application/usesCase/user/GerUsersUseCase";
 
 @injectable()
 export class UserController {
     
 constructor(@inject(Types.CreateUserUseCase)  private createUserUseCase:CreateUserUseCase,
-                  @inject(Types.GetUserUseCase) private getUserUseCase:GetUserUseCase){}
+            @inject(Types.GetUserUseCase) private getUserUseCase:GetUserUseCase,
+            @inject(Types.GetUsersUseCase) private getUsersUseCase:GetUsersUseCase){}
 
-      async createUser(req: Request, res: Response) 
+    
+  async createUser(req: Request, res: Response) 
       {
     try {
           
@@ -35,12 +38,12 @@ constructor(@inject(Types.CreateUserUseCase)  private createUserUseCase:CreateUs
     }
       }
 
-      async getUser(req: Request, res: Response) 
+    async getUser(req: Request, res: Response) 
       {
         try {
               const { id } = req.params;
               const user = await this.getUserUseCase.execute(id!);
-              console.log(user.rol)
+               
                
 
               res.json({
@@ -50,6 +53,25 @@ constructor(@inject(Types.CreateUserUseCase)  private createUserUseCase:CreateUs
 
     } catch (error: any) {
       res.status(404).json({
+        success: false,
+        error: error.message
+      });
+    }
+  }
+
+    async getUsers(req: Request, res: Response) {
+    try {
+      
+      const users = await this.getUsersUseCase.execute()
+      
+
+      res.json({
+        success: true,
+        data: users
+      });
+
+    } catch (error: any) {
+      res.status(500).json({
         success: false,
         error: error.message
       });

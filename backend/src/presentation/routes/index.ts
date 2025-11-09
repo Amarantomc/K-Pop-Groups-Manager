@@ -2,7 +2,7 @@ import { Router } from "express";
  
  
 import { AuthRoutes } from "./AuthRoutes";
-import { UserRoutes } from "./UserRoutes";
+import { UserRoutes } from "./userRoutes";
 
 const rootRouter:Router=Router()
 const userRoutes=new UserRoutes()

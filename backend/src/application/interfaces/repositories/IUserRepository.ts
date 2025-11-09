@@ -5,6 +5,7 @@ import type { IBaseRepository } from "./IBaseRepository";
 
 export interface IUserRepository extends IBaseRepository<User,CreateUserDto,any> {
   findByEmail(email: string): Promise<User | null>;
+  getUsers():Promise<User[]>
   
 }
 

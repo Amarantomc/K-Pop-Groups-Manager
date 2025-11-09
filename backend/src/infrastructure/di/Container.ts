@@ -11,6 +11,7 @@ import  { GetUserUseCase } from '../../application/usesCase/user/GetUserUseCase'
 import  { UserController } from '../../presentation/controllers/UserController';
 import { LoginUserUseCase } from '../../application/usesCase/user/LoginUserUseCase';
 import  { AuthController } from '../../presentation/controllers/AuthController';
+import  { GetUsersUseCase } from '../../application/usesCase/user/GerUsersUseCase';
 
  
 
@@ -48,9 +49,9 @@ container.bind<GetUserUseCase>(Types.GetUserUseCase)
   .to(GetUserUseCase)
   .inTransientScope();
 
-// container.bind<GetUsersUseCase>(Types.GetUsersUseCase)
-//   .to(GetUsersUseCase)
-//   .inTransientScope();
+container.bind<GetUsersUseCase>(Types.GetUsersUseCase)
+  .to(GetUsersUseCase)
+  .inTransientScope();
 
 // container.bind<UpdateUserUseCase>(UpdateUserUseCase)
 //   .to(UpdateUserUseCase)

@@ -15,6 +15,7 @@ export class UserRepository implements IUserRepository
     @inject(Types.IUnitOfWork)  private unitOfWork: UnitOfWork
   ) {}
 
+
      private get db() {
     return this.unitOfWork.getTransaction();
   }
@@ -45,6 +46,12 @@ export class UserRepository implements IUserRepository
     }
     delete(id: string): Promise<void> {
         throw new Error("Method not implemented.");
+    }
+
+    async getUsers(): Promise<User[]> {
+      const prismaUsers = await this.db.user.findMany();
+
+    return prismaUsers
     }
 
  

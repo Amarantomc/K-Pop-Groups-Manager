@@ -15,7 +15,7 @@ export class UserResponseDto {
       user.id,
       user.email,
       user.name,
-      user.rol.toString()
+      user.rol
       
     );
   }
@@ -26,7 +26,7 @@ export class UserResponseDto {
       name:user.name,
       email: user.email,
       password:user.password,
-      rol:user.role,}
+      rol:user.role.toString(),}
      
     )
   }
