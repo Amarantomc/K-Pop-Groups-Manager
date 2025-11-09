@@ -13,8 +13,8 @@ const Types = {
   GetUsersUseCase: Symbol.for('GetUsersUseCase'),
   UpdateUserUseCase: Symbol.for('UpdateUserUseCase'),
   DeleteUserUseCase: Symbol.for('DeleteUserUseCase'),
-  RegisterUserUseCase: Symbol.for('RegisterUserUseCase'),
-  AuthenticateUserUseCase: Symbol.for('AuthenticateUserUseCase'),
+   
+  LoginUserUseCase: Symbol.for('LoginUserUseCase'),
   ValidateTokenUseCase: Symbol.for('ValidateTokenUseCase'),
   
   // Presentation
