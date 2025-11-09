@@ -1,4 +1,4 @@
-import type { Prisma } from "@prisma/client";
+
 import { User } from "../../../domain";
 
 export class UserResponseDto {
