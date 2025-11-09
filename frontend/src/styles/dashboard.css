@@ -14,27 +14,31 @@
 /* Contenido de la dashboard */
 .dashboard-content{
     display: flex;
+    justify-content: flex-start;
     flex-direction: column;
     gap: 20px;
 }
 
 .welcome-card{
     display: flex;
-    align-items: center;
-    gap: 16px;
+    justify-content: flex-start; /* logo a la izquierda, texto a la derecha */
+    gap: 12px;
+    width: 100%;
     background: #ffffff;
     padding: 18px;
     border-radius: 10px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    
 }
 .welcome-logo{
-    width: 84px;
-    height: 84px;
+    width: 120px;
+    height: 120px;
     object-fit: contain;
     border-radius: 8px;
     background: linear-gradient(180deg,#fff,#f5f5f5);
     padding: 8px;
 }
+.welcome-text{ text-align: left; display:flex; flex-direction:column; justify-content:center; }
 .welcome-text h2{ margin: 0 0 6px 0; color: #222; }
 .welcome-text p{ margin: 0; color: #555; }
 

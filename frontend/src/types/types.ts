@@ -4,6 +4,11 @@ export interface User {
   email: string;
   name: string;
   isVerified: boolean;
+  // Opcionales adicionales usados en UI
+  avatarUrl?: string | null;
+  phone?: string | null;
+  address?: string | null;
+  country?: string | null;
 }
 
 export interface AuthResponse {
