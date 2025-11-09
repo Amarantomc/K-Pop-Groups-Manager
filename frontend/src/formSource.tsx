@@ -63,6 +63,7 @@ export const userFields: Field[] = [
     { id: 'username', name: 'username', label: 'Nombre de usuario', type: 'text', placeholder: 'usuario', required: true },
     { id: 'email', name: 'email', label: 'Correo electrónico', type: 'email', placeholder: 'correo@ejemplo.com', required: true },
     { id: 'password', name: 'password', label: 'Contraseña', type: 'password', required: true },
+    { id: 'role', name: 'role', label: 'Rol de usuario', type: 'select', options: enumToOptions(ROLE_TYPES) }
 ];
 
 // Agencia

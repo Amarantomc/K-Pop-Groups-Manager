@@ -1,33 +1,192 @@
-form{
+/* Form layout */
+.Form {
+    background: #ffffff;
+    padding: 18px;
+    border-radius: 8px;
+    box-shadow: 0 6px 18px rgba(23, 23, 23, 0.06);
+    max-width: 900px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    justify-content: space-between;
+    gap: 14px;
 }
-.form-group{
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 20px;
+}
+
+.form-group {
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    width: 40%;
+    gap: 6px;
+    width: 100%;
 }
-label{
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+
+label {
+    font-weight: 600;
+    color: #222;
+    font-size: 0.95rem;
 }
-button{
-    padding: 10px 15px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e2e8f0; /* light grey */
+    border-radius: 8px;
+    background: #fcfdff;
+    color: #111827; /* dark text */
+    font-size: 0.95rem;
+    box-sizing: border-box;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.08);
+    border-color: #6366f1; /* indigo */
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+input[type="file"] {
+    padding: 6px 8px;
+}
+
+.file-input-wrapper{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.file-input-wrapper input[type="file"]{
+    /* ocultar el input nativo pero mantener accesibilidad */
+    position: absolute;
+    width:1px;
+    height:1px;
+    padding:0;
+    margin:-1px;
+    overflow:hidden;
+    clip:rect(0 0 0 0);
+    white-space:nowrap;
+    border:0;
+}
+
+.file-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 12px;
+    background:#eef2ff;
+    color:#3730a3;
+    border-radius:8px;
+    border:1px solid #e0e7ff;
+    cursor:pointer;
+    font-weight:600;
+}
+
+.file-btn svg { color: #3730a3; }
+
+.file-name{
+    font-size:0.9rem;
+    color:#374151;
+}
+
+/* Mejoras para input date (calendar) */
+input[type="date"]{
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: linear-gradient(180deg,#fff,#fbfdff);
+    border: 1px solid #e6eef9;
+    color: #0f172a;
+}
+
+/* Webkit: estilizar el icono del calendario para que combine */
+input[type="date"]::-webkit-calendar-picker-indicator{
+    filter: invert(28%) sepia(48%) saturate(400%) hue-rotate(215deg) brightness(95%) contrast(85%);
     cursor: pointer;
 }
 
-input{
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+/* Aclarar placeholder color para inputs de fecha */
+input[type="date"]::placeholder{ color: #9ca3af; }
+
+/* Buttons & actions */
+.form-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 6px;
+}
+
+button,
+button[type="submit"],
+.btn {
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.btn-primary {
+    background: #4f46e5; /* indigo-600 */
+    color: white;
+}
+
+.btn-secondary {
+    background: #eef2ff; /* light indigo */
+    color: #3730a3;
+}
+
+.btn-ghost {
+    background: transparent;
+    color: #374151;
+}
+
+/* Small helper styles */
+.hint {
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+
+.error {
+    color: #b91c1c; /* red-700 */
+    font-size: 0.85rem;
+}
+
+/* Responsive */
+@media (max-width: 800px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    .form-group {
+        width: 100%;
+    }
+}
+
+/* Añadir efecto de entrada para formularios que aparecen dinámicamente */
+.Form { transition: transform .16s ease, opacity .18s ease; }
+.Form.enter{ transform: translateY(0); opacity: 1; }
+.Form.hidden{ transform: translateY(6px); opacity: 0; pointer-events:none; }
+
+@media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+}
+
+/* Utility: center small forms */
+.form-center {
+    display: flex;
+    justify-content: center;
 }

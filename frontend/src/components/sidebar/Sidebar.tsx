@@ -88,8 +88,10 @@ const Sidebar : React.FC = () => {
                     </li>
                     <p className="title">CUENTA</p>
                     <li>
-                        <AccountCircleIcon className="icon"/>
-                        <span>Perfil</span>
+                        <Link to="/profile" style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <AccountCircleIcon className="icon"/>
+                            <span>Perfil</span>
+                        </Link>
                     </li>
                     <li onClick={logout}>
                         <LogoutIcon className="icon"/>

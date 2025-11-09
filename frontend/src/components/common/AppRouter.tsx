@@ -5,6 +5,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import Login from '../../pages/Login/Login';
 import Dashboard from '../../pages/dashboard/Dashboard';
 import Agency from '../../pages/Agency/Agency';
+import Profile from '../../pages/Profile/Profile';
 
 const AppRouter: React.FC = () => {
   const { user, isLoading } = useAuth();
@@ -32,6 +33,11 @@ const AppRouter: React.FC = () => {
       <Route
         path="/agency"
         element={user ? <Agency /> : <Navigate to="/login" replace />}
+      />
+
+      <Route
+        path="/profile"
+        element={user ? <Profile /> : <Navigate to="/login" replace />}
       />
 
       <Route
