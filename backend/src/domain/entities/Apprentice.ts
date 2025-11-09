@@ -7,7 +7,7 @@ export default class Apprentice{
     readonly dateOfBirth: Date
     readonly age: number
     readonly trainingLv: number
-    readonly status: Status
+    readonly status: Status | string
 
     constructor(attrs:{id:number,name:string,dateOfBirth:Date,age:number,trainingLv: number,status:Status})
     {
