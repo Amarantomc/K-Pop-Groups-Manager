@@ -20,15 +20,12 @@ export class UserRepository implements IUserRepository
   }
     
    async create(data: CreateUserDto): Promise<User> {
-         
-         
-
-        const user= await this.db.user.create({
+         const user= await this.db.user.create({
             data:{
                 
                 email:data.email,
                 name:data.name,
-                password:data.password,
+                password:data.GetPassword(),
                 role:data.rol
             }
         })
@@ -52,8 +49,11 @@ export class UserRepository implements IUserRepository
 
  
 
-  findByEmail(email: string): Promise<UserResponseDto | null> {
-        throw new Error("Method not implemented.");
+  async findByEmail(email: string): Promise<User | null> {
+        const user= await this.db.user.findUnique({
+            where:{email}
+        })
+        return user ? UserResponseDto.toEntity(user) : null
     }
     
     

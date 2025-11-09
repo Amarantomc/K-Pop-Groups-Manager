@@ -14,6 +14,7 @@ export class GetUserUseCase {
     if (!user) {
       throw new Error('User not found');
     }
-    return new UserResponseDto(user.id,user.email,user.name,user.rol);
+     
+    return UserResponseDto.fromEntity(user)
   }
 }

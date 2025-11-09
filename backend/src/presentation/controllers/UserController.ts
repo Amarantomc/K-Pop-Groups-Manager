@@ -17,17 +17,8 @@ constructor(@inject(Types.CreateUserUseCase)  private createUserUseCase:CreateUs
       async createUser(req: Request, res: Response) 
       {
     try {
-      const { email, name, password,rol } = req.body;
-       
-      if (!email || !name || !password || !rol) {
-        return res.status(400).json({
-          success: false,
-          error: 'Email, name and password are required'
-        });
-      }
-      
-      
-      const userDto=new CreateUserDto(email,name,password,rol)
+          
+      const userDto=CreateUserDto.Create(req.body)
       const user = await this.createUserUseCase.execute(userDto);
 
       
@@ -50,6 +41,7 @@ constructor(@inject(Types.CreateUserUseCase)  private createUserUseCase:CreateUs
         try {
               const { id } = req.params;
               const user = await this.getUserUseCase.execute(id!);
+              console.log(user.rol)
                
 
               res.json({
