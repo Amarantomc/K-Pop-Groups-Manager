@@ -15,13 +15,14 @@ export class UserResponseDto {
       user.id,
       user.email,
       user.name,
-      user.role
+      user.rol.toString()
       
     );
   }
 
   static toEntity(user:any):User {
-    return new User({ id:user.id,
+    return new User({ 
+      id:user.id,
       name:user.name,
       email: user.email,
       password:user.password,

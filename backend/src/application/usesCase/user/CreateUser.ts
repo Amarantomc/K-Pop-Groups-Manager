@@ -19,17 +19,18 @@ export class CreateUserUseCase{
         try{
             await this.unitOfWork.beginTransaction()
              
-            //const existingUser = await this.userRepository.findByEmail(command.email);
-        //     if (existingUser) {
-        // throw new Error('User with this email already exists');
-        //     }
+            const existingUser = await this.userRepository.findByEmail(command.email);
+            if (existingUser) {
+        throw new Error('User with this email already exists');
+            }
 
-            const hashedPassword = await bcrypt.hash(command.password, 12);
+            const hashedPassword = await bcrypt.hash(command.GetPassword(), 12);
+            command.SetHashedPassword(hashedPassword)
 
             const user = await this.userRepository.create(command);
              
             await this.unitOfWork.commit();
-            return new UserResponseDto(user.id,user.email,user.name,user.rol)
+            return UserResponseDto.fromEntity(user)
         }
         catch(error){
             await this.unitOfWork.rollback();
