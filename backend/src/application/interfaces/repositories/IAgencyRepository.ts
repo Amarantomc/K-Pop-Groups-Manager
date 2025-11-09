@@ -4,8 +4,8 @@ import type { IBaseRepository } from "./IBaseRepository";
 
 export interface IAgencyRepository
 	extends IBaseRepository<Agency, CreateAgencyDTO, any> {
-	findByName(name: string): Promise<Agency | null>;
-	findByAddress(address: string): Promise<Agency | null>;
-	findByFoundation(foundation: Date): Promise<Agency | null>;
+	findByName(name: string): Promise<Agency[]>;
+	findByAddress(address: string): Promise<Agency[]>;
+	findByFoundation(foundation: Date): Promise<Agency[]>;
 	findAll(): Promise<Agency[]>;
 }

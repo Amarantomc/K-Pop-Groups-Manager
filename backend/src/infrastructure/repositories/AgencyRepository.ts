@@ -44,23 +44,23 @@ export class AgencyRepository implements IAgencyRepository {
 		return agency ? this.mapPrismaToDomain(agency) : null;
 	}
 
-	async findByName(name: string): Promise<Agency | null> {
-		const agency = await this.db.agencia.find({ where: { nombre: name } });
-		return agency ? this.mapPrismaToDomain(agency) : null;
+	async findByName(name: string): Promise<Agency[]> {
+		const list = await this.db.agencia.findMany({ where: { nombre: name } });
+		return list.map((r: any) => this.mapPrismaToDomain(r));
 	}
 
-	async findByAddress(address: string): Promise<Agency | null> {
-		const agency = await this.db.agencia.findFirst({
+	async findByAddress(address: string): Promise<Agency[]> {
+		const list = await this.db.agencia.findMany({
 			where: { ubicacion: address },
 		});
-		return agency ? this.mapPrismaToDomain(agency) : null;
+		return list.map((r: any) => this.mapPrismaToDomain(r));
 	}
 
-	async findByFoundation(foundation: Date): Promise<Agency | null> {
-		const agency = await this.db.agencia.findFirst({
+	async findByFoundation(foundation: Date): Promise<Agency[]> {
+		const list = await this.db.agencia.findMany({
 			where: { fechaFundacion: foundation },
 		});
-		return agency ? this.mapPrismaToDomain(agency) : null;
+		return list.map((r: any) => this.mapPrismaToDomain(r));
 	}
 
 	async findAll(): Promise<Agency[]> {

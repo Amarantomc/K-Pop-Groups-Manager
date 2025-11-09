@@ -15,10 +15,12 @@ export class CreateAgencyUseCase {
 			await this.unitOfWork.beginTransaction();
 			console.log("OK3");
 
-			// const existingAgency = await this.agencyRepository.findByName(command.name);
-			// if (existingAgency) {
-			// throw new Error('Agency with this name already exists');
-			// }
+			const existingAgencies = await this.agencyRepository.findByName(
+				command.name
+			);
+			if (existingAgencies.length > 0) {
+				throw new Error("Agency with this name already exists");
+			}
 
 			const agency = await this.agencyRepository.create(command);
 			console.log("OK4");

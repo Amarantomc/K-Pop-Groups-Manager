@@ -1,9 +1,12 @@
 import { PrismaClient } from "../../generated/prisma";
-import { CreateAgencyUseCase } from "../../application/usesCase/agency/CreateAgency";
+import { CreateAgencyUseCase } from "../../application/usesCase/agency/CreateAgencyUseCase";
 import { GetAgencyUseCase } from "../../application/usesCase/agency/GetAgencyUseCase";
 import { ListAgenciesUseCase } from "../../application/usesCase/agency/ListAgenciesUseCase";
 import { UpdateAgencyUseCase } from "../../application/usesCase/agency/UpdateAgencyUseCase";
 import { DeleteAgencyUseCase } from "../../application/usesCase/agency/DeleteAgencyUseCase";
+import { FindAgenciesByNameUseCase } from "../../application/usesCase/agency/FindAgenciesByNameUseCase";
+import { FindAgenciesByAddressUseCase } from "../../application/usesCase/agency/FindAgenciesByAddressUseCase";
+import { FindAgenciesByFoundationUseCase } from "../../application/usesCase/agency/FindAgenciesByFoundationUseCase";
 import { UnitOfWork } from "../../infrastructure/PrismaUnitOfWork";
 import { AgencyRepository } from "../../infrastructure/repositories/AgencyRepository";
 import type { Request, Response } from "express";
@@ -15,6 +18,9 @@ export class AgencyController {
 	private listUseCase: ListAgenciesUseCase;
 	private updateUseCase: UpdateAgencyUseCase;
 	private deleteUseCase: DeleteAgencyUseCase;
+	private findByNameUseCase: FindAgenciesByNameUseCase;
+	private findByAddressUseCase: FindAgenciesByAddressUseCase;
+	private findByFoundationUseCase: FindAgenciesByFoundationUseCase;
 
 	constructor() {
 		const prisma = new PrismaClient();
@@ -26,6 +32,9 @@ export class AgencyController {
 		this.listUseCase = new ListAgenciesUseCase(repo);
 		this.updateUseCase = new UpdateAgencyUseCase(repo, unitOfWork);
 		this.deleteUseCase = new DeleteAgencyUseCase(repo, unitOfWork);
+		this.findByNameUseCase = new FindAgenciesByNameUseCase(repo);
+		this.findByAddressUseCase = new FindAgenciesByAddressUseCase(repo);
+		this.findByFoundationUseCase = new FindAgenciesByFoundationUseCase(repo);
 	}
 
 	async createAgency(req: Request, res: Response) {
@@ -74,6 +83,49 @@ export class AgencyController {
 			const { id } = req.params;
 			await this.deleteUseCase.execute(id!);
 			res.json({ success: true });
+		} catch (error: any) {
+			res.status(400).json({ success: false, error: error.message });
+		}
+	}
+
+	async findAgenciesByName(req: Request, res: Response) {
+		try {
+			const { name } = req.query;
+			if (!name || typeof name !== "string") {
+				throw new Error("Name parameter is required");
+			}
+			const agencies = await this.findByNameUseCase.execute(name);
+			res.json({ success: true, data: agencies });
+		} catch (error: any) {
+			res.status(400).json({ success: false, error: error.message });
+		}
+	}
+
+	async findAgenciesByAddress(req: Request, res: Response) {
+		try {
+			const { address } = req.query;
+			if (!address || typeof address !== "string") {
+				throw new Error("Address parameter is required");
+			}
+			const agencies = await this.findByAddressUseCase.execute(address);
+			res.json({ success: true, data: agencies });
+		} catch (error: any) {
+			res.status(400).json({ success: false, error: error.message });
+		}
+	}
+
+	async findAgenciesByFoundation(req: Request, res: Response) {
+		try {
+			const { foundation } = req.query;
+			if (!foundation || typeof foundation !== "string") {
+				throw new Error("Foundation date parameter is required");
+			}
+			const date = new Date(foundation);
+			if (isNaN(date.getTime())) {
+				throw new Error("Invalid date format");
+			}
+			const agencies = await this.findByFoundationUseCase.execute(date);
+			res.json({ success: true, data: agencies });
 		} catch (error: any) {
 			res.status(400).json({ success: false, error: error.message });
 		}
