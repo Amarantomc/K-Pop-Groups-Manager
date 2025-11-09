@@ -18,8 +18,16 @@ const ListAgency: React.FC = () => {
         <div className="listAgencySideBar">
             <Sidebar/>
             <div className="listAgencyNavBar">
-                {/* <Navbar/> */}
-                <Datatable columns={agencyColumns} rows={agencyRows}/>
+                    {/* <Navbar/> */}
+                    <div className="agency-header">
+                        <div className="welcome-card">
+                            <div className="welcome-text">
+                                <h1>Agencias</h1>
+                                <p className="hint">Listado y gestión de agencias.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <Datatable columns={agencyColumns} rows={agencyRows}/>
             </div>
         </div>
     )

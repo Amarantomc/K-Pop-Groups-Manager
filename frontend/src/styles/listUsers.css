@@ -1,7 +1,15 @@
 .listUsersSideBar{
     display: flex;
     width: 100%;
+    min-height: 100vh; /* asegurar que ocupa toda la ventana */
+    background-color: #f5f5f5;
+    align-items: stretch;
 }
 .listUsersNavBar{
-    flex: 6;
+    flex: 1; /* ocupar el espacio restante junto a la sidebar fija */
+    min-height: 100vh;
+    padding: 20px;
 }
+
+/* Importar estilos del header/form de Agency para que las páginas de listado compartan el mismo look */
+@import './agency.css';

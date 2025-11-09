@@ -62,8 +62,16 @@ const ListUsers: React.FC = () => {
         <div className="listUsersSideBar">
             <Sidebar/>
             <div className="listUsersNavBar">
-                {/* <Navbar/> */}
-                <Datatable columns={userColumns} rows={userRows}/>
+            {/* <Navbar/> */}
+            <div className="agency-header">
+              <div className="welcome-card">
+                <div className="welcome-text">
+                  <h1>Usuarios</h1>
+                  <p className="hint">Listado y gestión de usuarios.</p>
+                </div>
+              </div>
+            </div>
+            <Datatable columns={userColumns} rows={userRows}/>
             </div>
         </div>
     )

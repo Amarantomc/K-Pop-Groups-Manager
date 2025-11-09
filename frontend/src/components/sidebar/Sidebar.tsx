@@ -48,8 +48,10 @@ const Sidebar : React.FC = () => {
                     </li>
                     <p className="title">APRENDIZ</p>
                     <li>
+                        <Link to="/apprentices" style={{ textDecoration: 'none', color: 'inherit' }}>
                             <PersonAddIcon className="icon"/>
                             <span>Añadir Aprendiz</span>
+                        </Link>
                     </li>
                     <li>
                         <Link to="/listApprentice" style={{ textDecoration: 'none', color: 'inherit' }}>
