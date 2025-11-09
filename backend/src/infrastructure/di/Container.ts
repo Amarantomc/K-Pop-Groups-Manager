@@ -9,6 +9,8 @@ import { UserRepository } from '../repositories/UserRepository';
 import  { CreateUserUseCase } from '../../application/usesCase/user/CreateUser';
 import  { GetUserUseCase } from '../../application/usesCase/user/GetUserUseCase';
 import  { UserController } from '../../presentation/controllers/UserController';
+import { LoginUserUseCase } from '../../application/usesCase/user/LoginUserUseCase';
+import  { AuthController } from '../../presentation/controllers/AuthController';
 
  
 
@@ -61,9 +63,9 @@ container.bind<GetUserUseCase>(Types.GetUserUseCase)
 // // Use Cases - Auth
  
 
-// container.bind<AuthenticateUserUseCase>(AuthenticateUserUseCase)
-//   .to(AuthenticateUserUseCase)
-//   .inTransientScope();
+container.bind<LoginUserUseCase>(Types.LoginUserUseCase)
+  .to(LoginUserUseCase)
+  .inTransientScope();
 
 // container.bind<ValidateTokenUseCase>(ValidateTokenUseCase)
 //   .to(ValidateTokenUseCase)
@@ -74,8 +76,8 @@ container.bind<UserController>(Types.UserController)
   .to(UserController)
   .inTransientScope();
 
-// container.bind<AuthController>(AuthController)
-//   .to(AuthController)
-//   .inTransientScope();
+container.bind<AuthController>(Types.AuthController)
+  .to(AuthController)
+  .inTransientScope();
 
 export { container };

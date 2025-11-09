@@ -1,7 +1,6 @@
-import { PrismaClient } from '../../generated/prisma'
+ 
 import { CreateUserUseCase } from "../../application/usesCase/user/CreateUser";
-import { UnitOfWork } from '../../infrastructure/PrismaUnitOfWork';
-import { UserRepository } from '../../infrastructure/repositories/UserRepository';
+ 
 import type { Request,Response } from 'express';
 import { CreateUserDto } from '../../application/dtos/user/CreateUserDto';
 import { GetUserUseCase } from '../../application/usesCase/user/GetUserUseCase';
