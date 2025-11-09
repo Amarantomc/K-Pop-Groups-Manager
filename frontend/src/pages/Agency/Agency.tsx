@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Sidebar from '../../components/sidebar/Sidebar';
-import NavBar from '../../components/navbar/Navbar'
+// import NavBar from '../../components/navbar/Navbar'
 import "../../styles/agency.css"
 // import logo from '../../assets/k-pop-logo.png';
 import Form from '../../components/form/Form';
@@ -50,7 +50,7 @@ const Agency : React.FC = () =>{
     <div className='Agency-sidebar'>
       <Sidebar/>
       <div className='Agency-navbar'>
-        <NavBar/>
+        {/* <NavBar/> */}
 
         <div className='Agency-content'>
           <div className="agency-header">

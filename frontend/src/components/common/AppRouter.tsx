@@ -5,6 +5,9 @@ import { useAuth } from '../../contexts/AuthContext';
 import Login from '../../pages/Login/Login';
 import Dashboard from '../../pages/dashboard/Dashboard';
 import Agency from '../../pages/Agency/Agency';
+import ListAgency from '../../pages/ListAgency/ListAgency';
+import ListApprentice from '../../pages/ListApprentice/ListApprentice';
+import ListUsers from '../../pages/ListUsers/ListUsers';
 import Profile from '../../pages/Profile/Profile';
 
 const AppRouter: React.FC = () => {
@@ -38,6 +41,21 @@ const AppRouter: React.FC = () => {
       <Route
         path="/profile"
         element={user ? <Profile /> : <Navigate to="/login" replace />}
+      />
+
+      <Route
+        path="/listAgency"
+        element={user ? <ListAgency /> : <Navigate to="/login" replace />}
+      />
+
+      <Route
+        path="/listApprentice"
+        element={user ? <ListApprentice /> : <Navigate to="/login" replace />}
+      />
+
+      <Route
+        path="/listUsers"
+        element={user ? <ListUsers /> : <Navigate to="/login" replace />}
       />
 
       <Route

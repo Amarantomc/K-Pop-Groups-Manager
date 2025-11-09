@@ -1,6 +1,6 @@
 import React from 'react';
 import Sidebar from '../../components/sidebar/Sidebar';
-import NavBar from '../../components/navbar/Navbar'
+// import NavBar from '../../components/navbar/Navbar'
 import "../../styles/dashboard.css"
 import logo from '../../assets/k-pop-logo.png';
 
@@ -10,7 +10,7 @@ const Dashboard : React.FC = () =>{
     <div className='dashboard-sidebar'>
       <Sidebar/>
       <div className='dashboard-navbar'>
-        <NavBar/>
+        {/* <NavBar/> */}
 
         <div className='dashboard-content'>
           <div className='welcome-card'>

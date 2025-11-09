@@ -1,0 +1,7 @@
+.listAgencySideBar{
+    display: flex;
+    width: 100%;
+}
+.listAgencyNavBar{
+    flex: 6;
+}
