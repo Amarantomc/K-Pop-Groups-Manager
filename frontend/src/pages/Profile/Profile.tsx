@@ -24,12 +24,6 @@ const Profile: React.FC = () => {
     setShowUserForm(false);
   };
 
-  const handleShowUsers = () => {
-    // Placeholder: cuando haya tablas y endpoints, implementar fetch GET /api/users
-    // Debe: setLoading(true); fetch('/api/users') -> setUsers(response)
-    console.log('Mostrar usuarios (placeholder)');
-  };
-
   return (
     <div className="Profile-sidebar">
       <Sidebar />
@@ -39,7 +33,7 @@ const Profile: React.FC = () => {
         <div className="Profile-content">
           <div className='welcome-card'>
             <div className='welcome-text'>
-              <h1>Profile</h1>
+              <h1>Perfil</h1>
               <p className='hint'>Información y ajustes de tu cuenta</p>
             </div>
           </div>
@@ -97,9 +91,6 @@ const Profile: React.FC = () => {
           <div className="profile-button-row" style={{ marginTop: 18 }}>
             <button className="primary-btn" onClick={() => { setShowUserForm(!showUserForm); setShowEditForm(false); setShowPasswordForm(false); }}>
               Añadir usuario
-            </button>
-            <button className="secondary-btn" onClick={() => handleShowUsers()}>
-              Mostrar usuarios
             </button>
           </div>
 

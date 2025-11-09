@@ -7,6 +7,7 @@ import Dashboard from '../../pages/dashboard/Dashboard';
 import Agency from '../../pages/Agency/Agency';
 import ListAgency from '../../pages/ListAgency/ListAgency';
 import ListApprentice from '../../pages/ListApprentice/ListApprentice';
+import Apprentice from '../../pages/Apprentice/Apprentice';
 import ListUsers from '../../pages/ListUsers/ListUsers';
 import Profile from '../../pages/Profile/Profile';
 
@@ -51,6 +52,11 @@ const AppRouter: React.FC = () => {
       <Route
         path="/listApprentice"
         element={user ? <ListApprentice /> : <Navigate to="/login" replace />}
+      />
+
+      <Route
+        path="/apprentices"
+        element={user ? <Apprentice /> : <Navigate to="/login" replace />}
       />
 
       <Route

@@ -1,8 +1,6 @@
-
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import type { User, LoginFormData, RegisterFormData, AuthResponse } from '../types/types';
-
 
 interface AuthContextType {
   user: User | null;
@@ -32,11 +30,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Verificar si el usuario está autenticado al cargar la app
   useEffect(() => {
     const token = localStorage.getItem('token');
     const userData = localStorage.getItem('user');
-    
+
     if (token && userData) {
       setUser(JSON.parse(userData));
     }
@@ -46,12 +43,28 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = async (data: LoginFormData): Promise<void> => {
     try {
       setIsLoading(true);
-      // Simulación de API call - reemplazar con tu backend real
-      const response = await mockLoginAPI(data);
-      
-      localStorage.setItem('token', response.token);
-      localStorage.setItem('user', JSON.stringify(response.user));
-      setUser(response.user);
+      const API_BASE = 'http://localhost:3000';
+      const res = await fetch(`${API_BASE}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: data.email, password: data.password }),
+      });
+
+      if (!res.ok) {
+        let errMsg = 'Credenciales inválidas';
+        try {
+          const errJson = await res.json();
+          errMsg = errJson?.message || errJson?.error || errMsg;
+        } catch (e) {
+          // ignore
+        }
+        throw new Error(errMsg);
+      }
+
+      const responseJson: AuthResponse = await res.json();
+      localStorage.setItem('token', responseJson.token);
+      localStorage.setItem('user', JSON.stringify(responseJson.user));
+      setUser(responseJson.user);
     } catch (error) {
       throw error;
     } finally {
@@ -62,23 +75,40 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const register = async (data: RegisterFormData): Promise<void> => {
     try {
       setIsLoading(true);
-      // Validación: email debe ser formato Gmail
       const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/i;
       if (!gmailRegex.test(data.email)) {
         throw new Error('El correo debe ser una dirección Gmail válida (ej: usuario@gmail.com)');
       }
 
-      // Simulación de API call - reemplazar con tu backend real
       await mockRegisterAPI(data);
-      
-      // En una implementación real, aquí redirigirías a una página de "verifica tu email"
+
       alert('Registration successful! Please check your email to verify your account.');
     } catch (error) {
       throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
+
+        // Llamada real al backend para crear usuario
+        const API_BASE = 'http://localhost:3000';
+        const res = await fetch(`${API_BASE}/api/user/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name: data.name, email: data.email, password: data.password }),
+        });
+
+        if (!res.ok) {
+          let errMsg = 'Error al registrar usuario';
+          try {
+            const errJson = await res.json();
+            errMsg = errJson?.message || errJson?.error || errMsg;
+          } catch (e) {
+            // ignore
+          }
+          throw new Error(errMsg);
+        }
+
+        // Registro exitoso
+        alert('Registro exitoso. Puedes iniciar sesión con tus credenciales.');
 
   const logout = () => {
     localStorage.removeItem('token');
@@ -87,13 +117,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const requestPasswordReset = async (email: string): Promise<void> => {
-    // Simulación de API call
     await new Promise(resolve => setTimeout(resolve, 1000));
     alert(`Password reset instructions sent to ${email}`);
   };
 
   const verifyEmail = async (token: string): Promise<void> => {
-    // Simulación de verificación de email usando el token
     await new Promise(resolve => setTimeout(resolve, 1000));
     alert(`Email verified successfully with token: ${token}`);
   };
@@ -108,46 +136,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     verifyEmail,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 // Mock API functions - reemplazar con llamadas reales a tu backend
-const mockLoginAPI = async (data: LoginFormData): Promise<AuthResponse> => {
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  // Rechazar correos que no sean Gmail
-  const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/i;
-  if (!gmailRegex.test(data.email)) {
-    throw new Error('El correo debe ser una dirección Gmail válida (ej: usuario@gmail.com)');
-  }
-
-  // Simulación de validación: credenciales de prueba (solo gmail)
-  if (data.email === 'user@gmail.com' && data.password === 'password') {
-    return {
-      user: {
-        id: '1',
-        email: data.email,
-        name: 'Test User',
-        isVerified: true,
-      },
-      token: 'mock-jwt-token',
-    };
-  } else {
-    throw new Error('Credenciales inválidas');
-  }
-};
-
 const mockRegisterAPI = async (data: RegisterFormData): Promise<void> => {
   await new Promise(resolve => setTimeout(resolve, 1000));
-  
+
   if (data.password !== data.confirmPassword) {
     throw new Error('Passwords do not match');
   }
-  
-  // Simulación de registro exitoso
+
   return;
 };

@@ -11,7 +11,8 @@
 }
 
 .Profile-navbar {
-    flex: 6;
+    /* contenido principal: ocupa el espacio restante junto a la sidebar fija */
+    flex: 1;
     min-height: 100vh;
     /* emparejar altura con el sidebar */
     padding: 20px;

@@ -1,5 +1,6 @@
 .sidebar{
-    flex: 1;
+    /* sidebar con ancho fijo para estabilidad entre páginas */
+    flex: 0 0 240px; /* ancho fijo de 240px */
     border-right: 0.5px solid rgb(230, 227, 227);
     min-height: 100vh;
     background-color: white;
