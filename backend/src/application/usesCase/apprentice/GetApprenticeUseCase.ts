@@ -2,9 +2,12 @@ import { ApprenticeResponseDto } from "../../dtos/apprentice/ApprenticeResponseD
 import type { IApprenticeRepository } from "../../interfaces/repositories/IApprenticeRepository";
 import { Apprentice } from "../../../domain";
 import type { Status } from "../../../domain/enums/ApprenticeStatus";
+import { inject, injectable } from "inversify";
+import { Types } from "../../../infrastructure/di/Types";
 
+@injectable()
 export class GetApprenticeUseCase{
-    constructor(private apprenticeRepository: IApprenticeRepository){}
+    constructor(@inject(Types.IApprenticeRepository) private apprenticeRepository: IApprenticeRepository){}
 
     async excute(apprenticeId:string): Promise<ApprenticeResponseDto> {
 

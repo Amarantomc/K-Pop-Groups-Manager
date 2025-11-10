@@ -12,6 +12,13 @@ import  { UserController } from '../../presentation/controllers/UserController';
 import { LoginUserUseCase } from '../../application/usesCase/user/LoginUserUseCase';
 import  { AuthController } from '../../presentation/controllers/AuthController';
 import  { GetUsersUseCase } from '../../application/usesCase/user/GerUsersUseCase';
+import  { GetApprenticeUseCase } from '../../application/usesCase/apprentice/GetApprenticeUseCase';
+import type { IApprenticeRepository } from '../../application/interfaces/repositories/IApprenticeRepository';
+import { ApprenticeRepository } from '../repositories/ApprenticeRepository';
+import  { UpdateApprenticeUseCase } from '../../application/usesCase/apprentice/UpdateApprentice';
+import { DeleteApprenticeUseCase } from '../../application/usesCase/apprentice/DeleteApprentice';
+import  { CreateApprenticeUseCase } from '../../application/usesCase/apprentice/CreateApprentice';
+import { ApprenticeController } from '../../presentation/controllers/ApprenticeController';
 
  
 
@@ -40,6 +47,10 @@ container.bind<IUserRepository>(Types.IUserRepository)
   .to(UserRepository)
   .inSingletonScope();
 
+  container.bind<IApprenticeRepository>(Types.IApprenticeRepository)
+  .to(ApprenticeRepository)
+  .inSingletonScope();
+
 // Use Cases - User
 container.bind<CreateUserUseCase>(Types.CreateUserUseCase)
   .to(CreateUserUseCase)
@@ -51,6 +62,22 @@ container.bind<GetUserUseCase>(Types.GetUserUseCase)
 
 container.bind<GetUsersUseCase>(Types.GetUsersUseCase)
   .to(GetUsersUseCase)
+  .inTransientScope();
+
+  container.bind<GetApprenticeUseCase>(Types.GetApprenticeUseCase)
+  .to(GetApprenticeUseCase)
+  .inTransientScope();
+
+  container.bind<UpdateApprenticeUseCase>(Types.UpdateApprenticeUseCase)
+  .to(UpdateApprenticeUseCase)
+  .inTransientScope();
+
+  container.bind<DeleteApprenticeUseCase>(Types.DeleteApprenticeUseCase)
+  .to(DeleteApprenticeUseCase)
+  .inTransientScope();
+
+   container.bind<CreateApprenticeUseCase>(Types.CreateApprenticeUseCase)
+  .to(CreateApprenticeUseCase)
   .inTransientScope();
 
 // container.bind<UpdateUserUseCase>(UpdateUserUseCase)
@@ -79,6 +106,10 @@ container.bind<UserController>(Types.UserController)
 
 container.bind<AuthController>(Types.AuthController)
   .to(AuthController)
+  .inTransientScope();
+
+container.bind<ApprenticeController>(Types.ApprenticeController)
+  .to(ApprenticeController)
   .inTransientScope();
 
 export { container };

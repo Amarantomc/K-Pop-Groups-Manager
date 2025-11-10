@@ -23,14 +23,14 @@ export class ApprenticeResponseDto{
         );
       }
 
-      static toEntity(apprentice: any): ApprenticeResponseDto {
+      static toEntity(apprentice: any): Apprentice {
         return new Apprentice(
             {id:apprentice.id,
-            name:apprentice.name,
-            dateOfBirth:apprentice.dateOfBirth,
-            age:apprentice.age,
-            trainingLv:apprentice.trainingLv,
-            status:apprentice.status,}
+            name:apprentice.nombreCompleto,
+            dateOfBirth:apprentice.fechaNacimiento,
+            age:apprentice.edad,
+            trainingLv:apprentice.nivelEntrenamiento,
+            status:apprentice.estadoAprendiz,}
         );
       }
 

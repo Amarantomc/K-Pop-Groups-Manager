@@ -3,21 +3,25 @@ import type { CreateApprenticeDto } from "../../dtos/apprentice/CreateApprentice
 import { ApprenticeResponseDto } from "../../dtos/apprentice/ApprenticeResponseDto";
 import type { IUnitOfWork } from "../../interfaces/IUnitOfWork";
 import type { IApprenticeRepository } from "../../interfaces/repositories/IApprenticeRepository";
-import * as bcrypt from 'bcrypt'
+import { inject, injectable } from "inversify";
+import { Types } from "../../../infrastructure/di/Types";
 
-export class CreateUserUseCase{
+
+@injectable()
+export class CreateApprenticeUseCase{
 
     constructor(
-    private apprenticeRepository: IApprenticeRepository,
-    private unitOfWork: IUnitOfWork
+    @inject(Types.IApprenticeRepository) private apprenticeRepository: IApprenticeRepository,
+    @inject(Types.IUnitOfWork)  private unitOfWork: IUnitOfWork
   ) {}
 
-      async execute(command:CreateApprenticeDto):Promise<ApprenticeResponseDto>{
+    async execute(command:CreateApprenticeDto):Promise<ApprenticeResponseDto>{
         try
         {
             await this.unitOfWork.beginTransaction();
             const apprentice = await this.apprenticeRepository.create(command);
             await this.unitOfWork.commit();
+            
             return new ApprenticeResponseDto(
                 apprentice.id,
                 apprentice.name,
