@@ -6,6 +6,7 @@ import  { DeleteApprenticeUseCase } from "../../application/usesCase/apprentice/
 import  { UpdateApprenticeUseCase } from "../../application/usesCase/apprentice/UpdateApprentice";
 import { CreateApprenticeDto } from "../../application/dtos/apprentice/CreateApprenticeDto";
 import type { Request,Response } from "express";
+import type { ListApprenticeUseCase } from "../../application/usesCase/apprentice/ListApprenticeUseCase";
 
 @injectable()
 export class ApprenticeController {
@@ -13,7 +14,8 @@ export class ApprenticeController {
 constructor(@inject(Types.CreateApprenticeUseCase)  private createApprenticeUseCase: CreateApprenticeUseCase ,
             @inject(Types.GetApprenticeUseCase) private getApprenticeUseCase:GetApprenticeUseCase,
             @inject(Types.DeleteApprenticeUseCase) private deleteApprenticeUseCase:DeleteApprenticeUseCase,
-            @inject(Types.UpdateApprenticeUseCase) private updateApprenticeUseCase:UpdateApprenticeUseCase){}
+            @inject(Types.UpdateApprenticeUseCase) private updateApprenticeUseCase:UpdateApprenticeUseCase,
+            @inject(Types.ListApprenticeUseCase) private listApprenticeUseCase:ListApprenticeUseCase){}
 
     
   async createApprentice(req: Request, res: Response) 
@@ -94,6 +96,25 @@ constructor(@inject(Types.CreateApprenticeUseCase)  private createApprenticeUseC
 
     } catch (error: any) {
       res.status(404).json({
+        success: false,
+        error: error.message
+      });
+    }
+  }
+
+      async listApprentice(req: Request, res: Response) {
+    try {
+      
+      const apprentice = await this.listApprenticeUseCase.execute()
+      
+
+      res.json({
+        success: true,
+        data: apprentice
+      });
+
+    } catch (error: any) {
+      res.status(500).json({
         success: false,
         error: error.message
       });

@@ -17,6 +17,7 @@ export class ApprenticeRepository implements IApprenticeRepository
     @inject(Types.IUnitOfWork) private unitOfWork: UnitOfWork
   ) {}
 
+
      private get db() {
     return this.unitOfWork.getTransaction();
   }
@@ -68,5 +69,11 @@ export class ApprenticeRepository implements IApprenticeRepository
     } catch (error) {
       throw new Error(`Error deleting apprentice with id ${id}: ${error}`);
     }
+  }
+
+    async findAll(): Promise<Apprentice[]> {
+      const apprentices = await this.db.Aprendiz.findMany();
+
+      return apprentices
   }
 }

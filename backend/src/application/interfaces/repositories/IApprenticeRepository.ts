@@ -5,6 +5,7 @@ import type { IBaseRepository } from "./IBaseRepository";
 import { Status } from '../../../domain/enums/ApprenticeStatus';
 
 export interface IApprenticeRepository extends IBaseRepository<Apprentice,CreateApprenticeDto,any> {
+    findAll(): Promise<Apprentice[]>;
 }
 
  

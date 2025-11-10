@@ -15,11 +15,11 @@ export class ApprenticeResponseDto{
     static fromEntity(apprendice: any): ApprenticeResponseDto {
         return new ApprenticeResponseDto(
             apprendice.id,
-            apprendice.name,
-            apprendice.dateOfBirth,
-            apprendice.age,
-            apprendice.trainingLv,
-            apprendice.status,
+            apprendice.nombreCompleto,
+            apprendice.fechaNacimiento,
+            apprendice.edad,
+            apprendice.nivelEntrenamiento,
+            apprendice.estadoAprendiz
         );
       }
 
