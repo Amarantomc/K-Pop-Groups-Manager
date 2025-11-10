@@ -15,21 +15,46 @@ const Dashboard : React.FC = () =>{
 
     const fetchCount = async (url: string) => {
       try {
-        const res = await fetch(url);
-        if (!res.ok) return null;
+        const token = localStorage.getItem('token');
+        const headers = token ? { 'Authorization': `Bearer ${token}` } : undefined;
+        const res = await fetch(url, { headers });
+
+        if (!res.ok) {
+          if (import.meta.env.MODE === 'development') {
+            const txt = await res.text().catch(() => '');
+            // eslint-disable-next-line no-console
+            console.debug('[Dashboard] fetchCount non-ok', url, res.status, res.statusText, txt);
+          }
+          return null;
+        }
+
         const data = await res.json().catch(() => null);
+
+        // Casos comunes que puede devolver el backend
+        // - una lista (array)
         if (Array.isArray(data)) return data.length;
-        // Si backend devuelve un objeto con { total } o {count}
+
+        // - objeto con clave 'data' que contiene lista
         if (data && typeof data === 'object') {
-          if (typeof data.total === 'number') return data.total;
-          if (typeof data.count === 'number') return data.count;
+          if (Array.isArray((data as any).data)) return (data as any).data.length;
+          if (typeof (data as any).total === 'number') return (data as any).total;
+          if (typeof (data as any).count === 'number') return (data as any).count;
+          if (typeof (data as any).length === 'number') return (data as any).length;
+          // algunos endpoints devuelven { meta: { total: X } }
+          if ((data as any).meta && typeof (data as any).meta.total === 'number') return (data as any).meta.total;
+        }
+
+        // Si no logramos inferir nada, devolver null
+        if (import.meta.env.MODE === 'development') {
+          // eslint-disable-next-line no-console
+          console.debug('[Dashboard] fetchCount unknown response shape', url, data);
         }
         return null;
       } catch (e) {
         if (import.meta.env.MODE === 'development') console.debug('[Dashboard] fetchCount error', url, e);
         return null;
       }
-    }
+    };
 
     (async () => {
       const [a, p, u] = await Promise.all([
