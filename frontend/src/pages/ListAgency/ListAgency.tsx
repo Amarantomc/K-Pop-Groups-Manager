@@ -6,6 +6,7 @@ import { agencyColumns } from "../../datatableSource"
 import React from "react"
 
 
+// aqui va el endpoint para obtener los valores de las agencias
 const agencyRows = [
   { id: 1, name: 'KQ Entertainment', location: 'Seúl', founded: '2016-12-31' },
   { id: 2, name: 'HYBE', location: 'Seúl', founded: '2005-02-01' },

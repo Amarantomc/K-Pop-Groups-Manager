@@ -13,7 +13,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import logo from "../../assets/k-pop-logo.png"
-import {useAuth} from "../../contexts/AuthContext"
+import {useAuth} from "../../auth/AuthContext"
 import { Link } from "react-router-dom";
 
 const Sidebar : React.FC = () => {
