@@ -44,47 +44,40 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = async (data: LoginFormData): Promise<void> => {
     try {
       setIsLoading(true);
-      // Validación local para pruebas: user@gmail.com / password
-      // Detectar modo desarrollo (soporta Vite import.meta.env.DEV y NODE_ENV)
-      const viteEnv = (import.meta as any)?.env;
-      const nodeEnv = (globalThis as any)?.process?.env?.NODE_ENV;
-      const isDev = !!((viteEnv && viteEnv.DEV) || nodeEnv === 'development');
+  // Inicio del proceso de login
 
-      if (isDev && data.email === 'user@gmail.com' && data.password === 'password') {
-        const fakeUser: User = { id: 'local-1', name: 'Local User', email: data.email } as User;
-        const fakeToken = 'local-dev-token';
-        localStorage.setItem('token', fakeToken);
-        localStorage.setItem('user', JSON.stringify(fakeUser));
-        setUser(fakeUser);
-        // Log para depuración en DEV
-        try { (console as any).debug && console.debug('[AUTH DEV] Fake login ejecutado para', data.email); } catch {}
-        return;
-      }
+      // Llamada real al endpoint de autenticación
+      const requestBody = { email: data.email, password: data.password };
 
-      // aqui va el endpoint (comentado para pruebas locales)
-      /*
       const res = await fetch(`${API_BASE}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: data.email, password: data.password }),
+        body: JSON.stringify(requestBody),
       });
+
+      // leer texto crudo para depuración y manejo de errores no-JSON
+      const rawText = await res.text();
+      let responseJson: any = null;
+      try {
+        responseJson = rawText ? JSON.parse(rawText) : null;
+      } catch (e) {
+        responseJson = null;
+      }
 
       if (!res.ok) {
         let errMsg = 'Credenciales inválidas';
-        try {
-          const errJson = await res.json();
-          errMsg = errJson?.message || errJson?.error || errMsg;
-        } catch (e) {
-          // ignore
-        }
+        if (responseJson) errMsg = responseJson?.message || responseJson?.error || errMsg;
+        else if (rawText) errMsg = rawText;
         throw new Error(errMsg);
       }
 
-      const responseJson = await res.json();
+      if (!responseJson || !responseJson.token || !responseJson.user) {
+        throw new Error('Respuesta inesperada del servidor al iniciar sesión');
+      }
+
       localStorage.setItem('token', responseJson.token);
       localStorage.setItem('user', JSON.stringify(responseJson.user));
       setUser(responseJson.user);
-      */
     } catch (error) {
       throw error;
     } finally {
