@@ -6,7 +6,7 @@ import { CreateUserDto } from '../../application/dtos/user/CreateUserDto';
 import { GetUserUseCase } from '../../application/usesCase/user/GetUserUseCase';
 import { inject, injectable } from 'inversify';
 import { Types } from '../../infrastructure/di/Types';
-import type { GetUsersUseCase } from "../../application/usesCase/user/GetUsersUseCase";
+import type { GetUsersUseCase } from "../../application/usesCase/user/GerUsersUseCase";
 
 @injectable()
 export class UserController {

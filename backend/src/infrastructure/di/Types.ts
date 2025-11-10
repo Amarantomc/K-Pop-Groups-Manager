@@ -1,3 +1,5 @@
+
+
 // src/infrastructure/di/TYPES.ts
 const Types = {
   // Database
@@ -7,6 +9,8 @@ const Types = {
   IUnitOfWork: Symbol.for('IUnitOfWork'),
   IUserRepository: Symbol.for('IUserRepository'),
   IApprenticeRepository : Symbol.for('IApprenticeRepository'),
+  IAgencyRepository : Symbol.for('IAgencyRepository'),
+
   
   // Application Use Cases
   CreateUserUseCase: Symbol.for('CreateUserUseCase'),
@@ -19,6 +23,17 @@ const Types = {
   DeleteApprenticeUseCase: Symbol.for('DeleteApprenticeUseCase'),
   GetApprenticeUseCase: Symbol.for('GetApprenticeUseCase'),
   UpdateApprenticeUseCase: Symbol.for('UpdateApprenticeUseCase'),
+
+  CreateAgencyUseCase :Symbol.for('CreateAgencyUseCase'),
+  DeleteAgencyUseCase :Symbol.for('DeleteAgencyUseCase'),
+  FindAgenciesByAddressUseCase :Symbol.for(' FindAgenciesByAddressUseCase'),
+  FindAgenciesByFoundationUseCase :Symbol.for('FindAgenciesByFoundationUseCase'),
+  FindAgenciesByNameUseCase :Symbol.for('FindAgenciesByNameUseCase'),
+  GetAgencyUseCase :Symbol.for('GetAgencyUseCase'),
+  UpdateAgencyUseCase :Symbol.for('UpdateAgencyUseCase'),
+  ListAgenciesUseCase :Symbol.for('ListAgenciesUseCase'),
+
+
    
   LoginUserUseCase: Symbol.for('LoginUserUseCase'),
   ValidateTokenUseCase: Symbol.for('ValidateTokenUseCase'),
@@ -26,7 +41,9 @@ const Types = {
   // Presentation
   UserController: Symbol.for('UserController'),
   AuthController: Symbol.for('AuthController'),
-  ApprenticeController : Symbol.for('ApprenticeController')
+  ApprenticeController : Symbol.for('ApprenticeController'),
+  AgencyController : Symbol.for('AgencyController'),
+
 };
 
 export { Types };
