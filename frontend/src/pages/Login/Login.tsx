@@ -1,6 +1,7 @@
 // Ubicación: src/components/auth/Login.tsx
 import React, { useState } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../auth/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import type { LoginFormData } from '../../types/types';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -16,6 +17,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 const Login: React.FC = () => {
   const { login, isLoading } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<LoginFormData>({
     email: '',
     password: '',
@@ -33,14 +35,21 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/i;
-    if (!gmailRegex.test(formData.email)) {
-      setError('Por favor usa una dirección Gmail válida (ej: usuario@gmail.com)');
+    // Validación básica: email y contraseña no vacíos y formato simple
+    const basicEmailRegex = /\S+@\S+\.\S+/;
+    if (!basicEmailRegex.test(formData.email)) {
+      setError('Por favor ingresa un correo electrónico válido');
+      return;
+    }
+    if (!formData.password) {
+      setError('Por favor ingresa la contraseña');
       return;
     }
 
     try {
       await login(formData);
+      // Si el login fue exitoso, redirigir al dashboard
+      navigate('/dashboard', { replace: true });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Ocurrió un error');
     }

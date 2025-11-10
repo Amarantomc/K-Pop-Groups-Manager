@@ -5,6 +5,7 @@ import Datatable from "../../components/datatable/Datatable"
 import { apprenticeColumns } from "../../datatableSource"
 import React from "react"
 
+// aqui va el endpoint para obtener los valores de los aprendices
 const apprenticeRows = [
   {
     id: 1,
