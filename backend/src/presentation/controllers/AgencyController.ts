@@ -11,37 +11,29 @@ import { UnitOfWork } from "../../infrastructure/PrismaUnitOfWork";
 import { AgencyRepository } from "../../infrastructure/repositories/AgencyRepository";
 import type { Request, Response } from "express";
 import { CreateAgencyDTO } from "../../application/dtos/agency/CreateAgencyDTO";
+import { inject, injectable } from "inversify";
+import { Types } from "../../infrastructure/di/Types";
 
+@injectable()
 export class AgencyController {
-	private createUseCase: CreateAgencyUseCase;
-	private getUseCase: GetAgencyUseCase;
-	private listUseCase: ListAgenciesUseCase;
-	private updateUseCase: UpdateAgencyUseCase;
-	private deleteUseCase: DeleteAgencyUseCase;
-	private findByNameUseCase: FindAgenciesByNameUseCase;
-	private findByAddressUseCase: FindAgenciesByAddressUseCase;
-	private findByFoundationUseCase: FindAgenciesByFoundationUseCase;
 
-	constructor() {
-		const prisma = new PrismaClient();
-		const unitOfWork = new UnitOfWork(prisma as any);
-		const repo = new AgencyRepository(prisma as any, unitOfWork as any);
-
-		this.createUseCase = new CreateAgencyUseCase(repo, unitOfWork);
-		this.getUseCase = new GetAgencyUseCase(repo);
-		this.listUseCase = new ListAgenciesUseCase(repo);
-		this.updateUseCase = new UpdateAgencyUseCase(repo, unitOfWork);
-		this.deleteUseCase = new DeleteAgencyUseCase(repo, unitOfWork);
-		this.findByNameUseCase = new FindAgenciesByNameUseCase(repo);
-		this.findByAddressUseCase = new FindAgenciesByAddressUseCase(repo);
-		this.findByFoundationUseCase = new FindAgenciesByFoundationUseCase(repo);
-	}
+constructor(@inject(Types.CreateAgencyUseCase)  private createAgencyUseCase: CreateAgencyUseCase,
+			@inject(Types.DeleteAgencyUseCase)  private deleteAgencyUseCase: DeleteAgencyUseCase,
+			@inject(Types.FindAgenciesByAddressUseCase)  private findAgenciesByAddressUseCase: FindAgenciesByAddressUseCase,
+			@inject(Types.FindAgenciesByFoundationUseCase)  private findAgenciesByFoundationUseCase: FindAgenciesByFoundationUseCase,
+			@inject(Types.FindAgenciesByNameUseCase)  private findAgenciesByNameUseCase: FindAgenciesByNameUseCase,
+			@inject(Types.GetAgencyUseCase)  private getAgencyUseCase: GetAgencyUseCase,
+			@inject(Types.ListAgenciesUseCase)  private listAgenciesUseCase: ListAgenciesUseCase,
+			@inject(Types.UpdateAgencyUseCase)  private updateAgencyUseCase: UpdateAgencyUseCase,) {}
+		
+			
+		
 
 	async createAgency(req: Request, res: Response) {
 		try {
 			const body = req.body;
 			const dto = CreateAgencyDTO.create(body);
-			const created = await this.createUseCase.execute(dto);
+			const created = await this.createAgencyUseCase.execute(dto);
 			res.status(201).json({ success: true, data: created });
 		} catch (error: any) {
 			res.status(400).json({ success: false, error: error.message });
@@ -51,7 +43,7 @@ export class AgencyController {
 	async getAgency(req: Request, res: Response) {
 		try {
 			const { id } = req.params;
-			const agency = await this.getUseCase.execute(id!);
+			const agency = await this.getAgencyUseCase.execute(id!);
 			res.json({ success: true, data: agency });
 		} catch (error: any) {
 			res.status(404).json({ success: false, error: error.message });
@@ -60,7 +52,7 @@ export class AgencyController {
 
 	async listAgencies(req: Request, res: Response) {
 		try {
-			const agencies = await this.listUseCase.execute();
+			const agencies = await this.listAgenciesUseCase.execute();
 			res.json({ success: true, data: agencies });
 		} catch (error: any) {
 			res.status(500).json({ success: false, error: error.message });
@@ -71,7 +63,7 @@ export class AgencyController {
 		try {
 			const { id } = req.params;
 			const payload = req.body;
-			const updated = await this.updateUseCase.execute(id!, payload);
+			const updated = await this.updateAgencyUseCase.execute(id!, payload);
 			res.json({ success: true, data: updated });
 		} catch (error: any) {
 			res.status(400).json({ success: false, error: error.message });
@@ -81,7 +73,7 @@ export class AgencyController {
 	async deleteAgency(req: Request, res: Response) {
 		try {
 			const { id } = req.params;
-			await this.deleteUseCase.execute(id!);
+			await this.deleteAgencyUseCase.execute(id!);
 			res.json({ success: true });
 		} catch (error: any) {
 			res.status(400).json({ success: false, error: error.message });
@@ -94,7 +86,7 @@ export class AgencyController {
 			if (!name || typeof name !== "string") {
 				throw new Error("Name parameter is required");
 			}
-			const agencies = await this.findByNameUseCase.execute(name);
+			const agencies = await this.findAgenciesByNameUseCase.execute(name);
 			res.json({ success: true, data: agencies });
 		} catch (error: any) {
 			res.status(400).json({ success: false, error: error.message });
@@ -107,7 +99,7 @@ export class AgencyController {
 			if (!address || typeof address !== "string") {
 				throw new Error("Address parameter is required");
 			}
-			const agencies = await this.findByAddressUseCase.execute(address);
+			const agencies = await this.findAgenciesByAddressUseCase.execute(address);
 			res.json({ success: true, data: agencies });
 		} catch (error: any) {
 			res.status(400).json({ success: false, error: error.message });
@@ -124,7 +116,7 @@ export class AgencyController {
 			if (isNaN(date.getTime())) {
 				throw new Error("Invalid date format");
 			}
-			const agencies = await this.findByFoundationUseCase.execute(date);
+			const agencies = await this.findAgenciesByFoundationUseCase.execute(date);
 			res.json({ success: true, data: agencies });
 		} catch (error: any) {
 			res.status(400).json({ success: false, error: error.message });

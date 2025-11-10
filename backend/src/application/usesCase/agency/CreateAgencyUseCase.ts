@@ -2,11 +2,15 @@ import { CreateAgencyDTO } from "../../dtos/agency/CreateAgencyDTO";
 import { AgencyResponseDTO } from "../../dtos/agency/AgencyResponseDTO";
 import type { IAgencyRepository } from "../../interfaces/repositories/IAgencyRepository";
 import type { IUnitOfWork } from "../../interfaces/IUnitOfWork";
+import { inject, injectable } from "inversify";
+import { Types } from "../../../infrastructure/di/Types";
+
+@injectable()
 
 export class CreateAgencyUseCase {
 	constructor(
-		private agencyRepository: IAgencyRepository,
-		private unitOfWork: IUnitOfWork
+		@inject(Types.IAgencyRepository) private agencyRepository: IAgencyRepository,
+		@inject(Types.IUnitOfWork) private unitOfWork: IUnitOfWork
 	) {}
 
 	async execute(command: CreateAgencyDTO): Promise<AgencyResponseDTO> {

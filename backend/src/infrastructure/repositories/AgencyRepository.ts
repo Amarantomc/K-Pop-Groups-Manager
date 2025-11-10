@@ -3,12 +3,17 @@ import { CreateAgencyDTO } from "../../application/dtos/agency/CreateAgencyDTO";
 import { AgencyResponseDTO } from "../../application/dtos/agency/AgencyResponseDTO";
 import { UnitOfWork } from "../PrismaUnitOfWork";
 import type { IAgencyRepository } from "../../application/interfaces/repositories/IAgencyRepository";
+import { inject, injectable } from "inversify";
+import { Types } from "../di/Types";
 
 // Note: Prisma model is 'Agencia' (in schema.prisma). The generated client exposes
 // `prisma.agencia`. The DB fields are named (nombre, ubicacion, fechaFundacion),
 // while our domain uses (name, address, foundation). Repository maps between them.
+
+@injectable()
 export class AgencyRepository implements IAgencyRepository {
-	constructor(private prisma: any, private unitOfWork: UnitOfWork) {}
+	constructor(@inject(Types.PrismaClient) private prisma: any, 
+	@inject(Types.IUnitOfWork) private unitOfWork: UnitOfWork) {}
 
 	private get db() {
 		return this.unitOfWork.getTransaction();
@@ -31,7 +36,7 @@ export class AgencyRepository implements IAgencyRepository {
 			data: {
 				nombre: data.name,
 				ubicacion: data.address,
-				fechaFundacion: data.foundation,
+				fechaFundacion: new Date(data.foundation),
 			},
 		});
 

@@ -19,6 +19,17 @@ import  { UpdateApprenticeUseCase } from '../../application/usesCase/apprentice/
 import { DeleteApprenticeUseCase } from '../../application/usesCase/apprentice/DeleteApprentice';
 import  { CreateApprenticeUseCase } from '../../application/usesCase/apprentice/CreateApprentice';
 import { ApprenticeController } from '../../presentation/controllers/ApprenticeController';
+import  { AgencyController } from '../../presentation/controllers/AgencyController';
+import  { CreateAgencyUseCase } from '../../application/usesCase/agency/CreateAgencyUseCase';
+import { DeleteAgencyUseCase } from '../../application/usesCase/agency/DeleteAgencyUseCase';
+import { FindAgenciesByAddressUseCase } from '../../application/usesCase/agency/FindAgenciesByAddressUseCase';
+import { FindAgenciesByFoundationUseCase } from '../../application/usesCase/agency/FindAgenciesByFoundationUseCase';
+import { FindAgenciesByNameUseCase } from '../../application/usesCase/agency/FindAgenciesByNameUseCase';
+import { GetAgencyUseCase } from '../../application/usesCase/agency/GetAgencyUseCase';
+import { ListAgenciesUseCase } from '../../application/usesCase/agency/ListAgenciesUseCase';
+import { UpdateAgencyUseCase } from '../../application/usesCase/agency/UpdateAgencyUseCase';
+import type { IAgencyRepository } from '../../application/interfaces/repositories/IAgencyRepository';
+import { AgencyRepository } from '../repositories/AgencyRepository';
 
  
 
@@ -51,6 +62,10 @@ container.bind<IUserRepository>(Types.IUserRepository)
   .to(ApprenticeRepository)
   .inSingletonScope();
 
+  container.bind<IAgencyRepository>(Types.IAgencyRepository)
+  .to(AgencyRepository)
+  .inSingletonScope();
+
 // Use Cases - User
 container.bind<CreateUserUseCase>(Types.CreateUserUseCase)
   .to(CreateUserUseCase)
@@ -78,6 +93,38 @@ container.bind<GetUsersUseCase>(Types.GetUsersUseCase)
 
    container.bind<CreateApprenticeUseCase>(Types.CreateApprenticeUseCase)
   .to(CreateApprenticeUseCase)
+  .inTransientScope();
+
+   container.bind<CreateAgencyUseCase>(Types.CreateAgencyUseCase)
+  .to(CreateAgencyUseCase)
+  .inTransientScope();
+
+  container.bind<DeleteAgencyUseCase>(Types.DeleteAgencyUseCase)
+  .to(DeleteAgencyUseCase)
+  .inTransientScope();
+
+  container.bind<FindAgenciesByAddressUseCase>(Types.FindAgenciesByAddressUseCase)
+  .to(FindAgenciesByAddressUseCase)
+  .inTransientScope();
+
+  container.bind<FindAgenciesByFoundationUseCase>(Types.FindAgenciesByFoundationUseCase)
+  .to(FindAgenciesByFoundationUseCase)
+  .inTransientScope();
+
+  container.bind<FindAgenciesByNameUseCase>(Types.FindAgenciesByNameUseCase)
+  .to(FindAgenciesByNameUseCase)
+  .inTransientScope();
+
+  container.bind<GetAgencyUseCase>(Types.GetAgencyUseCase)
+  .to(GetAgencyUseCase)
+  .inTransientScope();
+
+  container.bind<ListAgenciesUseCase>(Types.ListAgenciesUseCase)
+  .to(ListAgenciesUseCase)
+  .inTransientScope();
+
+  container.bind<UpdateAgencyUseCase>(Types.UpdateAgencyUseCase)
+  .to(UpdateAgencyUseCase)
   .inTransientScope();
 
 // container.bind<UpdateUserUseCase>(UpdateUserUseCase)
@@ -110,6 +157,10 @@ container.bind<AuthController>(Types.AuthController)
 
 container.bind<ApprenticeController>(Types.ApprenticeController)
   .to(ApprenticeController)
+  .inTransientScope();
+
+container.bind<AgencyController>(Types.AgencyController)
+  .to(AgencyController)
   .inTransientScope();
 
 export { container };
