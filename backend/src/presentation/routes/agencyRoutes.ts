@@ -1,22 +1,44 @@
 import { Router } from "express";
 import { AgencyController } from "../controllers/AgencyController";
 
-const router = Router();
-const controller = new AgencyController();
+export class AgencyRoutes {
+	private router: Router;
+	private agencyController: AgencyController;
 
-router.post("/", (req, res) => controller.createAgency(req, res));
-router.get("/", (req, res) => controller.listAgencies(req, res));
-router.get("/:id", (req, res) => controller.getAgency(req, res));
-router.put("/:id", (req, res) => controller.updateAgency(req, res));
-router.delete("/:id", (req, res) => controller.deleteAgency(req, res));
-router.get("/search/agency_name", (req, res) =>
-	controller.findAgenciesByName(req, res)
-);
-router.get("/search/agency_address", (req, res) =>
-	controller.findAgenciesByAddress(req, res)
-);
-router.get("/search/agency_foundation", (req, res) =>
-	controller.findAgenciesByFoundation(req, res)
-);
+	constructor() {
+		this.router = Router();
+		this.agencyController = new AgencyController();
+		this.setupRoutes();
+	}
 
-export default router;
+	private setupRoutes(): void {
+		this.router.post("/", (req, res) =>
+			this.agencyController.createAgency(req, res)
+		);
+		this.router.get("/", (req, res) =>
+			this.agencyController.listAgencies(req, res)
+		);
+		this.router.get("/:id", (req, res) =>
+			this.agencyController.getAgency(req, res)
+		);
+		this.router.put("/:id", (req, res) =>
+			this.agencyController.updateAgency(req, res)
+		);
+		this.router.delete("/:id", (req, res) =>
+			this.agencyController.deleteAgency(req, res)
+		);
+		this.router.get("/search/agency_name", (req, res) =>
+			this.agencyController.findAgenciesByName(req, res)
+		);
+		this.router.get("/search/agency_address", (req, res) =>
+			this.agencyController.findAgenciesByAddress(req, res)
+		);
+		this.router.get("/search/agency_foundation", (req, res) =>
+			this.agencyController.findAgenciesByFoundation(req, res)
+		);
+	}
+
+	public getRouter(): Router {
+		return this.router;
+	}
+}

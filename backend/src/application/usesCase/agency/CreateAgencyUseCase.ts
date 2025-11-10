@@ -1,4 +1,3 @@
-import { Agency } from "../../../domain/entities/Agency";
 import { CreateAgencyDTO } from "../../dtos/agency/CreateAgencyDTO";
 import { AgencyResponseDTO } from "../../dtos/agency/AgencyResponseDTO";
 import type { IAgencyRepository } from "../../interfaces/repositories/IAgencyRepository";
@@ -13,17 +12,13 @@ export class CreateAgencyUseCase {
 	async execute(command: CreateAgencyDTO): Promise<AgencyResponseDTO> {
 		try {
 			await this.unitOfWork.beginTransaction();
-			console.log("OK3");
-
 			const existingAgencies = await this.agencyRepository.findByName(
 				command.name
 			);
 			if (existingAgencies.length > 0) {
 				throw new Error("Agency with this name already exists");
 			}
-
 			const agency = await this.agencyRepository.create(command);
-			console.log("OK4");
 			await this.unitOfWork.commit();
 			return new AgencyResponseDTO(
 				agency.id,
