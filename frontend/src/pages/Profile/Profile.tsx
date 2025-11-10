@@ -5,9 +5,11 @@ import '../../styles/profile.css';
 import Form from '../../components/form/Form';
 import formFieldsByEntity from '../../formSource';
 import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Profile: React.FC = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
   // Normalizar campos (solo los que usamos: name, email, rol)
   const u: any = user as any;
   const displayName = u?.name ?? 'Usuario';
@@ -80,7 +82,7 @@ const Profile: React.FC = () => {
           {/* Mostrar datos del usuario logueado en tarjeta principal */}
           <div className="profile-container" style={{ marginTop: 12 }}>
             {user ? (
-              <div className="profile-card">
+              <div className="profile-card" style={{ position: 'relative' }}>
                 <div className="profile-top" style={{ alignItems: 'center', display: 'flex' }}>
                   {/* Avatar: si el usuario tiene avatarUrl, mostrar imagen, si no, inicial */}
                   <img
@@ -102,6 +104,39 @@ const Profile: React.FC = () => {
                         Cambiar contraseña
                       </button>
                     </div>
+                    {/* Botón rojo para eliminar perfil dentro del recuadro (esquina inferior derecha) */}
+                    <button
+                      onClick={async () => {
+                        if (!window.confirm('¿Estás seguro de eliminar tu perfil? Esta acción no se puede deshacer.')) return;
+                        const API_BASE = 'http://localhost:3000';
+                        try {
+                          const token = localStorage.getItem('token');
+                          const uid = user?.id;
+                          const res = await fetch(`${API_BASE}/api/user/${uid}`, {
+                            method: 'DELETE',
+                            headers: token ? { 'Authorization': `Bearer ${token}` } : undefined,
+                          });
+                          if (!res.ok) {
+                            const raw = await res.text().catch(() => '');
+                            let msg = 'Error al eliminar perfil';
+                            try { const j = JSON.parse(raw); msg = j?.message || j?.error || raw || msg; } catch(e) { msg = raw || msg; }
+                            alert(msg);
+                            return;
+                          }
+                          alert('Perfil eliminado correctamente');
+                          try { localStorage.removeItem('token'); localStorage.removeItem('user'); } catch(e){}
+                          if (logout && typeof logout === 'function') logout();
+                          navigate('/login', { replace: true });
+                        } catch (err) {
+                          console.error('Error eliminando perfil:', err);
+                          alert(err instanceof Error ? err.message : 'Error de red');
+                        }
+                      }}
+                      style={{ position: 'absolute', right: 12, bottom: 12, zIndex: 1100, background: '#d32f2f', color: '#fff', border: 'none', padding: '10px 14px', borderRadius: 6, cursor: 'pointer' }}
+                      className="btn-delete-profile"
+                    >
+                      Eliminar perfil
+                    </button>
                   </div>
 
                   {/* ID en la esquina superior derecha del header (alineado a la derecha dentro del flex) */}
@@ -147,6 +182,27 @@ const Profile: React.FC = () => {
                     if (data instanceof FormData) {
                       data.forEach((v, k) => { payload[k] = v; });
                     } else Object.assign(payload, data);
+
+                    // Asegurar que el payload incluya todas las claves que se usan en creación de usuario
+                    const userFields = formFieldsByEntity['user'] || [];
+                    userFields.forEach((f) => {
+                      if (!(f.name in payload)) {
+                        payload[f.name] = (u && (u[f.name] !== undefined && u[f.name] !== null)) ? u[f.name] : '';
+                      }
+                    });
+
+                    // Si el formulario incluye nuevas contraseñas, validarlas y mapear al campo 'password'
+                    if ('newPassword' in payload || 'confirmPassword' in payload) {
+                      if (payload.newPassword !== payload.confirmPassword) {
+                        alert('La nueva contraseña y la confirmación no coinciden');
+                        return;
+                      }
+                      if (payload.newPassword) {
+                        payload.password = payload.newPassword;
+                      }
+                      delete payload.newPassword;
+                      delete payload.confirmPassword;
+                    }
 
                     (async () => {
                       const API_BASE = 'http://localhost:3000';
@@ -233,6 +289,22 @@ const Profile: React.FC = () => {
                       return;
                     }
 
+                    // Construir payload completo con todas las claves de user
+                    const userFields = formFieldsByEntity['user'] || [];
+                    userFields.forEach((f) => {
+                      if (!(f.name in payload)) {
+                        payload[f.name] = (u && (u[f.name] !== undefined && u[f.name] !== null)) ? u[f.name] : '';
+                      }
+                    });
+
+                    // Añadir campos de contraseña al payload en el formato que espera el backend
+                    payload.currentPassword = payload.currentPassword || '';
+                    if (payload.newPassword) {
+                      payload.password = payload.newPassword; // mapear a 'password' si el backend lo espera
+                    }
+                    delete payload.newPassword;
+                    delete payload.confirmPassword;
+
                     (async () => {
                       const API_BASE = 'http://localhost:3000';
                       try {
@@ -240,22 +312,14 @@ const Profile: React.FC = () => {
                         const headers: Record<string, string> = { 'Content-Type': 'application/json' };
                         if (token) headers['Authorization'] = `Bearer ${token}`;
 
-                        // aqui va el endpoint
-                        // Intentar el endpoint principal y varios fallbacks comunes si el backend no expone /api/auth/change-password
-                        const bodyChange = JSON.stringify({ currentPassword: payload.currentPassword, newPassword: payload.newPassword });
-                        const tryPost = async (url: string) => fetch(url, { method: 'POST', headers, body: bodyChange });
-
+                        // Intentar endpoints: primero POST a /api/user/:id/password con payload completo,
+                        // si falla, intentar PUT a /api/user/:id con payload completo
                         const uid = user ? user.id : '';
-                        // Cambiar contraseña: el backend gestiona usuarios en /api/user/:id
-                        // Intentar POST a /api/user/:id/password (si existe), si no, enviar PUT a /api/user/:id con campos de contraseña
                         const changePassUrl = uid ? `${API_BASE}/api/user/${uid}/password` : `${API_BASE}/api/user/password`;
-                        let resPwd = await tryPost(changePassUrl).catch(() => null);
-                        if (resPwd && resPwd.ok) {
-                          // éxito
-                        } else {
-                          // intentar PUT a /api/user/:id con los campos currentPassword/newPassword
+                        let resPwd = await fetch(changePassUrl, { method: 'POST', headers, body: JSON.stringify(payload) }).catch(() => null);
+                        if (!resPwd || !resPwd.ok) {
                           const putUrl = uid ? `${API_BASE}/api/user/${uid}` : `${API_BASE}/api/user`;
-                          resPwd = await fetch(putUrl, { method: 'PUT', headers, body: JSON.stringify({ currentPassword: payload.currentPassword, newPassword: payload.newPassword }) }).catch(() => null);
+                          resPwd = await fetch(putUrl, { method: 'PUT', headers, body: JSON.stringify(payload) }).catch(() => null);
                         }
 
                         if (!resPwd || !resPwd.ok) {
@@ -283,6 +347,7 @@ const Profile: React.FC = () => {
             </div>
           )}
         </div>
+        
       </div>
     </div>
   );
