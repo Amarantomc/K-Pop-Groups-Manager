@@ -6,6 +6,7 @@ import type { IUserRepository } from "../../application/interfaces/repositories/
 import type { User } from "../../domain";
 import type { UnitOfWork } from "../PrismaUnitOfWork";
 import { Types } from "../di/Types";
+
  
 @injectable()
 export class UserRepository implements IUserRepository
@@ -41,11 +42,20 @@ export class UserRepository implements IUserRepository
         })
         return user ? UserResponseDto.toEntity(user) : null
     }
-    update(id: string, data: any): Promise<User> {
-        throw new Error("Method not implemented.");
+    async update(id: string, data: Partial<CreateUserDto>): Promise<User> {
+        const user = await this.db.user.update({
+                  where: { id: Number(id) },
+                  data,
+                });
+              
+                return UserResponseDto.toEntity(user);
     }
-    delete(id: string): Promise<void> {
-        throw new Error("Method not implemented.");
+    async delete(id: any): Promise<void> {
+        id=(Number)(id)
+        await this.db.user.delete({
+            where:{id}
+        })
+        
     }
 
     async getUsers(): Promise<User[]> {

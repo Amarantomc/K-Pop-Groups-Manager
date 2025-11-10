@@ -30,6 +30,8 @@ import { ListAgenciesUseCase } from '../../application/usesCase/agency/ListAgenc
 import { UpdateAgencyUseCase } from '../../application/usesCase/agency/UpdateAgencyUseCase';
 import type { IAgencyRepository } from '../../application/interfaces/repositories/IAgencyRepository';
 import { AgencyRepository } from '../repositories/AgencyRepository';
+import { DeleteUserUseCase } from '../../application/usesCase/user/DeleteUserUseCase';
+import { UpdateUserUseCase } from '../../application/usesCase/user/UpdateUserUseCase';
 
  
 
@@ -77,6 +79,14 @@ container.bind<GetUserUseCase>(Types.GetUserUseCase)
 
 container.bind<GetUsersUseCase>(Types.GetUsersUseCase)
   .to(GetUsersUseCase)
+  .inTransientScope();
+
+container.bind<DeleteUserUseCase>(Types.DeleteUserUseCase)
+  .to(DeleteUserUseCase)
+  .inTransientScope();
+
+container.bind<UpdateUserUseCase>(Types.UpdateUserUseCase)
+  .to(UpdateUserUseCase)
   .inTransientScope();
 
   container.bind<GetApprenticeUseCase>(Types.GetApprenticeUseCase)

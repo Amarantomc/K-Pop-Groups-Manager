@@ -7,13 +7,18 @@ import { GetUserUseCase } from '../../application/usesCase/user/GetUserUseCase';
 import { inject, injectable } from 'inversify';
 import { Types } from '../../infrastructure/di/Types';
 import type { GetUsersUseCase } from "../../application/usesCase/user/GerUsersUseCase";
+import type { DeleteUserUseCase } from "../../application/usesCase/user/DeleteUserUseCase";
+import type { UpdateUserUseCase } from "../../application/usesCase/user/UpdateUserUseCase";
+import { UserResponseDto } from "../../application/dtos/user/UserResponseDto";
 
 @injectable()
 export class UserController {
     
 constructor(@inject(Types.CreateUserUseCase)  private createUserUseCase:CreateUserUseCase,
             @inject(Types.GetUserUseCase) private getUserUseCase:GetUserUseCase,
-            @inject(Types.GetUsersUseCase) private getUsersUseCase:GetUsersUseCase){}
+            @inject(Types.GetUsersUseCase) private getUsersUseCase:GetUsersUseCase,
+            @inject(Types.DeleteUserUseCase) private deleteUserUseCase:DeleteUserUseCase,
+          @inject(Types.UpdateUserUseCase) private updateUserUseCase:UpdateUserUseCase){}
 
     
   async createUser(req: Request, res: Response) 
@@ -77,4 +82,43 @@ constructor(@inject(Types.CreateUserUseCase)  private createUserUseCase:CreateUs
       });
     }
   }
+
+    async deleteUser(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      await this.deleteUserUseCase.execute(id!);
+
+      res.json({
+        success: true,
+        message: 'User deleted successfully'
+      });
+
+    } catch (error: any) {
+      res.status(400).json({
+        success: false,
+        error: error.message
+      });
+    }
+  }
+
+    async updateUser(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const user = await this.updateUserUseCase.execute(id!,req.body)
+
+      const userResponse = UserResponseDto.fromEntity(user);
+
+      res.json({
+        success: true,
+        data: userResponse
+      });
+
+    } catch (error: any) {
+      res.status(400).json({
+        success: false,
+        error: error.message
+      });
+    }
+  }
+
 }
