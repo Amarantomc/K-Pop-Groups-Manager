@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from '../../auth/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 import Login from '../../pages/Login/Login';
 import Dashboard from '../../pages/dashboard/Dashboard';
 import Agency from '../../pages/Agency/Agency';

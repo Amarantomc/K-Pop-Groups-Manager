@@ -15,20 +15,24 @@
 .bottom {
     background-color: #fff;
     border-radius: 10px;
-    -webkit-box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.47);
-    box-shadow: 0px 2px 4px -1px rgba(201, 201, 201, 0.47);
-    padding: 10px;
-    margin: 0 0 20px 0;
+    -webkit-box-shadow: 0px 2px 6px rgba(15,23,42,0.04);
+    box-shadow: 0px 6px 20px rgba(15,23,42,0.04);
+    padding: 16px;
+    margin: 0 0 18px 0;
     display: flex;
-    font-style: oblique;
+    align-items: center;
 }
+
 h1 {
-    font-size: 28px;
-    font-weight: 700 !important;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 10px;
-    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+    text-align: left;
+}
+.hint {
+    margin: 4px 0 0;
+    color: #6b7280;
 }
 
 /* Estilos del formulario de la página Agency: fondo claro para inputs */
@@ -184,18 +188,23 @@ h1 {
 }
 
 .welcome-card {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    width: 100%;
-    justify-content: center; /* centrar título cuando no hay logo */
+    display:flex;
+    align-items:flex-start;
+    gap:14px;
+    width:100%;
+    justify-content:space-between;
+    background: transparent;
+    padding: 0;
+    border-radius: 10px;
 }
+.welcome-text{ text-align:left; }
+.welcome-text h1{ margin:0; font-size:1.25rem; color:#0f172a; }
+.welcome-text .hint{ margin:6px 0 0; font-size:0.95rem; color:#6b7280; }
 
-.welcome-logo {
-    width: 56px;
-    height: 56px;
-    object-fit: contain;
-    border-radius: 8px;
+/* Centrar y contener la tabla en una tarjeta visual agradable */
+.list-container {
+    max-width: 1100px;
+    margin: 12px auto 0;
 }
 
 .welcome-text h1 {

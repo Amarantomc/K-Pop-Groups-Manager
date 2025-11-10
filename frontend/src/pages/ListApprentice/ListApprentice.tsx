@@ -86,7 +86,9 @@ const ListAgency: React.FC = () => {
                 </div>
               </div>
             </div>
-            <Datatable columns={apprenticeColumns} rows={apprenticeRows}/>
+            <div className="list-container">
+              <Datatable columns={apprenticeColumns} rows={apprenticeRows}/>
+            </div>
             </div>
         </div>
     )

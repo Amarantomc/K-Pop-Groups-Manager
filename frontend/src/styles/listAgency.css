@@ -12,11 +12,4 @@
     flex: 1; /* ocupar el espacio restante junto a la sidebar fija */
     min-height: 100vh;
     padding: 20px;
-<<<<<<< Updated upstream
 }
-
-/* Importar estilos del header/form de Agency para que las páginas de listado compartan el mismo look */
-@import './agency.css';
-=======
-}
->>>>>>> Stashed changes
