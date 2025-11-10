@@ -80,9 +80,10 @@ export const userFields: Field[] = [
 
 // Agencia
 export const agencyFields: Field[] = [
+    // Alineado con CreateAgencyDTO del backend: name, address, foundation
     { id: 'name', name: 'name', label: 'Nombre Agencia', type: 'text', placeholder: 'Nombre de la agencia', required: true, minLength: 2, maxLength: 120 },
-    { id: 'location', name: 'location', label: 'Ubicación', type: 'text', placeholder: 'Ciudad / Dirección', maxLength: 200 },
-    { id: 'foundedAt', name: 'foundedAt', label: 'Fecha Fundación', type: 'date' },
+    { id: 'address', name: 'address', label: 'Ubicación', type: 'text', placeholder: 'Ciudad / Dirección', required: true, maxLength: 200 },
+    { id: 'foundation', name: 'foundation', label: 'Fecha Fundación', type: 'date', required: true },
 ];
 
 // Aprendiz
