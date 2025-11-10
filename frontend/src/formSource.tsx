@@ -27,8 +27,19 @@ export type Field = {
 };
 
 // Enums y utilidades para convertirlos a opciones del select
-export const APPRENTICE_STATUS = ['en_entrenamiento', 'en_proceso_seleccion', 'transferido'] as const;
+// Valores exactamente como los define el backend (enum Status)
+// Claves del enum `Status` del backend (keys). El backend valida que `status` sea una de estas claves.
+export const APPRENTICE_STATUS = ['Training', 'Process', 'Transferred'] as const;
 export type ApprenticeStatus = typeof APPRENTICE_STATUS[number];
+
+// Labels en español para mostrar en el formulario; los `value` enviados serán las claves del enum.
+const APPRENTICE_STATUS_LABELS: Record<ApprenticeStatus, string> = {
+    'Training': 'En entrenamiento',
+    'Process': 'En proceso',
+    'Transferred': 'Transferido',
+};
+
+export const APPRENTICE_STATUS_OPTIONS = (APPRENTICE_STATUS as readonly string[]).map((v) => ({ value: v, label: APPRENTICE_STATUS_LABELS[v as ApprenticeStatus] }));
 
 export const ARTIST_STATUS = ['activo', 'en_pausa', 'inactivo'] as const;
 export type ArtistStatus = typeof ARTIST_STATUS[number];
@@ -69,20 +80,20 @@ export const userFields: Field[] = [
 
 // Agencia
 export const agencyFields: Field[] = [
-    { id: 'agencyId', name: 'agencyId', label: 'ID Agencia', type: 'text' },
+    // Alineado con CreateAgencyDTO del backend: name, address, foundation
     { id: 'name', name: 'name', label: 'Nombre Agencia', type: 'text', placeholder: 'Nombre de la agencia', required: true, minLength: 2, maxLength: 120 },
-    { id: 'location', name: 'location', label: 'Ubicación', type: 'text', placeholder: 'Ciudad / Dirección', maxLength: 200 },
-    { id: 'foundedAt', name: 'foundedAt', label: 'Fecha Fundación', type: 'date' },
+    { id: 'address', name: 'address', label: 'Ubicación', type: 'text', placeholder: 'Ciudad / Dirección', required: true, maxLength: 200 },
+    { id: 'foundation', name: 'foundation', label: 'Fecha Fundación', type: 'date', required: true },
 ];
 
 // Aprendiz
 export const apprenticeFields: Field[] = [
-    { id: 'apprenticeId', name: 'apprenticeId', label: 'ID Aprendiz', type: 'text' },
-    { id: 'fullName', name: 'fullName', label: 'Nombre Completo', type: 'text', required: true },
-    { id: 'age', name: 'age', label: 'Edad', type: 'number', min: 0 },
-    { id: 'birthdate', name: 'birthdate', label: 'Fecha Nacimiento', type: 'date' },
-    { id: 'status', name: 'status', label: 'Estado Aprendiz', type: 'select', options: enumToOptions(APPRENTICE_STATUS) },
-    { id: 'trainingLevel', name: 'trainingLevel', label: 'Nivel Entrenamiento', type: 'text' },
+    // Campos alineados con CreateApprenticeDto del backend
+    { id: 'name', name: 'name', label: 'Nombre Completo', type: 'text', required: true },
+    { id: 'dateOfBirth', name: 'dateOfBirth', label: 'Fecha Nacimiento', type: 'date', required: true },
+    { id: 'age', name: 'age', label: 'Edad', type: 'number', min: 15, required: true },
+    { id: 'trainingLv', name: 'trainingLv', label: 'Nivel Entrenamiento', type: 'number', min: 0, required: true },
+    { id: 'status', name: 'status', label: 'Estado Aprendiz', type: 'select', options: APPRENTICE_STATUS_OPTIONS, required: true },
 ];
 
 // Artista

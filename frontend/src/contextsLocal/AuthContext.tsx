@@ -38,46 +38,49 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (token && userData) {
       setUser(JSON.parse(userData));
     }
-    setIsLoading(false);
+  setIsLoading(false);
   }, []);
 
   const login = async (data: LoginFormData): Promise<void> => {
     try {
       setIsLoading(true);
-  // Inicio del proceso de login
+  // login invoked
+      // Validación local para pruebas: user@gmail.com / password
+      // Aceptar las credenciales locales siempre (modo de pruebas)
+      if (data.email === 'user@gmail.com' && data.password === 'password') {
+        const fakeUser: User = { id: 'local-1', name: 'Local User', email: data.email } as User;
+        const fakeToken = 'local-dev-token';
+        localStorage.setItem('token', fakeToken);
+        localStorage.setItem('user', JSON.stringify(fakeUser));
+        setUser(fakeUser);
+        // En modo local, devolver control al llamador (Login.tsx) para que navegue
+        return;
+      }
 
-      // Llamada real al endpoint de autenticación
-      const requestBody = { email: data.email, password: data.password };
-
+      // aqui va el endpoint (comentado para pruebas locales)
+      /*
       const res = await fetch(`${API_BASE}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestBody),
+        body: JSON.stringify({ email: data.email, password: data.password }),
       });
-
-      // leer texto crudo para depuración y manejo de errores no-JSON
-      const rawText = await res.text();
-      let responseJson: any = null;
-      try {
-        responseJson = rawText ? JSON.parse(rawText) : null;
-      } catch (e) {
-        responseJson = null;
-      }
 
       if (!res.ok) {
         let errMsg = 'Credenciales inválidas';
-        if (responseJson) errMsg = responseJson?.message || responseJson?.error || errMsg;
-        else if (rawText) errMsg = rawText;
+        try {
+          const errJson = await res.json();
+          errMsg = errJson?.message || errJson?.error || errMsg;
+        } catch (e) {
+          // ignore
+        }
         throw new Error(errMsg);
       }
 
-      if (!responseJson || !responseJson.token || !responseJson.user) {
-        throw new Error('Respuesta inesperada del servidor al iniciar sesión');
-      }
-
+      const responseJson = await res.json();
       localStorage.setItem('token', responseJson.token);
       localStorage.setItem('user', JSON.stringify(responseJson.user));
       setUser(responseJson.user);
+      */
     } catch (error) {
       throw error;
     } finally {

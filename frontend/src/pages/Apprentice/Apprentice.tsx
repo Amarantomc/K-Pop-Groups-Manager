@@ -1,20 +1,11 @@
 import React from 'react';
 import Sidebar from '../../components/sidebar/Sidebar';
 import Form from '../../components/form/Form';
-import formFieldsByEntity from '../../formSource';
+import formFieldsByEntity, { APPRENTICE_STATUS, APPRENTICE_STATUS_OPTIONS } from '../../formSource';
 import "../../styles/apprentice.css";
 
 const Apprentice: React.FC = () => {
   const handleSubmit = (data: FormData | Record<string, any>) => {
-<<<<<<< Updated upstream
-    if (data instanceof FormData) {
-      const obj: Record<string, any> = {};
-      data.forEach((v, k) => { obj[k] = v; });
-      console.log('submit apprentice', obj);
-    } else {
-      console.log('submit apprentice', data);
-    }
-=======
     const API_BASE = 'http://localhost:3000';
     const payload: Record<string, any> = {};
     if (data instanceof FormData) {
@@ -23,32 +14,70 @@ const Apprentice: React.FC = () => {
 
     (async () => {
       try {
+        // Normalizaciones y validaciones client-side antes de enviar
+        if (!payload.name && payload.fullName) payload.name = payload.fullName;
+        if (!payload.dateOfBirth && payload.birthdate) payload.dateOfBirth = payload.birthdate;
+        if (!payload.trainingLv && payload.trainingLevel) payload.trainingLv = payload.trainingLevel;
+
+        if (payload.age != null) payload.age = Number(payload.age);
+        if (payload.trainingLv != null) payload.trainingLv = Number(payload.trainingLv);
+
+        // mapear label (español) o valor antiguo a la clave del enum que espera el backend
+        const statusRaw = payload.status;
+        if (statusRaw) {
+          const found = APPRENTICE_STATUS_OPTIONS.find(o => o.value === statusRaw || o.label === statusRaw || String(o.value) === String(statusRaw));
+          if (found) payload.status = found.value;
+        }
+
+        // Asegurar fecha en ISO
+        if (payload.dateOfBirth) {
+          try {
+            const d = new Date(payload.dateOfBirth);
+            if (!isNaN(d.getTime())) payload.dateOfBirth = d.toISOString();
+          } catch (e) { /* ignore */ }
+        }
+
+        // validar status contra las claves del enum
+        const allowed = (APPRENTICE_STATUS as readonly string[]).map(s => String(s));
+        if (!payload.status || !allowed.includes(String(payload.status))) {
+          console.debug('[Apprentice] status inválido o ausente:', payload.status, 'allowed:', allowed);
+          alert(`Estado inválido: "${payload.status}". Opciones válidas: ${allowed.join(', ')}`);
+          return;
+        }
+
+        if (import.meta.env.MODE === 'development') console.debug('[Apprentice] payload enviado:', payload);
+
         const token = localStorage.getItem('token');
         const headers: Record<string, string> = { 'Content-Type': 'application/json' };
         if (token) headers['Authorization'] = `Bearer ${token}`;
 
-  // aqui va el endpoint
-  const res = await fetch(`${API_BASE}/api/apprentice`, {
+        // Endpoint para crear aprendiz: POST /api/apprentice/
+        const res = await fetch(`${API_BASE}/api/apprentice/`, {
           method: 'POST',
           headers,
           body: JSON.stringify(payload),
         });
 
         if (!res.ok) {
+          // intentar leer JSON o texto crudo para dar feedback útil
           let msg = 'Error al crear aprendiz';
-          try { const j = await res.json(); msg = j?.message || j?.error || msg; } catch(e) {}
+          try {
+            const txt = await res.text();
+            try { const j = JSON.parse(txt); msg = j?.message || j?.error || txt || msg; }
+            catch { msg = txt || msg; }
+          } catch (e) {}
           alert(msg);
           return;
         }
 
-        await res.json();
+        // consumir respuesta si es JSON, pero no es obligatorio
+        await res.json().catch(() => null);
         alert('Aprendiz creado correctamente');
       } catch (err) {
         console.error('Error creando aprendiz:', err);
         alert(err instanceof Error ? err.message : 'Error de red');
       }
     })();
->>>>>>> Stashed changes
   };
 
   return (
