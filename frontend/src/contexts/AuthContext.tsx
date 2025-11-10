@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import type { ReactNode } from 'react';
-import type { User, LoginFormData, AuthResponse } from '../types/types';
+import type { User, LoginFormData } from '../types/types';
 
 const API_BASE = 'http://localhost:3000';
 
@@ -44,8 +44,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = async (data: LoginFormData): Promise<void> => {
     try {
       setIsLoading(true);
-  // aqui va el endpoint
-  const res = await fetch(`${API_BASE}/api/auth/login`, {
+      // Validación local para pruebas: user@gmail.com / password
+      // Detectar modo desarrollo (soporta Vite import.meta.env.DEV y NODE_ENV)
+      const viteEnv = (import.meta as any)?.env;
+      const nodeEnv = (globalThis as any)?.process?.env?.NODE_ENV;
+      const isDev = !!((viteEnv && viteEnv.DEV) || nodeEnv === 'development');
+
+      if (isDev && data.email === 'user@gmail.com' && data.password === 'password') {
+        const fakeUser: User = { id: 'local-1', name: 'Local User', email: data.email } as User;
+        const fakeToken = 'local-dev-token';
+        localStorage.setItem('token', fakeToken);
+        localStorage.setItem('user', JSON.stringify(fakeUser));
+        setUser(fakeUser);
+        // Log para depuración en DEV
+        try { (console as any).debug && console.debug('[AUTH DEV] Fake login ejecutado para', data.email); } catch {}
+        return;
+      }
+
+      // aqui va el endpoint (comentado para pruebas locales)
+      /*
+      const res = await fetch(`${API_BASE}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: data.email, password: data.password }),
@@ -62,10 +80,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         throw new Error(errMsg);
       }
 
-      const responseJson: AuthResponse = await res.json();
+      const responseJson = await res.json();
       localStorage.setItem('token', responseJson.token);
       localStorage.setItem('user', JSON.stringify(responseJson.user));
       setUser(responseJson.user);
+      */
     } catch (error) {
       throw error;
     } finally {
