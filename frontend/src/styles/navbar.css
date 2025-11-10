@@ -29,6 +29,21 @@
     border: 0.5px solid lightgray;
     padding: 3px;
 }
+
+/* Forzar fondo claro en la caja de búsqueda y estilo del input */
+.search{
+    background-color: #ffffff;
+    border-radius: 6px;
+}
+
+.search input{
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 6px 8px;
+    color: #333;
+    width: 180px;
+}
 .icon-nav{
     font-size: 20px;
 }

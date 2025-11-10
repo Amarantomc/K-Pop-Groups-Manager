@@ -1,0 +1,210 @@
+/* Estilos para la página Profile - diseño cuidado y moderno */
+
+.Profile-sidebar {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    /* asegurar que ocupa toda la ventana */
+    background-color: #f5f5f5;
+    /* fondo claro consistente con otras páginas */
+    align-items: stretch;
+}
+
+.Profile-navbar {
+    /* contenido principal: ocupa el espacio restante junto a la sidebar fija */
+    flex: 1;
+    min-height: 100vh;
+    /* emparejar altura con el sidebar */
+    padding: 20px;
+}
+
+
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 20px;
+}
+
+.profile-card {
+    background: linear-gradient(180deg, #ffffff, #fafcff);
+    border: 1px solid #eef2ff;
+    border-radius: 12px;
+    padding: 18px;
+    box-shadow: 0 8px 30px rgba(15, 23, 42, 0.04);
+    max-width: 980px;
+}
+
+.profile-top {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+}
+
+.profile-avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f0f6ff, #eef2ff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #374151;
+    font-size: 1.6rem;
+    border: 1px solid #e6eefc;
+}
+
+.profile-avatar-img {
+    width: 96px;
+    height: 96px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 1px solid #e6eefc;
+}
+
+.profile-meta h2 {
+    margin: 0;
+    font-size: 1.3rem;
+    color: #0f172a;
+}
+
+.profile-meta p {
+    margin: 6px 0 0;
+    color: #6b7280;
+}
+
+.profile-meta .meta-line {
+    margin: 6px 0;
+    color: #475569;
+}
+
+.profile-page-header {
+    margin: 18px 0 6px;
+}
+
+.profile-page-header h1 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #111827;
+    justify-items: center;
+    text-align: center
+}
+
+.profile-page-header .hint {
+    margin: 4px 0 0;
+    font-size: 0.9rem;
+    color: #6b7280;
+}
+
+.profile-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.profile-actions .btn {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.btn-primary {
+    background: #4f46e5;
+    color: #fff;
+}
+
+.btn-ghost {
+    background: transparent;
+    color: #374151;
+    border: 1px solid #e6e6f0;
+}
+
+.profile-details {
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 20px;
+}
+
+.detail-item {
+    background: #fff;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #f1f5f9;
+}
+
+.detail-item strong {
+    display: block;
+    color: #111827;
+    margin-bottom: 6px;
+}
+
+.detail-item span {
+    color: #475569;
+}
+
+@media (max-width:760px) {
+    .profile-top {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .profile-details {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Botones principales usados en Profile */
+.profile-button-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    max-width: 980px;
+    margin: 18px auto 0; /* centrar y separar desde arriba */
+    justify-content: flex-start;
+}
+
+.primary-btn {
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.secondary-btn {
+    background: transparent;
+    color: #374151;
+    border: 1px solid #e6e6f0;
+    padding: 9px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* Espacio superior para el formulario respecto a los botones y alineación consistente */
+.Profile-form {
+    max-width: 980px;
+    margin: 36px auto 0; /* separación superior mayor y centrado */
+}
+
+/* Header shared style (welcome-card) to match other pages */
+.welcome-card{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    width:100%;
+    justify-content:center;
+    background: #ffffff;
+    padding: 18px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+.welcome-text{ text-align:center; }
+.welcome-text h1{ margin:0; font-size:1.2rem; color:#111827; }
+.welcome-text .hint{ margin:4px 0 0; font-size:0.9rem; color:#6b7280; }

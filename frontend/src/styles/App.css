@@ -73,6 +73,23 @@ body {
   border-color: #007bff;
 }
 
+/* Remove Chrome/Edge autofill yellow background for inputs (and MUI TextField) */
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
+  box-shadow: 0 0 0px 1000px #ffffff inset !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+
+/* Specific targeting for Material-UI filled/outlined inputs */
+.MuiInputBase-input:-webkit-autofill,
+.MuiOutlinedInput-input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
+  box-shadow: 0 0 0px 1000px #ffffff inset !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+
 .submit-button {
   width: 100%;
   padding: 0.75rem;

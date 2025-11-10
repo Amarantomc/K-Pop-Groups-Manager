@@ -1,19 +1,21 @@
 import "../../styles/sidebar.css"
 import React from "react";
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import PersonIcon from '@mui/icons-material/Person';
-import PendingActionsIcon from '@mui/icons-material/PendingActions';
-import QuizIcon from '@mui/icons-material/Quiz';
-import CelebrationIcon from '@mui/icons-material/Celebration';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import HistoryIcon from '@mui/icons-material/History';
-import DescriptionIcon from '@mui/icons-material/Description';
+// import PersonIcon from '@mui/icons-material/Person';
+// import PendingActionsIcon from '@mui/icons-material/PendingActions';
+// import QuizIcon from '@mui/icons-material/Quiz';
+// import CelebrationIcon from '@mui/icons-material/Celebration';
+// import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+// import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+// import HistoryIcon from '@mui/icons-material/History';
+// import DescriptionIcon from '@mui/icons-material/Description';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import logo from "../../assets/k-pop-logo.png"
-import {useAuth} from "../../contexts/AuthContext"
+import {useAuth} from "../../auth/AuthContext"
+import { Link } from "react-router-dom";
+
 const Sidebar : React.FC = () => {
     const {logout} = useAuth();
     return (
@@ -26,15 +28,38 @@ const Sidebar : React.FC = () => {
                 <ul>
                     <p className="title">INICIO</p>
                     <li>
-                        <DashboardIcon className="icon"/>
-                        <span>Inicio</span>
+                        <Link to="/dashboard" style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <DashboardIcon className="icon"/>
+                            <span>Inicio</span>
+                        </Link>
                     </li>
                     <p className="title">AGENCIA</p>
                     <li>
-                        <PersonAddIcon className="icon"/>
-                        <span>Añadir Miembro</span>
+                        <Link to="/agency" style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <PersonAddIcon className="icon"/>
+                            <span>Añadir Agencia</span>
+                        </Link>
                     </li>
                     <li>
+                        <Link to="/listAgency" style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <PersonAddIcon className="icon"/>
+                            <span>Mostrar Agencias</span>
+                        </Link>
+                    </li>
+                    <p className="title">APRENDIZ</p>
+                    <li>
+                        <Link to="/apprentices" style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <PersonAddIcon className="icon"/>
+                            <span>Añadir Aprendiz</span>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/listApprentice" style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <PersonAddIcon className="icon"/>
+                            <span>Mostrar Aprendices</span>
+                        </Link>
+                    </li>
+                    {/* <li>
                         <PendingActionsIcon className="icon"/>
                         <span>Ver Solicitudes</span>
                     </li>
@@ -79,11 +104,19 @@ const Sidebar : React.FC = () => {
                     <li>
                         <DescriptionIcon className="icon"/>
                         <span>Solicitud Manager</span>
-                    </li>
+                    </li> */}
                     <p className="title">CUENTA</p>
                     <li>
-                        <AccountCircleIcon className="icon"/>
-                        <span>Perfil</span>
+                        <Link to="/profile" style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <AccountCircleIcon className="icon"/>
+                            <span>Perfil</span>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/listUsers" style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <AccountCircleIcon className="icon"/>
+                            <span>Usuarios Registrados</span>
+                        </Link>
                     </li>
                     <li onClick={logout}>
                         <LogoutIcon className="icon"/>

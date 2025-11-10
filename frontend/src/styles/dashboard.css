@@ -1,6 +1,58 @@
 .dashboard-sidebar {
     display: flex;
+    width: 100%;
+    min-height: 100vh; /* asegurar altura completa y emparejar con sidebar */
+    background-color: #f5f5f5; /* fondo claro para cubrir el fondo global oscuro */
+    align-items: stretch;
 }
 .dashboard-navbar{
-    flex : 6;
+    flex: 6;
+    min-height: 100vh; /* emparejar altura con el sidebar */
+    padding: 20px;
 }
+
+/* Contenido de la dashboard */
+.dashboard-content{
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.welcome-card{
+    display: flex;
+    justify-content: flex-start; /* logo a la izquierda, texto a la derecha */
+    gap: 12px;
+    width: 100%;
+    background: #ffffff;
+    padding: 18px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    
+}
+.welcome-logo{
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: linear-gradient(180deg,#fff,#f5f5f5);
+    padding: 8px;
+}
+.welcome-text{ text-align: left; display:flex; flex-direction:column; justify-content:center; }
+.welcome-text h2{ margin: 0 0 6px 0; color: #222; }
+.welcome-text p{ margin: 0; color: #555; }
+
+.quick-stats{
+    display: flex;
+    gap: 12px;
+}
+.stat{
+    background: #fff;
+    padding: 12px 16px;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    min-width: 120px;
+    text-align: center;
+}
+.stat-value{ font-size: 20px; font-weight: 700; color: #0b5cff; }
+.stat-label{ font-size: 12px; color: #666; margin-top: 6px; }

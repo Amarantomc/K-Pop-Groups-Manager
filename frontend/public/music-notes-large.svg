@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <defs>
+    <style>
+      .note1 { fill: #ff5fa6; opacity: 0.18; }
+      .note2 { fill: #5fa8ff; opacity: 0.16; }
+      .note3 { fill: #ffd36f; opacity: 0.14; }
+      .shadow { fill: rgba(0,0,0,0.02); }
+    </style>
+  </defs>
+  <rect width="100%" height="100%" fill="#e8f7ff" />
+
+  <!-- Randomized musical notes layout (manually placed for pattern variation) -->
+  <g transform="translate(40,60)">
+    <text x="0" y="0" font-size="64" class="note1" transform="rotate(-10 0 0)">♪</text>
+  </g>
+  <g transform="translate(300,120)">
+    <text x="0" y="0" font-size="88" class="note2" transform="rotate(8 0 0)">♩</text>
+  </g>
+  <g transform="translate(520,50)">
+    <text x="0" y="0" font-size="48" class="note3" transform="rotate(-25 0 0)">♬</text>
+  </g>
+  <g transform="translate(900,220)">
+    <text x="0" y="0" font-size="72" class="note1" transform="rotate(12 0 0)">♪</text>
+  </g>
+  <g transform="translate(110,360)">
+    <text x="0" y="0" font-size="56" class="note2" transform="rotate(-6 0 0)">♬</text>
+  </g>
+  <g transform="translate(400,320)">
+    <text x="0" y="0" font-size="48" class="note1" transform="rotate(18 0 0)">♪</text>
+  </g>
+  <g transform="translate(700,420)">
+    <text x="0" y="0" font-size="96" class="note2" transform="rotate(-12 0 0)">♩</text>
+  </g>
+  <g transform="translate(980,520)">
+    <text x="0" y="0" font-size="40" class="note3" transform="rotate(20 0 0)">♪</text>
+  </g>
+  <g transform="translate(200,600)">
+    <text x="0" y="0" font-size="60" class="note1" transform="rotate(-8 0 0)">♬</text>
+  </g>
+  <g transform="translate(520,560)">
+    <text x="0" y="0" font-size="44" class="note2" transform="rotate(6 0 0)">♪</text>
+  </g>
+  <g transform="translate(840,80)">
+    <text x="0" y="0" font-size="52" class="note3" transform="rotate(-18 0 0)">♬</text>
+  </g>
+
+  <!-- Smaller accents -->
+  <circle cx="60" cy="140" r="3" class="note1" />
+  <circle cx="480" cy="200" r="2.5" class="note2" />
+  <circle cx="760" cy="100" r="2" class="note3" />
+  <circle cx="1000" cy="300" r="2.5" class="note1" />
+  <circle cx="300" cy="460" r="2" class="note2" />
+  <circle cx="640" cy="700" r="2" class="note3" />
+
+  <!-- Subtle decorative lines -->
+  <path d="M30 200 Q200 150 380 210" stroke="#ff5fa6" stroke-opacity="0.06" fill="none" stroke-width="2" />
+  <path d="M500 50 Q680 100 900 60" stroke="#5fa8ff" stroke-opacity="0.05" fill="none" stroke-width="2" />
+</svg>

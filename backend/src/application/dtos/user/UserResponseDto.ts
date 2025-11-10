@@ -1,4 +1,4 @@
-import type { Prisma } from "@prisma/client";
+
 import { User } from "../../../domain";
 
 export class UserResponseDto {
@@ -15,17 +15,18 @@ export class UserResponseDto {
       user.id,
       user.email,
       user.name,
-      user.role
+      user.rol
       
     );
   }
 
   static toEntity(user:any):User {
-    return new User({ id:user.id,
+    return new User({ 
+      id:user.id,
       name:user.name,
       email: user.email,
       password:user.password,
-      rol:user.role,}
+      rol:user.role.toString(),}
      
     )
   }
