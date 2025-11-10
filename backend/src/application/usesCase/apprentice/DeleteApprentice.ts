@@ -1,7 +1,12 @@
+import { inject, injectable } from "inversify";
 import type { IApprenticeRepository } from "../../interfaces/repositories/IApprenticeRepository";
+import { Types } from "../../../infrastructure/di/Types";
+import type { IUnitOfWork } from "../../interfaces/IUnitOfWork";
 
+@injectable()
 export class DeleteApprenticeUseCase {
-  constructor(private apprenticeRepository: IApprenticeRepository) {}
+  constructor(@inject(Types.IApprenticeRepository) private apprenticeRepository: IApprenticeRepository,
+                @inject(Types.IUnitOfWork)  private unitOfWork: IUnitOfWork) {}
 
   async execute(apprenticeId: string): Promise<void> {
     const apprentice = await this.apprenticeRepository.findById(apprenticeId);

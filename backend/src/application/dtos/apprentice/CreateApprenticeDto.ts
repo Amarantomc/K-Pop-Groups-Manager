@@ -15,7 +15,7 @@ export class CreateApprenticeDto{
         {
             throw new Error('Missing required fields');
         }
-        if (!( body.rol in Status))
+        if (!( body.status in Status))
         {
             throw new Error('Invalid Status');
         }

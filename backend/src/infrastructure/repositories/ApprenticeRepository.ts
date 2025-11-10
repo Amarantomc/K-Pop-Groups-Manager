@@ -5,13 +5,16 @@ import type { IApprenticeRepository } from "../../application/interfaces/reposit
 import { Apprentice } from "../../domain";
 import type { UnitOfWork } from "../PrismaUnitOfWork";
 import { Status } from "../../domain/enums/ApprenticeStatus";
+import { inject, injectable } from "inversify";
+import { Types } from "../di/Types";
  
 
+@injectable()
 export class ApprenticeRepository implements IApprenticeRepository
 {   
     constructor(
-    private prisma: any,
-    private unitOfWork: UnitOfWork
+    @inject(Types.PrismaClient) private prisma: any,
+    @inject(Types.IUnitOfWork) private unitOfWork: UnitOfWork
   ) {}
 
      private get db() {
@@ -21,36 +24,37 @@ export class ApprenticeRepository implements IApprenticeRepository
    async create(data: CreateApprenticeDto): Promise<Apprentice> {
          
          
-
-        const apprentice= await this.db.apprentice.create({
+        
+        const apprentice= await this.db.Aprendiz.create({
             data:{
-                name:data.name,
-                dateOfBirth:data.dateOfBirth,
-                age:data.age,
-                trainingLv:data.trainingLv,
-                status:data.status              
+                nombreCompleto:data.name,
+                fechaNacimiento:new Date(data.dateOfBirth),
+                edad:data.age,
+                nivelEntrenamiento:data.trainingLv,
+                estadoAprendiz:data.status              
             }
         })
+        
         
         return ApprenticeResponseDto.toEntity(apprentice)
     }
     async findById(id: any): Promise<Apprentice | null> {
          id=(Number)(id)
-        const apprentice=await this.db.apprentice.findUnique({
+        const apprentice=await this.db.Aprendiz.findUnique({
            where:{id}
         })
         return apprentice ? ApprenticeResponseDto.toEntity(apprentice) : null
     }
 
     async update(id: string, data: Partial<CreateApprenticeDto>): Promise<Apprentice> {
-        const apprentice = await this.db.apprentice.update({
+        const apprentice = await this.db.Aprendiz.update({
           where: { id: Number(id) },
           data: {
-            name: data.name,
-            dateOfBirth: data.dateOfBirth,
-            age: data.age,
-            trainingLv: data.trainingLv,
-            status: data.status,
+            nombreCompleto:data.name,
+            fechaNacimiento:data.dateOfBirth,
+            edad:data.age,
+            nivelEntrenamiento:data.trainingLv,
+            estadoAprendiz:data.status
           },
         });
       
@@ -58,7 +62,7 @@ export class ApprenticeRepository implements IApprenticeRepository
       }
    async delete(id: string): Promise<void> {
     try {
-      await this.db.apprentice.delete({
+      await this.db.Aprendiz.delete({
         where: { id: Number(id) },
       });
     } catch (error) {
