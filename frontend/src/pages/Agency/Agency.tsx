@@ -9,16 +9,6 @@ import formFieldsByEntity from '../../formSource';
 
 const Agency : React.FC = () =>{
   const handleSubmit = (data: FormData | Record<string, any>) => {
-<<<<<<< Updated upstream
-    // Por ahora sólo mostramos en consola; más adelante se conectará a la API
-    if (data instanceof FormData) {
-      const obj: Record<string, any> = {};
-      data.forEach((v, k) => { obj[k] = v; });
-      console.log('submit agency', obj);
-    } else {
-      console.log('submit agency', data);
-    }
-=======
     // Enviar al backend
     const API_BASE = 'http://localhost:3000';
     const payload: Record<string, any> = {};
@@ -32,28 +22,34 @@ const Agency : React.FC = () =>{
         const headers: Record<string, string> = { 'Content-Type': 'application/json' };
         if (token) headers['Authorization'] = `Bearer ${token}`;
 
-                        // aqui va el endpoint
-                        const res = await fetch(`${API_BASE}/api/agency`, {
+                        // Endpoint para crear agencia: POST /api/agency/
+                        // Usamos la ruta con barra final para coherencia con el resto del código
+                        const res = await fetch(`${API_BASE}/api/agency/`, {
           method: 'POST',
           headers,
           body: JSON.stringify(payload),
         });
 
         if (!res.ok) {
+          // intentar leer JSON o texto crudo para dar feedback útil
           let msg = 'Error al crear agencia';
-          try { const j = await res.json(); msg = j?.message || j?.error || msg; } catch(e) {}
+          try {
+            const txt = await res.text();
+            try { const j = JSON.parse(txt); msg = j?.message || j?.error || txt || msg; }
+            catch { msg = txt || msg; }
+          } catch (e) {}
           alert(msg);
           return;
         }
 
-        await res.json();
+        // consumir respuesta si es JSON, pero no es obligatorio
+        await res.json().catch(() => null);
         alert('Agencia creada correctamente');
       } catch (err) {
         console.error('Error creando agencia:', err);
         alert(err instanceof Error ? err.message : 'Error de red');
       }
     })();
->>>>>>> Stashed changes
   };
 
   return (

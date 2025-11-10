@@ -4,10 +4,14 @@ import Sidebar from '../../components/sidebar/Sidebar';
 import '../../styles/profile.css';
 import Form from '../../components/form/Form';
 import formFieldsByEntity from '../../formSource';
-import { useAuth } from '../../auth/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 const Profile: React.FC = () => {
   const { user } = useAuth();
+  // Normalizar campos (solo los que usamos: name, email, rol)
+  const u: any = user as any;
+  const displayName = u?.name ?? 'Usuario';
+  const displayRole = u?.rol ?? u?.role ?? '-';
   const [showUserForm, setShowUserForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [showPasswordForm, setShowPasswordForm] = useState(false);
@@ -22,11 +26,15 @@ const Profile: React.FC = () => {
       Object.assign(payload, data);
     }
 
-<<<<<<< Updated upstream
-=======
     (async () => {
       try {
   // aqui va el endpoint
+  try { console.log('Creando usuario - payload:', payload); } catch(e) {}
+
+        // Compatibilidad: si backend espera 'name' en lugar de 'username', rellenarlo desde username
+        if (!payload.name && payload.username) {
+          payload.name = payload.username;
+        }
   const res = await fetch(`${API_BASE}/api/user/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -34,13 +42,18 @@ const Profile: React.FC = () => {
         });
 
         if (!res.ok) {
+          // intentar leer JSON o texto crudo para dar feedback útil
           let msg = 'Error al crear usuario';
-          try { const j = await res.json(); msg = j?.message || j?.error || msg; } catch(e) {}
+          try {
+            const txt = await res.text();
+            try { const j = JSON.parse(txt); msg = j?.message || j?.error || txt || msg; }
+            catch { msg = txt || msg; }
+          } catch(e) {}
           alert(msg);
           return;
         }
 
-  await res.json();
+  await res.json().catch(() => null);
   alert('Usuario creado correctamente');
         setShowUserForm(false);
       } catch (err) {
@@ -50,7 +63,6 @@ const Profile: React.FC = () => {
     })();
   };
 
->>>>>>> Stashed changes
   return (
     <div className="Profile-sidebar">
       <Sidebar />
@@ -69,22 +81,19 @@ const Profile: React.FC = () => {
           <div className="profile-container" style={{ marginTop: 12 }}>
             {user ? (
               <div className="profile-card">
-                <div className="profile-top">
+                <div className="profile-top" style={{ alignItems: 'center', display: 'flex' }}>
                   {/* Avatar: si el usuario tiene avatarUrl, mostrar imagen, si no, inicial */}
-                  {/* Mostrar siempre una imagen: la del usuario si existe, o el placeholder */}
                   <img
                     src={user.avatarUrl ?? '/avatar-placeholder.svg'}
                     alt={user.name ?? 'Avatar'}
                     className="profile-avatar-img"
                   />
 
+                  {/* Meta principal: nombre, email y rol */}
                   <div className="profile-meta">
-                    <h2>{user.name ?? 'Usuario'}</h2>
-                    <p className="meta-line"><strong>Email:</strong> {user.email ?? '-'}</p>
-                    <p className="meta-line"><strong>Phone:</strong> {user.phone ?? '-'}</p>
-                    <p className="meta-line"><strong>Address:</strong> {user.address ?? '-'}</p>
-                    <p className="meta-line"><strong>Country:</strong> {user.country ?? '-'}</p>
-
+                    <h2>{displayName}</h2>
+                    <p className="meta-line"><strong>Email:</strong> {u?.email ?? '-'}</p>
+                    <p className="meta-line"><strong>Rol:</strong> {displayRole}</p>
                     <div className="profile-actions">
                       <button className="btn btn-primary" onClick={() => { setShowEditForm(true); setShowPasswordForm(false); setShowUserForm(false); }}>
                         Editar perfil
@@ -94,17 +103,9 @@ const Profile: React.FC = () => {
                       </button>
                     </div>
                   </div>
-                </div>
 
-                <div className="profile-details">
-                  <div className="detail-item">
-                    <strong>ID</strong>
-                    <span>{user.id ?? '-'}</span>
-                  </div>
-                  <div className="detail-item">
-                    <strong>Verificado</strong>
-                    <span>{user.isVerified ? 'Sí' : 'No'}</span>
-                  </div>
+                  {/* ID en la esquina superior derecha del header (alineado a la derecha dentro del flex) */}
+                  <div className="profile-id-top">{user.id ?? '-'}</div>
                 </div>
               </div>
             ) : (
@@ -137,7 +138,8 @@ const Profile: React.FC = () => {
                   fields={formFieldsByEntity['user'].filter(f => f.name !== 'password')}
                   entity="Usuario"
                   mode="edit"
-                  initialValues={{ username: user.name, email: user.email }}
+                  // El formulario espera el campo 'name' (no 'username') y 'rol' para el select
+                  initialValues={{ name: u?.name, email: u?.email, rol: u?.rol ?? u?.role ?? '' }}
                   submitLabel="Actualizar perfil"
                   onSubmit={(data) => {
                     // Enviar actualización del perfil al backend
@@ -150,6 +152,10 @@ const Profile: React.FC = () => {
                       const API_BASE = 'http://localhost:3000';
                       try {
                         const token = localStorage.getItem('token');
+                        if (!token) {
+                          alert('No autenticado. Por favor inicia sesión de nuevo.');
+                          return;
+                        }
                         const headers: Record<string, string> = {};
                         let body: any;
                         if (data instanceof FormData) {
@@ -162,15 +168,25 @@ const Profile: React.FC = () => {
                         if (token) headers['Authorization'] = `Bearer ${token}`;
 
                         // aqui va el endpoint
-                        const res = await fetch(`${API_BASE}/api/user/${user.id}`, {
-                          method: 'PATCH',
+                        // Intentar PATCH; si el servidor no soporta PATCH, probar PUT y varias rutas alternativas (con y sin id)
+                        // Usamos directamente PUT a la ruta principal; la función tryEndpoints se elimina porque no se utiliza.
+                        
+                        // Según tu backend: actualizar usuario en PUT /api/user/:id
+                        const primaryUrl = `${API_BASE}/api/user/${user.id}`;
+                        const res = await fetch(primaryUrl, {
+                          method: 'PUT',
                           headers: Object.keys(headers).length ? headers : undefined,
                           body,
                         });
 
                         if (!res.ok) {
+                          const raw = await res.text().catch(() => '');
+                          if (import.meta.env.MODE === 'development') {
+                            // eslint-disable-next-line no-console
+                            console.debug('[Profile] PUT /api/user/:', res.status, res.statusText, raw);
+                          }
                           let msg = 'Error al actualizar perfil';
-                          try { const j = await res.json(); msg = j?.message || j?.error || msg; } catch(e) {}
+                          try { const j = JSON.parse(raw); msg = j?.message || j?.error || raw || msg; } catch(e) { msg = raw || msg; }
                           alert(msg);
                           return;
                         }
@@ -225,15 +241,31 @@ const Profile: React.FC = () => {
                         if (token) headers['Authorization'] = `Bearer ${token}`;
 
                         // aqui va el endpoint
-                        const res = await fetch(`${API_BASE}/api/auth/change-password`, {
-                          method: 'POST',
-                          headers,
-                          body: JSON.stringify({ currentPassword: payload.currentPassword, newPassword: payload.newPassword }),
-                        });
+                        // Intentar el endpoint principal y varios fallbacks comunes si el backend no expone /api/auth/change-password
+                        const bodyChange = JSON.stringify({ currentPassword: payload.currentPassword, newPassword: payload.newPassword });
+                        const tryPost = async (url: string) => fetch(url, { method: 'POST', headers, body: bodyChange });
 
-                        if (!res.ok) {
+                        const uid = user ? user.id : '';
+                        // Cambiar contraseña: el backend gestiona usuarios en /api/user/:id
+                        // Intentar POST a /api/user/:id/password (si existe), si no, enviar PUT a /api/user/:id con campos de contraseña
+                        const changePassUrl = uid ? `${API_BASE}/api/user/${uid}/password` : `${API_BASE}/api/user/password`;
+                        let resPwd = await tryPost(changePassUrl).catch(() => null);
+                        if (resPwd && resPwd.ok) {
+                          // éxito
+                        } else {
+                          // intentar PUT a /api/user/:id con los campos currentPassword/newPassword
+                          const putUrl = uid ? `${API_BASE}/api/user/${uid}` : `${API_BASE}/api/user`;
+                          resPwd = await fetch(putUrl, { method: 'PUT', headers, body: JSON.stringify({ currentPassword: payload.currentPassword, newPassword: payload.newPassword }) }).catch(() => null);
+                        }
+
+                        if (!resPwd || !resPwd.ok) {
+                          const raw = await (resPwd ? resPwd.text().catch(() => '') : Promise.resolve(''));
+                          if (import.meta.env.MODE === 'development') {
+                            // eslint-disable-next-line no-console
+                            console.debug('[Profile] change-password fallo (final):', resPwd?.status, resPwd?.statusText, raw);
+                          }
                           let msg = 'Error al cambiar contraseña';
-                          try { const j = await res.json(); msg = j?.message || j?.error || msg; } catch(e) {}
+                          try { const j = JSON.parse(raw); msg = j?.message || j?.error || raw || msg; } catch(e) { msg = raw || msg; }
                           alert(msg);
                           return;
                         }

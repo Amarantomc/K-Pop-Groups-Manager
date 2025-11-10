@@ -1,5 +1,6 @@
 // Ubicación: src/types/index.ts
 export interface User {
+  rol: string;
   id: string;
   email: string;
   name: string;

@@ -9,3 +9,24 @@ La otra url de usuarios es
 /api/user/
 Crea un usuario
 /api/user/id busca usuario x id
+
+
+aprendices
+
+/apprentice
+/apprentice/ para crear aprendiz
+/apprentice/:id para sacar aprendiz x id
+/apprentice/:id pero put es para update aprendiz x id
+/apprentice/:id pero delete es para delete aprendiz x id
+
+Agencia
+
+/agency es la principal
+/agency/ para crear agencia post
+/agency/ para listar agencias get
+/agency/id para getAgencia x id
+/agency/id para update put
+/agency/id para delte agencia delete
+/agency/search/agency_name para buscar x nombre
+/agency/search/agency_address por direccion
+/agency/search/agency_foundation por fundation
