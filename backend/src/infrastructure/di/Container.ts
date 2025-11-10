@@ -11,7 +11,7 @@ import  { GetUserUseCase } from '../../application/usesCase/user/GetUserUseCase'
 import  { UserController } from '../../presentation/controllers/UserController';
 import { LoginUserUseCase } from '../../application/usesCase/user/LoginUserUseCase';
 import  { AuthController } from '../../presentation/controllers/AuthController';
-import  { GetUsersUseCase } from '../../application/usesCase/user/GerUsersUseCase';
+import  { GetUsersUseCase } from '../../application/usesCase/user/GetUsersUseCase';
 import  { GetApprenticeUseCase } from '../../application/usesCase/apprentice/GetApprenticeUseCase';
 import type { IApprenticeRepository } from '../../application/interfaces/repositories/IApprenticeRepository';
 import { ApprenticeRepository } from '../repositories/ApprenticeRepository';
