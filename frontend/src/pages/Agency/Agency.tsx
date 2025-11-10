@@ -18,13 +18,31 @@ const Agency : React.FC = () =>{
 
     (async () => {
       try {
+        // Normalizaciones para coincidir con CreateAgencyDTO: name, address, foundation
+        if (!payload.address && payload.location) payload.address = payload.location;
+        if (!payload.foundation && payload.foundedAt) payload.foundation = payload.foundedAt;
+
+        // Validación cliente mínima
+        if (!payload.name || !payload.address || !payload.foundation) {
+          alert('Faltan campos requeridos: name, address o foundation');
+          return;
+        }
+
+        // Asegurar fecha ISO para foundation
+        try {
+          const d = new Date(payload.foundation);
+          if (!isNaN(d.getTime())) payload.foundation = d.toISOString();
+        } catch (e) { /* ignore */ }
+
         const token = localStorage.getItem('token');
         const headers: Record<string, string> = { 'Content-Type': 'application/json' };
         if (token) headers['Authorization'] = `Bearer ${token}`;
 
-                        // Endpoint para crear agencia: POST /api/agency/
-                        // Usamos la ruta con barra final para coherencia con el resto del código
-                        const res = await fetch(`${API_BASE}/api/agency/`, {
+        const url = `${API_BASE}/api/agency/`;
+        if (import.meta.env.MODE === 'development') console.debug('[Agency] POST', url, 'payload:', payload);
+
+        // Endpoint para crear agencia: POST /api/agency/
+        const res = await fetch(url, {
           method: 'POST',
           headers,
           body: JSON.stringify(payload),
