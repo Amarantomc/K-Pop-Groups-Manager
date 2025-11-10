@@ -1,5 +1,7 @@
 import  { Router } from "express";
-import  { UserController } from "../../presentation/controllers/UserController";
+import  { UserController } from "../controllers/UserController";
+import { container } from "../../infrastructure/di/Container";
+import { Types } from "../../infrastructure/di/Types";
  
 
 export class UserRoutes {
@@ -9,13 +11,16 @@ export class UserRoutes {
 
   constructor() {
     this.router = Router();
-    this.userController = new UserController();
+    this.userController =container.get<UserController>(Types.UserController)
     this.setupRoutes();
   }
 
   private setupRoutes(): void {
     this.router.post('/', (req, res) => this.userController.createUser(req, res))
+    this.router.get('/',(req,res)=>this.userController.getUsers(req,res))
     this.router.get('/:id',(req,res)=>this.userController.getUser(req,res))
+    
+
    
   }
 

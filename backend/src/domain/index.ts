@@ -1,3 +1,4 @@
 import User from "./entities/user"
+import Apprentice from "./entities/Apprentice"
 
-export {User}
+export {User,Apprentice}

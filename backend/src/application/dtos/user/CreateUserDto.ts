@@ -5,12 +5,12 @@ export class CreateUserDto {
     constructor(
     public readonly email: string,
     public readonly name: string,
-    public readonly password: string,
+    private password: string,
     public readonly rol: string
 
    ) {}
 
-  static create(body: any): CreateUserDto {
+  static Create(body: any): CreateUserDto {
     
     if (!body.email || !body.name || !body.password || !body.rol) {
       throw new Error('Missing required fields');
@@ -24,6 +24,17 @@ export class CreateUserDto {
     
     return new CreateUserDto(body.email, body.name, body.password,body.rol);
   }
+   
+   public SetHashedPassword(hash:any) 
+   {
+     this.password=hash
+   }
+   
+   public GetPassword()  
+   {
+    return this.password
+   }
+   
 
   
 }

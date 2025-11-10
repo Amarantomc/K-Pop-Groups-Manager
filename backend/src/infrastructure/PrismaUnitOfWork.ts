@@ -1,10 +1,13 @@
 import type { PrismaClient } from '../generated/prisma';
 import type { IUnitOfWork } from "../application/interfaces/IUnitOfWork";
+import { inject, injectable } from 'inversify';
+import { Types } from './di/Types';
 
+@injectable()
 export class UnitOfWork implements IUnitOfWork {
   private transaction: any = null;
 
-  constructor(private prisma: PrismaClient) {}
+  constructor(@inject(Types.PrismaClient) private prisma: PrismaClient) {}
 
   async beginTransaction(): Promise<void> {
     if (this.transaction) {
@@ -16,7 +19,7 @@ export class UnitOfWork implements IUnitOfWork {
     // Iniciar transacción real de Prisma
     await this.prisma.$executeRaw`BEGIN`;
     
-    console.log('✅ Transaction started');
+     
 
   }
 
