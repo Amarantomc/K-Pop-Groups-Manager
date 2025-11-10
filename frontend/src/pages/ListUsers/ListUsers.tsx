@@ -4,61 +4,57 @@ import Sidebar from "../../components/sidebar/Sidebar"
 import Datatable from "../../components/datatable/Datatable"
 import { userColumns } from "../../datatableSource"
 import React from "react"
-
-  // aqui va el endpoint para obtener los valores de los usuarios
-  const userRows = [
-  {
-    id: 1,
-    username: "admin01",
-    email: "admin@kpopmanager.com",
-    password: "********",
-    role: "Administrador",
-  },
-  {
-    id: 2,
-    username: "jungkook",
-    email: "jk@bighit.com",
-    password: "********",
-    role: "Entrenador",
-  },
-  {
-    id: 3,
-    username: "rosie_p",
-    email: "rosie@ygent.com",
-    password: "********",
-    role: "Aprendiz",
-  },
-  {
-    id: 4,
-    username: "karina_y",
-    email: "karina@sm.com",
-    password: "********",
-    role: "Aprendiz",
-  },
-  {
-    id: 5,
-    username: "lisa_m",
-    email: "lisa@ygent.com",
-    password: "********",
-    role: "Entrenador",
-  },
-  {
-    id: 6,
-    username: "hybe_admin",
-    email: "hybe@hybe.com",
-    password: "********",
-    role: "Administrador",
-  },
-  {
-    id: 7,
-    username: "staff01",
-    email: "staff@kpopmanager.com",
-    password: "********",
-    role: "Soporte",
-  },
-];
+import { useEffect , useState } from "react"
 
 const ListUsers: React.FC = () => {
+
+    const [userRows, setUserRows] = useState<any[]>([])
+
+    useEffect(
+            () => {
+                const fetchUsers = async () => {
+                    try{
+                        const response = await fetch("http://localhost:3000/api/user")
+                        if(!response.ok){
+                            throw new Error("Error al obtener los usuarios")
+                        }
+                        const data = await response.json()
+                        console.log(data)
+                        const formattedData = data.data.map((user : any , index : number) => ({
+                            id : user.id?? index,
+                            username : user.name,
+                            email : user.email,
+                        }))
+                        setUserRows(formattedData)
+                    }
+                    catch(error){
+                        console.error(error)
+                    }
+                }
+                fetchUsers()
+            },[]
+        )
+
+            const handleDelete = async (id: number) => {
+    try {
+      const confirmDelete = window.confirm("¿Estás seguro de eliminar esta agencia?");
+      if (!confirmDelete) return;
+
+      const response = await fetch(`http://localhost:3000/api/user/${id}`, {
+        method: "DELETE",
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        setUserRows((prev) => prev.filter((user) => user.id !== id));
+      } else {
+        alert("Error al eliminar el usuario");
+      }
+    } catch (error) {
+      console.error("Error al eliminar:", error);
+    }
+  };
+
     return (
         <div className="listUsersSideBar">
             <Sidebar/>
@@ -72,7 +68,7 @@ const ListUsers: React.FC = () => {
                 </div>
               </div>
             </div>
-            <Datatable columns={userColumns} rows={userRows}/>
+            <Datatable columns={userColumns} rows={userRows} onDelete={handleDelete} showEditButton={false}/>
             </div>
         </div>
     )
