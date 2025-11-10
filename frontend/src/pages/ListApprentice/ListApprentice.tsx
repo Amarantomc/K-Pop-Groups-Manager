@@ -4,75 +4,79 @@ import Sidebar from "../../components/sidebar/Sidebar"
 import Datatable from "../../components/datatable/Datatable"
 import { apprenticeColumns } from "../../datatableSource"
 import React from "react"
+import { useEffect , useState  } from "react"
 
-// aqui va el endpoint para obtener los valores de los aprendices
-const apprenticeRows = [
-  {
-    id: 1,
-    fullname: "Jimin Park",
-    age: 23,
-    birthday: "2002-10-13",
-    agencyName: "BigHit Entertainment",
-    status: "Activo",
-    trainingLevel: "Avanzado",
-  },
-  {
-    id: 2,
-    fullname: "Lisa Manoban",
-    age: 25,
-    birthday: "2000-03-27",
-    agencyName: "YG Entertainment",
-    status: "Activo",
-    trainingLevel: "Experto",
-  },
-  {
-    id: 3,
-    fullname: "Taehyung Kim",
-    age: 24,
-    birthday: "2001-12-30",
-    agencyName: "BigHit Entertainment",
-    status: "En descanso",
-    trainingLevel: "Intermedio",
-  },
-  {
-    id: 4,
-    fullname: "Rosé Park",
-    age: 26,
-    birthday: "1999-02-11",
-    agencyName: "YG Entertainment",
-    status: "Activo",
-    trainingLevel: "Avanzado",
-  },
-  {
-    id: 5,
-    fullname: "Haechan Lee",
-    age: 21,
-    birthday: "2004-06-06",
-    agencyName: "SM Entertainment",
-    status: "En entrenamiento",
-    trainingLevel: "Básico",
-  },
-  {
-    id: 6,
-    fullname: "Karina Yoo",
-    age: 22,
-    birthday: "2003-04-11",
-    agencyName: "SM Entertainment",
-    status: "Activo",
-    trainingLevel: "Intermedio",
-  },
-  {
-    id: 7,
-    fullname: "Sakura Miyawaki",
-    age: 27,
-    birthday: "1998-03-19",
-    agencyName: "HYBE Labels",
-    status: "Activo",
-    trainingLevel: "Experto",
-  },
-];
 
 const ListAgency: React.FC = () => {
+
+     const [apprenticeRows, setApprenticeRows] = useState<any[]>([])
+    
+        useEffect(
+                () => {
+                    const fetchApprentices = async () => {
+                        try{
+                            const response = await fetch("http://localhost:3000/api/apprentice")
+                            if(!response.ok){
+                                throw new Error("Error al obtener los aprendices")
+                            }
+                            const data = await response.json()
+                            console.log(data)
+                            const formattedData = data.data.map((apprentice : any , index : number) => ({
+                                id : apprentice.id?? index,
+                                name : apprentice.name,
+                                age : apprentice.age,
+                                dateOfBirth : apprentice.dateOfBirth,
+                                status : apprentice.status,
+                                trainingLv : apprentice.trainingLv
+                            }))
+                            setApprenticeRows(formattedData)
+                        }
+                        catch(error){
+                            console.error(error)
+                        }
+                    }
+                    fetchApprentices()
+                },[]
+            )
+    
+                const handleDelete = async (id: number) => {
+        try {
+          const confirmDelete = window.confirm("¿Estás seguro de eliminar este aprendiz?");
+          if (!confirmDelete) return;
+    
+          const response = await fetch(`http://localhost:3000/api/apprentice/${id}`, {
+            method: "DELETE",
+          });
+    
+          const result = await response.json();
+          if (result.success) {
+            setApprenticeRows((prev) => prev.filter((apprentice) => apprentice.id !== id));
+          } else {
+            alert("Error al eliminar el aprendiz");
+          }
+        } catch (error) {
+          console.error("Error al eliminar:", error);
+        }
+      };
+
+       const handleEditSave = async (updated: any) => {
+    await fetch(`http://localhost:3000/api/apprentice/${updated.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(
+        {
+            name: updated.name,
+            dateOfBirth: updated.dateOfBirth,
+            age: Number(updated.age),
+            status: updated.status,
+            trainingLv: Number(updated.trainingLv),
+            id: updated.id
+        }
+      ),
+    });
+    setApprenticeRows(prev => prev.map(a => (a.id === updated.id ? updated : a)));
+  };
+
     return (
         <div className="listApprenticeSideBar">
             <Sidebar/>
@@ -87,7 +91,7 @@ const ListAgency: React.FC = () => {
               </div>
             </div>
             <div className="list-container">
-              <Datatable columns={apprenticeColumns} rows={apprenticeRows}/>
+              <Datatable columns={apprenticeColumns} rows={apprenticeRows} onDelete={handleDelete} onEditSave={handleEditSave}/>
             </div>
             </div>
         </div>
