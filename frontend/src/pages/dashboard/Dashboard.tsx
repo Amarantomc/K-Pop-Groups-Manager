@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Sidebar from '../../components/sidebar/Sidebar';
 // import NavBar from '../../components/navbar/Navbar'
 import "../../styles/dashboard.css"
@@ -6,6 +6,45 @@ import logo from '../../assets/k-pop-logo.png';
 
 
 const Dashboard : React.FC = () =>{
+  const [agenciesCount, setAgenciesCount] = useState<number | null>(null);
+  const [apprenticesCount, setApprenticesCount] = useState<number | null>(null);
+  const [usersCount, setUsersCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    const API_BASE = 'http://localhost:3000';
+
+    const fetchCount = async (url: string) => {
+      try {
+        const res = await fetch(url);
+        if (!res.ok) return null;
+        const data = await res.json().catch(() => null);
+        if (Array.isArray(data)) return data.length;
+        // Si backend devuelve un objeto con { total } o {count}
+        if (data && typeof data === 'object') {
+          if (typeof data.total === 'number') return data.total;
+          if (typeof data.count === 'number') return data.count;
+        }
+        return null;
+      } catch (e) {
+        if (import.meta.env.MODE === 'development') console.debug('[Dashboard] fetchCount error', url, e);
+        return null;
+      }
+    }
+
+    (async () => {
+      const [a, p, u] = await Promise.all([
+        fetchCount(`${API_BASE}/api/agency/`),
+        fetchCount(`${API_BASE}/api/apprentice/`),
+        fetchCount(`${API_BASE}/api/user/`),
+      ]);
+      setAgenciesCount(a);
+      setApprenticesCount(p);
+      setUsersCount(u);
+    })();
+  }, []);
+
+  const renderValue = (v: number | null) => v == null ? '—' : String(v);
+
   return (
     <div className='dashboard-sidebar'>
       <Sidebar/>
@@ -23,16 +62,16 @@ const Dashboard : React.FC = () =>{
 
           <div className='quick-stats'>
             <div className='stat'>
-              <div className='stat-value'>12</div>
+              <div className='stat-value'>{renderValue(agenciesCount)}</div>
               <div className='stat-label'>Agencias</div>
             </div>
             <div className='stat'>
-              <div className='stat-value'>34</div>
-              <div className='stat-label'>Artistas</div>
+              <div className='stat-value'>{renderValue(apprenticesCount)}</div>
+              <div className='stat-label'>Aprendices</div>
             </div>
             <div className='stat'>
-              <div className='stat-value'>5</div>
-              <div className='stat-label'>Eventos hoy</div>
+              <div className='stat-value'>{renderValue(usersCount)}</div>
+              <div className='stat-label'>Usuarios</div>
             </div>
           </div>
         </div>
