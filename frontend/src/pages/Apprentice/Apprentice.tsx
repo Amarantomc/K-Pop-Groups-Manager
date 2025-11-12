@@ -37,6 +37,23 @@ const Apprentice: React.FC = () => {
           } catch (e) { /* ignore */ }
         }
 
+        // Validar que la edad coincida con la fecha de nacimiento si ambos están presentes
+        if (payload.dateOfBirth && payload.age != null) {
+          try {
+            const bd = new Date(payload.dateOfBirth);
+            if (!isNaN(bd.getTime())) {
+              const today = new Date();
+              let years = today.getFullYear() - bd.getFullYear();
+              const m = today.getMonth() - bd.getMonth();
+              if (m < 0 || (m === 0 && today.getDate() < bd.getDate())) years -= 1;
+              if (Number(payload.age) !== years) {
+                alert(`La edad (${payload.age}) no coincide con la fecha de nacimiento (${bd.toLocaleDateString()}). Edad calculada: ${years}`);
+                return;
+              }
+            }
+          } catch (e) { /* ignore parse errors */ }
+        }
+
         // validar status contra las claves del enum
         const allowed = (APPRENTICE_STATUS as readonly string[]).map(s => String(s));
         if (!payload.status || !allowed.includes(String(payload.status))) {
