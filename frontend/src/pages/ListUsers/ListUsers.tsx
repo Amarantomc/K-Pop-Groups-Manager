@@ -37,7 +37,7 @@ const ListUsers: React.FC = () => {
 
             const handleDelete = async (id: number) => {
     try {
-      const confirmDelete = window.confirm("¿Estás seguro de eliminar esta agencia?");
+      const confirmDelete = window.confirm("¿Estás seguro de eliminar este usuario?");
       if (!confirmDelete) return;
 
       const response = await fetch(`http://localhost:3000/api/user/${id}`, {
