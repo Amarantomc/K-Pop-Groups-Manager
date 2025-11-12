@@ -5,6 +5,7 @@ import Datatable from "../../components/datatable/Datatable"
 import { apprenticeColumns } from "../../datatableSource"
 import React from "react"
 import { useEffect , useState  } from "react"
+import { apprenticeConstraints } from "../../modalConstraints"
 
 
 const ListAgency: React.FC = () => {
@@ -91,7 +92,7 @@ const ListAgency: React.FC = () => {
               </div>
             </div>
             <div className="list-container">
-              <Datatable columns={apprenticeColumns} rows={apprenticeRows} onDelete={handleDelete} onEditSave={handleEditSave}/>
+              <Datatable columns={apprenticeColumns} rows={apprenticeRows} onDelete={handleDelete} onEditSave={handleEditSave} constraints={apprenticeConstraints}/>
             </div>
             </div>
         </div>

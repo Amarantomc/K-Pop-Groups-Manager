@@ -5,6 +5,7 @@ import Datatable from "../../components/datatable/Datatable"
 import { agencyColumns } from "../../datatableSource"
 import React from "react"
 import { useEffect , useState  } from "react"
+import { agencyConstraints } from "../../modalConstraints"
 
 
 
@@ -88,7 +89,7 @@ const ListAgency: React.FC = () => {
                             </div>
                         </div>
                     </div>
-                    <Datatable columns={agencyColumns} rows={agencyRows} onDelete={handleDelete} onEditSave = {handleEditSave}/>
+                    <Datatable columns={agencyColumns} rows={agencyRows} onDelete={handleDelete} onEditSave = {handleEditSave} constraints={agencyConstraints}/>
             </div>
         </div>
     )
