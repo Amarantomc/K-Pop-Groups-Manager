@@ -12,8 +12,89 @@ type FormProps = {
 };
 
 const Form: React.FC<FormProps> = ({ fields, entity, onSubmit, initialValues = {}, mode = 'add', submitLabel }) => {
+    const validateValue = (f: Field, raw: any): { ok: boolean; msg?: string } => {
+        // normalize value
+        if (raw instanceof File) {
+            // file input
+            if (f.required && (!raw || raw.size === 0)) return { ok: false, msg: `${f.label || f.name} es requerido` };
+            if (f.maxFileSizeMB && raw && raw.size) {
+                const mb = raw.size / (1024 * 1024);
+                if (mb > f.maxFileSizeMB) return { ok: false, msg: `${f.label || f.name} supera el tamaño máximo (${f.maxFileSizeMB} MB)` };
+            }
+            return { ok: true };
+        }
+        let v = raw;
+        if (v === null || typeof v === 'undefined') v = '';
+        if (Array.isArray(v)) v = v.join(',');
+        const s = String(v ?? '').trim();
+
+        if (f.required && s.length === 0) return { ok: false, msg: `${f.label || f.name} es requerido y no puede estar vacío` };
+
+        if (f.type === 'email' && s.length) {
+            // simple email regex
+            const re = /^\S+@\S+\.\S+$/;
+            if (!re.test(s)) return { ok: false, msg: `${f.label || f.name} debe ser un correo válido` };
+        }
+
+        if (f.type === 'number' && s.length) {
+            const n = Number(s);
+            if (Number.isNaN(n)) return { ok: false, msg: `${f.label || f.name} debe ser un número` };
+            if (typeof f.min === 'number' && n < f.min) return { ok: false, msg: `${f.label || f.name} debe ser ≥ ${f.min}` };
+            if (typeof f.max === 'number' && n > f.max) return { ok: false, msg: `${f.label || f.name} debe ser ≤ ${f.max}` };
+        }
+
+        if ((f.minLength || f.maxLength) && s.length) {
+            if (f.minLength && s.length < f.minLength) return { ok: false, msg: `${f.label || f.name} debe tener al menos ${f.minLength} caracteres` };
+            if (f.maxLength && s.length > f.maxLength) return { ok: false, msg: `${f.label || f.name} debe tener como máximo ${f.maxLength} caracteres` };
+        }
+
+        if (f.pattern && s.length) {
+            try {
+                const re = new RegExp(f.pattern);
+                if (!re.test(s)) return { ok: false, msg: `${f.label || f.name} no cumple el formato requerido` };
+            } catch (e) { /* ignore invalid pattern */ }
+        }
+
+        if (f.type === 'date' && s.length) {
+            // Disallow future dates (la fecha no puede ser posterior a hoy)
+            // s expected in YYYY-MM-DD or a parseable date string
+            const parsed = new Date(s);
+            if (isNaN(parsed.getTime())) return { ok: false, msg: `${f.label || f.name} no es una fecha válida` };
+            const today = new Date();
+            // normalize to date-only for comparison
+            parsed.setHours(0,0,0,0);
+            today.setHours(0,0,0,0);
+            if (parsed.getTime() > today.getTime()) return { ok: false, msg: `${f.label || f.name} no puede ser una fecha futura` };
+        }
+
+        return { ok: true };
+    };
+
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
+
+        // If fields are provided, validate against them
+        if (fields && fields.length) {
+            const fdCheck = new FormData(e.currentTarget);
+            for (const f of fields) {
+                // skip label-less hidden generated fields? still validate if required
+                const raw = fdCheck.get(f.name);
+                // If file input, get the File object
+                let value = raw;
+                if (f.type === 'file') {
+                    const el = e.currentTarget.elements.namedItem(f.name) as HTMLInputElement | null;
+                    if (el && el.files && el.files[0]) value = el.files[0];
+                }
+                const res = validateValue(f, value);
+                if (!res.ok) {
+                    alert(res.msg || 'Valor inválido');
+                    // try focus the offending field
+                    try { const el = e.currentTarget.elements.namedItem(f.name) as HTMLElement | null; if (el && typeof (el as any).focus === 'function') (el as any).focus(); } catch(e) {}
+                    return;
+                }
+            }
+        }
+
         const fd = new FormData(e.currentTarget);
         if (onSubmit) {
             onSubmit(fd);

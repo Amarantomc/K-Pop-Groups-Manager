@@ -10,7 +10,7 @@ export type Field = {
     id: string;
     name: string;
     label: string;
-    type: 'text' | 'email' | 'password' | 'number' | 'date' | 'time' | 'select' | 'textarea' | 'checkbox' | 'file';
+    type: 'text' | 'email' | 'password' | 'number' | 'date' | 'time' | 'select' | 'textarea' | 'checkbox' | 'file' | 'hidden';
     placeholder?: string;
     required?: boolean;
     options?: FieldOption[];

@@ -51,6 +51,22 @@
     border: 1px solid rgba(79,70,229,0.08);
 }
 
+/* Botón eliminar perfil en la esquina inferior derecha de la tarjeta */
+.delete-profile-btn {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    background: #ef4444; /* rojo */
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    box-shadow: 0 6px 18px rgba(239,68,68,0.12);
+}
+.delete-profile-btn:hover { background: #dc2626; }
+
 @media (max-width:760px) {
     .profile-id-top { top: 6px; right: 10px; font-size: 0.75rem; padding: 4px 8px; }
 }

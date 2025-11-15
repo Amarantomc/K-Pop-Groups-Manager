@@ -13,8 +13,65 @@ const Profile: React.FC = () => {
   const displayName = u?.name ?? 'Usuario';
   const displayRole = u?.rol ?? u?.role ?? '-';
   const [showUserForm, setShowUserForm] = useState(false);
-  const [showEditForm, setShowEditForm] = useState(false);
   const [showPasswordForm, setShowPasswordForm] = useState(false);
+  const [pfCurrent, setPfCurrent] = useState('');
+  const [pfNew, setPfNew] = useState('');
+  const [pfConfirm, setPfConfirm] = useState('');
+
+  const handleDeleteProfile = async () => {
+    if (!user) {
+      alert('No hay usuario autenticado');
+      return;
+    }
+    const ok = window.confirm('¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.');
+    if (!ok) return;
+
+    const API_BASE = 'http://localhost:3000';
+    try {
+      const token = localStorage.getItem('token');
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
+      const res = await fetch(`${API_BASE}/api/user/${user.id}`, { method: 'DELETE', headers });
+      if (!res.ok) {
+        const raw = await res.text().catch(() => '');
+        let msg = 'Error al eliminar cuenta';
+        try { const j = JSON.parse(raw); msg = j?.message || j?.error || raw || msg; } catch(e) { msg = raw || msg; }
+        alert(msg);
+        return;
+      }
+
+      // limpiar almacenamiento y redirigir al login
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      alert('Cuenta eliminada correctamente');
+      window.location.href = '/login';
+    } catch (err) {
+      console.error('Error al eliminar cuenta:', err);
+      alert(err instanceof Error ? err.message : 'Error de red');
+    }
+  };
+
+  // Sanitize user object: return only primitive fields and arrays of primitives
+  const sanitizeUserForUpdate = (u: any) => {
+    const out: Record<string, any> = {};
+    if (!u || typeof u !== 'object') return out;
+    Object.keys(u).forEach((k) => {
+      const v = u[k];
+      const t = typeof v;
+      if (v === null) {
+        out[k] = null;
+      } else if (t === 'string' || t === 'number' || t === 'boolean') {
+        out[k] = v;
+      } else if (Array.isArray(v)) {
+        // include arrays only if they contain primitives
+        const ok = v.every((item) => item === null || ['string', 'number', 'boolean'].includes(typeof item));
+        if (ok) out[k] = v;
+      }
+      // ignore objects, functions, undefined, symbols
+    });
+    return out;
+  };
 
   const handleSubmit = (data: FormData | Record<string, any>) => {
     // Envío real al backend: POST http://localhost:3000/api/user/
@@ -79,7 +136,7 @@ const Profile: React.FC = () => {
 
           {/* Mostrar datos del usuario logueado en tarjeta principal */}
           <div className="profile-container" style={{ marginTop: 12 }}>
-            {user ? (
+            {user ? (<>
               <div className="profile-card">
                 <div className="profile-top" style={{ alignItems: 'center', display: 'flex' }}>
                   {/* Avatar: si el usuario tiene avatarUrl, mostrar imagen, si no, inicial */}
@@ -95,20 +152,22 @@ const Profile: React.FC = () => {
                     <p className="meta-line"><strong>Email:</strong> {u?.email ?? '-'}</p>
                     <p className="meta-line"><strong>Rol:</strong> {displayRole}</p>
                     <div className="profile-actions">
-                      <button className="btn btn-primary" onClick={() => { setShowEditForm(true); setShowPasswordForm(false); setShowUserForm(false); }}>
-                        Editar perfil
-                      </button>
-                      <button className="btn btn-primary" onClick={() => { setShowPasswordForm(true); setShowEditForm(false); setShowUserForm(false); }}>
+                      {/* 
+                      <button className="btn btn-primary" onClick={() => { setShowPasswordForm(true); setShowUserForm(false); }}>
                         Cambiar contraseña
                       </button>
+                      */}
                     </div>
                   </div>
 
                   {/* ID en la esquina superior derecha del header (alineado a la derecha dentro del flex) */}
                   <div className="profile-id-top">{user.id ?? '-'}</div>
                 </div>
+              <button className="delete-profile-btn" onClick={handleDeleteProfile}>
+                Eliminar perfil
+              </button>
               </div>
-            ) : (
+              </>) : (
               <div className="profile-card">
                 <p>No hay usuario autenticado</p>
               </div>
@@ -117,7 +176,7 @@ const Profile: React.FC = () => {
 
           {/* Contenedor con los dos botones solicitados debajo del header/tarjeta */}
           <div className="profile-button-row" style={{ marginTop: 18 }}>
-            <button className="primary-btn" onClick={() => { setShowUserForm(!showUserForm); setShowEditForm(false); setShowPasswordForm(false); }}>
+            <button className="primary-btn" onClick={() => { setShowUserForm(!showUserForm); setShowPasswordForm(false); }}>
               Añadir usuario
             </button>
           </div>
@@ -130,155 +189,83 @@ const Profile: React.FC = () => {
             </div>
           )}
 
-          {/* Formulario de edición del perfil (prefill con datos del login) */}
-          {showEditForm && user && (
-            <div className="Profile-form">
-              <div className="form-center">
-                <Form
-                  fields={formFieldsByEntity['user'].filter(f => f.name !== 'password')}
-                  entity="Usuario"
-                  mode="edit"
-                  // El formulario espera el campo 'name' (no 'username') y 'rol' para el select
-                  initialValues={{ name: u?.name, email: u?.email, rol: u?.rol ?? u?.role ?? '' }}
-                  submitLabel="Actualizar perfil"
-                  onSubmit={(data) => {
-                    // Enviar actualización del perfil al backend
-                    const payload: Record<string, any> = {};
-                    if (data instanceof FormData) {
-                      data.forEach((v, k) => { payload[k] = v; });
-                    } else Object.assign(payload, data);
+          {/* Formulario de edición eliminado: solo se permite cambiar la contraseña desde el formulario específico */}
 
-                    (async () => {
-                      const API_BASE = 'http://localhost:3000';
-                      try {
-                        const token = localStorage.getItem('token');
-                        if (!token) {
-                          alert('No autenticado. Por favor inicia sesión de nuevo.');
-                          return;
-                        }
-                        const headers: Record<string, string> = {};
-                        let body: any;
-                        if (data instanceof FormData) {
-                          // enviar FormData directamente (para incluir archivos)
-                          body = data as FormData;
-                        } else {
-                          headers['Content-Type'] = 'application/json';
-                          body = JSON.stringify(payload);
-                        }
-                        if (token) headers['Authorization'] = `Bearer ${token}`;
-
-                        // aqui va el endpoint
-                        // Intentar PATCH; si el servidor no soporta PATCH, probar PUT y varias rutas alternativas (con y sin id)
-                        // Usamos directamente PUT a la ruta principal; la función tryEndpoints se elimina porque no se utiliza.
-                        
-                        // Según tu backend: actualizar usuario en PUT /api/user/:id
-                        const primaryUrl = `${API_BASE}/api/user/${user.id}`;
-                        const res = await fetch(primaryUrl, {
-                          method: 'PUT',
-                          headers: Object.keys(headers).length ? headers : undefined,
-                          body,
-                        });
-
-                        if (!res.ok) {
-                          const raw = await res.text().catch(() => '');
-                          if (import.meta.env.MODE === 'development') {
-                            // eslint-disable-next-line no-console
-                            console.debug('[Profile] PUT /api/user/:', res.status, res.statusText, raw);
-                          }
-                          let msg = 'Error al actualizar perfil';
-                          try { const j = JSON.parse(raw); msg = j?.message || j?.error || raw || msg; } catch(e) { msg = raw || msg; }
-                          alert(msg);
-                          return;
-                        }
-
-                        const updated = await res.json().catch(() => null);
-                        if (updated) {
-                          // actualizar user en localStorage si backend devuelve el usuario
-                          localStorage.setItem('user', JSON.stringify(updated));
-                        }
-                        alert('Perfil actualizado correctamente');
-                        setShowEditForm(false);
-                      } catch (err) {
-                        console.error('Error actualizando perfil:', err);
-                        alert(err instanceof Error ? err.message : 'Error de red');
-                      }
-                    })();
-                  }}
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Formulario para cambiar contraseña */}
+          {/* Formulario para cambiar contraseña (implementación controlada para evitar que el gestor de contraseñas muestre selección) */}
           {showPasswordForm && (
             <div className="Profile-form">
               <div className="form-center">
-                <Form
-                  fields={[
-                    { id: 'currentPassword', name: 'currentPassword', label: 'Contraseña actual', type: 'password', required: true },
-                    { id: 'newPassword', name: 'newPassword', label: 'Nueva contraseña', type: 'password', required: true, minLength: 6 },
-                    { id: 'confirmPassword', name: 'confirmPassword', label: 'Confirmar contraseña', type: 'password', required: true, minLength: 6 }
-                  ]}
-                  entity="Contraseña"
-                  mode="edit"
-                  submitLabel="Cambiar contraseña"
-                  onSubmit={(data) => {
-                    const payload: Record<string, any> = {};
-                    if (data instanceof FormData) {
-                      data.forEach((v, k) => { payload[k] = v; });
-                    } else Object.assign(payload, data);
-                    // Validación simple: nueva y confirm
-                    if (payload.newPassword !== payload.confirmPassword) {
-                      alert('La nueva contraseña y la confirmación no coinciden');
-                      return;
-                    }
+                <div className="Form">
+                  <h1>Editar Contraseña</h1>
+                  <div className="form-group">
+                    <label htmlFor="pf_current">Contraseña actual</label>
+                    <input id="pf_current" name="pf_current" type="password" placeholder="Contraseña actual" value={pfCurrent} onChange={(e) => setPfCurrent(e.target.value)} autoComplete="current-password" />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="pf_new">Nueva contraseña</label>
+                    <input id="pf_new" name="pf_new" type="password" placeholder="Nueva contraseña" value={pfNew} onChange={(e) => setPfNew(e.target.value)} autoComplete="new-password" />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="pf_confirm">Confirmar contraseña</label>
+                    <input id="pf_confirm" name="pf_confirm" type="password" placeholder="Confirmar contraseña" value={pfConfirm} onChange={(e) => setPfConfirm(e.target.value)} autoComplete="new-password" />
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 12 }}>
+                    <button
+                      className="btn-primary"
+                      onClick={async () => {
+                        // Validaciones cliente
+                        if (pfNew !== pfConfirm) { alert('La nueva contraseña y la confirmación no coinciden'); return; }
+                        if (!user) { alert('No hay usuario autenticado'); return; }
 
-                    (async () => {
-                      const API_BASE = 'http://localhost:3000';
-                      try {
-                        const token = localStorage.getItem('token');
-                        const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-                        if (token) headers['Authorization'] = `Bearer ${token}`;
+                        const API_BASE = 'http://localhost:3000';
+                        try {
+                          const token = localStorage.getItem('token');
+                          const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+                          if (token) headers['Authorization'] = `Bearer ${token}`;
 
-                        // aqui va el endpoint
-                        // Intentar el endpoint principal y varios fallbacks comunes si el backend no expone /api/auth/change-password
-                        const bodyChange = JSON.stringify({ currentPassword: payload.currentPassword, newPassword: payload.newPassword });
-                        const tryPost = async (url: string) => fetch(url, { method: 'POST', headers, body: bodyChange });
-
-                        const uid = user ? user.id : '';
-                        // Cambiar contraseña: el backend gestiona usuarios en /api/user/:id
-                        // Intentar POST a /api/user/:id/password (si existe), si no, enviar PUT a /api/user/:id con campos de contraseña
-                        const changePassUrl = uid ? `${API_BASE}/api/user/${uid}/password` : `${API_BASE}/api/user/password`;
-                        let resPwd = await tryPost(changePassUrl).catch(() => null);
-                        if (resPwd && resPwd.ok) {
-                          // éxito
-                        } else {
-                          // intentar PUT a /api/user/:id con los campos currentPassword/newPassword
-                          const putUrl = uid ? `${API_BASE}/api/user/${uid}` : `${API_BASE}/api/user`;
-                          resPwd = await fetch(putUrl, { method: 'PUT', headers, body: JSON.stringify({ currentPassword: payload.currentPassword, newPassword: payload.newPassword }) }).catch(() => null);
-                        }
-
-                        if (!resPwd || !resPwd.ok) {
-                          const raw = await (resPwd ? resPwd.text().catch(() => '') : Promise.resolve(''));
+                          const uid = user.id;
+                          // Intentar endpoint especializado primero
+                          // Enviar la entidad completa del usuario con la nueva contraseña usando PUT
+                          const putUrl = `${API_BASE}/api/user/${uid}`;
+                          // Construir payload sanearizado para evitar objetos anidados o referencias
+                          let userPayload: Record<string, any> = Object.assign({}, user || {});
+                          userPayload.password = pfNew;
+                          userPayload.newPassword = pfNew;
+                          if (pfCurrent) userPayload.currentPassword = pfCurrent;
+                          userPayload = Object.assign(userPayload, sanitizeUserForUpdate(userPayload));
+                          // Log payload and headers in development to help debug backend validation errors
                           if (import.meta.env.MODE === 'development') {
-                            // eslint-disable-next-line no-console
-                            console.debug('[Profile] change-password fallo (final):', resPwd?.status, resPwd?.statusText, raw);
+                            try { console.debug('[Profile] PUT payload:', JSON.parse(JSON.stringify(userPayload))); } catch(e) { console.debug('[Profile] PUT payload (raw):', userPayload); }
+                            try { console.debug('[Profile] PUT headers:', headers); } catch(e) {}
                           }
-                          let msg = 'Error al cambiar contraseña';
-                          try { const j = JSON.parse(raw); msg = j?.message || j?.error || raw || msg; } catch(e) { msg = raw || msg; }
-                          alert(msg);
-                          return;
-                        }
+                          const res = await fetch(putUrl, { method: 'PUT', headers, body: JSON.stringify(userPayload) }).catch(() => null);
 
-                        alert('Contraseña cambiada correctamente');
-                        setShowPasswordForm(false);
-                      } catch (err) {
-                        console.error('Error cambiando contraseña:', err);
-                        alert(err instanceof Error ? err.message : 'Error de red');
-                      }
-                    })();
-                  }}
-                />
+                          if (!res || !res.ok) {
+                            const raw = await (res ? res.text().catch(() => '') : Promise.resolve(''));
+                            // Log full response for debugging
+                            try { console.error('[Profile] change-password response:', res?.status, raw); } catch(e) { console.error('[Profile] change-password response error'); }
+                            let msg = 'Error al cambiar contraseña';
+                            try { const j = JSON.parse(raw); msg = j?.message || j?.error || raw || msg; } catch(e) { msg = raw || msg; }
+                            alert(`${msg} (status ${res?.status ?? 'no-res'})`);
+                            return;
+                          }
+
+                          const updated = await res.json().catch(() => null);
+                          if (updated) localStorage.setItem('user', JSON.stringify(updated));
+
+                          alert('Contraseña cambiada correctamente');
+                          setPfCurrent(''); setPfNew(''); setPfConfirm('');
+                          setShowPasswordForm(false);
+                        } catch (err) {
+                          console.error('Error cambiando contraseña:', err);
+                          alert(err instanceof Error ? err.message : 'Error de red');
+                        }
+                      }}
+                    >
+                      Cambiar contraseña
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           )}
