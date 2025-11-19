@@ -5,7 +5,7 @@ export class ArtistResponseDto {
     public readonly id: number,
     public readonly ArtistName: string,
     public readonly DebutDate: string,
-    public readonly State: string,
+    public readonly Status: string,
     
   ) {}
 
@@ -14,7 +14,7 @@ export class ArtistResponseDto {
       artist.id,
       artist.ArtistName,
       artist.DebutDate,
-      artist.State
+      artist.Status
       
     );
   }
@@ -24,7 +24,7 @@ export class ArtistResponseDto {
       id:artist.id,
       ArtistName:artist.ArtistName,
       DebutDate: artist.DebutDate,
-      State:artist.State,
+      Status:artist.Status,
       }
      
     )

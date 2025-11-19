@@ -1,4 +1,4 @@
-export  enum ArtistState 
+export  enum ArtistStatus 
 {
    Active="Activo",
    OnPause="EnPausa",

@@ -1,4 +1,4 @@
-import { ArtistState } from "../../../domain/enums/ArtistState";
+import { ArtistStatus } from "../../../domain/enums/ArtistStatus";
 
 
 export class CreateArtistDto {
@@ -6,23 +6,23 @@ export class CreateArtistDto {
     constructor(
     public readonly ArtistName: string,
     public readonly DebutDate: string,
-    public readonly State: string
+    public readonly Status: string
 
    ) {}
 
   static Create(body: any): CreateArtistDto {
     
-    if (!body.ArtistName || !body.DebutDate || !body.State) {
+    if (!body.ArtistName || !body.DebutDate || !body.Status) {
       throw new Error('Missing required fields');
     }
-    if (!( body.State in ArtistState))
+    if (!( body.Status in ArtistStatus))
     {
-        throw new Error('Invalid State');
+        throw new Error('Invalid Status');
     }
     
 
     
-    return new CreateArtistDto(body.ArtistName, body.DebutDate, body.State);
+    return new CreateArtistDto(body.ArtistName, body.DebutDate, body.Status);
   }
    
    
