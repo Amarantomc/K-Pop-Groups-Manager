@@ -10,6 +10,8 @@ const Types = {
   IUserRepository: Symbol.for('IUserRepository'),
   IApprenticeRepository : Symbol.for('IApprenticeRepository'),
   IAgencyRepository : Symbol.for('IAgencyRepository'),
+  IArtistRepository : Symbol.for('IArtistRepository'),
+
 
   
   // Application Use Cases
@@ -34,6 +36,12 @@ const Types = {
   UpdateAgencyUseCase :Symbol.for('UpdateAgencyUseCase'),
   ListAgenciesUseCase :Symbol.for('ListAgenciesUseCase'),
 
+  
+  CreateArtistUseCase :Symbol.for('CreateArtistUseCase'),
+  DeleteArtistUseCase :Symbol.for('DeleteArtistUseCase'),
+  UpdateArtistUseCase :Symbol.for('UpdateArtistUseCase'),
+  FindArtistByIdUseCase :Symbol.for('FindArtistByIdUseCase'),
+
 
    
   LoginUserUseCase: Symbol.for('LoginUserUseCase'),
@@ -44,6 +52,8 @@ const Types = {
   AuthController: Symbol.for('AuthController'),
   ApprenticeController : Symbol.for('ApprenticeController'),
   AgencyController : Symbol.for('AgencyController'),
+  ArtistController : Symbol.for('ArtistController'),
+
 
 };
 
