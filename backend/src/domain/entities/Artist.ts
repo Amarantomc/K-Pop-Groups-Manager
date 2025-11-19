@@ -1,19 +1,19 @@
-import type { ArtistState } from "../enums/ArtistState";
+import type { ArtistStatus } from "../enums/ArtistStatus";
 
 export class Artist{
 
     readonly id:number
     readonly ArtistName:string
     readonly DebutDate:Date
-    readonly State:ArtistState
+    readonly Status:ArtistStatus
      
 
 
-    constructor(attrs:{ id:number,ArtistName:string, DebutDate:Date, State:ArtistState})
+    constructor(attrs:{ id:number,ArtistName:string, DebutDate:Date, Status:ArtistStatus})
     {
         this.id=attrs.id
         this.ArtistName=attrs.ArtistName
         this.DebutDate=attrs.DebutDate
-        this.State=attrs.State
+        this.Status=attrs.Status
     }
 }
