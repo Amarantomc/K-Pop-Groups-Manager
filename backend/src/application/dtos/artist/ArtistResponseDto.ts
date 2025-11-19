@@ -1,4 +1,5 @@
 import  { Artist } from "../../../domain/entities/Artist";
+import { GroupMembership } from "../../../domain/value objects/GroupMembership";
 
 export class ArtistResponseDto {
   constructor(
@@ -6,6 +7,12 @@ export class ArtistResponseDto {
     public readonly ArtistName: string,
     public readonly DebutDate: string,
     public readonly Status: string,
+    public readonly groupHistory?: Array<{
+      groupId: number;
+      role: string;
+      startDate: string;
+      endDate?: string;
+    }>
     
   ) {}
 
@@ -14,7 +21,8 @@ export class ArtistResponseDto {
       artist.id,
       artist.ArtistName,
       artist.DebutDate,
-      artist.Status
+      artist.Status,
+      artist.groupHistory
       
     );
   }
@@ -23,8 +31,15 @@ export class ArtistResponseDto {
     return new Artist({ 
       id:artist.id,
       ArtistName:artist.ArtistName,
-      DebutDate: artist.DebutDate,
+      DebutDate: new Date(artist.DebutDate),
       Status:artist.Status,
+      groupHistory: artist.HistorialGrupos?.map((h: any) => 
+        new GroupMembership(
+          h.idGr,
+          h.rol,
+          new Date(h.fechaInicio),
+          h.fechaFinalizacion ? new Date(h.fechaFinalizacion) : undefined
+        ))
       }
      
     )
