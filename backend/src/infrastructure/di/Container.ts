@@ -33,6 +33,9 @@ import { AgencyRepository } from '../repositories/AgencyRepository';
 import { DeleteUserUseCase } from '../../application/usesCase/user/DeleteUserUseCase';
 import { UpdateUserUseCase } from '../../application/usesCase/user/UpdateUserUseCase';
 import { ListApprenticeUseCase } from '../../application/usesCase/apprentice/ListApprenticeUseCase';
+import type { IArtistRepository } from '../../application/interfaces/repositories/IArtistRepository';
+import { ArtistRepository } from '../repositories/ArtistRepository';
+import { ArtistController } from '../../presentation/controllers/ArtistController';
 
  
 
@@ -67,6 +70,10 @@ container.bind<IUserRepository>(Types.IUserRepository)
 
   container.bind<IAgencyRepository>(Types.IAgencyRepository)
   .to(AgencyRepository)
+  .inSingletonScope();
+
+  container.bind<IArtistRepository>(Types.IArtistRepository)
+  .to(ArtistRepository)
   .inSingletonScope();
 
 // Use Cases - User
@@ -142,13 +149,7 @@ container.bind<UpdateUserUseCase>(Types.UpdateUserUseCase)
   .to(UpdateAgencyUseCase)
   .inTransientScope();
 
-// container.bind<UpdateUserUseCase>(UpdateUserUseCase)
-//   .to(UpdateUserUseCase)
-//   .inTransientScope();
-
-// container.bind<DeleteUserUseCase>(DeleteUserUseCase)
-//   .to(DeleteUserUseCase)
-//   .inTransientScope();
+ 
 
 // // Use Cases - Auth
  
@@ -177,5 +178,11 @@ container.bind<ApprenticeController>(Types.ApprenticeController)
 container.bind<AgencyController>(Types.AgencyController)
   .to(AgencyController)
   .inTransientScope();
+
+  container.bind<ArtistController>(Types.ArtistController)
+  .to(ArtistController)
+  .inTransientScope();
+
+  
 
 export { container };
