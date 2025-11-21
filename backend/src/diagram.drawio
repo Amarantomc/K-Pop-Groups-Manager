@@ -1,0 +1,114 @@
+<mxfile host="65bd71144e">
+    <diagram id="clean-architecture-kpop" name="Clean Architecture - K-Pop Manager">
+        <mxGraphModel dx="1666" dy="3709" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="1">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="app-dtos" value="📁 dtos/&lt;br&gt;&lt;b&gt;artist/&lt;/b&gt;&lt;br&gt;├─ CreateArtistDto.ts&lt;br&gt;├─ UpdateArtistDto.ts&lt;br&gt;└─ ArtistResponseDto.ts&lt;br&gt;&lt;b&gt;apprentice/&lt;/b&gt;&lt;br&gt;├─ CreateApprenticeDto.ts&lt;br&gt;└─ ApprenticeResponseDto.ts&lt;br&gt;&lt;b&gt;user/&lt;/b&gt;&lt;br&gt;├─ LoginRequestDto.ts&lt;br&gt;└─ UserResponseDto.ts" style="text;html=1;strokeColor=none;fillColor=#fff9e6;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Courier New;" parent="1" vertex="1">
+                    <mxGeometry x="2170" y="-2662" width="723" height="520" as="geometry"/>
+                </mxCell>
+                <mxCell id="ovmJHjXE8t7-6Yl4B2Db-13" style="edgeStyle=none;shape=connector;rounded=1;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#b85450;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=20;fontColor=default;labelBackgroundColor=default;endArrow=classic;fillColor=#f8cecc;" parent="1" source="presentation-layer" target="pres-controllers" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="presentation-layer" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=3;fontSize=20;" parent="1" vertex="1">
+                    <mxGeometry x="800.0000000000001" y="-2440" width="1200" height="1000" as="geometry"/>
+                </mxCell>
+                <mxCell id="infrastructure-layer" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=3;fontSize=20;" parent="1" vertex="1">
+                    <mxGeometry x="1000" y="-2340" width="800" height="800" as="geometry"/>
+                </mxCell>
+                <mxCell id="ovmJHjXE8t7-6Yl4B2Db-9" style="edgeStyle=none;shape=connector;rounded=1;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#d6b656;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=20;fontColor=default;labelBackgroundColor=default;endArrow=classic;fillColor=#fff2cc;" parent="1" source="application-layer" target="app-dtos" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="application-layer" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=3;fontSize=20;" parent="1" vertex="1">
+                    <mxGeometry x="1140" y="-2210" width="500" height="500" as="geometry"/>
+                </mxCell>
+                <mxCell id="title" value="Clean Architecture - K-Pop Groups Manager" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="1082" y="-2518" width="700" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="ovmJHjXE8t7-6Yl4B2Db-6" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fillColor=#dae8fc;strokeColor=#6c8ebf;flowAnimation=0;fontSize=20;" parent="1" source="domain-layer" target="domain-entities" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="domain-layer" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;fontSize=20;" parent="1" vertex="1">
+                    <mxGeometry x="1240" y="-2105" width="300" height="300" as="geometry"/>
+                </mxCell>
+                <mxCell id="domain-title" value="&lt;b&gt;KPop.Domain&lt;/b&gt;&lt;br&gt;(Entidades y Reglas de Negocio)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="1290" y="-2028" width="200" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="domain-entities" value="📁 entities/&lt;br&gt;├─ Artist.ts&lt;br&gt;├─ Apprentice.ts&lt;br&gt;├─ Agency.ts&lt;br&gt;├─ Group.ts&lt;br&gt;├─ Album.ts&lt;br&gt;└─ Contract.ts" style="text;html=1;strokeColor=none;fillColor=#f5f5f5;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Courier New;" parent="1" vertex="1">
+                    <mxGeometry x="2163" y="-2114" width="405" height="212" as="geometry"/>
+                </mxCell>
+                <mxCell id="domain-enums" value="📁 enums/&lt;br&gt;├─ ArtistStatus.ts&lt;br&gt;├─ ApprenticeStatus.ts&lt;br&gt;└─ Role.ts" style="text;html=1;strokeColor=none;fillColor=#f5f5f5;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Courier New;" parent="1" vertex="1">
+                    <mxGeometry x="2350" y="-2110" width="140" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="application-title" value="&lt;b&gt;KPop.Application&lt;/b&gt;&lt;br&gt;(Casos de Uso y Contratos)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="1290" y="-2165" width="200" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="app-usecases" value="📁 useCases/&lt;br&gt;&lt;b&gt;artist/&lt;/b&gt;&lt;br&gt;├─ CreateArtistUseCase.ts&lt;br&gt;├─ UpdateArtistUseCase.ts&lt;br&gt;├─ GetArtistGroupHistoryUseCase.ts&lt;br&gt;└─ GetArtistContractsUseCase.ts&lt;br&gt;&lt;b&gt;apprentice/&lt;/b&gt;&lt;br&gt;├─ CreateApprenticeUseCase.ts&lt;br&gt;└─ ListApprenticeUseCase.ts" style="text;html=1;strokeColor=none;fillColor=#fff9e6;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Courier New;" parent="1" vertex="1">
+                    <mxGeometry x="2510" y="-2657" width="110" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="infrastructure-title" value="&lt;b&gt;KPop.Infrastructure&lt;/b&gt;&lt;br&gt;(Implementaciones y Detalles Técnicos)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="1247.88" y="-2290" width="300" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="infra-repositories" value="📁 repositories/&lt;br&gt;├─ ArtistRepository.ts&lt;br&gt;├─ ApprenticeRepository.ts&lt;br&gt;├─ AgencyRepository.ts&lt;br&gt;└─ UserRepository.ts&lt;br&gt;&lt;div&gt;&lt;br/&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=#e6f5e6;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Courier New;" parent="1" vertex="1">
+                    <mxGeometry x="2190" y="-1805" width="705" height="369" as="geometry"/>
+                </mxCell>
+                <mxCell id="infra-di" value="📁 di/&lt;br&gt;├─ Container.ts&lt;br&gt;└─ Types.ts&lt;i&gt;&lt;br&gt;&lt;/i&gt;" style="text;html=1;strokeColor=none;fillColor=#e6f5e6;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Courier New;" parent="1" vertex="1">
+                    <mxGeometry x="2207" y="-1662" width="90" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="infra-database" value="📁 database/&lt;br&gt;├─ seeds.ts&lt;br&gt;└─ consultas.ts&lt;br&gt;&lt;br&gt;PrismaUnitOfWork.ts&lt;i&gt;&lt;br&gt;&lt;/i&gt;" style="text;html=1;strokeColor=none;fillColor=#e6f5e6;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Courier New;" parent="1" vertex="1">
+                    <mxGeometry x="2555" y="-1788" width="130" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="infra-prisma" value="📦 Prisma ORM&lt;br&gt;&lt;br&gt;prisma/&lt;br&gt;├─ schema.prisma&lt;br&gt;└─ migrations/&lt;br&gt;&lt;br&gt;generated/prisma/&lt;br&gt;└─ client" style="text;html=1;strokeColor=none;fillColor=#e6f5e6;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Courier New;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="2560" y="-1662" width="130" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="presentation-title" value="&lt;b&gt;KPop.Presentation&lt;/b&gt;&lt;br&gt;(API REST - Express)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="1250" y="-2410" width="300" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="pres-controllers" value="&amp;nbsp; &amp;nbsp;&amp;nbsp;&lt;div&gt;📁 controllers/&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;&lt;br&gt;&lt;/font&gt;├─ ArtistController.ts&lt;br&gt;├─ ApprenticeController.ts&lt;br&gt;├─ AgencyController.ts&lt;br&gt;├─ AuthController.ts&lt;br&gt;└─ UserController.ts&lt;br&gt;&lt;br&gt;&lt;i&gt;Manejan requests HTTP&lt;br&gt;y llaman a Use Cases&lt;/i&gt;&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;i&gt;&lt;br&gt;&lt;/i&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;&amp;nbsp;tests/&lt;/span&gt;&lt;br style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251);&quot;&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;&amp;nbsp;application/&lt;/span&gt;&lt;br style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251);&quot;&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;&amp;nbsp;└─ useCases/&lt;/span&gt;&lt;br style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251);&quot;&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;&amp;nbsp;├─ artist/&lt;/span&gt;&lt;br style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251);&quot;&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;&amp;nbsp;└─ apprentice/&lt;/span&gt;&lt;br style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251);&quot;&gt;&lt;br style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251);&quot;&gt;&lt;i style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251);&quot;&gt;&amp;nbsp;Unit Tests&lt;/i&gt;&lt;i&gt;&lt;/i&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=#ffe6e6;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Courier New;" parent="1" vertex="1">
+                    <mxGeometry x="2160" y="-1403" width="704" height="496" as="geometry"/>
+                </mxCell>
+                <mxCell id="pres-routes" value="📁 routes/&lt;br&gt;├─ ArtistRoutes.ts&lt;br&gt;├─ ApprenticeRoutes.ts&lt;br&gt;├─ agencyRoutes.ts&lt;br&gt;├─ AuthRoutes.ts&lt;br&gt;├─ userRoutes.ts&lt;br&gt;└─ index.ts&lt;br&gt;&lt;br&gt;&lt;i&gt;Definición de endpoints&lt;/i&gt;" style="text;html=1;strokeColor=none;fillColor=#ffe6e6;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Courier New;" parent="1" vertex="1">
+                    <mxGeometry x="2520" y="-1370" width="140" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="external-db" value="🗄️ PostgreSQL&lt;br&gt;&lt;br&gt;Tables:&lt;br&gt;• Artista&lt;br&gt;• Aprendiz&lt;br&gt;• Agencia&lt;br&gt;• Grupo&lt;br&gt;• Album&lt;br&gt;• Contrato&lt;br&gt;• ArtistaEnGrupo&lt;br&gt;• ..." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#647687;strokeColor=#314354;fontColor=#ffffff;fontSize=20;fontFamily=Courier New;align=left;verticalAlign=top;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="247" y="-2047" width="177" height="313" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;fontSize=20;" parent="1" vertex="1">
+                    <mxGeometry x="441" y="-2340" width="333" height="268" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-title" value="📋 Principios de Clean Architecture" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="464" y="-2330" width="300" height="25" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-content" value="✅ Independencia de Frameworks&lt;br&gt;✅ Independencia de UI&lt;br&gt;✅ Independencia de Base de Datos&lt;br&gt;✅ Testeable (Domain sin dependencias)&lt;br&gt;➡️ Dependencias apuntan hacia adentro" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=20;" parent="1" vertex="1">
+                    <mxGeometry x="464" y="-2297" width="300" height="79" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=20;" parent="1" vertex="1">
+                    <mxGeometry x="1087.88" y="-1310" width="620" height="301" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow-title" value="🔄 Flujo de una Request (Ejemplo: Crear Artista)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="1117" y="-1310" width="600" height="25" as="geometry"/>
+                </mxCell>
+                <mxCell id="tech-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;fontSize=20;" parent="1" vertex="1">
+                    <mxGeometry x="482" y="-2061" width="150" height="609" as="geometry"/>
+                </mxCell>
+                <mxCell id="tech-title" value="🛠️ Stack Tecnológico" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="477" y="-2043" width="150" height="25" as="geometry"/>
+                </mxCell>
+                <mxCell id="tech-content" value="&lt;b&gt;Runtime:&lt;/b&gt;&lt;br&gt;• Node.js + TypeScript&lt;br&gt;&lt;br&gt;&lt;b&gt;Framework:&lt;/b&gt;&lt;br&gt;• Express.js&lt;br&gt;&lt;br&gt;&lt;b&gt;ORM:&lt;/b&gt;&lt;br&gt;• Prisma&lt;br&gt;&lt;br&gt;&lt;b&gt;Database:&lt;/b&gt;&lt;br&gt;• PostgreSQL&lt;br&gt;&lt;br&gt;&lt;b&gt;DI Container:&lt;/b&gt;&lt;br&gt;• InversifyJS&lt;br&gt;&lt;br&gt;&lt;b&gt;Testing:&lt;/b&gt;&lt;br&gt;• Jest&lt;br&gt;&lt;br&gt;&lt;b&gt;Dev Tools:&lt;/b&gt;&lt;br&gt;• Nodemon&lt;br&gt;• ts-node" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=20;" parent="1" vertex="1">
+                    <mxGeometry x="502" y="-2004" width="130" height="285" as="geometry"/>
+                </mxCell>
+                <mxCell id="flow-content" value="&lt;div&gt;&lt;br&gt;&lt;/div&gt;1️⃣ POST /api/artists → &lt;b&gt;ArtistRoutes&lt;/b&gt;&lt;br&gt;2️⃣ Router → &lt;b&gt;ArtistController.create()&lt;/b&gt;&lt;br&gt;3️⃣ Controller → &lt;b&gt;CreateArtistUseCase.execute()&lt;/b&gt;&lt;br&gt;4️⃣ Use Case → &lt;b&gt;IArtistRepository.create()&lt;/b&gt; (Interface)&lt;br&gt;5️⃣ Repository → &lt;b&gt;ArtistRepository&lt;/b&gt; (Implementación) → Prisma&lt;br&gt;6️⃣ Prisma → &lt;b&gt;PostgreSQL&lt;/b&gt; (INSERT)&lt;br&gt;7️⃣ Response ← Transforma &lt;b&gt;Artist&lt;/b&gt; (Entity) → &lt;b&gt;ArtistResponseDto&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=20;fontFamily=Courier New;" parent="1" vertex="1">
+                    <mxGeometry x="1097.88" y="-1287.5" width="614.12" height="97.5" as="geometry"/>
+                </mxCell>
+                <mxCell id="app-interfaces" value="📁 interfaces/&lt;br&gt;&lt;b&gt;repositories/&lt;/b&gt;&lt;br&gt;├─ IArtistRepository.ts&lt;br&gt;├─ IApprenticeRepository.ts&lt;br&gt;├─ IAgencyRepository.ts&lt;br&gt;├─ IBaseRepository.ts&lt;br&gt;└─ IUserRepository.ts&lt;br&gt;IUnitOfWork.ts" style="text;html=1;strokeColor=none;fillColor=#fff9e6;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Courier New;" parent="1" vertex="1">
+                    <mxGeometry x="2180" y="-2389" width="100" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="ovmJHjXE8t7-6Yl4B2Db-11" style="edgeStyle=none;shape=connector;rounded=1;html=1;entryX=-0.016;entryY=0.355;entryDx=0;entryDy=0;entryPerimeter=0;strokeColor=#82b366;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=20;fontColor=default;labelBackgroundColor=default;endArrow=classic;fillColor=#d5e8d4;" parent="1" source="infrastructure-layer" target="infra-repositories" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

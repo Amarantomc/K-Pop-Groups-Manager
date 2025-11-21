@@ -8,8 +8,8 @@ export class FindArtistByIdUseCase {
 
     constructor(@inject(Types.IArtistRepository) private artistRepository: IArtistRepository){}
 
-    async execute(Id: string): Promise<ArtistResponseDto> {
-        const artist = await this.artistRepository.findById(Id);
+    async execute(Id:any): Promise<ArtistResponseDto> {
+        const artist = await this.artistRepository.findById(Id!);
         if (!artist) {
           throw new Error('Artist not found');
         }
