@@ -36,6 +36,10 @@ import { ListApprenticeUseCase } from '../../application/usesCase/apprentice/Lis
 import type { IArtistRepository } from '../../application/interfaces/repositories/IArtistRepository';
 import { ArtistRepository } from '../repositories/ArtistRepository';
 import { ArtistController } from '../../presentation/controllers/ArtistController';
+import { CreateArtistUseCase } from '../../application/usesCase/artist/CreateArtistUseCase';
+import { UpdateArtistUseCase } from '../../application/usesCase/artist/UpdateArtistUseCase';
+import { DeleteArtistUseCase } from '../../application/usesCase/artist/DeleteArtistUseCase';
+import { FindArtistByIdUseCase } from '../../application/usesCase/artist/FindArtistByIdUseCase';
 
  
 
@@ -147,6 +151,22 @@ container.bind<UpdateUserUseCase>(Types.UpdateUserUseCase)
 
   container.bind<UpdateAgencyUseCase>(Types.UpdateAgencyUseCase)
   .to(UpdateAgencyUseCase)
+  .inTransientScope();
+
+  container.bind<CreateArtistUseCase>(Types.CreateArtistUseCase)
+  .to(CreateArtistUseCase)
+  .inTransientScope();
+
+  container.bind<UpdateArtistUseCase>(Types.UpdateArtistUseCase)
+  .to(UpdateArtistUseCase)
+  .inTransientScope();
+  
+  container.bind<DeleteArtistUseCase>(Types.DeleteArtistUseCase)
+  .to(DeleteArtistUseCase)
+  .inTransientScope();
+
+   container.bind<FindArtistByIdUseCase>(Types.FindArtistByIdUseCase)
+  .to(FindArtistByIdUseCase)
   .inTransientScope();
 
  

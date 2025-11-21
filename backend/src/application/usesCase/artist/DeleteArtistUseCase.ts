@@ -9,7 +9,7 @@ export class DeleteArtistUseCase {
                     @inject(Types.IUnitOfWork) private unitOfWork: IUnitOfWork
 ){}
 
-    async excute(id:string):Promise<void>{
+    async excute(id:any):Promise<void>{
         
         try {   
             await this.unitOfWork.beginTransaction()

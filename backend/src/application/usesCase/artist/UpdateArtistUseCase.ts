@@ -14,7 +14,7 @@ export class UpdateArtistUseCase{
     
     
 
-async execute( id: string, data: Partial<UpdateArtistDto>): Promise<ArtistResponseDto> 
+async execute( id: any, data: Partial<UpdateArtistDto>): Promise<ArtistResponseDto> 
       {
         
         try {   
