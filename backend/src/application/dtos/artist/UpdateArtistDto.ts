@@ -1,3 +1,4 @@
+import { ArtistStatus } from "../../../domain/enums/ArtistStatus";
 
 export class UpdateArtistDto {
   
@@ -8,6 +9,13 @@ export class UpdateArtistDto {
     public readonly Status?: string
 
    ) {}
+     static Create(body: any): UpdateArtistDto {
+    if (body.Status && !( body.Status in ArtistStatus)) {
+      throw new Error("Invalid Status");
+    }
+
+    return new UpdateArtistDto(body.ArtistName, body.DebutDate, body.Status);
+  }
 
   
 }

@@ -41,10 +41,11 @@ export class CreateArtistUseCase{
     //   }
  
 
-            const Artist = await this.artistRepository.create(command);
+            const artist = await this.artistRepository.create(command);
+            await this.artistRepository.addGroupHistory(artist.ApprenticeId,artist.GroupId,artist.GroupId,"Member",new Date(command.DebutDate));
              
             await this.unitOfWork.commit();
-            return ArtistResponseDto.fromEntity(Artist)
+            return ArtistResponseDto.fromEntity(artist)
         }
         catch(error){
             await this.unitOfWork.rollback();
