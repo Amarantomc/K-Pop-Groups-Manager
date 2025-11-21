@@ -1,4 +1,4 @@
-export class Activity {
+export class VisualConcept {
 	readonly id: number;
 
 	constructor(attrs: { id: number }) {

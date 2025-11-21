@@ -1,4 +1,4 @@
-export class Activity {
+export class Concept {
 	readonly id: number;
 
 	constructor(attrs: { id: number }) {
