@@ -37,8 +37,8 @@ export class ArtistController {
     async findById(req:Request,res:Response)
     {
         try {
-            const {id}=req.params
-            const artist= await this.findArtistByIdUseCase.execute(id!)
+            const {apprenticeId,groupId}=req.params
+            const artist= await this.findArtistByIdUseCase.execute({apprenticeId: Number(apprenticeId), groupId: Number(groupId)})
             res.json({
                 success: true,
                 data: artist
@@ -56,8 +56,8 @@ export class ArtistController {
     async deleteArtist(req:Request,res:Response)
     {
         try {
-            const {id}=req.params
-            await this.deleteArtistUseCase.excute(id!)
+            const {apprenticeId,groupId}=req.params
+            await this.deleteArtistUseCase.excute({apprenticeId: Number(apprenticeId), groupId: Number(groupId)})
         res.json({
         success: true,
         message: 'Artist deleted successfully'
@@ -75,8 +75,8 @@ export class ArtistController {
     async updateArtist(req:Request,res:Response)
     {
         try {
-            const {id}=req.params
-            const artist= await this.updateArtistUseCase.execute(id!,req.body)
+            const {apprenticeId,groupId}=req.params
+            const artist= await this.updateArtistUseCase.execute({apprenticeId: Number(apprenticeId), groupId: Number(groupId)},req.body)
         
         res.json({
         success: true,
