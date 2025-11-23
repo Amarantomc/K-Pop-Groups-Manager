@@ -44,7 +44,7 @@ export class ArtistResponseDto {
       ApprenticeId:artist.idAp,
       GroupId:artist.idGr,
       ArtistName:artist.nombreArtistico,
-      DebutDate: new Date(artist.fsechaDebut),
+      DebutDate: artist.fsechaDebut,
       Status:artist.estadoArtista,
  
       }
@@ -54,5 +54,9 @@ export class ArtistResponseDto {
 
   static fromEntities(artists: any[]): ArtistResponseDto[] {
     return artists.map(artist => this.fromEntity(artist));
+  }
+
+   static toEntities(artists: any[]): Artist[] {
+    return artists.map(artist => this.toEntity(artist));
   }
 }

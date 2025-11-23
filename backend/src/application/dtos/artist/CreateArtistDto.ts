@@ -4,8 +4,8 @@ import { ArtistStatus } from "../../../domain/enums/ArtistStatus";
 export class CreateArtistDto {
   
     constructor(
-    public readonly apprenticeId: number,
-    public readonly groupId: number ,
+    public readonly ApprenticeId: number,
+    public readonly GroupId: number ,
     public readonly ArtistName: string,
     public readonly DebutDate: string,
     public readonly Status: string
@@ -14,17 +14,17 @@ export class CreateArtistDto {
 
   static Create(body: any): CreateArtistDto {
     
-    if (!body.ArtistName || !body.DebutDate || !body.Status || !body.apprenticeId || !body.groupId) {
+    if (!body.ArtistName || !body.DebutDate || !body.Status || !body.ApprenticeId || !body.GroupId) {
       throw new Error('Missing required fields');
     }
-    if (!( body.Status in ArtistStatus))
+    if (!Object.values(ArtistStatus).includes(body.Status))
     {
         throw new Error('Invalid Status');
     }
     
 
-    
-    return new CreateArtistDto(body.apprenticeId, body.groupId, body.ArtistName, body.DebutDate, body.Status);
+     
+    return new CreateArtistDto(body.ApprenticeId, body.GroupId, body.ArtistName, body.DebutDate, body.Status);
   }
    
    

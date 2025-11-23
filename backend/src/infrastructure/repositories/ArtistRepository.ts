@@ -21,14 +21,14 @@ private get db() {
   }
 
     async create(data: CreateArtistDto): Promise<Artist> {
-    
+     
     const artist = await this.db.artista.create({
       data: {
         nombreArtistico: data.ArtistName,
         fsechaDebut: new Date(data.DebutDate),
         estadoArtista: data.Status,
-        idAp: data.apprenticeId,   
-        idGr: data.groupId          
+        idAp: data.ApprenticeId,   
+        idGr: data.GroupId          
       }
     })
     return ArtistResponseDto.toEntity(artist);
@@ -89,20 +89,29 @@ private get db() {
   }
 
     async update(id:any, data: Partial<UpdateArtistDto>): Promise<Artist> {
-          const artist = await this.db.artista.update({
-                    where: { idAp_idGr: {
-                      idAp: id.apprenticeId,
-                      idGr: id.groupId,
-                      }, },
-                    data,
+        
+     const artist = await this.db.artista.update({
+                where: {    idAp_idGr: {
+                              idAp: id.apprenticeId,
+                              idGr: id.groupId
+                            }
+                       
+                      },
+                    data: {
+                      nombreArtistico:data.ArtistName,
+                      fsechaDebut:data.DebutDate,
+                      estadoArtista:data.Status
+                    }
                   });
+                  console.log(artist)
                 
                   return ArtistResponseDto.toEntity(artist);
       }
     
     async getAll(): Promise<Artist[]> {
         const artists = await this.db.artista.findMany();
-        return artists
+        
+        return ArtistResponseDto.toEntities(artists)
     }
 
     async findByName(name: string): Promise<Artist[]> {

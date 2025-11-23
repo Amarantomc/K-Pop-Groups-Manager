@@ -22,9 +22,8 @@ export class CreateArtistUseCase{
             await this.unitOfWork.beginTransaction()
              
           // Validar que el aprendiz existe
-      const apprentice = await this.apprenticeRepository.findById(
-        command.apprenticeId.toString()
-      );
+      const apprentice = await this.apprenticeRepository.findById(command.ApprenticeId.toString());
+      
       if (!apprentice) {
         throw new Error("Apprentice not found");
       }
@@ -42,6 +41,7 @@ export class CreateArtistUseCase{
  
 
             const artist = await this.artistRepository.create(command);
+            
             await this.artistRepository.addGroupHistory(artist.ApprenticeId,artist.GroupId,artist.GroupId,"Member",new Date(command.DebutDate));
              
             await this.unitOfWork.commit();

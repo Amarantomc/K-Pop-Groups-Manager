@@ -41,6 +41,7 @@ const Types = {
   DeleteArtistUseCase :Symbol.for('DeleteArtistUseCase'),
   UpdateArtistUseCase :Symbol.for('UpdateArtistUseCase'),
   FindArtistByIdUseCase :Symbol.for('FindArtistByIdUseCase'),
+  GetAllArtistsUseCase :Symbol.for('GetAllArtistsUseCase'),
 
 
    

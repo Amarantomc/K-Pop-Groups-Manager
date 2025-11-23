@@ -4,9 +4,9 @@ export class UpdateArtistDto {
   
     constructor(
     
-    public readonly ArtistName?: string,
-    public readonly DebutDate?: string,
-    public readonly Status?: string
+    public readonly ArtistName: string,
+    public readonly DebutDate: Date,
+    public readonly Status: string
 
    ) {}
      static Create(body: any): UpdateArtistDto {

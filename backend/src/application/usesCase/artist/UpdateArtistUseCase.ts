@@ -19,12 +19,14 @@ async execute( id: any, data: Partial<UpdateArtistDto>): Promise<ArtistResponseD
         
         try {   
                 await this.unitOfWork.beginTransaction()
+                
                 const artist = await this.artistRepository.findById(id);
                 if (!artist) {
                 throw new Error('Artist not found');
                 }
-    
+                
                 const updateArtist=await this.artistRepository.update(id,data);
+                
                 await this.unitOfWork.commit();
                 return ArtistResponseDto.fromEntity(updateArtist)
         } catch (error) {

@@ -40,6 +40,7 @@ import { CreateArtistUseCase } from '../../application/usesCase/artist/CreateArt
 import { UpdateArtistUseCase } from '../../application/usesCase/artist/UpdateArtistUseCase';
 import { DeleteArtistUseCase } from '../../application/usesCase/artist/DeleteArtistUseCase';
 import { FindArtistByIdUseCase } from '../../application/usesCase/artist/FindArtistByIdUseCase';
+import  { GetAllArtistsUseCase } from '../../application/usesCase/artist/GetAllArtistsUseCase';
 
  
 
@@ -167,6 +168,10 @@ container.bind<UpdateUserUseCase>(Types.UpdateUserUseCase)
 
    container.bind<FindArtistByIdUseCase>(Types.FindArtistByIdUseCase)
   .to(FindArtistByIdUseCase)
+  .inTransientScope();
+
+  container.bind<GetAllArtistsUseCase>(Types.GetAllArtistsUseCase)
+  .to(GetAllArtistsUseCase)
   .inTransientScope();
 
  
