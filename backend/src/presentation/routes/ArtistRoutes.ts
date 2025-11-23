@@ -17,10 +17,10 @@ import { Types } from "../../infrastructure/di/Types";
   private setupRoutes(): void {
      
     this.router.post('/', (req, res) => this.artistController.createArtist(req, res))
-    this.router.get('/:id', (req, res) => this.artistController.findById(req,res))
-    this.router.put('/:id', (req, res) => this.artistController.updateArtist(req, res))
-    this.router.delete('/:id',(req, res) => this.artistController.deleteArtist(req, res))
-    //this.router.get('/',(req, res) => this.artistController.(req, res))
+    this.router.get('/:apprenticeId&:groupId', (req, res) => this.artistController.findById(req,res))
+    this.router.put('/:apprenticeId&:groupId', (req, res) => this.artistController.updateArtist(req, res))
+    this.router.delete('/:apprenticeId&:groupId',(req, res) => this.artistController.deleteArtist(req, res))
+    this.router.get('/',(req, res) => this.artistController.getAll(req, res))
    
   }
 

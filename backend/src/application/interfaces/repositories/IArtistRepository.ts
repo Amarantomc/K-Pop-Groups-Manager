@@ -5,7 +5,7 @@ import type { CreateArtistDto } from "../../dtos/artist/CreateArtistDto";
 import type { UpdateArtistDto } from "../../dtos/artist/UpdateArtistDto";
 import type { IBaseRepository } from "./IBaseRepository";
 
-export interface IArtistRepository extends IBaseRepository<Artist,CreateArtistDto,UpdateArtistDto>{
+export interface IArtistRepository extends IBaseRepository<Artist,CreateArtistDto,Partial<UpdateArtistDto>>{
 
         getAll():Promise<Artist[]>
         findByName(name: string): Promise<Artist[]>;

@@ -6,6 +6,8 @@ import type { DeleteArtistUseCase } from "../../application/usesCase/artist/Dele
 import type { FindArtistByIdUseCase } from "../../application/usesCase/artist/FindArtistByIdUseCase";
 import { CreateArtistDto } from "../../application/dtos/artist/CreateArtistDto";
 import type { Request,Response } from 'express';
+import { UpdateArtistDto } from "../../application/dtos/artist/UpdateArtistDto";
+import type { GetAllArtistsUseCase } from "../../application/usesCase/artist/GetAllArtistsUseCase";
 
 @injectable()
 export class ArtistController {
@@ -13,12 +15,14 @@ export class ArtistController {
     constructor(@inject(Types.CreateArtistUseCase) private createArtistUseCase :CreateArtistUseCase,
                 @inject(Types.UpdateArtistUseCase) private updateArtistUseCase :UpdateArtistUseCase,
                 @inject(Types.DeleteArtistUseCase) private deleteArtistUseCase :DeleteArtistUseCase,
-                @inject(Types.FindArtistByIdUseCase) private findArtistByIdUseCase :FindArtistByIdUseCase,){}
+                @inject(Types.FindArtistByIdUseCase) private findArtistByIdUseCase :FindArtistByIdUseCase,
+              @inject(Types.GetAllArtistsUseCase) private getAllArtistsUseCase :GetAllArtistsUseCase,){}
 
 
     async createArtist(req:Request,res:Response){
         try {
             const artistDto=CreateArtistDto.Create(req.body)
+             
             const artist=await this.createArtistUseCase.execute(artistDto)
             res.status(201).json({
         success: true,
@@ -76,11 +80,31 @@ export class ArtistController {
     {
         try {
             const {apprenticeId,groupId}=req.params
+            
+            
             const artist= await this.updateArtistUseCase.execute({apprenticeId: Number(apprenticeId), groupId: Number(groupId)},req.body)
         
         res.json({
         success: true,
         data: artist
+      });
+
+            
+        } catch (error:any) {
+        res.status(400).json({
+        success: false,
+        error: error.message
+      });
+        }
+    }
+
+    async getAll(req:Request,res:Response){
+          try {
+             const artists= await this.getAllArtistsUseCase.execute()
+        
+        res.json({
+        success: true,
+        data: artists
       });
 
             
