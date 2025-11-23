@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface FieldConstraint {
   editable: boolean;              // Si el campo se puede modificar
   required?: boolean;             // Si es obligatorio
@@ -17,10 +18,11 @@ export const agencyConstraints: Constraints = {
         type:"string",
         label:"Nombre",
         validate: (value) => {
-            if(!value || value.trim() === ""){
+            const valueText = String(value)
+            if(!valueText || valueText.trim() === ""){
                 return "El nombre es obligatorio";
             }
-            if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(value)) return "El nombre solo puede contener letras y espacios";
+            if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(valueText)) return "El nombre solo puede contener letras y espacios";
             return null;
         }
     },
@@ -30,10 +32,11 @@ export const agencyConstraints: Constraints = {
         type:"string",
         label:"Ubicación",
         validate: (value) => {
-            if(!value || value.trim() === ""){
+            const valueText = String(value)
+            if(!valueText || valueText.trim() === ""){
                 return "La ubicación es obligatoria";
             }
-            if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(value)) return "La ubicación solo puede contener letras y espacios";
+            if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(valueText)) return "La ubicación solo puede contener letras y espacios";
             return null;
         }
     },
@@ -51,9 +54,10 @@ export const apprenticeConstraints: Constraints = {
         type:"number",
         label:"Nivel de Entrenamiento",
         validate: (value) => {
-            if(!value || value.trim() === "") return "El nivel de entrenamiento es obligatorio";
-            if (!/^\d+$/.test(value)) return "El nivel de entrenamiento debe ser un número natural";
-            const num = parseInt(value);
+            const valueText = String(value)
+            if(!value || valueText.trim() === "") return "El nivel de entrenamiento es obligatorio";
+            if (!/^\d+$/.test(valueText)) return "El nivel de entrenamiento debe ser un número natural";
+            const num = parseInt(valueText);
             if(num < 0 || num > 10) return "El nivel de entrenamiento debe estar entre 0 y 10";
             return null;
         }
@@ -65,8 +69,9 @@ export const apprenticeConstraints: Constraints = {
         label:"Estado",
         options:["En Entrenamiento", "En Proceso", "Transferido"],
         validate: (value) => {
+            const valueText = String(value)
             if(!value || value.trim() === "") return "El estado es obligatorio";
-            if (!["En Entrenamiento", "En Proceso", "Transferido"].includes(value)) return "Estado inválido";
+            if (!["En Entrenamiento", "En Proceso", "Transferido"].includes(valueText)) return "Estado inválido";
             return null;
         }
     }

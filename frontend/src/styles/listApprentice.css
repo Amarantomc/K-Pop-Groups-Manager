@@ -10,6 +10,9 @@
     flex: 1; /* ocupar el espacio restante junto a la sidebar fija */
     min-height: 100vh; /* emparejar altura con el sidebar */
     padding: 20px;
+    width: 100%;
+    transition: all 0.3s ease;
+    overflow: hidden;
 }
 .top,
 .bottom {

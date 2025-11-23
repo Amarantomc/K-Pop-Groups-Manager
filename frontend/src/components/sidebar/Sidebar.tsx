@@ -1,5 +1,4 @@
-import "../../styles/sidebar.css"
-import React from "react";
+import "../../styles/sidebar.css";
 import DashboardIcon from '@mui/icons-material/Dashboard';
 // import PersonIcon from '@mui/icons-material/Person';
 // import PendingActionsIcon from '@mui/icons-material/PendingActions';
@@ -16,15 +15,22 @@ import logo from "../../assets/k-pop-logo.png"
 import {useAuth} from "../../contexts/AuthContext"
 import { Link } from "react-router-dom";
 
-const Sidebar : React.FC = () => {
+
+interface SidebarProps{
+    collapsed: boolean;
+}
+const Sidebar : React.FC<SidebarProps> = ({collapsed}) => {
     const {logout} = useAuth();
     return (
-        <div className="sidebar">
+        <div className={`sidebar ${collapsed ? "collapsed" : ""}`}>
+            {/* <div className="toogle-btn" onClick={() => setCollapsed(!collapsed)}>
+                {collapsed? <MenuIcon className="icon"/> : <ChevronLeftICon className="icon"/>}
+            </div> */}
             <div className="top">
-                <img src={logo} alt="KPop-Dashboard" className="logo"/>
+                {!collapsed && <img src={logo} alt="KPop-Dashboard" className="logo"/>}
             </div>
             <hr/>
-            <div className="center">
+            {!collapsed && (<div className="center">
                 <ul>
                     <p className="title">INICIO</p>
                     <li>
@@ -123,7 +129,7 @@ const Sidebar : React.FC = () => {
                         <span>Cerrar Sesión</span>
                     </li>
                 </ul>
-            </div>
+            </div>)}
             {/* <div className="bottom">
                 <div className="colorOption"></div>
                 <div className="colorOption"></div>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import Sidebar from '../../components/sidebar/Sidebar';
 // import NavBar from '../../components/navbar/Navbar';
@@ -5,6 +6,7 @@ import '../../styles/profile.css';
 import Form from '../../components/form/Form';
 import formFieldsByEntity from '../../formSource';
 import { useAuth } from '../../contexts/AuthContext';
+import Header from '../../components/header/Header';
 
 const Profile: React.FC = () => {
   const { user } = useAuth();
@@ -119,20 +121,15 @@ const Profile: React.FC = () => {
       }
     })();
   };
-
+  const [collapsed,setCollapsed] = useState(false)
   return (
     <div className="Profile-sidebar">
-      <Sidebar />
+      <Sidebar collapsed={collapsed} />
       <div className="Profile-navbar">
         {/* <NavBar /> */}
 
         <div className="Profile-content">
-          <div className='welcome-card'>
-            <div className='welcome-text'>
-              <h1>Perfil</h1>
-              <p className='hint'>Información y ajustes de tu cuenta</p>
-            </div>
-          </div>
+          <Header title='Perfil' description='Información y ajustes de tu cuenta' showlogo={false} collapsed={collapsed} setCollapsed={setCollapsed}/>
 
           {/* Mostrar datos del usuario logueado en tarjeta principal */}
           <div className="profile-container" style={{ marginTop: 12 }}>

@@ -1,9 +1,22 @@
 .sidebar{
     /* sidebar con ancho fijo para estabilidad entre páginas */
-    flex: 0 0 240px; /* ancho fijo de 240px */
+    width: 240px; /* ancho fijo de 240px */
+    flex-shrink: 0;
     border-right: 0.5px solid rgb(230, 227, 227);
     min-height: 100vh;
     background-color: white;
+    transition: width 0.3s ease;
+    position: relative;
+}
+
+.sidebar.collapsed {
+    width: 0;
+    padding: 0;
+    border: none;
+    visibility: hidden;
+}
+.sidebar {
+    transition: all 0.3s ease;
 }
 .top{
     height: 50px;
@@ -75,4 +88,12 @@ span{
     &:nth-child(2){
         background-color: #333;
     }
+}
+
+.sidebar.collapsed span {
+    display: none; /* ocultar texto al colapsar */
+}
+
+.sidebar.collapsed .logo {
+    display: none;
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import "../../styles/listApprentice.css"
 import Sidebar from "../../components/sidebar/Sidebar"
 // import Navbar from "../../components/navbar/Navbar"
@@ -6,12 +7,20 @@ import { apprenticeColumns } from "../../datatableSource"
 import React from "react"
 import { useEffect , useState  } from "react"
 import { apprenticeConstraints } from "../../modalConstraints"
+import Header from "../../components/header/Header"
+import ConfirmDialog from "../../components/confirmDialog/ConfirmDialog"
 
 
-const ListAgency: React.FC = () => {
+const ListApprentice: React.FC = () => {
 
      const [apprenticeRows, setApprenticeRows] = useState<any[]>([])
-    
+     const [apprenticeToDelete,setApprenticeToDelete] = useState<number | null>(null)
+     const [openConfirm,setOpenConfirm] = useState(false)
+
+     const askDelete = (id : number) =>{
+      setApprenticeToDelete(id),
+      setOpenConfirm(true)
+     }
         useEffect(
                 () => {
                     const fetchApprentices = async () => {
@@ -40,23 +49,25 @@ const ListAgency: React.FC = () => {
                 },[]
             )
     
-                const handleDelete = async (id: number) => {
+                const handleDelete = async () => {
+                  if(apprenticeToDelete === null) return;
+
         try {
-          const confirmDelete = window.confirm("¿Estás seguro de eliminar este aprendiz?");
-          if (!confirmDelete) return;
-    
-          const response = await fetch(`http://localhost:3000/api/apprentice/${id}`, {
+          const response = await fetch(`http://localhost:3000/api/apprentice/${apprenticeToDelete}`, {
             method: "DELETE",
           });
     
           const result = await response.json();
           if (result.success) {
-            setApprenticeRows((prev) => prev.filter((apprentice) => apprentice.id !== id));
+            setApprenticeRows((prev) => prev.filter((apprentice) => apprentice.id !== apprenticeToDelete));
           } else {
             alert("Error al eliminar el aprendiz");
           }
         } catch (error) {
           console.error("Error al eliminar:", error);
+        }finally{
+          setOpenConfirm(false);
+          setApprenticeToDelete(null)
         }
       };
 
@@ -77,26 +88,21 @@ const ListAgency: React.FC = () => {
     });
     setApprenticeRows(prev => prev.map(a => (a.id === updated.id ? updated : a)));
   };
-
+    const [collapsed,setCollapsed] = useState(false)
     return (
         <div className="listApprenticeSideBar">
-            <Sidebar/>
+            <Sidebar collapsed={collapsed}/>
             <div className="listApprenticeNavBar">
             {/* <Navbar/> */}
             <div className="agency-header">
-              <div className="welcome-card">
-                <div className="welcome-text">
-                  <h1>Aprendices</h1>
-                  <p className="hint">Listado y gestión de aprendices.</p>
-                </div>
-              </div>
+              <Header title="Aprendices" description="Listado y gestión de aprendices" showlogo={false} collapsed={collapsed} setCollapsed={setCollapsed}/>
             </div>
-            <div className="list-container">
-              <Datatable columns={apprenticeColumns} rows={apprenticeRows} onDelete={handleDelete} onEditSave={handleEditSave} constraints={apprenticeConstraints}/>
+            <Datatable columns={apprenticeColumns} rows={apprenticeRows} onDelete={askDelete} onEditSave={handleEditSave} constraints={apprenticeConstraints}/>
             </div>
-            </div>
+            <ConfirmDialog message="¿Está seguro que desea eliminar este aprendiz?" open={openConfirm} onCancel={() => setOpenConfirm(false)} onConfirm={handleDelete}>
+            </ConfirmDialog>
         </div>
     )
 }
 
-export default ListAgency
+export default ListApprentice
