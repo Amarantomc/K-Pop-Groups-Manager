@@ -1,18 +1,25 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import "../../styles/listAgency.css"
 import Sidebar from "../../components/sidebar/Sidebar"
-// import Navbar from "../../components/navbar/Navbar"
 import Datatable from "../../components/datatable/Datatable"
 import { agencyColumns } from "../../datatableSource"
-import React from "react"
 import { useEffect , useState  } from "react"
 import { agencyConstraints } from "../../modalConstraints"
+import ConfirmDialog from "../../components/confirmDialog/ConfirmDialog"
+import Header from "../../components/header/Header"
 
 
 
 const ListAgency: React.FC = () => {
 
     const [agencyRows, setAgencyRows] = useState<any[]>([])
+    const [agencyToDelete,setAgencyToDelete] = useState<number | null>(null)
+    const [openConfirm,setOpenConfirm] = useState(false)
 
+    const askDelete = (id : number) =>{
+      setAgencyToDelete(id)
+      setOpenConfirm(true)
+    }
     useEffect(
         () => {
             const fetchAgencies = async () => {
@@ -39,24 +46,25 @@ const ListAgency: React.FC = () => {
         },[]
     )
 
-      const handleDelete = async (id: number) => {
+      const handleDelete = async () => {
+        if(agencyToDelete === null) return;
     try {
-      const confirmDelete = window.confirm("¿Estás seguro de eliminar esta agencia?");
-      if (!confirmDelete) return;
-
-      const response = await fetch(`http://localhost:3000/api/agency/${id}`, {
+      const response = await fetch(`http://localhost:3000/api/agency/${agencyToDelete}`, {
         method: "DELETE",
       });
 
       const result = await response.json();
       if (result.success) {
-        setAgencyRows((prev) => prev.filter((agency) => agency.id !== id));
+        setAgencyRows((prev) => prev.filter((agency) => agency.id !== agencyToDelete));
         console.log(agencyRows)
       } else {
         alert("Error al eliminar la agencia");
       }
     } catch (error) {
       console.error("Error al eliminar:", error);
+    }finally{
+      setOpenConfirm(false);
+      setAgencyToDelete(null)
     }
   };
 
@@ -75,21 +83,17 @@ const ListAgency: React.FC = () => {
     });
     setAgencyRows(prev => prev.map(a => (a.id === updated.id ? updated : a)));
   };
-
+    const [collapsed,setcollapsed] = useState(false)
     return (
         <div className="listAgencySideBar">
-            <Sidebar/>
+            <Sidebar collapsed={collapsed}/>
             <div className="listAgencyNavBar">
-                    {/* <Navbar/> */}
                     <div className="agency-header">
-                        <div className="welcome-card">
-                            <div className="welcome-text">
-                                <h1>Agencias</h1>
-                                <p className="hint">Listado y gestión de agencias.</p>
-                            </div>
-                        </div>
+                            <Header title="Agencias" description="Listado y gestión de agencias." showlogo={false} collapsed={collapsed} setCollapsed={setcollapsed}/>
                     </div>
-                    <Datatable columns={agencyColumns} rows={agencyRows} onDelete={handleDelete} onEditSave = {handleEditSave} constraints={agencyConstraints}/>
+                    <Datatable columns={agencyColumns} rows={agencyRows} onDelete={askDelete} onEditSave = {handleEditSave} constraints={agencyConstraints}/>
+            <ConfirmDialog message="¿Está seguro que desea eliminar esta agencia?" open={openConfirm} onCancel={() => setOpenConfirm(false)} onConfirm={handleDelete}showDeleteButton={false}>
+            </ConfirmDialog>
             </div>
         </div>
     )

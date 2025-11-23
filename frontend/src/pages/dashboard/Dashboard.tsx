@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../../components/sidebar/Sidebar';
-// import NavBar from '../../components/navbar/Navbar'
 import "../../styles/dashboard.css"
-import logo from '../../assets/k-pop-logo.png';
+import Header from '../../components/header/Header';
 
 
 const Dashboard : React.FC = () =>{
@@ -69,21 +69,16 @@ const Dashboard : React.FC = () =>{
   }, []);
 
   const renderValue = (v: number | null) => v == null ? '—' : String(v);
-
+  const [collapsed, setCollapsed] = useState(false);
   return (
     <div className='dashboard-sidebar'>
-      <Sidebar/>
+      <Sidebar collapsed={collapsed}/>
       <div className='dashboard-navbar'>
-        {/* <NavBar/> */}
 
         <div className='dashboard-content'>
-          <div className='welcome-card'>
-            <img src={logo} alt='IS-K Pop' className='welcome-logo' />
-            <div className='welcome-text'>
-              <h2>Bienvenido a Gestión de Agencias del K-Pop</h2>
-              <p>Administra agencias, artistas y actividades desde este panel. Aquí tienes un resumen rápido para comenzar.</p>
-            </div>
-          </div>
+          <Header title='Bienvenido a Gestión de Agencias del K-Pop' 
+          description='Administra agencias, artistas y actividades desde este panel. Aquí tienes un resumen rápido para comenzar.'
+          collapsed={collapsed} setCollapsed={setCollapsed}/>
 
           <div className='quick-stats'>
             <div className='stat'>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import "../../styles/listUsers.css"
 import Sidebar from "../../components/sidebar/Sidebar"
 // import Navbar from "../../components/navbar/Navbar"
@@ -5,6 +6,7 @@ import Datatable from "../../components/datatable/Datatable"
 import { userColumns } from "../../datatableSource"
 import React from "react"
 import { useEffect , useState } from "react"
+import Header from "../../components/header/Header"
 
 const ListUsers: React.FC = () => {
 
@@ -54,19 +56,14 @@ const ListUsers: React.FC = () => {
       console.error("Error al eliminar:", error);
     }
   };
-
+  const [collapsed,setCollapsed] = useState(false)
     return (
         <div className="listUsersSideBar">
-            <Sidebar/>
+            <Sidebar collapsed={collapsed}/>
             <div className="listUsersNavBar">
             {/* <Navbar/> */}
             <div className="agency-header">
-              <div className="welcome-card">
-                <div className="welcome-text">
-                  <h1>Usuarios</h1>
-                  <p className="hint">Listado y gestión de usuarios.</p>
-                </div>
-              </div>
+              <Header title="Usuarios" description="Listado y gestión de usuarios." showlogo={false} collapsed={collapsed} setCollapsed={setCollapsed}/>
             </div>
             <Datatable columns={userColumns} rows={userRows} onDelete={handleDelete} showEditButton={false}/>
             </div>

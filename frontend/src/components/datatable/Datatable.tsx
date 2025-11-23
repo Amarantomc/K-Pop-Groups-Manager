@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+/* eslint-disable @typescript-eslint/prefer-as-const */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { DataGrid, type GridColDef , type GridRowsProp } from '@mui/x-data-grid';
 import React from 'react';
 import {Modal, Box, TextField, Typography ,FormControl,InputLabel,Select,MenuItem,FormHelperText} from '@mui/material';
@@ -7,6 +10,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import "../../styles/datatable.css";
 import { useState } from 'react';
 import type { FieldConstraint } from '../../modalConstraints';
+import {esES} from "@mui/x-data-grid/locales"
 
 interface DataTableProps {
   columns : GridColDef[];
@@ -31,7 +35,7 @@ const modalStyle = {
   p: 4,
 };
 
-const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , checkboxSelection = true , onDelete, onEditSave , showEditButton = true , constraints}) => {
+const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , checkboxSelection = false , onDelete, onEditSave , showEditButton = true , constraints}) => {
   const paginationModel = { page: 0, pageSize: pagesize };
 
    const [openModal, setOpenModal] = useState(false);
@@ -53,7 +57,7 @@ const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , c
   };
 
   const validate = () : boolean => {
-    if (!editingRow) return false;
+    if (!editingRow)return false;
 
     const newErrors: Record<string, string> = {};
     Object.keys(editingRow).forEach((key) => {
@@ -106,7 +110,9 @@ const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , c
             initialState={{ pagination: { paginationModel } }}
             pageSizeOptions={[5, 10]}
             checkboxSelection = {checkboxSelection}
+            disableRowSelectionOnClick
             sx={{ border: 0 }}
+            localeText={esES.components.MuiDataGrid.defaultProps.localeText}
         />
         </div>
 
@@ -140,6 +146,7 @@ const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , c
                       value={value}
                       label={rule.label}
                       onChange={(e) =>
+
                         handleFieldChange(key, e.target.value)
                       }
                       disabled={!rule.editable}
@@ -164,11 +171,11 @@ const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , c
                     fullWidth
                     margin="normal"
                     type={
-                      rule.type === "number"
-                        ? "number"
-                        : rule.type === "date"
-                        ? "date"
-                        : "text"
+                      // rule.type === "number"
+                      //   ? "number"
+                      rule.type === "date"
+                          ? "date"
+                        :"text"
                     }
                     value={editingRow[key] ?? ''}
                     onChange={(e) => handleFieldChange(key, e.target.value)}

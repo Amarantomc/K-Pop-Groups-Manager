@@ -1,8 +1,12 @@
-import React from 'react';
+/* eslint-disable no-empty */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { use, useState } from 'react';
 import Sidebar from '../../components/sidebar/Sidebar';
 import Form from '../../components/form/Form';
 import formFieldsByEntity, { APPRENTICE_STATUS, APPRENTICE_STATUS_OPTIONS } from '../../formSource';
 import "../../styles/apprentice.css";
+import Header from '../../components/header/Header';
 
 const Apprentice: React.FC = () => {
   const handleSubmit = (data: FormData | Record<string, any>) => {
@@ -96,18 +100,13 @@ const Apprentice: React.FC = () => {
       }
     })();
   };
-
+ const [collapsed,setCollapsed] = useState(false)
   return (
     <div className='listApprenticeSideBar'>
-      <Sidebar />
+      <Sidebar collapsed={collapsed} />
       <div className='listApprenticeNavBar'>
         <div className='agency-header'>
-          <div className='welcome-card'>
-            <div className='welcome-text'>
-              <h1>Aprendices</h1>
-              <p className='hint'>Usa este formulario para crear o editar registros.</p>
-            </div>
-          </div>
+          <Header title='Aprendices' description='Usa este formulario para crear o editar registros' showlogo={false} collapsed={collapsed} setCollapsed={setCollapsed}/>
         </div>
 
         {/* Formulario mostrado directamente, sin botones de "Mostrar" */}
