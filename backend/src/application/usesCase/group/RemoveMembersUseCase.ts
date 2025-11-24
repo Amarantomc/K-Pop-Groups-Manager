@@ -5,29 +5,33 @@ import type { IGroupRepository } from "../../interfaces/repositories/IGroupRepos
 import { GroupResponseDTO } from "../../dtos/group/GroupResponseDTO";
 
 @injectable()
-export class UpdateGroupUseCase {
+export class RemoveMembersUseCase {
 	constructor(
 		@inject(Types.IGroupRepository) private groupRepository: IGroupRepository,
 		@inject(Types.IUnitOfWork) private unitOfWork: IUnitOfWork
 	) {}
 
 	async execute(
-		id: string,
-		payload: {
-			name?: string;
-			debut?: Date;
-			status?: string;
-			memberCount?: number;
-			agency?: number;
-			concept?: number;
-			visualConcept?: number;
-		}
+		groupId: string,
+		artistIds: number[]
 	): Promise<GroupResponseDTO> {
 		try {
 			await this.unitOfWork.beginTransaction();
-			const updated = await this.groupRepository.update(id, payload);
+
+			const group = await this.groupRepository.findById(groupId);
+			if (!group) throw new Error("Group not found");
+
+			if (!Array.isArray(artistIds) || artistIds.length === 0) {
+				throw new Error("artistIds must be a non-empty array");
+			}
+
+			await this.groupRepository.removeMembers(group.id, artistIds);
+
+			const updatedGroup = await this.groupRepository.findById(groupId);
+			if (!updatedGroup) throw new Error("Failed to retrieve updated group");
+
 			await this.unitOfWork.commit();
-			return GroupResponseDTO.fromEntity(updated);
+			return GroupResponseDTO.fromEntity(updatedGroup);
 		} catch (error) {
 			await this.unitOfWork.rollback();
 			throw error;

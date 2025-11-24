@@ -4,14 +4,14 @@ import type { IGroupRepository } from "../../interfaces/repositories/IGroupRepos
 import { GroupResponseDTO } from "../../dtos/group/GroupResponseDTO";
 
 @injectable()
-export class GetGroupUseCase {
+export class FindGroupByNameUseCase {
 	constructor(
 		@inject(Types.IGroupRepository) private groupRepository: IGroupRepository
 	) {}
 
-	async execute(id: string): Promise<GroupResponseDTO> {
-		const group = await this.groupRepository.findById(id);
-		if (!group) throw new Error("Group not found");
+	async execute(name: string): Promise<GroupResponseDTO> {
+		const group = await this.groupRepository.findByName(name);
+		if (!group) throw new Error("Group with this name not found");
 		return GroupResponseDTO.fromEntity(group);
 	}
 }
