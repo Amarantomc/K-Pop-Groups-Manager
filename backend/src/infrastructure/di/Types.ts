@@ -10,6 +10,8 @@ const Types = {
   IUserRepository: Symbol.for('IUserRepository'),
   IApprenticeRepository : Symbol.for('IApprenticeRepository'),
   IAgencyRepository : Symbol.for('IAgencyRepository'),
+  ISongRepository : Symbol.for('ISongRepository'),
+
 
   
   // Application Use Cases
@@ -44,7 +46,7 @@ const Types = {
   AuthController: Symbol.for('AuthController'),
   ApprenticeController : Symbol.for('ApprenticeController'),
   AgencyController : Symbol.for('AgencyController'),
-
+  
 };
 
 export { Types };
