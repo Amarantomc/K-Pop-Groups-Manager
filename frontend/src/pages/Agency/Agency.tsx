@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import Sidebar from '../../components/sidebar/Sidebar';
 import "../../styles/agency.css"
 import Form from '../../components/form/Form';
-import formFieldsByEntity from '../../formSource';
+import formFieldsByEntity from '../../config/formSource';
 import Header from '../../components/header/Header';
 
 

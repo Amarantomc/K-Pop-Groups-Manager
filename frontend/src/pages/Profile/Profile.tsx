@@ -2,9 +2,9 @@
 import React, { useState } from 'react';
 import Sidebar from '../../components/sidebar/Sidebar';
 // import NavBar from '../../components/navbar/Navbar';
-import '../../styles/profile.css';
-import Form from '../../components/form/Form';
-import formFieldsByEntity from '../../formSource';
+import "../../styles/profile.css";
+import Form from "../../components/form/Form";
+import formFieldsByEntity from "../../config/formSource";
 import { useAuth } from '../../contexts/AuthContext';
 import Header from '../../components/header/Header';
 

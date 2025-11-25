@@ -9,7 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import "../../styles/datatable.css";
 import { useState } from 'react';
-import type { FieldConstraint } from '../../modalConstraints';
+import type { FieldConstraint } from '../../config/modalConstraints';
 import {esES} from "@mui/x-data-grid/locales"
 
 interface DataTableProps {
