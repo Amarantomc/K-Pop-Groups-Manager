@@ -4,7 +4,7 @@
 import React, { use, useState } from 'react';
 import Sidebar from '../../components/sidebar/Sidebar';
 import Form from '../../components/form/Form';
-import formFieldsByEntity, { APPRENTICE_STATUS, APPRENTICE_STATUS_OPTIONS } from '../../formSource';
+import formFieldsByEntity, { APPRENTICE_STATUS, APPRENTICE_STATUS_OPTIONS } from '../../config/formSource';
 import "../../styles/apprentice.css";
 import Header from '../../components/header/Header';
 

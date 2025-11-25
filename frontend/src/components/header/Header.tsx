@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import logo from '../../assets/k-pop-logo.png';
-import "./header.css"
+import "../../styles/header.css"
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import React from 'react'

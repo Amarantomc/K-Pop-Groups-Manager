@@ -1,6 +1,6 @@
 import "../../styles/form.css"
 import React from "react";
-import type { Field } from "../../formSource";
+import type { Field } from "../../config/formSource";
 
 type FormProps = {
     fields?: Field[];
