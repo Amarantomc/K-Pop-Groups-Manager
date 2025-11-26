@@ -1,19 +1,18 @@
 import { Group } from "../../../domain/entities/Group";
-import { GroupStatus } from "../../../domain/enums/GroupStatus";
 
 export class GroupResponseDTO {
 	constructor(
 		public readonly id: number,
 		public readonly name: string,
 		public readonly debut: Date,
-		public readonly status: GroupStatus,
+		public readonly status: string,
 		public readonly memberCount: number,
-		public readonly agency: number,
-		public readonly concept: number,
-		public readonly visualConcept: number,
-		public readonly members: number[] = [],
-		public readonly albums: number[] = [],
-		public readonly activities: number[] = []
+		public readonly IdAgency: number,
+		public readonly IdConcept: number,
+		public readonly IdVisualConcept: number,
+		public readonly members: number[],
+		public readonly albums?: number[],
+		public readonly activities?: number[]
 	) {}
 
 	static fromEntity(group: any): GroupResponseDTO {
@@ -23,10 +22,10 @@ export class GroupResponseDTO {
 			group.debut,
 			group.status,
 			group.memberCount,
-			group.agency,
-			group.concept,
-			group.visualConcept,
-			group.members || [],
+			group.IdAgency,
+			group.IdConcept,
+			group.IdVisualConcept,
+			group.members,
 			group.albums || [],
 			group.activities || []
 		);

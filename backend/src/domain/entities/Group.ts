@@ -1,4 +1,7 @@
 import { GroupStatus } from "../enums/GroupStatus";
+import { Agency } from "./Agency";
+import { Concept } from "./Concept";
+import { VisualConcept } from "./VisualConcept";
 
 export class Group {
 	readonly id: number;
@@ -6,11 +9,9 @@ export class Group {
 	readonly debut: Date;
 	readonly status: GroupStatus;
 	readonly memberCount: number;
-
-	// IDs de relaciones únicas
-	readonly agency: number;
-	readonly concept: number;
-	readonly visualConcept: number;
+	readonly agency: Agency;
+	readonly concept: Concept;
+	readonly visualConcept: VisualConcept;
 
 	constructor(attrs: {
 		id: number;
@@ -18,9 +19,9 @@ export class Group {
 		debut: Date;
 		status: GroupStatus;
 		memberCount: number;
-		agency: number;
-		concept: number;
-		visualConcept: number;
+		agency: Agency;
+		concept: Concept;
+		visualConcept: VisualConcept;
 	}) {
 		this.id = attrs.id;
 		this.name = attrs.name;

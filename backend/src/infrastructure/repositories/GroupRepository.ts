@@ -25,9 +25,10 @@ export class GroupRepository implements IGroupRepository {
 				fechaDebut: new Date(data.debut),
 				estadoGrupo: data.status,
 				Nomiembros: data.members?.length || 0,
-				idConcepto: data.concept,
+				idConcepto: data.IdConcept,
+				idConceptoVisual: data.IdVisualConcept,
 				Agencias: {
-					connect: { id: data.agency },
+					connect: { id: data.IdAgency },
 				},
 			},
 		});
@@ -108,6 +109,7 @@ export class GroupRepository implements IGroupRepository {
 	}
 
 	async update(id: string, data: Partial<CreateGroupDTO>): Promise<Group> {
+		// ! Promise<Partial<GroupResponseDTO>>
 		const updateData: any = {};
 
 		if (data.name) updateData.nombreCompleto = data.name;
@@ -115,7 +117,7 @@ export class GroupRepository implements IGroupRepository {
 		if (data.status) updateData.estadoGrupo = data.status;
 		if (data.memberCount !== undefined)
 			updateData.Nomiembros = data.memberCount;
-		if (data.concept) updateData.idConcepto = data.concept;
+		if (data.IdConcept) updateData.idConcepto = data.IdConcept;
 
 		const updated = await this.db.grupo.update({
 			where: { id: Number(id) },
@@ -293,9 +295,9 @@ export class GroupRepository implements IGroupRepository {
 		);
 	}
 
-	async findByAgency(agency: number): Promise<Group[]> {
+	async findByAgency(IdAgency: number): Promise<Group[]> {
 		const grupos = await this.db.agencia.findUnique({
-			where: { id: agency },
+			where: { id: IdAgency },
 			include: {
 				Grupos: {
 					include: {
@@ -326,9 +328,9 @@ export class GroupRepository implements IGroupRepository {
 		);
 	}
 
-	async findByConcept(concept: number): Promise<Group[]> {
+	async findByConcept(IdConcept: number): Promise<Group[]> {
 		const groups = await this.db.grupo.findMany({
-			where: { idConcepto: concept },
+			where: { idConcepto: IdConcept },
 			include: {
 				Artistas: {
 					where: { fechaFinalizacion: null },
@@ -353,9 +355,9 @@ export class GroupRepository implements IGroupRepository {
 		);
 	}
 
-	async findByVisualConcept(visualConceptId: number): Promise<Group | null> {
+	async findByVisualConcept(IdVisualConcept: number): Promise<Group | null> {
 		const visualConcept = await this.db.conceptoVisual.findUnique({
-			where: { idConcepto: visualConceptId },
+			where: { idConcepto: IdVisualConcept },
 		});
 
 		if (!visualConcept) return null;
