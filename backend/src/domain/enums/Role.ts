@@ -1,4 +1,7 @@
 export enum Role {
        Admin="admin",
-       Artist="artist"
+       Artist="artist",
+       Apprentice="apprentice",
+       Manager="manager",
+       Director="director"
 }
