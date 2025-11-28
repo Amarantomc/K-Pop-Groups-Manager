@@ -2,7 +2,8 @@ import { Role } from "../enums/Role"
 import  User  from "./user"
 
 export class ManagerUser extends User {
-    readonly agenciaId: number
+  
+    readonly agencyId: number
      
     
     constructor(attrs: {
@@ -10,12 +11,18 @@ export class ManagerUser extends User {
         name: string
         email: string
         password: string
-        agenciaId: number
+        agencyId: number
          
     }) {
         super({ ...attrs, rol: Role.Manager })
-        this.agenciaId = attrs.agenciaId
+        this.agencyId = attrs.agencyId
         
     }
+      getProfileData(): Record<string, any> {
+        return {
+            agencyId:this.agencyId
+        }
+    }
+  
  
 }

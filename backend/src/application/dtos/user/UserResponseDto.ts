@@ -7,6 +7,7 @@ export class UserResponseDto {
     public readonly email: string,
     public readonly name: string,
     public readonly rol: string,
+    public readonly profileData?: Record<string, any>
     
   ) {}
 

@@ -1,7 +1,7 @@
-import type { Role } from "../enums/Role"
+import  { Role } from "../enums/Role"
 
 
-export default class User{
+export default abstract class User{
        readonly id: number
        readonly name:string
        readonly email: string
@@ -18,9 +18,10 @@ export default class User{
               this.rol=attrs.rol
               
        }
+        abstract getProfileData(): Record<string, any>
        
-
-      
+    
 }
+
 
 

@@ -20,6 +20,45 @@ model User{
   email String @unique
   password String  
   role String
+
+  perfilManager PerfilManager?
+  perfilDirector PerfilDirector?
+  perfilAprendiz PerfilAprendiz?
+  perfilArtista PerfilArtista?
+}
+
+model PerfilManager {
+  userId Int @id
+  agenciaId Int
+ usuario User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  agencia Agencia @relation( fields: [agenciaId], references: [id])
+}
+
+model PerfilDirector {
+  userId Int @id
+  agenciaId Int
+
+ usuario User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  agencia Agencia @relation( fields: [agenciaId], references: [id])
+}
+
+model PerfilAprendiz {
+  userId Int @id
+  aprendizId Int @unique
+ 
+ usuario User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  aprendiz Aprendiz @relation(fields: [aprendizId], references: [id])
+}
+
+model PerfilArtista {
+  userId Int @id
+  IdAp Int
+  IdGr Int
+  
+  usuario User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  artista Artista @relation(fields: [IdAp, IdGr], references: [idAp, idGr])
+  
+  @@unique([IdAp, IdGr])
 }
 
 model Agencia{
@@ -33,6 +72,8 @@ model Agencia{
   SolicitudesAprendiz AprendizSolicitaGrupo[]
   SolicitudesArtistas ArtistaSolicitaGrupo[]
   Grupos Grupo[]
+  Managers PerfilManager []
+  Directores PerfilDirector [] 
 }
 model Aprendiz{
   id Int @id @default(autoincrement())
@@ -45,6 +86,7 @@ model Aprendiz{
   Evaluacion EvaluacionAprendiz[]
   Artista Artista[]
   SolicitudGrupo AprendizSolicitaGrupo[]
+  Perfil PerfilAprendiz?
 }
 model Actividad{
   id Int @id @default(autoincrement())
@@ -130,6 +172,7 @@ model Artista {
   Actividades ArtistaEnActividad[]
   Lanzamientos ArtistaLanzaAlbum[]
   SolicitudGrupo ArtistaSolicitaGrupo[]
+  Perfil PerfilArtista?
 
   @@id([idAp,idGr])
 }
