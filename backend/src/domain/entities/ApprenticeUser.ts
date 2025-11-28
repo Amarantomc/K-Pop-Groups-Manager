@@ -12,7 +12,7 @@ export class ApprenticeUser extends User {
         password: string
         apprenticeId: number
     }) {
-        super({ ...attrs, rol: Role.Apprentice })
+        super({ ...attrs, role: Role.Apprentice })
         this.apprenticeId = attrs.apprenticeId
     }
     

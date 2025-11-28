@@ -14,7 +14,7 @@ export class DirectorUser extends User {
         agencyId: number
          
     }) {
-        super({ ...attrs, rol: Role.Director })
+        super({ ...attrs, role: Role.Director })
         this.agencyId = attrs.agencyId
          
     }

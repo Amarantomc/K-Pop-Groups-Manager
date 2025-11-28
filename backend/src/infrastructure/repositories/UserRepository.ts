@@ -6,6 +6,8 @@ import type { IUserRepository } from "../../application/interfaces/repositories/
 import type { User } from "../../domain";
 import type { UnitOfWork } from "../PrismaUnitOfWork";
 import { Types } from "../di/Types";
+import { UserFactory } from "../../domain/factories/UserFactory";
+import { Role } from "../../domain/enums/Role";
 
  
 @injectable()
@@ -28,17 +30,78 @@ export class UserRepository implements IUserRepository
                 email:data.email,
                 name:data.name,
                 password:data.GetPassword(),
-                role:data.rol
+                role:data.role
             }
         })
+
+        let profileData: any = {}
+
+    // Crear perfil según el rol
+    switch (data.role) {
+      case Role.Manager:
+        
+        const managerProfile = await this.db.perfilManager.create({
+          data: {
+            userId: user.id,
+            agenciaId: data.agencyId,
+            
+          }
+        })
+        profileData = managerProfile
+        break
+
+      case Role.Director:
+        
+        const directorProfile = await this.db.perfilDirector.create({
+          data: {
+            userId: user.id,
+            agenciaId: data.agencyId,
+             
+          }
+        })
+        profileData = directorProfile
+        break
+
+      case Role.Apprentice:
+        
+        const apprenticeProfile = await this.db.perfilAprendiz.create({
+          data: {
+            userId: user.id,
+            aprendizId: data.IdAp
+          }
+        })
+        profileData = apprenticeProfile
+        break
+
+      case Role.Artist:
          
-        return UserResponseDto.toEntity(user)
+        const artistProfile = await this.db.perfilArtista.create({
+          data: {
+            userId: user.id,
+            artistaIdAp: data.IdAp,
+            artistaIdGr: data.IdGr
+          }
+        })
+        profileData = artistProfile
+        
+        break
+    }
+
+    return UserFactory.create(user, profileData)
+         
+
 
     }
     async findById(id: any): Promise<User | null> {
          id=(Number)(id)
         const user=await this.db.user.findUnique({
-           where:{id}
+           where:{id},
+           include: {
+        perfilManager: true,
+        perfilDirector: true,
+        perfilAprendiz: true,
+        perfilArtista: true
+      }
         })
         return user ? UserResponseDto.toEntity(user) : null
     }
@@ -48,7 +111,7 @@ export class UserRepository implements IUserRepository
                   data,
                 });
               
-                return UserResponseDto.toEntity(user);
+                return this.findById(user.id) as Promise<User>
     }
     async delete(id: any): Promise<void> {
         id=(Number)(id)
@@ -59,16 +122,30 @@ export class UserRepository implements IUserRepository
     }
 
     async getUsers(): Promise<User[]> {
-      const prismaUsers = await this.db.user.findMany();
+      const prismaUsers = await this.db.user.findMany({
+              include: {
+        perfilManager: true,
+        perfilDirector: true,
+        perfilAprendiz: true,
+        perfilArtista: true
+      }
+      });
 
-    return prismaUsers
+    return UserResponseDto.toEntities(prismaUsers)
     }
 
  
 
   async findByEmail(email: string): Promise<User | null> {
         const user= await this.db.user.findUnique({
-            where:{email}
+            where:{email},
+                  include: {
+        perfilManager: true,
+        perfilDirector: true,
+        perfilAprendiz: true,
+        perfilArtista: true
+      }
+
         })
         return user ? UserResponseDto.toEntity(user) : null
     }
