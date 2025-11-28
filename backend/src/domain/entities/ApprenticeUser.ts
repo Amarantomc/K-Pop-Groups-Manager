@@ -2,6 +2,7 @@ import { Role } from "../enums/Role"
 import  User from "./user"
 
 export class ApprenticeUser extends User {
+   
     readonly apprenticeId: number
     
     constructor(attrs: {
@@ -15,4 +16,9 @@ export class ApprenticeUser extends User {
         this.apprenticeId = attrs.apprenticeId
     }
     
+     getProfileData(): Record<string, any> {
+        return{
+            apprenticeId:this.apprenticeId
+        }
+    }
 }

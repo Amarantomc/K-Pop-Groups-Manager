@@ -2,6 +2,7 @@ import { Role } from "../enums/Role"
 import  User from "./user"
 
 export class ArtistUser extends User {
+   
     readonly IdAp: number
     readonly IdGr: number
     
@@ -16,6 +17,12 @@ export class ArtistUser extends User {
         super({ ...attrs, rol: Role.Artist })
         this.IdAp = attrs.IdAp
         this.IdGr = attrs.IdGr
+    }
+     getProfileData(): Record<string, any> {
+        return {
+            IdAp: this.IdAp,
+            IdGr:this.IdGr
+        }
     }
  
 }
