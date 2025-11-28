@@ -14,7 +14,7 @@ export class ArtistUser extends User {
         IdAp: number
         IdGr: number
     }) {
-        super({ ...attrs, rol: Role.Artist })
+        super({ ...attrs, role: Role.Artist })
         this.IdAp = attrs.IdAp
         this.IdGr = attrs.IdGr
     }

@@ -8,7 +8,7 @@ export class AdminUser extends User {
         email: string
         password: string
     }) {
-        super({ ...attrs, rol: Role.Admin })
+        super({ ...attrs, role: Role.Admin })
     }
     
     getProfileData() {

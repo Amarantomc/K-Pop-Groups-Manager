@@ -1,38 +1,62 @@
 
 import { User } from "../../../domain";
+import { UserFactory } from "../../../domain/factories/UserFactory";
 
 export class UserResponseDto {
   constructor(
     public readonly id: number,
     public readonly email: string,
     public readonly name: string,
-    public readonly rol: string,
+    public readonly role: string,
     public readonly profileData?: Record<string, any>
     
   ) {}
 
-  static fromEntity(user: any): UserResponseDto {
+  static fromEntity(user: User): UserResponseDto {
     return new UserResponseDto(
       user.id,
       user.email,
       user.name,
-      user.rol
+      user.role,
+      user.getProfileData()
       
     );
   }
+  
+    static toEntity(userData: any): User {
+    let profileData: any = {}
 
-  static toEntity(user:any):User {
-    return new User({ 
-      id:user.id,
-      name:user.name,
-      email: user.email,
-      password:user.password,
-      rol:user.role.toString(),}
-     
-    )
+    // Determinar qué perfil tiene
+    if (userData.perfilManager) {
+      profileData = {
+        agenciaId: userData.perfilManager.agenciaId,
+
+      }
+    } else if (userData.perfilDirector) {
+      profileData = {
+        agenciaId: userData.perfilDirector.agenciaId,
+
+      }
+    } else if (userData.perfilAprendiz) {
+      profileData = {
+        aprendizId: userData.perfilAprendiz.aprendizId
+      }
+    } else if (userData.perfilArtista) {
+      profileData = {
+        artistaIdAp: userData.perfilArtista.IdAp,
+        artistaIdGr: userData.perfilArtista.IdGr
+      }
+    }
+
+    return UserFactory.create(userData, profileData)
   }
 
-  static fromEntities(users: any[]): UserResponseDto[] {
+
+  static fromEntities(users: User[]): UserResponseDto[] {
     return users.map(user => this.fromEntity(user));
+  }
+
+  static toEntities(users: any []) :User []{
+    return users.map(user=>this.toEntity(user))
   }
 }
