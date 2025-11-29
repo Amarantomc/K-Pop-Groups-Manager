@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import logo from '../../assets/k-pop-logo.png';
+import logo from '../../assets/KPopWorld logo.png';
 import musicIcon from '../../assets/music-notes-large.svg';
 import "./header.css"
 import MenuIcon from '@mui/icons-material/Menu';

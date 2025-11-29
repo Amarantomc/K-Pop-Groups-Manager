@@ -5,7 +5,7 @@ import Sidebar from '../../../components/sidebar/Sidebar';
 import "./profile.css";
 import Form from "../../../components/form/Form";
 import formFieldsByEntity from "../../../config/formSource";
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../../contexts/auth/AuthContext';
 import Header from '../../../components/header/Header';
 
 const Profile: React.FC = () => {

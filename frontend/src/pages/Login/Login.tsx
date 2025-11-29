@@ -1,8 +1,8 @@
 // Ubicación: src/components/auth/Login.tsx
 import React, { useState } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import type { LoginFormData } from '../../config/types.tsx';
+import type { LoginFormData } from '../../types/types';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
