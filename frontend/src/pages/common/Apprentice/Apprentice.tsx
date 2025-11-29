@@ -2,11 +2,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { use, useState } from 'react';
-import Sidebar from '../../components/sidebar/Sidebar';
-import Form from '../../components/form/Form';
-import formFieldsByEntity, { APPRENTICE_STATUS, APPRENTICE_STATUS_OPTIONS } from '../../config/formSource';
-import "../../styles/apprentice.css";
-import Header from '../../components/header/Header';
+import Sidebar from '../../../components/sidebar/Sidebar';
+import Form from '../../../components/form/Form';
+import formFieldsByEntity, { APPRENTICE_STATUS, APPRENTICE_STATUS_OPTIONS } from '../../../config/formSource';
+import "./apprentice.css";
+import Header from '../../../components/header/Header';
 
 const Apprentice: React.FC = () => {
   const handleSubmit = (data: FormData | Record<string, any>) => {

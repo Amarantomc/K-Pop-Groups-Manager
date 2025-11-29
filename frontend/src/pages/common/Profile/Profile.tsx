@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
-import Sidebar from '../../components/sidebar/Sidebar';
+import Sidebar from '../../../components/sidebar/Sidebar';
 // import NavBar from '../../components/navbar/Navbar';
-import "../../styles/profile.css";
-import Form from "../../components/form/Form";
-import formFieldsByEntity from "../../config/formSource";
+import "./profile.css";
+import Form from "../../../components/form/Form";
+import formFieldsByEntity from "../../../config/formSource";
 import { useAuth } from '../../contexts/AuthContext';
-import Header from '../../components/header/Header';
+import Header from '../../../components/header/Header';
 
 const Profile: React.FC = () => {
   const { user } = useAuth();

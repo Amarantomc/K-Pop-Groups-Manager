@@ -1,4 +1,4 @@
-import "../../styles/form.css"
+import "./form.css"
 import React from "react";
 import type { Field } from "../../config/formSource";
 
