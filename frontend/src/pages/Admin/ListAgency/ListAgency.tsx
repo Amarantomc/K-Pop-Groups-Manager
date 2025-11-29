@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import "../../styles/listAgency.css"
-import Sidebar from "../../components/sidebar/Sidebar"
-import Datatable from "../../components/datatable/Datatable"
-import { agencyColumns } from "../../config/datatableSource"
+import "./listAgency.css"
+import Sidebar from "../../../components/sidebar/Sidebar"
+import Datatable from "../../../components/datatable/Datatable"
+import { agencyColumns } from "../../../config/datatableSource"
 import { useEffect , useState  } from "react"
-import { agencyConstraints } from "../../config/modalConstraints"
-import ConfirmDialog from "../../components/confirmDialog/ConfirmDialog"
-import Header from "../../components/header/Header"
+import { agencyConstraints } from "../../../config/modalConstraints"
+import ConfirmDialog from "../../../components/confirmDialog/ConfirmDialog"
+import Header from "../../../components/header/Header"
 
 
 

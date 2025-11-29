@@ -1,15 +1,15 @@
 
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../auth/AuthContext';
 import Login from '../../pages/Login/Login';
-import Dashboard from '../../pages/dashboard/Dashboard';
-import Agency from '../../pages/Agency/Agency';
-import ListAgency from '../../pages/ListAgency/ListAgency';
-import ListApprentice from '../../pages/ListApprentice/ListApprentice';
-import Apprentice from '../../pages/Apprentice/Apprentice';
-import ListUsers from '../../pages/ListUsers/ListUsers';
-import Profile from '../../pages/Profile/Profile';
+import Dashboard from '../../pages/Admin/AdminDashboard';
+import Agency from '../../pages/Admin/Agency/Agency';
+import ListAgency from '../../pages/Admin/ListAgency/ListAgency';
+import ListApprentice from '../../pages/common/ListApprentice/ListApprentice';
+import Apprentice from '../../pages/common/Apprentice/Apprentice';
+import ListUsers from '../../pages/Admin/ListUsers/ListUsers';
+import Profile from '../../pages/common/Profile/Profile';
 
 const AppRouter: React.FC = () => {
   const { user, isLoading } = useAuth();
