@@ -1,4 +1,4 @@
-// Ubicación: src/types/index.ts
+
 export interface User {
   rol: string;
   id: string;
@@ -29,7 +29,6 @@ export interface RegisterFormData {
   confirmPassword: string;
 }
 
-// Frontend models for Hito 1
 export interface Artista {
   id: string;
   nombre: string;

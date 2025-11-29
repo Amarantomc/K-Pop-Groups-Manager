@@ -2,11 +2,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
-import Sidebar from '../../components/sidebar/Sidebar';
-import "../../styles/agency.css"
-import Form from '../../components/form/Form';
-import formFieldsByEntity from '../../config/formSource';
-import Header from '../../components/header/Header';
+import Sidebar from '../../../components/sidebar/Sidebar';
+import "./agency.css"
+import Form from '../../../components/form/Form';
+import formFieldsByEntity from '../../../config/formSource';
+import Header from '../../../components/header/Header';
 
 
 const Agency : React.FC = () =>{

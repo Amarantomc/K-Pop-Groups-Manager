@@ -7,7 +7,7 @@ import {Modal, Box, TextField, Typography ,FormControl,InputLabel,Select,MenuIte
 import {Button} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import "../../styles/datatable.css";
+import "./datatable.css";
 import { useState } from 'react';
 import type { FieldConstraint } from '../../config/modalConstraints';
 import {esES} from "@mui/x-data-grid/locales"

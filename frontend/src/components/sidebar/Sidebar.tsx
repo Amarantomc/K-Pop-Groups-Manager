@@ -1,6 +1,6 @@
-import "../../styles/sidebar.css";
-import logo from "../../assets/k-pop-logo.png"
-import {useAuth} from "../../contexts/AuthContext"
+import "./sidebar.css";
+import logo from "../../assets/KPopWorld logo.png"
+import {useAuth} from "../../contexts/auth/AuthContext"
 import { Link } from "react-router-dom";
 import { MenuByRole ,type MenuSection } from "../../config/role";
 

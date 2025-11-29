@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import "../../styles/listUsers.css"
-import Sidebar from "../../components/sidebar/Sidebar"
+import "./listUsers.css"
+import Sidebar from "../../../components/sidebar/Sidebar"
 // import Navbar from "../../components/navbar/Navbar"
-import Datatable from "../../components/datatable/Datatable"
-import { userColumns } from "../../config/datatableSource"
+import Datatable from "../../../components/datatable/Datatable"
+import { userColumns } from "../../../config/datatableSource"
 import React from "react"
 import { useEffect , useState } from "react"
-import Header from "../../components/header/Header"
+import Header from "../../../components/header/Header"
 
 const ListUsers: React.FC = () => {
 

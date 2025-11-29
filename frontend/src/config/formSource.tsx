@@ -35,7 +35,7 @@ export type ApprenticeStatus = typeof APPRENTICE_STATUS[number];
 // Labels en español para mostrar en el formulario; los `value` enviados serán las claves del enum.
 const APPRENTICE_STATUS_LABELS: Record<ApprenticeStatus, string> = {
     'Training': 'En entrenamiento',
-    'Process': 'En proceso',
+    'Process': 'En proceso de evaluación',
     'Transferred': 'Transferido',
 };
 
@@ -53,10 +53,10 @@ export type ContractStatus = typeof CONTRACT_STATUS[number];
 export const ACTIVITY_TYPES = ['individual','grupal'] as const;
 export type ActivityType = typeof ACTIVITY_TYPES[number];
 
-export const ROLE_TYPES = ['Admin'] as const;
+export const ROLE_TYPES = ['Admin', 'Manager', 'Director','Artista', 'Aprendiz'] as const;
 export type RoleType = typeof ROLE_TYPES[number];
 
-export const INCOME_TYPES = ['ventas', 'concierto', 'publicidad', 'otras'] as const;
+export const INCOME_TYPES = ['ventas', 'concierto', 'publicidad', 'otros'] as const;
 export type IncomeType = typeof INCOME_TYPES[number];
 
 export const REQUEST_TYPES = ['ajuste_horario', 'disponibilidad', 'otro'] as const;
