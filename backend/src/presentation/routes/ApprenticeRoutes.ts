@@ -21,8 +21,8 @@ export class ApprenticeRoutes{
     this.router.put('/:id', (req, res) => this.apprenticeController.updateApprentice(req, res))
     this.router.delete('/:id',(req, res) => this.apprenticeController.deleteApprentice(req, res))
     this.router.get('/',(req, res) => this.apprenticeController.listApprentice(req, res))
-
-   
+    this.router.get('/:name', (req, res) => this.apprenticeController.getByNameApprentice(req,res))
+    
   }
 
   public getRouter(): Router {

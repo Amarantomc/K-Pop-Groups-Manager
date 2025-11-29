@@ -2,6 +2,7 @@ import { inject, injectable } from "inversify";
 import { Types } from "../../infrastructure/di/Types";
 import  { CreateApprenticeUseCase } from "../../application/usesCase/apprentice/CreateApprentice";
 import  { GetApprenticeUseCase } from "../../application/usesCase/apprentice/GetApprenticeUseCase";
+import  { GetApprenticeByNameUseCase } from "../../application/usesCase/apprentice/GetApprenticeByNameUseCase";
 import  { DeleteApprenticeUseCase } from "../../application/usesCase/apprentice/DeleteApprentice";
 import  { UpdateApprenticeUseCase } from "../../application/usesCase/apprentice/UpdateApprentice";
 import { CreateApprenticeDto } from "../../application/dtos/apprentice/CreateApprenticeDto";
@@ -15,7 +16,9 @@ constructor(@inject(Types.CreateApprenticeUseCase)  private createApprenticeUseC
             @inject(Types.GetApprenticeUseCase) private getApprenticeUseCase:GetApprenticeUseCase,
             @inject(Types.DeleteApprenticeUseCase) private deleteApprenticeUseCase:DeleteApprenticeUseCase,
             @inject(Types.UpdateApprenticeUseCase) private updateApprenticeUseCase:UpdateApprenticeUseCase,
-            @inject(Types.ListApprenticeUseCase) private listApprenticeUseCase:ListApprenticeUseCase){}
+            @inject(Types.ListApprenticeUseCase) private listApprenticeUseCase:ListApprenticeUseCase,
+            @inject(Types.GetApprenticeUseCase) private getByNameApprenticeUseCase:GetApprenticeByNameUseCase,
+          ){}
 
     
   async createApprentice(req: Request, res: Response) 
@@ -39,6 +42,27 @@ constructor(@inject(Types.CreateApprenticeUseCase)  private createApprenticeUseC
       });
     }
       }
+
+      async getByNameApprentice(req: Request, res: Response) 
+      {
+        try {
+              const { name } = req.params;
+              const apprentice = await this.getByNameApprenticeUseCase.excute(name!);
+               
+               
+
+              res.json({
+                success: true,
+                data: apprentice
+          });
+
+    } catch (error: any) {
+      res.status(404).json({
+        success: false,
+        error: error.message
+      });
+    }
+  }
 
     async getApprentice(req: Request, res: Response) 
       {

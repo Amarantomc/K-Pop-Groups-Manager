@@ -6,6 +6,7 @@ import { Status } from '../../../domain/enums/ApprenticeStatus';
 
 export interface IApprenticeRepository extends IBaseRepository<Apprentice,CreateApprenticeDto,any> {
     findAll(): Promise<Apprentice[]>;
+    findByName(name:string):Promise<Apprentice|null>;
 }
 
  
