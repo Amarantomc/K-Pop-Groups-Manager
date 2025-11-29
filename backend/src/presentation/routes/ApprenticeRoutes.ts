@@ -2,6 +2,8 @@ import { Router } from "express";
 import type { ApprenticeController } from "../controllers/ApprenticeController";
 import { container } from "../../infrastructure/di/Container";
 import { Types } from "../../infrastructure/di/Types";
+import { AuthMiddleware } from "../middlewares/AuthMiddleware";
+import { RoleMiddleware } from "../middlewares/RoleMiddleware";
 
 export class ApprenticeRoutes{
     private router: Router;
@@ -16,11 +18,13 @@ export class ApprenticeRoutes{
 
   private setupRoutes(): void {
      
-    this.router.post('/', (req, res) => this.apprenticeController.createApprentice(req, res))
+    this.router.use(AuthMiddleware.authenticate())
+    this.router.post('/:id',RoleMiddleware.onlyStaff(), (req, res) => this.apprenticeController.createApprentice(req, res))
     this.router.get('/:id', (req, res) => this.apprenticeController.getApprentice(req,res))
-    this.router.put('/:id', (req, res) => this.apprenticeController.updateApprentice(req, res))
-    this.router.delete('/:id',(req, res) => this.apprenticeController.deleteApprentice(req, res))
+    this.router.put('/:id',RoleMiddleware.onlyStaff(),(req, res) => this.apprenticeController.updateApprentice(req, res))
+    this.router.delete('/:id',RoleMiddleware.onlyStaff(),(req, res) => this.apprenticeController.deleteApprentice(req, res))
     this.router.get('/',(req, res) => this.apprenticeController.listApprentice(req, res))
+    this.router.get('/agency/:id',(req, res) => this.apprenticeController.listByAgency(req,res))
 
    
   }

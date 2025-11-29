@@ -7,6 +7,8 @@ import type { UnitOfWork } from "../PrismaUnitOfWork";
 import { Status } from "../../domain/enums/ApprenticeStatus";
 import { inject, injectable } from "inversify";
 import { Types } from "../di/Types";
+import { equal } from "assert";
+import { Agency } from "../../domain/entities/Agency";
  
 
 @injectable()
@@ -18,15 +20,14 @@ export class ApprenticeRepository implements IApprenticeRepository
   ) {}
 
 
+
      private get db() {
     return this.unitOfWork.getTransaction();
   }
     
    async create(data: CreateApprenticeDto): Promise<Apprentice> {
          
-         
-        
-        const apprentice= await this.db.Aprendiz.create({
+         const apprentice= await this.db.Aprendiz.create({
             data:{
                 nombreCompleto:data.name,
                 fechaNacimiento:new Date(data.dateOfBirth),
@@ -35,6 +36,15 @@ export class ApprenticeRepository implements IApprenticeRepository
                 estadoAprendiz:data.status              
             }
         })
+        //Se registra en Tabla de Relacion
+        await this.db.AprendizEnAgencia.create({
+          data:{
+            idAp:apprentice.id,
+            idAg:data.agencyId,
+            fechaInicio: new Date()
+          }
+        })
+
         
         
         return ApprenticeResponseDto.toEntity(apprentice)
@@ -62,18 +72,33 @@ export class ApprenticeRepository implements IApprenticeRepository
         return ApprenticeResponseDto.toEntity(apprentice);
       }
    async delete(id: string): Promise<void> {
-    try {
+    
       await this.db.Aprendiz.delete({
         where: { id: Number(id) },
       });
-    } catch (error) {
-      throw new Error(`Error deleting apprentice with id ${id}: ${error}`);
-    }
+      
   }
 
     async findAll(): Promise<Apprentice[]> {
       const apprentices = await this.db.Aprendiz.findMany();
 
-      return apprentices
+      return ApprenticeResponseDto.toEntities(apprentices);
+  }
+
+     async listByAgency(id: number): Promise<Apprentice[]> {
+       
+      //falta poner includes
+      const apprentices = await this.db.Aprendiz.findMany({
+      where: {
+        Agencia: {
+              some: {
+                  idAg:id
+              }
+          }
+      },
+        
+  });
+  
+      return ApprenticeResponseDto.toEntities(apprentices);
   }
 }

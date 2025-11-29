@@ -7,6 +7,8 @@ import  { UpdateApprenticeUseCase } from "../../application/usesCase/apprentice/
 import { CreateApprenticeDto } from "../../application/dtos/apprentice/CreateApprenticeDto";
 import type { Request,Response } from "express";
 import type { ListApprenticeUseCase } from "../../application/usesCase/apprentice/ListApprenticeUseCase";
+import type { ListByAgencyUseCase } from "../../application/usesCase/apprentice/ListByAgencyUseCase";
+
 
 @injectable()
 export class ApprenticeController {
@@ -15,14 +17,17 @@ constructor(@inject(Types.CreateApprenticeUseCase)  private createApprenticeUseC
             @inject(Types.GetApprenticeUseCase) private getApprenticeUseCase:GetApprenticeUseCase,
             @inject(Types.DeleteApprenticeUseCase) private deleteApprenticeUseCase:DeleteApprenticeUseCase,
             @inject(Types.UpdateApprenticeUseCase) private updateApprenticeUseCase:UpdateApprenticeUseCase,
-            @inject(Types.ListApprenticeUseCase) private listApprenticeUseCase:ListApprenticeUseCase){}
+            @inject(Types.ListApprenticeUseCase) private listApprenticeUseCase:ListApprenticeUseCase,
+             @inject(Types.ListByAgencyUseCase) private listByAgencyUseCase: ListByAgencyUseCase){}
 
     
   async createApprentice(req: Request, res: Response) 
       {
     try {
-          
-      const apprenticeDto=CreateApprenticeDto.create(req.body)
+      
+      const {id} =req.params
+      
+      const apprenticeDto=CreateApprenticeDto.create(req.body,Number(id));
       const apprentice = await this.createApprenticeUseCase.execute(apprenticeDto);
 
       
@@ -111,6 +116,27 @@ constructor(@inject(Types.CreateApprenticeUseCase)  private createApprenticeUseC
       res.json({
         success: true,
         data: apprentice
+      });
+
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
+    }
+  }
+
+      async listByAgency(req: Request, res: Response) {
+    try {
+      
+      const { id } = req.params;
+      
+      const apprentices = await this.listByAgencyUseCase.execute(Number(id));
+      
+
+      res.json({
+        success: true,
+        data: apprentices
       });
 
     } catch (error: any) {
