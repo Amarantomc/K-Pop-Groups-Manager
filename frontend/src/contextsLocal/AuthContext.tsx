@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import type { ReactNode } from 'react';
-import type { User, LoginFormData } from '../config/types.tsx';
+import type { User, LoginFormData } from '../types/types';
 
 const API_BASE = 'http://localhost:3000';
 

@@ -2,8 +2,8 @@
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { AuthProvider } from './contexts/auth/AuthContext';
-import AppRouter from './contexts/route/AppRouter';
-import './styles/App.css';
+import AppRouter from './contexts/routes/AppRouter';
+import './App.css';
 
 // DebugAuth removed
 
