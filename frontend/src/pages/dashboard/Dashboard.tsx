@@ -72,7 +72,7 @@ const Dashboard : React.FC = () =>{
   const [collapsed, setCollapsed] = useState(false);
   return (
     <div className='dashboard-sidebar'>
-      <Sidebar collapsed={collapsed}/>
+      <Sidebar collapsed={collapsed} role='ADMIN'/>
       <div className='dashboard-navbar'>
 
         <div className='dashboard-content'>

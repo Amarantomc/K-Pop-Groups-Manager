@@ -91,7 +91,7 @@ const ListApprentice: React.FC = () => {
     const [collapsed,setCollapsed] = useState(false)
     return (
         <div className="listApprenticeSideBar">
-            <Sidebar collapsed={collapsed}/>
+            <Sidebar collapsed={collapsed} role="ADMIN"/>
             <div className="listApprenticeNavBar">
             {/* <Navbar/> */}
             <div className="agency-header">

@@ -124,7 +124,7 @@ const Profile: React.FC = () => {
   const [collapsed,setCollapsed] = useState(false)
   return (
     <div className="Profile-sidebar">
-      <Sidebar collapsed={collapsed} />
+      <Sidebar collapsed={collapsed} role='ADMIN'/>
       <div className="Profile-navbar">
         {/* <NavBar /> */}
 
