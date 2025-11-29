@@ -19,6 +19,14 @@ export class ApprenticeRepository implements IApprenticeRepository
     @inject(Types.IUnitOfWork) private unitOfWork: UnitOfWork
   ) {}
 
+  async findByName(name: string): Promise<Apprentice|null> {
+        name=(String)(name)
+        const apprentice=await this.db.Aprendiz.findUnique({
+           where:{name}
+        })
+        return apprentice ? ApprenticeResponseDto.toEntity(apprentice) : null
+  }
+
 
 
      private get db() {
