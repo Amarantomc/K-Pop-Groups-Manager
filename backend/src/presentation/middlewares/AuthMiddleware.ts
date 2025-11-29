@@ -7,6 +7,10 @@ export interface AuthenticatedRequest extends Request {
     userId: number;
     email: string;
     role: Role;
+
+    agencyId?: number;
+    apprenticeId?: number;
+    groupId?: number;
   };
 }
 
@@ -26,7 +30,7 @@ export class AuthMiddleware {
         const decoded = jwt.verify(
           token,
           process.env.JWT_SECRET || 'secret'
-        ) as { userId: number; email: string; role: Role };
+        ) as any;
 
         (req as AuthenticatedRequest).user = decoded;
         next();

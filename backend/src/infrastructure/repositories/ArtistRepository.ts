@@ -252,5 +252,22 @@ private get db() {
     }));
   }
 
+   async findByAgency(id: number): Promise<Artist[]> {
+      const artists=await this.db.artista.findMany({
+         where: {
+                Aprendiz: {
+                    Agencia:{
+                      some:{
+                        id:id
+                      }
+                    }
+                }
+            }
+
+      })
+      return ArtistResponseDto.toEntities(artists)
+  }
+
+
 
 }

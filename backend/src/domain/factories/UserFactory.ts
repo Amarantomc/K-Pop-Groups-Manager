@@ -16,7 +16,7 @@ export class UserFactory {
         role: string
     }, profileData?: any): User {
         
-        const role = user.role as Role
+        const role = user.role.toLowerCase() as Role
         
         switch(role) {
             case Role.Manager:

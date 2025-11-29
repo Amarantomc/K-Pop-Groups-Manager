@@ -106,11 +106,11 @@ constructor(@inject(Types.CreateUserUseCase)  private createUserUseCase:CreateUs
       const { id } = req.params;
       const user = await this.updateUserUseCase.execute(id!,req.body)
 
-      const userResponse = UserResponseDto.fromEntity(user);
+       
 
       res.json({
         success: true,
-        data: userResponse
+        data: user
       });
 
     } catch (error: any) {

@@ -8,6 +8,7 @@ import { CreateArtistDto } from "../../application/dtos/artist/CreateArtistDto";
 import type { Request,Response } from 'express';
 import { UpdateArtistDto } from "../../application/dtos/artist/UpdateArtistDto";
 import type { GetAllArtistsUseCase } from "../../application/usesCase/artist/GetAllArtistsUseCase";
+import type { FindArtistByAgencyUseCase } from "../../application/usesCase/artist/FindArtistByAgencyUseCase";
 
 @injectable()
 export class ArtistController {
@@ -16,7 +17,8 @@ export class ArtistController {
                 @inject(Types.UpdateArtistUseCase) private updateArtistUseCase :UpdateArtistUseCase,
                 @inject(Types.DeleteArtistUseCase) private deleteArtistUseCase :DeleteArtistUseCase,
                 @inject(Types.FindArtistByIdUseCase) private findArtistByIdUseCase :FindArtistByIdUseCase,
-              @inject(Types.GetAllArtistsUseCase) private getAllArtistsUseCase :GetAllArtistsUseCase,){}
+              @inject(Types.GetAllArtistsUseCase) private getAllArtistsUseCase :GetAllArtistsUseCase,
+              @inject(Types.FindArtistByAgencyUseCase) private findArtistByAgency : FindArtistByAgencyUseCase){}
 
 
     async createArtist(req:Request,res:Response){
@@ -115,4 +117,24 @@ export class ArtistController {
       });
         }
     }
+
+     async getArtistsByAgency(req: Request, res: Response) {
+    try {
+        const { id } = req.params;
+        
+        const artists = await this.findArtistByAgency.execute(Number(id));
+        
+        res.json({
+            success: true,
+            data: artists,
+            
+        });
+        
+    } catch (error: any) {
+        res.status(400).json({
+            success: false,
+            error: error.message
+        });
+    }
+}
 }

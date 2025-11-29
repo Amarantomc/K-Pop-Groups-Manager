@@ -23,10 +23,12 @@ export class LoginUserUseCase {
     if (!isValidPassword) {
       throw new Error('Invalid credentials');
     }
+
+    const profileData=user.getProfileData()
  
     
     const token = jwt.sign(
-      { userId: user.id, email: user.email, role:user.rol },
+      { userId: user.id, email: user.email, role:user.role, ...profileData },
       process.env.JWT_SECRET || 'secret',
       { expiresIn: '24h' }
     );
