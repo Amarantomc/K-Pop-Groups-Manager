@@ -20,7 +20,7 @@ export class ConceptRoutes{
     this.router.get('/:id', (req, res) => this.conceptController.getConcept(req,res))
     this.router.put('/:id', (req, res) => this.conceptController.updateConcept(req, res))
     this.router.delete('/:id',(req, res) => this.conceptController.deleteConcept(req, res))
-    this.router.get('/:name',(req, res) => this.conceptController.listConcept(req, res))
+    this.router.get('/',(req, res) => this.conceptController.listConcept(req, res))
   }
 
   public getRouter(): Router {
