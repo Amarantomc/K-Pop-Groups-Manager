@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */ 
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../../components/sidebar/Sidebar';
-import "./AdminDashboard.css"
+import "./Dashboard.css"
 import Header from '../../components/header/Header';
 import { useAuth } from '../../contextsLocal/AuthContext';
 
@@ -76,11 +76,11 @@ const Dashboard : React.FC = () =>{
     <div className='dashboard-sidebar'>
       <Sidebar collapsed={collapsed} role={user?.role || 'admin'}/>
       <div className='dashboard-navbar'>
-
         <div className='dashboard-content'>
           <Header title='Bienvenido a Gestión de Agencias del K-Pop' 
           description='Administra agencias, artistas y actividades desde este panel. Aquí tienes un resumen rápido para comenzar.'
-          collapsed={collapsed} setCollapsed={setCollapsed}/>
+          collapsed={collapsed} 
+          setCollapsed={setCollapsed}/>
 
           <div className='quick-stats'>
             <div className='stat'>

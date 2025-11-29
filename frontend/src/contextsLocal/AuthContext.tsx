@@ -38,7 +38,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const rememberMeExpiration = localStorage.getItem('rememberMeExpiration');
 
     if (token && userData) {
-      // Verificar si Remember Me está activo y no ha expirado
+      // Si Remember Me está activo
       if (rememberMe === 'true' && rememberMeExpiration) {
         const expirationDate = new Date(rememberMeExpiration);
         const now = new Date();
@@ -49,12 +49,27 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           localStorage.removeItem('user');
           localStorage.removeItem('rememberMe');
           localStorage.removeItem('rememberMeExpiration');
+          setUser(null);
         } else {
-          // Sesión válida
+          // Sesión válida con Remember Me
           setUser(JSON.parse(userData));
         }
+      } else if (rememberMe === 'false') {
+        // Remember Me NO activado - verificar si hay sessionStart
+        const sessionStart = localStorage.getItem('sessionStart');
+        
+        if (sessionStart) {
+          // Sesión normal (sin Remember Me) - mantener hasta que cierre navegador
+          setUser(JSON.parse(userData));
+        } else {
+          // No hay sessionStart, limpiar (por si acaso)
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          localStorage.removeItem('rememberMe');
+          setUser(null);
+        }
       } else {
-        // No hay Remember Me, cargar usuario normal
+        // Caso legacy: no hay flag de rememberMe, asumir sesión válida
         setUser(JSON.parse(userData));
       }
     }
@@ -104,8 +119,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           expirationDate.setDate(expirationDate.getDate() + 30); // 30 días
           localStorage.setItem('rememberMe', 'true');
           localStorage.setItem('rememberMeExpiration', expirationDate.toISOString());
+          localStorage.removeItem('sessionStart'); // Limpiar sessionStart si existe
         } else {
-          localStorage.removeItem('rememberMe');
+          // Sin Remember Me - solo sesión del navegador
+          localStorage.setItem('rememberMe', 'false');
+          localStorage.setItem('sessionStart', new Date().toISOString());
           localStorage.removeItem('rememberMeExpiration');
         }
         
@@ -154,6 +172,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.removeItem('user');
     localStorage.removeItem('rememberMe');
     localStorage.removeItem('rememberMeExpiration');
+    localStorage.removeItem('sessionStart');
     setUser(null);
   };
   const requestPasswordReset = async (email: string): Promise<void> => {

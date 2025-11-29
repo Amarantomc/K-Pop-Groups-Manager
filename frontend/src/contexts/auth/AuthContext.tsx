@@ -86,10 +86,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = async (data: LoginFormData, rememberMe: boolean = false): Promise<void> => {
     try {
       setIsLoading(true);
-  // Inicio del proceso de login
+      // Inicio del proceso de login
 
       // Llamada real al endpoint de autenticación
-      const requestBody = { email: data.email, password: data.password };
+      const requestBody = { email: data.email, password: data.password};
 
       if (import.meta.env.MODE === 'development') {
         // mostrar en consola petición para depuración local
