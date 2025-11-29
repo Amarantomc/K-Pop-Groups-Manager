@@ -86,7 +86,7 @@ const ListAgency: React.FC = () => {
     const [collapsed,setcollapsed] = useState(false)
     return (
         <div className="listAgencySideBar">
-            <Sidebar collapsed={collapsed}/>
+            <Sidebar collapsed={collapsed} role="ADMIN"/>
             <div className="listAgencyNavBar">
                     <div className="agency-header">
                             <Header title="Agencias" description="Listado y gestión de agencias." showlogo={false} collapsed={collapsed} setCollapsed={setcollapsed}/>

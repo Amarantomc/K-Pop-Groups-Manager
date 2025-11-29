@@ -59,7 +59,7 @@ const ListUsers: React.FC = () => {
   const [collapsed,setCollapsed] = useState(false)
     return (
         <div className="listUsersSideBar">
-            <Sidebar collapsed={collapsed}/>
+            <Sidebar collapsed={collapsed} role="ADMIN"/>
             <div className="listUsersNavBar">
             {/* <Navbar/> */}
             <div className="agency-header">

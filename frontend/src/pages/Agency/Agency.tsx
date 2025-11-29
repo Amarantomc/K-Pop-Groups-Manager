@@ -74,7 +74,7 @@ const Agency : React.FC = () =>{
   const [collapsed,setcollapsed] = useState(false)
   return (
     <div className='Agency-sidebar'>
-      <Sidebar collapsed={collapsed} />
+      <Sidebar collapsed={collapsed} role="ADMIN"/>
       <div className='Agency-navbar'>
 
         <div className='Agency-content'>

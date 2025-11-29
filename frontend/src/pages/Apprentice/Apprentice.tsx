@@ -103,7 +103,7 @@ const Apprentice: React.FC = () => {
  const [collapsed,setCollapsed] = useState(false)
   return (
     <div className='listApprenticeSideBar'>
-      <Sidebar collapsed={collapsed} />
+      <Sidebar collapsed={collapsed} role='ADMIN'/>
       <div className='listApprenticeNavBar'>
         <div className='agency-header'>
           <Header title='Aprendices' description='Usa este formulario para crear o editar registros' showlogo={false} collapsed={collapsed} setCollapsed={setCollapsed}/>
