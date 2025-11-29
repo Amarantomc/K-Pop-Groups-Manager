@@ -1,5 +1,5 @@
 export enum Status{
     Training = "in trainning",
-    Process = "in process",
+    Process = "under evaluation",
     Transferred = "transferred"
 }
