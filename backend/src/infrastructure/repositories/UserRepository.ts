@@ -35,9 +35,9 @@ export class UserRepository implements IUserRepository
         })
 
         let profileData: any = {}
-
+        
     // Crear perfil según el rol
-    switch (data.role) {
+    switch (data.role.toLowerCase() as Role) {
       case Role.Manager:
         
         const managerProfile = await this.db.perfilManager.create({
@@ -48,6 +48,7 @@ export class UserRepository implements IUserRepository
           }
         })
         profileData = managerProfile
+        
         break
 
       case Role.Director:
@@ -106,7 +107,8 @@ export class UserRepository implements IUserRepository
         return user ? UserResponseDto.toEntity(user) : null
     }
     async update(id: string, data: Partial<CreateUserDto>): Promise<User> {
-        const user = await this.db.user.update({
+      //Update no hace sobre agencia grupo etc
+      const user = await this.db.user.update({
                   where: { id: Number(id) },
                   data,
                 });

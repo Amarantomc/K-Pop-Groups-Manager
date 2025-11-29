@@ -10,6 +10,7 @@ export interface IArtistRepository extends IBaseRepository<Artist,CreateArtistDt
         getAll():Promise<Artist[]>
         findByName(name: string): Promise<Artist[]>;
         findByStatus(status: string): Promise<Artist[]>;
+        findByAgency(id:number):Promise<Artist[]>
         
           // Métodos para tablas intermedias
   addGroupHistory(apprenticeId: number,groupId: number,debutGroupId: number,role: string,startDate: Date): Promise<void>;

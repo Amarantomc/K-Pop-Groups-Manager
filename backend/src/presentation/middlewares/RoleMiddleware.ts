@@ -26,6 +26,31 @@ export class RoleMiddleware {
     };
   }
 
+    // Middleware específico para verificar que Manager tenga agencia
+  static requireAgencyAccess(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    if (!req.user?.agencyId) {
+      return res.status(403).json({
+        success: false,
+        error: 'Agency access required'
+      })
+    }
+    next()
+  }
+
+    // Middleware para verificar que el Manager solo acceda a su agencia
+  static requireOwnAgency(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    const requestedAgencyId = Number(req.params.agencyId || req.body.agencyId)
+    
+    if (req.user?.role === Role.Manager && req.user.agencyId !== requestedAgencyId) {
+      return res.status(403).json({
+        success: false,
+        error: 'You can only access your own agency'
+      })
+    }
+    
+    next()
+  }
+
   // Métodos auxiliares para roles específicos
   static onlyAdmin() {
     return RoleMiddleware.authorize(Role.Admin);

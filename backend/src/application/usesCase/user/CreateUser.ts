@@ -27,6 +27,7 @@ export class CreateUserUseCase{
             const hashedPassword = await bcrypt.hash(command.GetPassword(), 12);
             command.SetHashedPassword(hashedPassword)
 
+            
             const user = await this.userRepository.create(command);
              
             await this.unitOfWork.commit();

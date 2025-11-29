@@ -20,14 +20,14 @@ export class CreateUserDto {
     if (!body.email || !body.name || !body.password || !body.role) {
       throw new Error('Missing required fields');
     }
-    if (!( body.rol in Role))
+    if (!( body.role in Role))
     {
         throw new Error('Invalid Role');
     }
     
 
     
-    return new CreateUserDto(body.email, body.name, body.password,body.rol,body.agencyId,body.IdAp,body.IdGr);
+    return new CreateUserDto(body.email, body.name, body.password,body.role,body.agencyId,body.IdAp,body.IdGr);
   }
    
    public SetHashedPassword(hash:any) 
