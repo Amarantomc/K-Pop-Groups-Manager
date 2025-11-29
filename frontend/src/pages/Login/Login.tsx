@@ -1,12 +1,11 @@
 // Ubicación: src/components/auth/Login.tsx
 import React, { useState } from 'react';
-import { useAuth } from '../../contexts/auth/AuthContext';
+import { useAuth } from '../../contextsLocal/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import type { LoginFormData } from '../../types/types';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
 //import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -14,6 +13,10 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 import CircularProgress from '@mui/material/CircularProgress';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import { getRoleConfig } from '../../config/roles technical ';
+
 
 const Login: React.FC = () => {
   const { login, isLoading } = useAuth();
@@ -23,6 +26,7 @@ const Login: React.FC = () => {
     password: '',
   });
   const [error, setError] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -47,9 +51,11 @@ const Login: React.FC = () => {
     }
 
     try {
-      await login(formData);
-      // Si el login fue exitoso, redirigir al dashboard
-      navigate('/dashboard', { replace: true });
+      await login(formData, rememberMe);
+      // Obtener el redirect correcto según el rol del usuario
+      const userData = JSON.parse(localStorage.getItem('user') || '{}');
+      const redirectPath = userData.role ? getRoleConfig(userData.role).defaultRedirect : '/dashboard';
+      navigate(redirectPath, { replace: true });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Ocurrió un error');
     }
@@ -62,10 +68,10 @@ const Login: React.FC = () => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-  backgroundColor: '#e8f7ff',
-  backgroundImage: `url('/music-notes-large.svg')`,
-  backgroundRepeat: 'repeat',
-  backgroundSize: '1200px 800px',
+        backgroundColor: '#e8f7ff',
+        backgroundImage: `url('/music-notes-large.svg')`,
+        backgroundRepeat: 'repeat',
+        backgroundSize: '1200px 800px',
       }}
     >
       <Container component="main" maxWidth="xs" sx={{ mt: 0 }}>
@@ -116,6 +122,18 @@ const Login: React.FC = () => {
                 onChange={handleChange}
               />
 
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    color="primary"
+                  />
+                }
+                label="Recordarme por 30 días"
+                sx={{ mt: 1 }}
+              />
+
               <Button
                 type="submit"
                 fullWidth
@@ -126,12 +144,6 @@ const Login: React.FC = () => {
               >
                 {isLoading ? <CircularProgress size={20} color="inherit" /> : 'Iniciar Sesión'}
               </Button>
-
-              <Box sx={{ width: '100%', mt: 1 }}>
-                <Link href="/forgot-password" variant="body2" display="block">
-                  ¿Olvidaste tu contraseña?
-                </Link>
-              </Box>
             </Box>
           </Box>
         </Paper>

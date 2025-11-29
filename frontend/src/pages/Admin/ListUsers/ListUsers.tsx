@@ -7,9 +7,10 @@ import { userColumns } from "../../../config/datatableSource"
 import React from "react"
 import { useEffect , useState } from "react"
 import Header from "../../../components/header/Header"
+import { useAuth } from "../../../contextsLocal/AuthContext"
 
 const ListUsers: React.FC = () => {
-
+    const { user } = useAuth();
     const [userRows, setUserRows] = useState<any[]>([])
 
     useEffect(
@@ -59,7 +60,7 @@ const ListUsers: React.FC = () => {
   const [collapsed,setCollapsed] = useState(false)
     return (
         <div className="listUsersSideBar">
-            <Sidebar collapsed={collapsed} role="ADMIN"/>
+            <Sidebar collapsed={collapsed} role={user?.role || 'admin'}/>
             <div className="listUsersNavBar">
             {/* <Navbar/> */}
             <div className="agency-header">

@@ -7,9 +7,11 @@ import "./agency.css"
 import Form from '../../../components/form/Form';
 import formFieldsByEntity from '../../../config/formSource';
 import Header from '../../../components/header/Header';
+import { useAuth } from '../../../contextsLocal/AuthContext';
 
 
 const Agency : React.FC = () =>{
+  const { user } = useAuth();
   const handleSubmit = (data: FormData | Record<string, any>) => {
     // Enviar al backend
     const API_BASE = 'http://localhost:3000';
@@ -74,7 +76,7 @@ const Agency : React.FC = () =>{
   const [collapsed,setcollapsed] = useState(false)
   return (
     <div className='Agency-sidebar'>
-      <Sidebar collapsed={collapsed} role="ADMIN"/>
+      <Sidebar collapsed={collapsed} role={user?.role || 'admin'}/>
       <div className='Agency-navbar'>
 
         <div className='Agency-content'>

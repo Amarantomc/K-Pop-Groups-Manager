@@ -1,8 +1,8 @@
 import "./sidebar.css";
 import logo from "../../assets/KPopWorld logo.png"
-import {useAuth} from "../../contexts/auth/AuthContext"
+import {useAuth} from "../../contextsLocal/AuthContext"
 import { Link } from "react-router-dom";
-import { MenuByRole ,type MenuSection } from "../../config/role";
+import { MenuByRole ,type MenuSection } from "../../config/role visual";
 
 
 interface SidebarProps{
@@ -11,7 +11,13 @@ interface SidebarProps{
 }
 const Sidebar : React.FC<SidebarProps> = ({collapsed,role}) => {
     const {logout} = useAuth();
-    const menuSections : MenuSection[] = MenuByRole[role]
+    const menuSections : MenuSection[] = MenuByRole[role] || MenuByRole['admin']
+    
+    // Si no hay menú para el rol, no renderizar nada
+    if (!menuSections || menuSections.length === 0) {
+        return null;
+    }
+    
     return (
         <div className={`sidebar ${collapsed ? "collapsed" : ""}`}>
             <div className="top">

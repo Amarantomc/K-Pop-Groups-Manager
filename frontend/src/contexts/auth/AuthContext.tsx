@@ -1,16 +1,22 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import type { ReactNode } from 'react';
-import type { User, LoginFormData } from '../../types/types';
+import type { User, LoginFormData, UserRole } from '../../types/types';
+import { isRouteAllowed } from '../../config/roles technical ';
 
 const API_BASE = 'http://localhost:3000';
 
 interface AuthContextType {
   user: User | null;
-  login: (data: LoginFormData) => Promise<void>;
+  login: (data: LoginFormData, rememberMe?: boolean) => Promise<void>;
   logout: () => void;
   isLoading: boolean;
   requestPasswordReset: (email: string) => Promise<void>;
   verifyEmail: (token: string) => Promise<void>;
+  //FUNCIONES PARA ROLES
+  getUserRole: () => UserRole | null;
+  hasRole: (role: UserRole) => boolean;
+  hasPermission: (permission: string) => boolean;
+  isRouteAllowed: (path: string) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -34,14 +40,50 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     const userData = localStorage.getItem('user');
+    const rememberMe = localStorage.getItem('rememberMe');
+    const expiration = localStorage.getItem('rememberMeExpiration');
+
+    // Verificar si la sesión Remember Me ha expirado
+    if (rememberMe === 'true' && expiration) {
+      const expirationDate = new Date(expiration);
+      const now = new Date();
+      
+      if (now > expirationDate) {
+        // Sesión expirada, limpiar todo
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('rememberMe');
+        localStorage.removeItem('rememberMeExpiration');
+        setUser(null);
+        setIsLoading(false);
+        return;
+      }
+    } else if (!rememberMe || rememberMe !== 'true') {
+      // Si no hay remember me activo, la sesión expira al cerrar el navegador
+      // Solo mantener sesión si hay token Y remember me
+      if (!rememberMe && token) {
+        // Limpiar sesión antigua sin remember me
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setUser(null);
+        setIsLoading(false);
+        return;
+      }
+    }
 
     if (token && userData) {
-      setUser(JSON.parse(userData));
+      const parsedUser = JSON.parse(userData);
+      // 🔧 NORMALIZAR DATOS AL CARGAR (por si hay sesiones antiguas)
+      const normalizedUser = {
+        ...parsedUser,
+        role: (parsedUser.role || parsedUser.rol || 'apprentice').toLowerCase() as UserRole
+      };
+      setUser(normalizedUser);
     }
     setIsLoading(false);
   }, []);
 
-  const login = async (data: LoginFormData): Promise<void> => {
+  const login = async (data: LoginFormData, rememberMe: boolean = false): Promise<void> => {
     try {
       setIsLoading(true);
   // Inicio del proceso de login
@@ -118,8 +160,28 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       localStorage.setItem('token', token);
 
       if (userObj) {
-        localStorage.setItem('user', JSON.stringify(userObj));
-        setUser(userObj);
+        // 🔧 NORMALIZAR DATOS DEL BACKEND
+        // El backend devuelve "rol" pero necesitamos "role"
+        // El backend devuelve "Admin" pero necesitamos "admin" (minúsculas)
+        const normalizedUser = {
+          ...userObj,
+          role: (userObj.role || userObj.rol || 'apprentice').toLowerCase() as UserRole
+        };
+        
+        localStorage.setItem('user', JSON.stringify(normalizedUser));
+        setUser(normalizedUser);
+        
+        // Guardar Remember Me si está activado
+        if (rememberMe) {
+          const expirationDate = new Date();
+          expirationDate.setDate(expirationDate.getDate() + 30); // 30 días
+          localStorage.setItem('rememberMe', 'true');
+          localStorage.setItem('rememberMeExpiration', expirationDate.toISOString());
+        } else {
+          // Limpiar remember me si no está marcado
+          localStorage.removeItem('rememberMe');
+          localStorage.removeItem('rememberMeExpiration');
+        }
       } else {
         // Si no hay user, registrar en consola y dejar user en null (frontend puede solicitar /me cuando haga falta)
         if (import.meta.env.MODE === 'development') {
@@ -139,6 +201,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    localStorage.removeItem('rememberMe');
+    localStorage.removeItem('rememberMeExpiration');
     setUser(null);
   };
   const requestPasswordReset = async (email: string): Promise<void> => {
@@ -183,14 +247,35 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const value = {
-    user,
-    login,
-    logout,
-    isLoading,
-    requestPasswordReset,
-    verifyEmail,
+  const getUserRole = (): UserRole | null => {
+    return user?.role || null;
   };
+
+  const hasRole = (role: UserRole): boolean => {
+    return user?.role === role;
+  };
+
+  const hasPermission = (permission: string): boolean => {
+    return user?.permissions.includes(permission) || false;
+  };
+
+  const isRouteAllowedForUser = (path: string): boolean => {
+    if (!user) return false;
+    return isRouteAllowed(path, user.role);
+  };
+
+  const value = {
+  user,
+  login,
+  logout,
+  isLoading,
+  requestPasswordReset,
+  verifyEmail,
+  getUserRole,
+  hasRole,
+  hasPermission,
+  isRouteAllowed: isRouteAllowedForUser, 
+};
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
