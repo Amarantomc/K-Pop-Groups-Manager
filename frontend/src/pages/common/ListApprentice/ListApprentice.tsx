@@ -9,10 +9,11 @@ import { useEffect , useState  } from "react"
 import { apprenticeConstraints } from "../../../config/modalConstraints"
 import Header from "../../../components/header/Header"
 import ConfirmDialog from "../../../components/confirmDialog/ConfirmDialog"
+import { useAuth } from "../../../contextsLocal/AuthContext"
 
 
 const ListApprentice: React.FC = () => {
-
+     const { user } = useAuth();
      const [apprenticeRows, setApprenticeRows] = useState<any[]>([])
      const [apprenticeToDelete,setApprenticeToDelete] = useState<number | null>(null)
      const [openConfirm,setOpenConfirm] = useState(false)
@@ -91,7 +92,7 @@ const ListApprentice: React.FC = () => {
     const [collapsed,setCollapsed] = useState(false)
     return (
         <div className="listApprenticeSideBar">
-            <Sidebar collapsed={collapsed} role="ADMIN"/>
+            <Sidebar collapsed={collapsed} role={user?.role || 'admin'}/>
             <div className="listApprenticeNavBar">
             {/* <Navbar/> */}
             <div className="agency-header">

@@ -1,4 +1,4 @@
-@import './agency.css';
+@import '../Agency/agency.css';
 
 /* Importar estilos del header/form de Agency para que las páginas de listado compartan el mismo look */
 .listUsersSideBar{

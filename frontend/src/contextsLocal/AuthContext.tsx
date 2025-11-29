@@ -6,7 +6,7 @@ const API_BASE = 'http://localhost:3000';
 
 interface AuthContextType {
   user: User | null;
-  login: (data: LoginFormData) => Promise<void>;
+  login: (data: LoginFormData, rememberMe?: boolean) => Promise<void>;
   logout: () => void;
   isLoading: boolean;
   requestPasswordReset: (email: string) => Promise<void>;
@@ -34,28 +34,87 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     const userData = localStorage.getItem('user');
+    const rememberMe = localStorage.getItem('rememberMe');
+    const rememberMeExpiration = localStorage.getItem('rememberMeExpiration');
 
     if (token && userData) {
-      setUser(JSON.parse(userData));
+      // Verificar si Remember Me está activo y no ha expirado
+      if (rememberMe === 'true' && rememberMeExpiration) {
+        const expirationDate = new Date(rememberMeExpiration);
+        const now = new Date();
+        
+        if (now > expirationDate) {
+          // Sesión expirada, limpiar todo
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          localStorage.removeItem('rememberMe');
+          localStorage.removeItem('rememberMeExpiration');
+        } else {
+          // Sesión válida
+          setUser(JSON.parse(userData));
+        }
+      } else {
+        // No hay Remember Me, cargar usuario normal
+        setUser(JSON.parse(userData));
+      }
     }
-  setIsLoading(false);
+    setIsLoading(false);
   }, []);
 
-  const login = async (data: LoginFormData): Promise<void> => {
+  const login = async (data: LoginFormData, rememberMe: boolean = false): Promise<void> => {
     try {
       setIsLoading(true);
-  // login invoked
-      // Validación local para pruebas: user@gmail.com / password
-      // Aceptar las credenciales locales siempre (modo de pruebas)
-      if (data.email === 'user@gmail.com' && data.password === 'password') {
-        const fakeUser: User = { id: 'local-1', name: 'Local User', email: data.email } as User;
-        const fakeToken = 'local-dev-token';
+
+      // 🧪 USUARIOS DE PRUEBA LOCALES (simulan backend)
+      const testUsers: Record<string, { user: User; password: string }> = {
+        'admin@test.com': {
+          user: { id: '1', name: 'Admin Test', email: 'admin@test.com', role: 'admin', permissions: [], isVerified: true },
+          password: 'admin123'
+        },
+        'manager@test.com': {
+          user: { id: '2', name: 'Manager Test', email: 'manager@test.com', role: 'manager', permissions: [], isVerified: true },
+          password: 'manager123'
+        },
+        'artist@test.com': {
+          user: { id: '3', name: 'Artist Test', email: 'artist@test.com', role: 'artist', permissions: [], isVerified: true },
+          password: 'artist123'
+        },
+        'apprentice@test.com': {
+          user: { id: '4', name: 'Apprentice Test', email: 'apprentice@test.com', role: 'apprentice', permissions: [], isVerified: true },
+          password: 'apprentice123'
+        },
+        'director@test.com': {
+          user: { id: '5', name: 'Director Test', email: 'director@test.com', role: 'director', permissions: [], isVerified: true },
+          password: 'director123'
+        }
+      };
+
+      // Validar credenciales locales
+      const testUser = testUsers[data.email];
+      if (testUser && testUser.password === data.password) {
+        const fakeToken = `local-token-${testUser.user.role}-${Date.now()}`;
+        
+        // Guardar en localStorage
         localStorage.setItem('token', fakeToken);
-        localStorage.setItem('user', JSON.stringify(fakeUser));
-        setUser(fakeUser);
-        // En modo local, devolver control al llamador (Login.tsx) para que navegue
+        localStorage.setItem('user', JSON.stringify(testUser.user));
+        
+        // Manejar Remember Me
+        if (rememberMe) {
+          const expirationDate = new Date();
+          expirationDate.setDate(expirationDate.getDate() + 30); // 30 días
+          localStorage.setItem('rememberMe', 'true');
+          localStorage.setItem('rememberMeExpiration', expirationDate.toISOString());
+        } else {
+          localStorage.removeItem('rememberMe');
+          localStorage.removeItem('rememberMeExpiration');
+        }
+        
+        setUser(testUser.user);
         return;
       }
+
+      // Si no coincide con usuarios de prueba, lanzar error
+      throw new Error('Credenciales inválidas. Usuarios de prueba disponibles: admin@test.com, manager@test.com, artist@test.com, apprentice@test.com, director@test.com');
 
       // aqui va el endpoint (comentado para pruebas locales)
       /*
@@ -93,6 +152,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    localStorage.removeItem('rememberMe');
+    localStorage.removeItem('rememberMeExpiration');
     setUser(null);
   };
   const requestPasswordReset = async (email: string): Promise<void> => {

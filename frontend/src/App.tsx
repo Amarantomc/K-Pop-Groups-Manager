@@ -1,7 +1,7 @@
 // Ubicación: src/App.tsx
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { AuthProvider } from './contexts/auth/AuthContext';
+import { AuthProvider } from './contextsLocal/AuthContext';
 import AppRouter from './contexts/routes/AppRouter';
 import './App.css';
 

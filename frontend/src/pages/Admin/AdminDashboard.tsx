@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Sidebar from '../../components/sidebar/Sidebar';
 import "./AdminDashboard.css"
 import Header from '../../components/header/Header';
+import { useAuth } from '../../contextsLocal/AuthContext';
 
 
 const Dashboard : React.FC = () =>{
@@ -70,9 +71,10 @@ const Dashboard : React.FC = () =>{
 
   const renderValue = (v: number | null) => v == null ? '—' : String(v);
   const [collapsed, setCollapsed] = useState(false);
+  const { user } = useAuth();
   return (
     <div className='dashboard-sidebar'>
-      <Sidebar collapsed={collapsed} role='ADMIN'/>
+      <Sidebar collapsed={collapsed} role={user?.role || 'admin'}/>
       <div className='dashboard-navbar'>
 
         <div className='dashboard-content'>

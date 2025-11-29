@@ -7,10 +7,12 @@ import { useEffect , useState  } from "react"
 import { agencyConstraints } from "../../../config/modalConstraints"
 import ConfirmDialog from "../../../components/confirmDialog/ConfirmDialog"
 import Header from "../../../components/header/Header"
+import { useAuth } from "../../../contextsLocal/AuthContext"
 
 
 
 const ListAgency: React.FC = () => {
+    const { user } = useAuth();
 
     const [agencyRows, setAgencyRows] = useState<any[]>([])
     const [agencyToDelete,setAgencyToDelete] = useState<number | null>(null)
@@ -86,7 +88,7 @@ const ListAgency: React.FC = () => {
     const [collapsed,setcollapsed] = useState(false)
     return (
         <div className="listAgencySideBar">
-            <Sidebar collapsed={collapsed} role="ADMIN"/>
+            <Sidebar collapsed={collapsed} role={user?.role || 'admin'}/>
             <div className="listAgencyNavBar">
                     <div className="agency-header">
                             <Header title="Agencias" description="Listado y gestión de agencias." showlogo={false} collapsed={collapsed} setCollapsed={setcollapsed}/>

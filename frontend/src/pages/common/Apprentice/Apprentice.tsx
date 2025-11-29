@@ -1,14 +1,16 @@
 /* eslint-disable no-empty */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { use, useState } from 'react';
+import React, { useState } from 'react';
 import Sidebar from '../../../components/sidebar/Sidebar';
 import Form from '../../../components/form/Form';
 import formFieldsByEntity, { APPRENTICE_STATUS, APPRENTICE_STATUS_OPTIONS } from '../../../config/formSource';
 import "./apprentice.css";
 import Header from '../../../components/header/Header';
+import { useAuth } from '../../../contextsLocal/AuthContext';
 
 const Apprentice: React.FC = () => {
+  const { user } = useAuth();
   const handleSubmit = (data: FormData | Record<string, any>) => {
     const API_BASE = 'http://localhost:3000';
     const payload: Record<string, any> = {};
@@ -103,7 +105,7 @@ const Apprentice: React.FC = () => {
  const [collapsed,setCollapsed] = useState(false)
   return (
     <div className='listApprenticeSideBar'>
-      <Sidebar collapsed={collapsed} role='ADMIN'/>
+      <Sidebar collapsed={collapsed} role={user?.role || 'admin'}/>
       <div className='listApprenticeNavBar'>
         <div className='agency-header'>
           <Header title='Aprendices' description='Usa este formulario para crear o editar registros' showlogo={false} collapsed={collapsed} setCollapsed={setCollapsed}/>

@@ -1,15 +1,23 @@
 
+export type UserRole = 'admin' | 'manager' | 'artist' | 'apprentice' | 'director';
+
 export interface User {
-  rol: string;
   id: string;
-  email: string;
   name: string;
+  email: string;
+  role: UserRole;                    
+  agencyId?: string;                 // Para managers, artistas, aprendices
+  permissions: string[];             // Permisos específicos
+  avatar?: string;
   isVerified: boolean;
-  // Opcionales adicionales usados en UI
   avatarUrl?: string | null;
-  phone?: string | null;
-  address?: string | null;
-  country?: string | null;
+}
+
+export interface RoleConfig {
+  dashboard: string;
+  allowedRoutes: string[];
+  sidebarItems: string[];
+  defaultRedirect: string;
 }
 
 export interface AuthResponse {

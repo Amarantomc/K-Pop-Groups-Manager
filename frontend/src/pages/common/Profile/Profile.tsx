@@ -5,11 +5,12 @@ import Sidebar from '../../../components/sidebar/Sidebar';
 import "./profile.css";
 import Form from "../../../components/form/Form";
 import formFieldsByEntity from "../../../config/formSource";
-import { useAuth } from '../../../contexts/auth/AuthContext';
+import { useAuth } from '../../../contextsLocal/AuthContext';
 import Header from '../../../components/header/Header';
 
 const Profile: React.FC = () => {
   const { user } = useAuth();
+  const [collapsed, setCollapsed] = useState(false);
   // Normalizar campos (solo los que usamos: name, email, rol)
   const u: any = user as any;
   const displayName = u?.name ?? 'Usuario';
@@ -121,10 +122,10 @@ const Profile: React.FC = () => {
       }
     })();
   };
-  const [collapsed,setCollapsed] = useState(false)
+  
   return (
     <div className="Profile-sidebar">
-      <Sidebar collapsed={collapsed} role='ADMIN'/>
+      <Sidebar collapsed={collapsed} role={user?.role || 'admin'}/>
       <div className="Profile-navbar">
         {/* <NavBar /> */}
 
