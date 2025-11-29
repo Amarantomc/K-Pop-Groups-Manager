@@ -255,10 +255,10 @@ private get db() {
    async findByAgency(id: number): Promise<Artist[]> {
       const artists=await this.db.artista.findMany({
          where: {
-                Aprendiz: {
+                aprendiz: {
                     Agencia:{
                       some:{
-                        id:id
+                        idAg:id
                       }
                     }
                 }

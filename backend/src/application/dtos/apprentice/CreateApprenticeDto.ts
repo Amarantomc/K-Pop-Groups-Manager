@@ -7,11 +7,13 @@ export class CreateApprenticeDto{
         public readonly dateOfBirth:Date,
         public readonly age: number,
         public readonly trainingLv: number,
-        public readonly status: string | Status
+        public readonly status: string | Status,
+        public readonly agencyId?:number
     ){}
 
-    static create(body: any): CreateApprenticeDto{
-        if(!body.name || !body.dateOfBirth || !body.age || !body.trainingLv || !body.status)
+    static create(body: any,agencyId:number): CreateApprenticeDto{
+        if(!body.name || !body.dateOfBirth || !body.age || !body.trainingLv || !body.status
+            || !agencyId)
         {
             throw new Error('Missing required fields');
         }
@@ -27,6 +29,6 @@ export class CreateApprenticeDto{
         {
             throw new Error('invalid Training Level')
         }
-        return new CreateApprenticeDto(body.name,body.dateOfBirth,body.age,body.trainingLv,body.status)
+        return new CreateApprenticeDto(body.name,body.dateOfBirth,body.age,body.trainingLv,body.status,agencyId);
     }
 }

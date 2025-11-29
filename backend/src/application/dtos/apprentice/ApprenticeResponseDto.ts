@@ -9,17 +9,18 @@ export class ApprenticeResponseDto{
         public readonly dateOfBirth:Date,
         public readonly age: number,
         public readonly trainingLv: number,
-        public readonly status: string | Status
+        public readonly status: string | Status,
+        
     ){}
 
-    static fromEntity(apprendice: any): ApprenticeResponseDto {
+    static fromEntity(apprentice: Apprentice): ApprenticeResponseDto {
         return new ApprenticeResponseDto(
-            apprendice.id,
-            apprendice.nombreCompleto,
-            apprendice.fechaNacimiento,
-            apprendice.edad,
-            apprendice.nivelEntrenamiento,
-            apprendice.estadoAprendiz
+            apprentice.id,
+            apprentice.name,
+            apprentice.dateOfBirth,
+            apprentice.age,
+            apprentice.trainingLv,
+            apprentice.status
         );
       }
 
@@ -36,5 +37,9 @@ export class ApprenticeResponseDto{
 
       static fromEntities(apprentices: any[]): ApprenticeResponseDto[] {
         return apprentices.map(apprentice => this.fromEntity(apprentice));
+      }
+
+      static toEntities(apprentices: any[]): Apprentice[] {
+        return apprentices.map(apprentice => this.toEntity(apprentice));
       }
 }
