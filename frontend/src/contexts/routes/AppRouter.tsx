@@ -3,13 +3,13 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '../../contextsLocal/AuthContext';
 import Login from '../../pages/Login/Login';
-import Dashboard from '../../pages/Admin/AdminDashboard';
-import Agency from '../../pages/Admin/Agency/Agency';
-import ListAgency from '../../pages/Admin/ListAgency/ListAgency';
-import ListApprentice from '../../pages/common/ListApprentice/ListApprentice';
-import Apprentice from '../../pages/common/Apprentice/Apprentice';
-import ListUsers from '../../pages/Admin/ListUsers/ListUsers';
-import Profile from '../../pages/common/Profile/Profile';
+import Dashboard from '../../pages/Dashboard/Dashboard';
+import Agency from '../../pages/Agency/Agency';
+import ListAgency from '../../pages/ListAgency/ListAgency';
+import ListApprentice from '../../pages/ListApprentice/ListApprentice';
+import Apprentice from '../../pages/Apprentice/Apprentice';
+import ListUsers from '../../pages/ListUsers/ListUsers';
+import Profile from '../../pages/Profile/Profile';
 import ProtectedRoute from './ProtectedRoute';
 import { getRoleConfig } from '../../config/roles technical ';
 
@@ -50,42 +50,37 @@ return (
     />
 
     {/* RUTAS SOLO PARA ADMIN */}
-    <Route path="/dashboard" element={
-      <ProtectedRoute allowedRoles={['admin']}>
-        <Dashboard />
-      </ProtectedRoute>
-    } />
     <Route path="/admin/dashboard" element={
       <ProtectedRoute allowedRoles={['admin']}>
         <Dashboard />
       </ProtectedRoute>
     } />
-    <Route path="/agency" element={
+    <Route path="/admin/agency" element={
       <ProtectedRoute allowedRoles={['admin']}>
         <Agency />
       </ProtectedRoute>
     } />
-    <Route path="/listAgency" element={
+    <Route path="/admin/listAgency" element={
       <ProtectedRoute allowedRoles={['admin']}>
         <ListAgency />
       </ProtectedRoute>
     } />
-    <Route path="/listUsers" element={
+    <Route path="/admin/listUsers" element={
       <ProtectedRoute allowedRoles={['admin']}>
         <ListUsers />
       </ProtectedRoute>
     } />
-    <Route path="/apprentices" element={
+    <Route path="/admin/apprentices" element={
       <ProtectedRoute allowedRoles={['admin']}>
         <Apprentice />
       </ProtectedRoute>
     } />
-    <Route path="/listApprentice" element={
+    <Route path="/admin/listApprentice" element={
       <ProtectedRoute allowedRoles={['admin']}>
         <ListApprentice />
       </ProtectedRoute>
     } />
-    <Route path="/profile" element={
+    <Route path="/admin/profile" element={
       <ProtectedRoute allowedRoles={['admin']}>
         <Profile />
       </ProtectedRoute>
@@ -94,7 +89,7 @@ return (
     {/* RUTAS SOLO PARA MANAGER */}
     <Route path="/manager/dashboard" element={
       <ProtectedRoute allowedRoles={['manager']}>
-        <div>Manager Dashboard</div>
+        <Dashboard />
       </ProtectedRoute>
     } />
     <Route path="/manager/apprentices" element={
@@ -102,25 +97,45 @@ return (
         <ListApprentice />
       </ProtectedRoute>
     } />
+    <Route path="/manager/profile" element={
+      <ProtectedRoute allowedRoles={['manager']}>
+        <Profile />
+      </ProtectedRoute>
+    } />
 
     {/* RUTAS SOLO PARA ARTIST */}
     <Route path="/artist/dashboard" element={
       <ProtectedRoute allowedRoles={['artist']}>
-        <div>Artist Dashboard</div>
+        <Dashboard />
+      </ProtectedRoute>
+    } />
+    <Route path="/artist/profile" element={
+      <ProtectedRoute allowedRoles={['artist']}>
+        <Profile />
       </ProtectedRoute>
     } />
 
     {/* RUTAS SOLO PARA APPRENTICE */}
     <Route path="/apprentice/dashboard" element={
       <ProtectedRoute allowedRoles={['apprentice']}>
-        <div>Apprentice Dashboard</div>
+        <Dashboard />
+      </ProtectedRoute>
+    } />
+    <Route path="/apprentice/profile" element={
+      <ProtectedRoute allowedRoles={['apprentice']}>
+        <Profile />
       </ProtectedRoute>
     } />
 
     {/* RUTAS SOLO PARA DIRECTOR */}
     <Route path="/director/dashboard" element={
       <ProtectedRoute allowedRoles={['director']}>
-        <div>Director Dashboard</div>
+        <Dashboard />
+      </ProtectedRoute>
+    } />
+    <Route path="/director/profile" element={
+      <ProtectedRoute allowedRoles={['director']}>
+        <Profile />
       </ProtectedRoute>
     } />
 

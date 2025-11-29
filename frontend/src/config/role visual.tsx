@@ -18,57 +18,55 @@ export interface MenuSection {
 }
 
 export const MenuByRole: Record<string, MenuSection[]> = {
+
     admin: [
         {
             title: "INICIO",
             items: [
-                { label: "Inicio", icon: <DashboardIcon />, path: "/dashboard" }
+                { label: "Inicio", icon: <DashboardIcon />, path: "/admin/dashboard" }
             ]
         },
         {
             title: "AGENCIA",
             items: [
-                { label: "Añadir Agencia", icon: <AddBusinessIcon />, path: "/agency" },
-                { label: "Mostrar Agencias", icon: <AddBusinessIcon />, path: "/listAgency" }
+                { label: "Añadir Agencia", icon: <AddBusinessIcon />, path: "/admin/agency" },
+                { label: "Mostrar Agencias", icon: <AddBusinessIcon />, path: "/admin/listAgency" }
             ]
         },
         {
             title: "APRENDIZ",
             items: [
-                { label: "Añadir Aprendiz", icon: <PersonAddIcon />, path: "/apprentices" },
-                { label: "Mostrar Aprendices", icon: <PersonAddIcon />, path: "/listApprentice" }
+                { label: "Añadir Aprendiz", icon: <PersonAddIcon />, path: "/admin/apprentices" },
+                { label: "Mostrar Aprendices", icon: <PersonAddIcon />, path: "/admin/listApprentice" }
             ]
         },
         {
             title: "CUENTA",
             items: [
-                { label: "Perfil", icon: <AccountCircleIcon />, path: "/profile" },
-                { label: "Usuarios Registrados", icon: <AccountCircleIcon />, path: "/listUsers" },
+                { label: "Perfil", icon: <AccountCircleIcon />, path: "/admin/profile" },
+                { label: "Usuarios Registrados", icon: <AccountCircleIcon />, path: "/admin/listUsers" },
                 { label: "Cerrar Sesión", icon: <LogoutIcon />, path: "/login", onclick: () => { } }
             ]
         }
     ],
 
-    // 🆕 AGREGAR ESTOS ROLES NUEVOS
     manager: [
         {
             title: "INICIO",
             items: [
-                { label: "Inicio", icon: <DashboardIcon />, path: "/dashboard" }
+                { label: "Inicio", icon: <DashboardIcon />, path: "/manager/dashboard" }
             ]
         },
         {
             title: "GESTIÓN",
             items: [
-                { label: "Aprendices", icon: <PersonAddIcon />, path: "/listApprentice" },
-                { label: "Artistas", icon: <PersonAddIcon />, path: "/manager/artists" },
-                { label: "Actividades", icon: <DashboardIcon />, path: "/manager/activities" }
+                { label: "Aprendices", icon: <PersonAddIcon />, path: "/manager/apprentices" }
             ]
         },
         {
             title: "CUENTA",
             items: [
-                { label: "Perfil", icon: <AccountCircleIcon />, path: "/profile" },
+                { label: "Perfil", icon: <AccountCircleIcon />, path: "/manager/profile" },
                 { label: "Cerrar Sesión", icon: <LogoutIcon />, path: "/login" }
             ]
         }
@@ -78,20 +76,13 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "INICIO",
             items: [
-                { label: "Inicio", icon: <DashboardIcon />, path: "/dashboard" }
-            ]
-        },
-        {
-            title: "MI CARRERA",
-            items: [
-                { label: "Mi Agenda", icon: <DashboardIcon />, path: "/artist/schedule" },
-                { label: "Mis Ingresos", icon: <DashboardIcon />, path: "/artist/earnings" }
+                { label: "Inicio", icon: <DashboardIcon />, path: "/artist/dashboard" }
             ]
         },
         {
             title: "CUENTA",
             items: [
-                { label: "Perfil", icon: <AccountCircleIcon />, path: "/profile" },
+                { label: "Perfil", icon: <AccountCircleIcon />, path: "/artist/profile" },
                 { label: "Cerrar Sesión", icon: <LogoutIcon />, path: "/login" }
             ]
         }
@@ -101,20 +92,13 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "INICIO",
             items: [
-                { label: "Inicio", icon: <DashboardIcon />, path: "/dashboard" }
-            ]
-        },
-        {
-            title: "MI FORMACIÓN",
-            items: [
-                { label: "Mis Evaluaciones", icon: <DashboardIcon />, path: "/apprentice/evaluations" },
-                { label: "Mis Entrenamientos", icon: <DashboardIcon />, path: "/apprentice/trainings" }
+                { label: "Inicio", icon: <DashboardIcon />, path: "/apprentice/dashboard" }
             ]
         },
         {
             title: "CUENTA",
             items: [
-                { label: "Perfil", icon: <AccountCircleIcon />, path: "/profile" },
+                { label: "Perfil", icon: <AccountCircleIcon />, path: "/apprentice/profile" },
                 { label: "Cerrar Sesión", icon: <LogoutIcon />, path: "/login" }
             ]
         }
@@ -124,21 +108,13 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "INICIO",
             items: [
-                { label: "Inicio", icon: <DashboardIcon />, path: "/dashboard" }
-            ]
-        },
-        {
-            title: "GESTIÓN ESTRATÉGICA",
-            items: [
-                { label: "Aprobar Grupos", icon: <DashboardIcon />, path: "/director/approvals" },
-                { label: "Validar Logros", icon: <DashboardIcon />, path: "/director/achievements" },
-                { label: "Reportes", icon: <DashboardIcon />, path: "/director/reports" }
+                { label: "Inicio", icon: <DashboardIcon />, path: "/director/dashboard" }
             ]
         },
         {
             title: "CUENTA",
             items: [
-                { label: "Perfil", icon: <AccountCircleIcon />, path: "/profile" },
+                { label: "Perfil", icon: <AccountCircleIcon />, path: "/director/profile" },
                 { label: "Cerrar Sesión", icon: <LogoutIcon />, path: "/login" }
             ]
         }

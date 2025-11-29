@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import "./listUsers.css"
-import Sidebar from "../../../components/sidebar/Sidebar"
+import Sidebar from "../../components/sidebar/Sidebar"
 // import Navbar from "../../components/navbar/Navbar"
-import Datatable from "../../../components/datatable/Datatable"
-import { userColumns } from "../../../config/datatableSource"
+import Datatable from "../../components/datatable/Datatable"
+import { userColumns } from "../../config/datatableSource"
 import React from "react"
 import { useEffect , useState } from "react"
-import Header from "../../../components/header/Header"
-import { useAuth } from "../../../contextsLocal/AuthContext"
+import Header from "../../components/header/Header"
+import { useAuth } from "../../contextsLocal/AuthContext"
 
 const ListUsers: React.FC = () => {
     const { user } = useAuth();
