@@ -24,7 +24,7 @@ export class GroupResponseDTO {
 			group.memberCount,
 			group.agency.id,
 			group.concept.id,
-			group.visualConcept.id,
+			1, // Cambiar por: group.visualConcept.id
 			group.members,
 			group.albums,
 			group.activities
@@ -34,13 +34,16 @@ export class GroupResponseDTO {
 	static toEntity(group: any): Group {
 		return new Group({
 			id: group.id,
-			name: group.nombreCompleto,
-			debut: group.fechaDebut,
-			memberCount: group.Nomiembros,
-			status: group.estadoGrupo,
-			agency: group.Agencias.connect,
-			concept: group.idConcepto,
-			visualConcept: group.visualConcept, // No existe idConceptoVisual en la tabla de BD
+			name: group.nombreCompleto || group.name,
+			debut: group.fechaDebut || group.debut,
+			memberCount: group.Nomiembros || group.memberCount,
+			status: group.estadoGrupo || group.status,
+			agency: group.agency || group.Agencias?.[0] || null,
+			concept:
+				group.concept ||
+				group.concepto ||
+				(group.idConcepto ? { id: group.idConcepto } : null),
+			visualConcept: group.visualConcept || null,
 		});
 	}
 

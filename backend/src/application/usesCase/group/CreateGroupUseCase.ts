@@ -25,7 +25,6 @@ export class CreateGroupUseCase {
 			if (existingGroup) throw new Error("Group with this name already exists");
 
 			const group = await this.groupRepository.create(command);
-			console.log(group);
 			await this.unitOfWork.commit();
 
 			return GroupResponseDTO.fromEntity(group);

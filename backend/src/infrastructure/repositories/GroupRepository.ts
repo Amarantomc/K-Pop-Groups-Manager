@@ -7,6 +7,8 @@ import type { GroupStatus } from "../../domain/enums/GroupStatus";
 import type { UnitOfWork } from "../PrismaUnitOfWork";
 import { Types } from "../di/Types";
 
+// ! Hay que crear la relación de grupo y concepto visual en la base de datos y actualizar los métodos que usan toEntity y actualizar el mismo toEntity
+
 @injectable()
 export class GroupRepository implements IGroupRepository {
 	constructor(
@@ -24,45 +26,17 @@ export class GroupRepository implements IGroupRepository {
 				nombreCompleto: data.name,
 				fechaDebut: data.debut,
 				estadoGrupo: data.status,
-				Nomiembros: data.members.length || 0,
-				idConcepto: data.IdConcept, // Falta tener la propiedad IdVisualConcept en la base de datos
-				Agencias: {
-					connect: { id: data.IdAgency },
-				},
+				Nomiembros: 0,
+				idConcepto: data.IdConcept,
+				// idConceptoVisual: data.IdVisualConcept, // Falta tener la propiedad IdVisualConcept en la base de datos
+				Agencias: { connect: { id: data.IdAgency } },
 			},
 		});
-		const today = new Date();
-		for (const artistId of data.members || []) {
-			const artist = await this.db.artista.findFirst({
-				where: { idAp: artistId },
-			});
-			if (!artist) throw new Error(`Artist with id ${artistId} not found`);
-			await this.db.artistaEnGrupo.create({
-				data: {
-					idAp: artistId,
-					idGrupoDebut: artist.idGr,
-					idGr: group.id,
-					fechaInicio: today,
-					rol: "miembro",
-				},
-			});
-		}
-		for (const albumId of data.albums || []) {
-			await this.db.album.update({
-				where: { id: albumId },
-				data: { idGrupo: group.id },
-			});
-		}
-		for (const activityId of data.activities || []) {
-			await this.db.grupoEnActividad.create({
-				data: {
-					idGr: group.id,
-					idAct: activityId,
-					aceptado: true,
-				},
-			});
-		}
-		return GroupResponseDTO.toEntity(group);
+		this.addMembers(group.id, data.members, data.roles);
+		if (data.albums) this.addAlbums(group.id, data.albums);
+		if (data.activities) this.addActivities(group.id, data.activities);
+		const updatedGroup = await this.findById(group.id);
+		return updatedGroup!;
 	}
 
 	async findById(id: any): Promise<Group | null> {
@@ -70,22 +44,27 @@ export class GroupRepository implements IGroupRepository {
 		const group = await this.db.grupo.findUnique({
 			where: { id },
 			include: {
+				Agencias: true,
+				concepto: true,
+				// conceptoVisual: true,
 				HistorialArtistas: {
 					where: { fechaFinalizacion: null },
 					select: { idAp: true },
 				},
-				Album: {
-					select: { id: true },
-				},
-				Actividades: {
-					select: { idAct: true },
-				},
+				Album: { select: { id: true } },
+				Actividades: { select: { idAct: true } },
 			},
 		});
 		return !group
 			? null
 			: GroupResponseDTO.toEntity({
 					...group,
+					agency:
+						group.Agencias && group.Agencias.length > 0
+							? group.Agencias[0]
+							: null,
+					concept: group.concepto,
+					visualConcept: null, // group.conceptoVisual,
 					members: group.HistorialArtistas.map((a: any) => a.idAp),
 					albums: group.Album.map((a: any) => a.id),
 					activities: group.Actividades.map((a: any) => a.idAct),
@@ -102,20 +81,25 @@ export class GroupRepository implements IGroupRepository {
 			where: { id: Number(id) },
 			data: updateData,
 			include: {
+				Agencias: true,
+				concepto: true,
+				// conceptoVisual: true,
 				HistorialArtistas: {
 					where: { fechaFinalizacion: null },
 					select: { idAp: true },
 				},
-				Album: {
-					select: { id: true },
-				},
-				Actividades: {
-					select: { idAct: true },
-				},
+				Album: { select: { id: true } },
+				Actividades: { select: { idAct: true } },
 			},
 		});
 		return GroupResponseDTO.toEntity({
 			...updated,
+			agency:
+				updated.Agencias && updated.Agencias.length > 0
+					? updated.Agencias[0]
+					: null,
+			concept: updated.concepto,
+			visualConcept: null, // group.conceptoVisual,
 			members: updated.HistorialArtistas.map((a: any) => a.idAp),
 			albums: updated.Album.map((a: any) => a.id),
 			activities: updated.Actividades.map((a: any) => a.idAct),
@@ -128,22 +112,27 @@ export class GroupRepository implements IGroupRepository {
 		const group = await this.db.grupo.findFirst({
 			where: { nombreCompleto: name },
 			include: {
+				Agencias: true,
+				concepto: true,
+				// conceptoVisual: true,
 				HistorialArtistas: {
 					where: { fechaFinalizacion: null },
 					select: { idAp: true },
 				},
-				Album: {
-					select: { id: true },
-				},
-				Actividades: {
-					select: { idAct: true },
-				},
+				Album: { select: { id: true } },
+				Actividades: { select: { idAct: true } },
 			},
 		});
 		return !group
 			? null
 			: GroupResponseDTO.toEntity({
 					...group,
+					agency:
+						group.Agencias && group.Agencias.length > 0
+							? group.Agencias[0]
+							: null,
+					concept: group.concepto,
+					visualConcept: null, // group.conceptoVisual,
 					members: group.HistorialArtistas.map((a: any) => a.idAp),
 					albums: group.Album.map((a: any) => a.id),
 					activities: group.Actividades.map((a: any) => a.idAct),
@@ -154,22 +143,27 @@ export class GroupRepository implements IGroupRepository {
 		const group = await this.db.grupo.findFirst({
 			where: { fechaDebut: debut },
 			include: {
+				Agencias: true,
+				concepto: true,
+				// conceptoVisual: true,
 				HistorialArtistas: {
 					where: { fechaFinalizacion: null },
 					select: { idAp: true },
 				},
-				Album: {
-					select: { id: true },
-				},
-				Actividades: {
-					select: { idAct: true },
-				},
+				Album: { select: { id: true } },
+				Actividades: { select: { idAct: true } },
 			},
 		});
 		return !group
 			? null
 			: GroupResponseDTO.toEntity({
 					...group,
+					agency:
+						group.Agencias && group.Agencias.length > 0
+							? group.Agencias[0]
+							: null,
+					concept: group.concepto,
+					visualConcept: null, // group.conceptoVisual,
 					members: group.HistorialArtistas.map((a: any) => a.idAp),
 					albums: group.Album.map((a: any) => a.id),
 					activities: group.Actividades.map((a: any) => a.idAct),
@@ -180,21 +174,26 @@ export class GroupRepository implements IGroupRepository {
 		const groups = await this.db.grupo.findMany({
 			where: { estadoGrupo: status },
 			include: {
+				Agencias: true,
+				concepto: true,
+				// conceptoVisual: true,
 				HistorialArtistas: {
 					where: { fechaFinalizacion: null },
 					select: { idAp: true },
 				},
-				Album: {
-					select: { id: true },
-				},
-				Actividades: {
-					select: { idAct: true },
-				},
+				Album: { select: { id: true } },
+				Actividades: { select: { idAct: true } },
 			},
 		});
 		return groups.map((group: any) =>
 			GroupResponseDTO.toEntity({
 				...group,
+				agency:
+					group.Agencias && group.Agencias.length > 0
+						? group.Agencias[0]
+						: null,
+				concept: group.concepto,
+				visualConcept: null, // group.conceptoVisual,
 				members: group.HistorialArtistas.map((a: any) => a.idAp),
 				albums: group.Album.map((a: any) => a.id),
 				activities: group.Actividades.map((a: any) => a.idAct),
@@ -206,21 +205,26 @@ export class GroupRepository implements IGroupRepository {
 		const groups = await this.db.grupo.findMany({
 			where: { Nomiembros: members },
 			include: {
+				Agencias: true,
+				concepto: true,
+				// conceptoVisual: true,
 				HistorialArtistas: {
 					where: { fechaFinalizacion: null },
 					select: { idAp: true },
 				},
-				Album: {
-					select: { id: true },
-				},
-				Actividades: {
-					select: { idAct: true },
-				},
+				Album: { select: { id: true } },
+				Actividades: { select: { idAct: true } },
 			},
 		});
 		return groups.map((group: any) =>
 			GroupResponseDTO.toEntity({
 				...group,
+				agency:
+					group.Agencias && group.Agencias.length > 0
+						? group.Agencias[0]
+						: null,
+				concept: group.concepto,
+				visualConcept: null, // group.conceptoVisual,
 				members: group.HistorialArtistas.map((a: any) => a.idAp),
 				albums: group.Album.map((a: any) => a.id),
 				activities: group.Actividades.map((a: any) => a.idAct),
@@ -234,15 +238,12 @@ export class GroupRepository implements IGroupRepository {
 			include: {
 				grupo: {
 					include: {
-						HistorialArtistas: {
-							select: { idAp: true },
-						},
-						Album: {
-							select: { id: true },
-						},
-						Actividades: {
-							select: { idAct: true },
-						},
+						Agencias: true,
+						concepto: true,
+						// conceptoVisual: true,
+						HistorialArtistas: { select: { idAp: true } },
+						Album: { select: { id: true } },
+						Actividades: { select: { idAct: true } },
 					},
 				},
 			},
@@ -250,6 +251,12 @@ export class GroupRepository implements IGroupRepository {
 		return artistsInGroup.map((artista: any) =>
 			GroupResponseDTO.toEntity({
 				...artista.grupo,
+				agency:
+					artista.grupo.Agencias && artista.grupo.Agencias.length > 0
+						? artista.grupo.Agencias[0]
+						: null,
+				concept: artista.grupo.concepto,
+				visualConcept: null, // group.conceptoVisual,
 				members: artista.grupo.HistorialArtistas.map((a: any) => a.idAp),
 				albums: artista.grupo.Album.map((a: any) => a.id),
 				activities: artista.grupo.Actividades.map((a: any) => a.idAct),
@@ -263,16 +270,15 @@ export class GroupRepository implements IGroupRepository {
 			include: {
 				Grupos: {
 					include: {
+						Agencias: true,
+						concepto: true,
+						// conceptoVisual: true,
 						HistorialArtistas: {
 							where: { fechaFinalizacion: null },
 							select: { idAp: true },
 						},
-						Album: {
-							select: { id: true },
-						},
-						Actividades: {
-							select: { idAct: true },
-						},
+						Album: { select: { id: true } },
+						Actividades: { select: { idAct: true } },
 					},
 				},
 			},
@@ -282,6 +288,12 @@ export class GroupRepository implements IGroupRepository {
 			: grupos.Grupos.map((group: any) =>
 					GroupResponseDTO.toEntity({
 						...group,
+						agency:
+							group.Agencias && group.Agencias.length > 0
+								? group.Agencias[0]
+								: null,
+						concept: group.concepto,
+						visualConcept: null, // group.conceptoVisual,
 						members: group.HistorialArtistas.map((a: any) => a.idAp),
 						albums: group.Album.map((a: any) => a.id),
 						activities: group.Actividades.map((a: any) => a.idAct),
@@ -293,21 +305,26 @@ export class GroupRepository implements IGroupRepository {
 		const groups = await this.db.grupo.findMany({
 			where: { idConcepto: IdConcept },
 			include: {
+				Agencias: true,
+				concepto: true,
+				// conceptoVisual: true,
 				HistorialArtistas: {
 					where: { fechaFinalizacion: null },
 					select: { idAp: true },
 				},
-				Album: {
-					select: { id: true },
-				},
-				Actividades: {
-					select: { idAct: true },
-				},
+				Album: { select: { id: true } },
+				Actividades: { select: { idAct: true } },
 			},
 		});
 		return groups.map((group: any) =>
 			GroupResponseDTO.toEntity({
 				...group,
+				agency:
+					group.Agencias && group.Agencias.length > 0
+						? group.Agencias[0]
+						: null,
+				concept: group.concepto,
+				visualConcept: null, // group.conceptoVisual,
 				members: group.HistorialArtistas.map((a: any) => a.idAp),
 				albums: group.Album.map((a: any) => a.id),
 				activities: group.Actividades.map((a: any) => a.idAct),
@@ -324,22 +341,27 @@ export class GroupRepository implements IGroupRepository {
 		const group = await this.db.grupo.findFirst({
 			where: { idConcepto: visualConcept.idConcepto },
 			include: {
+				Agencias: true,
+				concepto: true,
+				// conceptoVisual: true,
 				HistorialArtistas: {
 					where: { fechaFinalizacion: null },
 					select: { idAp: true },
 				},
-				Album: {
-					select: { id: true },
-				},
-				Actividades: {
-					select: { idAct: true },
-				},
+				Album: { select: { id: true } },
+				Actividades: { select: { idAct: true } },
 			},
 		});
 		return !group
 			? null
 			: GroupResponseDTO.toEntity({
 					...group,
+					agency:
+						group.Agencias && group.Agencias.length > 0
+							? group.Agencias[0]
+							: null,
+					concept: group.concepto,
+					visualConcept: null, // group.conceptoVisual,
 					members: group.HistorialArtistas.map((a: any) => a.idAp),
 					albums: group.Album.map((a: any) => a.id),
 					activities: group.Actividades.map((a: any) => a.idAct),
@@ -349,21 +371,26 @@ export class GroupRepository implements IGroupRepository {
 	async findAll(): Promise<Group[]> {
 		const groups = await this.db.grupo.findMany({
 			include: {
+				Agencias: true,
+				concepto: true,
+				// conceptoVisual: true,
 				HistorialArtistas: {
 					where: { fechaFinalizacion: null },
 					select: { idAp: true },
 				},
-				Album: {
-					select: { id: true },
-				},
-				Actividades: {
-					select: { idAct: true },
-				},
+				Album: { select: { id: true } },
+				Actividades: { select: { idAct: true } },
 			},
 		});
 		return groups.map((group: any) =>
 			GroupResponseDTO.toEntity({
 				...group,
+				agency:
+					group.Agencias && group.Agencias.length > 0
+						? group.Agencias[0]
+						: null,
+				concept: group.concepto,
+				visualConcept: null, // group.conceptoVisual,
 				members: group.HistorialArtistas.map((a: any) => a.idAp),
 				albums: group.Album.map((a: any) => a.id),
 				activities: group.Actividades.map((a: any) => a.idAct),
