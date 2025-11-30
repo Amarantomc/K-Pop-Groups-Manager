@@ -87,7 +87,6 @@ const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , c
   const handleFieldChange = (field: string, value: string) => {
     setEditingRow((prev: any) => ({ ...prev, [field]: value }));
   };
-
   const actionColumn : GridColDef[] = [
     {field: 'action', headerName: 'Acciones', width: 200, renderCell: (params) => {
       return (
@@ -103,6 +102,23 @@ const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , c
 
   return (
         <>
+        <div className='datatable-header'>
+            <button className='add-button'>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    >
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+                Agregar
+            </button>
+        </div>
         <div className="datatable">
         <DataGrid
             rows={rows || []}
@@ -115,6 +131,10 @@ const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , c
             localeText={esES.components.MuiDataGrid.defaultProps.localeText}
         />
         </div>
+
+            {/* Modal para agregar */}
+        {/* <Modal open={openModal} onClose={}>
+        </Modal> */}
 
            {/* Modal para editar */}
       <Modal open={openModal} onClose={handleClose}>

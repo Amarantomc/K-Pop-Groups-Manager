@@ -4,7 +4,7 @@ import Sidebar from '../../components/sidebar/Sidebar';
 import "./Dashboard.css"
 import Header from '../../components/header/Header';
 import { useAuth } from '../../contextsLocal/AuthContext';
-
+import Modal from '../../components/modal/Modal';
 
 const Dashboard : React.FC = () =>{
   const [agenciesCount, setAgenciesCount] = useState<number | null>(null);
