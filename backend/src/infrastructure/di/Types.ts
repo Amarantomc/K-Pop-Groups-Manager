@@ -1,3 +1,4 @@
+import { PopularityList } from "../../domain";
 
 
 // src/infrastructure/di/TYPES.ts
@@ -12,7 +13,7 @@ const Types = {
   IAgencyRepository : Symbol.for('IAgencyRepository'),
   IArtistRepository : Symbol.for('IArtistRepository'),
   IConceptRepository: Symbol.for('IConceptRepository'),
-
+  IPopularityListRepository: Symbol.for('IPopularityListRepository'),
   
   // Application Use Cases
   CreateUserUseCase: Symbol.for('CreateUserUseCase'),
@@ -51,6 +52,13 @@ const Types = {
   GetConceptUseCase: Symbol.for('GetConceptUseCase'),
   UpdateConceptUseCase: Symbol.for('UpdateConceptUseCase'),
   ListConceptUseCase :Symbol.for('ListConceptUseCase'),
+
+  CreatePopularityListUseCase: Symbol.for('CreatePopularityListUseCase'),
+  GetPopularityListUseCase: Symbol.for('GetPopularityListUseCase'),
+  ListPopularityListsUseCase: Symbol.for('GetPopularityListsUseCase'),
+  UpdatePopularityListUseCase: Symbol.for('UpdatePopularityListUseCase'),
+  DeletePopularityListUseCase: Symbol.for('DeletePopularityListUseCase'),
+  AddSongToPopularityListUseCase: Symbol.for('AddSongToPopularityListUseCase'),
    
   LoginUserUseCase: Symbol.for('LoginUserUseCase'),
   ValidateTokenUseCase: Symbol.for('ValidateTokenUseCase'),
@@ -62,6 +70,7 @@ const Types = {
   AgencyController : Symbol.for('AgencyController'),
   ArtistController : Symbol.for('ArtistController'),
   ConceptController : Symbol.for('ConceptController'),
+  PopularityListController : Symbol.for('PopularityListController'),
 
 };
 

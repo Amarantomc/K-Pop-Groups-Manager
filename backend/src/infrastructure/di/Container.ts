@@ -52,6 +52,13 @@ import { DeleteConceptUseCase } from '../../application/usesCase/concept/DeleteC
 import { GetConceptUseCase } from '../../application/usesCase/concept/GetConceptUseCase';
 import { ListConceptUseCase } from '../../application/usesCase/concept/ListConceptUSeCase';
 import { UpdateConceptUseCase } from '../../application/usesCase/concept/UpdateConcept';
+import type { IPopularityListRepository } from '../../application/interfaces/repositories/IPopularityListRepository';
+import { CreatePopularityListUseCase } from '../../application/usesCase/popularityList/CreatePopularityListUseCase';
+import { GetPopularityListUseCase } from '../../application/usesCase/popularityList/GetPopularityListUseCase';
+import { DeletePopularityListUseCase } from '../../application/usesCase/popularityList/DeletePopularityListUseCase';
+import { UpdatePopularityListUseCase } from '../../application/usesCase/popularityList/UpdatePopularityListUseCase';
+import { AddSongToPopularityListUseCase } from '../../application/usesCase/popularityList/AddSongToPopularityListUseCase';
+import { PopularityListRepository } from '../repositories/PopularityListRepository';
 
  
 
@@ -94,6 +101,10 @@ container.bind<IUserRepository>(Types.IUserRepository)
 
   container.bind<IConceptRepository>(Types.IConceptRepository)
   .to(ConceptRepository)
+  .inSingletonScope();
+
+  container.bind<IPopularityListRepository>(Types.IPopularityListRepository)
+  .to(PopularityListRepository)
   .inSingletonScope();
 
 // Use Cases - User
@@ -228,8 +239,29 @@ container.bind<UpdateUserUseCase>(Types.UpdateUserUseCase)
   .to(UpdateConceptUseCase)
   .inTransientScope();
 
- 
+  container.bind<CreatePopularityListUseCase>(Types.CreatePopularityListUseCase)
+  .to(CreatePopularityListUseCase)
+  .inTransientScope();
 
+container.bind<GetPopularityListUseCase>(Types.GetPopularityListUseCase)
+  .to(GetPopularityListUseCase)
+  .inTransientScope();
+
+container.bind<GetPopularityListUseCase>(Types.ListPopularityListsUseCase)
+  .to(GetPopularityListUseCase)
+  .inTransientScope();
+
+container.bind<DeletePopularityListUseCase>(Types.DeletePopularityListUseCase)
+  .to(DeletePopularityListUseCase)
+  .inTransientScope();
+
+container.bind<UpdatePopularityListUseCase>(Types.UpdatePopularityListUseCase)
+  .to(UpdatePopularityListUseCase)
+  .inTransientScope();
+
+  container.bind<AddSongToPopularityListUseCase>(Types.AddSongToPopularityListUseCase)
+  .to(AddSongToPopularityListUseCase)
+  .inTransientScope();
 // // Use Cases - Auth
  
 
