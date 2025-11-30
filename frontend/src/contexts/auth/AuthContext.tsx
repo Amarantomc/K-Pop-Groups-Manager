@@ -39,7 +39,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const userData = localStorage.getItem('user');
+    //const userData = localStorage.getItem('user');
     const rememberMe = localStorage.getItem('rememberMe');
     const expiration = localStorage.getItem('rememberMeExpiration');
 
@@ -71,15 +71,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     }
 
-    if (token && userData) {
-      const parsedUser = JSON.parse(userData);
-      // 🔧 NORMALIZAR DATOS AL CARGAR (por si hay sesiones antiguas)
-      const normalizedUser = {
-        ...parsedUser,
-        role: (parsedUser.role || parsedUser.rol || 'apprentice').toLowerCase() as UserRole
-      };
-      setUser(normalizedUser);
-    }
     setIsLoading(false);
   }, []);
 
@@ -132,6 +123,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const token = responseJson?.token || responseJson?.data?.token || responseJson?.accessToken || responseJson?.access_token;
       let userObj = responseJson?.user || responseJson?.data?.user || responseJson?.userData || null;
 
+      console.log("USEROBJ", userObj);
+      console.log("TOKEN", token);
+
       // Si recibimos token pero no user, intentar obtener /api/auth/me
       if (token && !userObj) {
         try {
@@ -160,12 +154,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       localStorage.setItem('token', token);
 
       if (userObj) {
-        // 🔧 NORMALIZAR DATOS DEL BACKEND
-        // El backend devuelve "rol" pero necesitamos "role"
         // El backend devuelve "Admin" pero necesitamos "admin" (minúsculas)
         const normalizedUser = {
           ...userObj,
-          role: (userObj.role || userObj.rol || 'apprentice').toLowerCase() as UserRole
+          role: (userObj.role || 'apprentice').toLowerCase() as UserRole
         };
         
         localStorage.setItem('user', JSON.stringify(normalizedUser));

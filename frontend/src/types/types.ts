@@ -14,7 +14,6 @@ export interface User {
 }
 
 export interface RoleConfig {
-  dashboard: string;
   allowedRoutes: string[];
   sidebarItems: string[];
   defaultRedirect: string;
