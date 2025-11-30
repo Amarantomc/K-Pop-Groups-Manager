@@ -3,6 +3,7 @@ import { Types } from "../../../infrastructure/di/Types";
 import type { IUnitOfWork } from "../../interfaces/IUnitOfWork";
 import type { IGroupRepository } from "../../interfaces/repositories/IGroupRepository";
 import { GroupResponseDTO } from "../../dtos/group/GroupResponseDTO";
+import type { CreateGroupDTO } from "../../dtos/group/CreateGroupDTO";
 
 @injectable()
 export class UpdateGroupUseCase {
@@ -13,15 +14,7 @@ export class UpdateGroupUseCase {
 
 	async execute(
 		id: string,
-		payload: {
-			name?: string;
-			debut?: Date;
-			status?: string;
-			memberCount?: number;
-			agency?: number;
-			concept?: number;
-			visualConcept?: number;
-		}
+		payload: Partial<CreateGroupDTO>
 	): Promise<GroupResponseDTO> {
 		try {
 			await this.unitOfWork.beginTransaction();

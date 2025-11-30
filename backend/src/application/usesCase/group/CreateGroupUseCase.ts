@@ -14,11 +14,17 @@ export class CreateGroupUseCase {
 
 	async execute(command: CreateGroupDTO): Promise<GroupResponseDTO> {
 		try {
+			if (!command.members || command.members.length == 0)
+				throw new Error("Members has to be a non empty array");
+
 			await this.unitOfWork.beginTransaction();
+
 			const existingGroup = await this.groupRepository.findByName(command.name);
 			if (existingGroup) throw new Error("Group with this name already exists");
+
 			const group = await this.groupRepository.create(command);
 			await this.unitOfWork.commit();
+
 			return GroupResponseDTO.fromEntity(group);
 		} catch (error) {
 			await this.unitOfWork.rollback();

@@ -11,6 +11,7 @@ export class GetGroupUseCase {
 
 	async execute(id: string): Promise<GroupResponseDTO> {
 		const group = await this.groupRepository.findById(id);
+		console.log(group);
 		if (!group) throw new Error("Group not found");
 		return GroupResponseDTO.fromEntity(group);
 	}

@@ -14,7 +14,11 @@ export interface IGroupRepository
 	findByConcept(concept: number): Promise<Group[]>;
 	findByVisualConcept(visualConcept: number): Promise<Group | null>;
 	findAll(): Promise<Group[]>;
-	addMembers(groupId: number, artistIds: number[]): Promise<void>;
+	addMembers(
+		groupId: number,
+		artistIds: number[],
+		artistRoles: string[]
+	): Promise<void>;
 	removeMembers(groupId: number, artistIds: number[]): Promise<void>;
 	addAlbums(groupId: number, albumIds: number[]): Promise<void>;
 	addActivities(groupId: number, activityIds: number[]): Promise<void>;

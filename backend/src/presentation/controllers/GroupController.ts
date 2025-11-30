@@ -20,6 +20,7 @@ import { FindGroupsByMemberUseCase } from "../../application/usesCase/group/Find
 import { FindGroupsByAgencyUseCase } from "../../application/usesCase/group/FindGroupsByAgencyUseCase";
 import { FindGroupsByConceptUseCase } from "../../application/usesCase/group/FindGroupsByConceptUseCase";
 import { FindGroupByVisualConceptUseCase } from "../../application/usesCase/group/FindGroupByVisualConceptUseCase";
+import type { GroupStatus } from "../../domain/enums/GroupStatus";
 
 @injectable()
 export class GroupController {
@@ -110,15 +111,26 @@ export class GroupController {
 	async addMembers(req: Request, res: Response) {
 		try {
 			const { id } = req.params;
-			const { members } = req.body;
+			const { members, roles } = req.body;
 
 			if (!Array.isArray(members) || members.length === 0) {
 				return res
 					.status(400)
 					.json({ success: false, error: "members must be a non-empty array" });
 			}
+			if (!Array.isArray(roles) || roles.length === 0) {
+				return res
+					.status(400)
+					.json({ success: false, error: "roles must be a non-empty array" });
+			}
+			if (members.length != roles.length) {
+				return res.status(400).json({
+					success: false,
+					error: "roles must be the same length of members",
+				});
+			}
 
-			const group = await this.addMembersUseCase.execute(id!, members);
+			const group = await this.addMembersUseCase.execute(id!, members, roles);
 			res.json({ success: true, data: group });
 		} catch (error: any) {
 			res.status(400).json({ success: false, error: error.message });
@@ -214,15 +226,13 @@ export class GroupController {
 		try {
 			const { status } = req.query;
 			if (!status || typeof status !== "string") {
-				return res
-					.status(400)
-					.json({
-						success: false,
-						error: "status query parameter is required",
-					});
+				return res.status(400).json({
+					success: false,
+					error: "status query parameter is required",
+				});
 			}
 			const groups = await this.findGroupsByStatusUseCase.execute(
-				status as any
+				status as GroupStatus
 			);
 			res.json({ success: true, data: groups });
 		} catch (error: any) {

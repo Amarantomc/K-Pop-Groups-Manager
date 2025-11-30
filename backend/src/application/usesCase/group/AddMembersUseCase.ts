@@ -13,7 +13,8 @@ export class AddMembersUseCase {
 
 	async execute(
 		groupId: string,
-		artistIds: number[]
+		artistIds: number[],
+		artistRoles: string[]
 	): Promise<GroupResponseDTO> {
 		try {
 			await this.unitOfWork.beginTransaction();
@@ -21,11 +22,14 @@ export class AddMembersUseCase {
 			const group = await this.groupRepository.findById(groupId);
 			if (!group) throw new Error("Group not found");
 
-			if (!Array.isArray(artistIds) || artistIds.length === 0) {
+			if (!Array.isArray(artistIds) || artistIds.length === 0)
 				throw new Error("artistIds must be a non-empty array");
-			}
+			if (!Array.isArray(artistRoles) || artistRoles.length === 0)
+				throw new Error("artistRoles must be a non-empty array");
+			if (artistIds.length !== artistRoles.length)
+				throw new Error("artistIds and artistRoles must have the same length");
 
-			await this.groupRepository.addMembers(group.id, artistIds);
+			await this.groupRepository.addMembers(group.id, artistIds, artistRoles);
 
 			const updatedGroup = await this.groupRepository.findById(groupId);
 			if (!updatedGroup) throw new Error("Failed to retrieve updated group");

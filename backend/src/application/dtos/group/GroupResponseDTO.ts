@@ -22,25 +22,25 @@ export class GroupResponseDTO {
 			group.debut,
 			group.status,
 			group.memberCount,
-			group.IdAgency,
-			group.IdConcept,
-			group.IdVisualConcept,
+			group.agency,
+			group.concept,
+			group.visualConcept,
 			group.members,
-			group.albums || [],
-			group.activities || []
+			group.albums,
+			group.activities
 		);
 	}
 
 	static toEntity(group: any): Group {
 		return new Group({
 			id: group.id,
-			name: group.name,
-			debut: group.debut,
-			memberCount: group.memberCount,
-			status: group.status,
-			agency: group.agency,
-			concept: group.concept,
-			visualConcept: group.visualConcept,
+			name: group.nombreCompleto,
+			debut: group.fechaDebut,
+			memberCount: group.Nomiembros,
+			status: group.estadoGrupo,
+			agency: group.agency, // No existe idAgencia en la tabla de BD
+			concept: group.idConcepto,
+			visualConcept: group.visualConcept, // No existe idConceptoVisual en la tabla de BD
 		});
 	}
 

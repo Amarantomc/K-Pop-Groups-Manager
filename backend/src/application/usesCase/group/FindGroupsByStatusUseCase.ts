@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { Types } from "../../../infrastructure/di/Types";
 import type { IGroupRepository } from "../../interfaces/repositories/IGroupRepository";
 import { GroupResponseDTO } from "../../dtos/group/GroupResponseDTO";
-import type { GroupStatus } from "../../../domain/enums/GroupStatus";
+import { GroupStatus } from "../../../domain/enums/GroupStatus";
 
 @injectable()
 export class FindGroupsByStatusUseCase {

@@ -54,10 +54,10 @@ export class GroupRoutes {
 		this.router.get("/:id", (req, res) =>
 			this.groupController.getGroup(req, res)
 		);
-		this.router.put("/:id", (req, res) =>
+		this.router.put("/update/:id", (req, res) =>
 			this.groupController.updateGroup(req, res)
 		);
-		this.router.delete("/:id", (req, res) =>
+		this.router.delete("/delete/:id", (req, res) =>
 			this.groupController.deleteGroup(req, res)
 		);
 
