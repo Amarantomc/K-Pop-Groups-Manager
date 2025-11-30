@@ -3,7 +3,6 @@
 
 import type React from "react"
 import { useState, useEffect } from "react"
-import type {Constraints } from "../types/constraints"
 import type { FieldConstraint } from "../../config/modalConstraints"
 import "./modal.css"
 
@@ -12,21 +11,28 @@ interface ModalProps {
   onClose?: () => void
   title?: string
   data?: any
-  constraints?: FieldConstraint
+  constraints?: Record<string, FieldConstraint>
   onSave?: (data: any) => void
-  mode?: "create" | "edit"
 }
 
-const Modal : React.FC<ModalProps> = ({ isOpen, onClose, title, data, constraints, onSave, mode }) => {
+const Modal : React.FC<ModalProps> = ({ isOpen, onClose, title, data, constraints, onSave }) => {
   const [formData, setFormData] = useState<any>({})
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
 
     useEffect(() => {
-        if (isOpen) {
-        setFormData(data)
+      if (!isOpen) return
+
+      // Si no hay constraints, usar data (o vacío)
+      if (!constraints) {
+        setFormData(data ?? {})
         setErrors({})
-    }
-}, [isOpen, data])
+        return
+      }
+        // En modo editar, usar los datos proporcionados
+        setFormData(data ?? {})
+      
+      setErrors({})
+    }, [isOpen, data, constraints])
 
     if (!isOpen) return null
 
@@ -42,25 +48,30 @@ const Modal : React.FC<ModalProps> = ({ isOpen, onClose, title, data, constraint
     const validateForm = (): boolean => {
     const newErrors: { [key: string]: string } = {}
 
+    if (!constraints) return true
+
     Object.keys(constraints).forEach((key) => {
-        const rule = constraints[key]
-        const value = formData[key]
+      const rule = constraints[key]
+      const value = formData ? formData[key] : undefined
 
-        if (rule.required && (!value || value === "")) {
-        newErrors[key] = `${rule.label} es requerido`
-}
-
-        if (rule.validate && value) {
-            const error = rule.validate(value)
+      // Llamar siempre a la validación personalizada si existe
+      if (rule.validate) {
+        const error = rule.validate(value)
         if (error) {
-            newErrors[key] = error
+          newErrors[key] = error
+          return
         }
-    }
+      }
+
+      // Fallback para campos required sin validate
+      if (rule.required && (value === undefined || value === null || value === "")) {
+        newErrors[key] = `${rule.label || key} es requerido`
+      }
     })
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
-}
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -91,9 +102,9 @@ const Modal : React.FC<ModalProps> = ({ isOpen, onClose, title, data, constraint
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="modal-form">
-          {Object.keys(constraints).map((key) => {
-            const rule = constraints[key]
+        <form onSubmit={handleSubmit} className="modal-form" noValidate>
+          {Object.keys(constraints || {}).map((key) => {
+            const rule = (constraints || {})[key]
             if (!rule.editable) return null
             if (key === "id") return null
 
@@ -108,7 +119,6 @@ const Modal : React.FC<ModalProps> = ({ isOpen, onClose, title, data, constraint
                     id={key}
                     value={value}
                     onChange={(e) => handleFieldChange(key, e.target.value)}
-                    required={rule.required}
                   >
                     <option value="">Selecciona una opción</option>
                     {rule.options?.map((opt) => (
@@ -130,8 +140,7 @@ const Modal : React.FC<ModalProps> = ({ isOpen, onClose, title, data, constraint
                   type={rule.type === "date" ? "date" : rule.type === "number" ? "number" : "text"}
                   value={value}
                   onChange={(e) => handleFieldChange(key, e.target.value)}
-                  required={rule.required}
-                  placeholder={`Ingresa ${rule.label.toLowerCase()}`}
+                  placeholder={`Ingresa ${rule.label?.toLowerCase() || key}`}
                 />
                 {errorMessage && <span className="error-message">{errorMessage}</span>}
               </div>
@@ -143,7 +152,7 @@ const Modal : React.FC<ModalProps> = ({ isOpen, onClose, title, data, constraint
               Cancelar
             </button>
             <button type="submit" className="submit-button">
-              {mode === "create" ? "Agregar" : "Guardar Cambios"}
+                Guardar Cambios
             </button>
           </div>
         </form>
