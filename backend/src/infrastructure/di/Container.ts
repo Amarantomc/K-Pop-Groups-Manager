@@ -44,6 +44,14 @@ import  { GetAllArtistsUseCase } from '../../application/usesCase/artist/GetAllA
 import  { FindArtistByAgencyUseCase } from '../../application/usesCase/artist/FindArtistByAgencyUseCase';
 import { ListByAgencyUseCase } from '../../application/usesCase/apprentice/ListByAgencyUseCase';
 import { GetApprenticeByNameUseCase } from '../../application/usesCase/apprentice/GetApprenticeByNameUseCase';
+import { ConceptController } from '../../presentation/controllers/ConceptController';
+import type { IConceptRepository } from '../../application/interfaces/repositories/IConceptRepository';
+import { ConceptRepository } from '../repositories/ConceptRepository';
+import { CreateConceptUseCase } from '../../application/usesCase/concept/CreateConcept';
+import { DeleteConceptUseCase } from '../../application/usesCase/concept/DeleteConcept';
+import { GetConceptUseCase } from '../../application/usesCase/concept/GetConceptUseCase';
+import { ListConceptUseCase } from '../../application/usesCase/concept/ListConceptUSeCase';
+import { UpdateConceptUseCase } from '../../application/usesCase/concept/UpdateConcept';
 
  
 
@@ -82,6 +90,10 @@ container.bind<IUserRepository>(Types.IUserRepository)
 
   container.bind<IArtistRepository>(Types.IArtistRepository)
   .to(ArtistRepository)
+  .inSingletonScope();
+
+  container.bind<IConceptRepository>(Types.IConceptRepository)
+  .to(ConceptRepository)
   .inSingletonScope();
 
 // Use Cases - User
@@ -195,6 +207,27 @@ container.bind<UpdateUserUseCase>(Types.UpdateUserUseCase)
   .to(FindArtistByAgencyUseCase)
   .inTransientScope();
 
+
+   container.bind<CreateConceptUseCase>(Types.CreateConceptUseCase)
+  .to(CreateConceptUseCase)
+  .inTransientScope();
+
+  container.bind<DeleteConceptUseCase>(Types.DeleteConceptUseCase)
+  .to(DeleteConceptUseCase)
+  .inTransientScope();
+
+  container.bind<GetConceptUseCase>(Types.GetConceptUseCase)
+  .to(GetConceptUseCase)
+  .inTransientScope();
+
+  container.bind<ListConceptUseCase>(Types.ListConceptUseCase)
+  .to(ListConceptUseCase)
+  .inTransientScope();
+
+    container.bind<UpdateConceptUseCase>(Types.UpdateConceptUseCase)
+  .to(UpdateConceptUseCase)
+  .inTransientScope();
+
  
 
 // // Use Cases - Auth
@@ -227,6 +260,10 @@ container.bind<AgencyController>(Types.AgencyController)
 
   container.bind<ArtistController>(Types.ArtistController)
   .to(ArtistController)
+  .inTransientScope();
+
+  container.bind<ConceptController>(Types.ConceptController)
+  .to(ConceptController)
   .inTransientScope();
 
   
