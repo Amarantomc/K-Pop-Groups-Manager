@@ -75,7 +75,7 @@ export const userFields: Field[] = [
     { id: 'email', name: 'email', label: 'Correo electrónico', type: 'email', placeholder: 'correo@ejemplo.com', required: true },
     { id: 'password', name: 'password', label: 'Contraseña', type: 'password', required: true },
     // El backend espera el campo 'rol' (no 'role') — sincronizamos el nombre con el API
-    { id: 'role', name: 'rol', label: 'Rol de usuario', type: 'select', options: enumToOptions(ROLE_TYPES) }
+    { id: 'role', name: 'rol', label: 'Rol de usuario', type: 'select', options: enumToOptions(ROLE_TYPES), required: true }
 ];
 
 // Agencia

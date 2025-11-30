@@ -95,6 +95,86 @@ const Profile: React.FC = () => {
         if (!payload.name && payload.username) {
           payload.name = payload.username;
         }
+
+        // Obtener el rol y el username
+        const userRole = (payload.rol || payload.role || '').toLowerCase();
+        const username = payload.name || payload.username;
+
+        // Agregar agencyId del usuario actual para todos los roles excepto admin
+        if (userRole !== 'admin' && user?.agencyId) {
+          payload.agencyId = user.agencyId;
+        }
+
+        // Consulta al backend para obtener IDs según el rol usando el username
+        if (userRole === 'aprendiz' || userRole === 'apprentice') {
+          // Para aprendiz: buscar ID por nombre de usuario
+          if (!username) {
+            alert('Debe proporcionar el nombre de usuario');
+            return;
+          }
+
+          try {
+            const apprenticeRes = await fetch(`${API_BASE}/api/apprentice?name=${encodeURIComponent(username)}`);
+            if (!apprenticeRes.ok) {
+              alert('No se encontró el aprendiz con ese nombre');
+              return;
+            }
+            const apprenticeData = await apprenticeRes.json();
+            if (!apprenticeData.data || apprenticeData.data.length === 0) {
+              alert('No se encontró el aprendiz con ese nombre');
+              return;
+            }
+            payload.apprenticeId = apprenticeData.data[0].id;
+          } catch (error) {
+            console.error('Error al buscar aprendiz:', error);
+            alert('Error al buscar el aprendiz en el sistema');
+            return;
+          }
+        }
+
+        if (userRole === 'artista' || userRole === 'artist') {
+          // Para artista: buscar ID de aprendiz y de grupo usando el username
+          if (!username) {
+            alert('Debe proporcionar el nombre de usuario');
+            return;
+          }
+
+          try {
+            // Buscar el aprendiz por nombre de usuario
+            const apprenticeRes = await fetch(`${API_BASE}/api/apprentice?name=${encodeURIComponent(username)}`);
+            if (!apprenticeRes.ok) {
+              alert('No se encontró el aprendiz con ese nombre');
+              return;
+            }
+            const apprenticeData = await apprenticeRes.json();
+            if (!apprenticeData.data || apprenticeData.data.length === 0) {
+              alert('No se encontró el aprendiz con ese nombre');
+              return;
+            }
+            payload.apprenticeId = apprenticeData.data[0].id;
+
+            // Solicitar nombre del grupo al usuario
+            const groupName = prompt('Ingrese el nombre del grupo (opcional, presione Cancelar para omitir):');
+            if (groupName && groupName.trim()) {
+              const groupRes = await fetch(`${API_BASE}/api/group?name=${encodeURIComponent(groupName.trim())}`);
+              if (!groupRes.ok) {
+                alert('No se encontró el grupo con ese nombre');
+                return;
+              }
+              const groupData = await groupRes.json();
+              if (!groupData.data || groupData.data.length === 0) {
+                alert('No se encontró el grupo con ese nombre');
+                return;
+              }
+              payload.groupId = groupData.data[0].id;
+            }
+          } catch (error) {
+            console.error('Error al buscar aprendiz/grupo:', error);
+            alert('Error al buscar los datos en el sistema');
+            return;
+          }
+        }
+
   const res = await fetch(`${API_BASE}/api/user/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
