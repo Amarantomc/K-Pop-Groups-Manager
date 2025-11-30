@@ -52,6 +52,14 @@ import { DeleteConceptUseCase } from '../../application/usesCase/concept/DeleteC
 import { GetConceptUseCase } from '../../application/usesCase/concept/GetConceptUseCase';
 import { ListConceptUseCase } from '../../application/usesCase/concept/ListConceptUSeCase';
 import { UpdateConceptUseCase } from '../../application/usesCase/concept/UpdateConcept';
+import type { IActivityRepository } from '../../application/interfaces/repositories/IActivityRepository';
+import { CreateActivityUseCase } from '../../application/usesCase/activity/CreateActivityUseCase';
+import { DeleteActivityUseCase } from '../../application/usesCase/activity/DeleteActivityUseCase';
+import { FindActivityByIdUseCase } from '../../application/usesCase/activity/FindActivityByIdUseCase';
+import { GetAllActivitiesUseCase } from '../../application/usesCase/activity/GetAllActivitiesUseCase';
+import { UpdateActivityUseCase } from '../../application/usesCase/activity/UpdateActivityUseCase';
+import { ActivityController } from '../../presentation/controllers/ActivityController';
+import { ActivityRepository } from '../repositories/ActivityRepository';
 
  
 
@@ -94,6 +102,10 @@ container.bind<IUserRepository>(Types.IUserRepository)
 
   container.bind<IConceptRepository>(Types.IConceptRepository)
   .to(ConceptRepository)
+  .inSingletonScope();
+
+  container.bind<IActivityRepository>(Types.IActivityRepository)
+  .to(ActivityRepository)
   .inSingletonScope();
 
 // Use Cases - User
@@ -237,6 +249,27 @@ container.bind<LoginUserUseCase>(Types.LoginUserUseCase)
   .to(LoginUserUseCase)
   .inTransientScope();
 
+
+  container.bind<CreateActivityUseCase>(Types.CreateActivityUseCase)
+  .to(CreateActivityUseCase)
+  .inTransientScope();
+
+container.bind<UpdateActivityUseCase>(Types.UpdateActivityUseCase)
+  .to(UpdateActivityUseCase)
+  .inTransientScope();
+
+container.bind<DeleteActivityUseCase>(Types.DeleteActivityUseCase)
+  .to(DeleteActivityUseCase)
+  .inTransientScope();
+
+container.bind<FindActivityByIdUseCase>(Types.FindActivityByIdUseCase)
+  .to(FindActivityByIdUseCase)
+  .inTransientScope();
+
+container.bind<GetAllActivitiesUseCase>(Types.GetAllActivitiesUseCase)
+  .to(GetAllActivitiesUseCase)
+  .inTransientScope();
+
 // container.bind<ValidateTokenUseCase>(ValidateTokenUseCase)
 //   .to(ValidateTokenUseCase)
 //   .inTransientScope();
@@ -264,6 +297,10 @@ container.bind<AgencyController>(Types.AgencyController)
 
   container.bind<ConceptController>(Types.ConceptController)
   .to(ConceptController)
+  .inTransientScope();
+
+  container.bind<ActivityController>(Types.ActivityController)
+  .to(ActivityController)
   .inTransientScope();
 
   
