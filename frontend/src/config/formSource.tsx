@@ -59,8 +59,8 @@ export type RoleType = typeof ROLE_TYPES[number];
 export const INCOME_TYPES = ['ventas', 'concierto', 'publicidad', 'otros'] as const;
 export type IncomeType = typeof INCOME_TYPES[number];
 
-export const REQUEST_TYPES = ['ajuste_horario', 'disponibilidad', 'otro'] as const;
-export type RequestType = typeof REQUEST_TYPES[number];
+export const REQUEST_STATUS = ['Aprobado', 'Rechazado', 'En Espera', 'Finalizado'] as const;
+export type RequestStatus = typeof REQUEST_STATUS[number];
 
 export const LIST_SCOPE = ['national', 'international'] as const;
 export type ListScope = typeof LIST_SCOPE[number];
@@ -184,7 +184,7 @@ export const incomeFields: Field[] = [
 // Solicitud
 export const requestFields: Field[] = [
     { id: 'requestId', name: 'requestId', label: 'ID Solicitud', type: 'text' },
-    { id: 'requestType', name: 'requestType', label: 'Solicitud', type: 'select', options: enumToOptions(REQUEST_TYPES) },
+    { id: 'requestStatus', name: 'requestStatus', label: 'Solicitud', type: 'select', options: enumToOptions(REQUEST_STATUS) },
     { id: 'date', name: 'date', label: 'Fecha Solicitud', type: 'date' },
 ];
 

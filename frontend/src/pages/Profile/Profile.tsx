@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
-import Sidebar from '../../components/sidebar/Sidebar';
-// import NavBar from '../../components/navbar/Navbar';
-import "./profile.css";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Form from "../../components/form/Form";
+import Header from '../../components/header/Header';
+import Sidebar from '../../components/sidebar/Sidebar';
 import formFieldsByEntity from "../../config/formSource";
 import { useAuth } from '../../contextsLocal/AuthContext';
-import Header from '../../components/header/Header';
+import "./profile.css";
 
 const Profile: React.FC = () => {
   const { user } = useAuth();
@@ -217,12 +217,23 @@ const Profile: React.FC = () => {
             {user ? (<>
               <div className="profile-card">
                 <div className="profile-top" style={{ alignItems: 'center', display: 'flex' }}>
-                  {/* Avatar: si el usuario tiene avatarUrl, mostrar imagen, si no, inicial */}
-                  <img
-                    src={user.avatarUrl ?? '/avatar-placeholder.svg'}
-                    alt={user.name ?? 'Avatar'}
-                    className="profile-avatar-img"
-                  />
+                  {/* Avatar: si el usuario tiene avatarUrl, mostrar imagen, si no, icono por defecto */}
+                  {user.avatarUrl ? (
+                    <img
+                      src={user.avatarUrl}
+                      alt={user.name ?? 'Avatar'}
+                      className="profile-avatar-img"
+                    />
+                  ) : (
+                    <AccountCircleIcon 
+                      className="profile-avatar-icon"
+                      sx={{ 
+                        fontSize: 80, 
+                        color: '#7451f8',
+                        marginRight: '20px'
+                      }}
+                    />
+                  )}
 
                   {/* Meta principal: nombre, email y rol */}
                   <div className="profile-meta">

@@ -1,33 +1,33 @@
 import type React from "react";
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import AddBusinessIcon from '@mui/icons-material/AddBusiness';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import LogoutIcon from '@mui/icons-material/Logout';
-import BusinessIcon from '@mui/icons-material/Business';
-import PeopleIcon from '@mui/icons-material/People';
-import SchoolIcon from '@mui/icons-material/School';
-import AssessmentIcon from '@mui/icons-material/Assessment';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import ScheduleIcon from '@mui/icons-material/Schedule';
-import HistoryIcon from '@mui/icons-material/History';
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
-import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-import WorkIcon from '@mui/icons-material/Work';
+import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import AlbumIcon from '@mui/icons-material/Album';
+import AssessmentIcon from '@mui/icons-material/Assessment';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import BusinessIcon from '@mui/icons-material/Business';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import DescriptionIcon from '@mui/icons-material/Description';
-import WarningIcon from '@mui/icons-material/Warning';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import LogoutIcon from '@mui/icons-material/Logout';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import PeopleIcon from '@mui/icons-material/People';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import SchoolIcon from '@mui/icons-material/School';
 import ViewTimelineIcon from '@mui/icons-material/ViewTimeline';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-import SettingsIcon from '@mui/icons-material/Settings';
-import BackupIcon from '@mui/icons-material/Backup';
+import WorkIcon from '@mui/icons-material/Work';
+//import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+//import ScheduleIcon from '@mui/icons-material/Schedule';
+//import HistoryIcon from '@mui/icons-material/History';
+//import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
+//import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+//import WarningIcon from '@mui/icons-material/Warning';
+//import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+//import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+//import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+//import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+//import SettingsIcon from '@mui/icons-material/Settings';
+//import BackupIcon from '@mui/icons-material/Backup';
 
 export interface MenuItem {
     label: string;
@@ -67,8 +67,7 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "ARTISTA",
             items: [
-                { label: "Añadir Artista", icon: <PersonAddIcon />, path: "/admin/artists" },
-                { label: "Mostrar Artistas", icon: <PeopleIcon />, path: "/admin/listArtists" }
+                { label: "Gestión de Artistas", icon: <PeopleIcon />, path: "/admin/Artist" }
             ]
         },
         {
@@ -102,7 +101,7 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "INGRESOS",
             items: [
-                { label: "Mis Ingresos", icon: <AttachMoneyIcon />, path: "/manager/earnings" }
+                { label: "Mis Ingresos", icon: <AttachMoneyIcon />, path: "/manager/income" }
             ]
         },
         {
@@ -136,8 +135,7 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "ARTISTA",
             items: [
-                { label: "Añadir Artista", icon: <PersonAddIcon />, path: "/manager/artists" },
-                { label: "Mostrar Artistas", icon: <PeopleIcon />, path: "/manager/listArtists" }
+                { label: "Gestión de Artistas", icon: <PeopleIcon />, path: "/director/Artist" }
             ]
         },
         {
@@ -157,8 +155,7 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "ACTIVIDAD",
             items: [
-                { label: "Crear Actividad", icon: <CalendarTodayIcon />, path: "/manager/activities" },
-                { label: "Mostrar Actividades", icon: <ViewTimelineIcon />, path: "/manager/listActivities" }
+                { label: "Gestión de Actividades", icon: <CalendarTodayIcon />, path: "/director/activities"}
             ]
         },
         {
@@ -171,7 +168,7 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "INGRESOS",
             items: [
-                { label: "Mis Ingresos", icon: <AttachMoneyIcon />, path: "/manager/earnings" }
+                { label: "Mis Ingresos", icon: <AttachMoneyIcon />, path: "/director/income" }
             ]
         },
         {
@@ -206,8 +203,7 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "ARTISTA",
             items: [
-                { label: "Añadir Artista", icon: <PersonAddIcon />, path: "/manager/artists" },
-                { label: "Mostrar Artistas", icon: <PeopleIcon />, path: "/manager/listArtists" }
+                { label: "Gestión de Artistas", icon: <PeopleIcon />, path: "/manager/Artist" }
             ]
         },
         {
@@ -227,8 +223,7 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "ACTIVIDAD",
             items: [
-                { label: "Crear Actividad", icon: <CalendarTodayIcon />, path: "/manager/activities" },
-                { label: "Mostrar Actividades", icon: <ViewTimelineIcon />, path: "/manager/listActivities" }
+                { label: "Gestión de Actividades", icon: <CalendarTodayIcon />, path: "/manager/activities"}
             ]
         },
         {
@@ -241,7 +236,7 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "INGRESOS",
             items: [
-                { label: "Mis Ingresos", icon: <AttachMoneyIcon />, path: "/manager/earnings" }
+                { label: "Mis Ingresos", icon: <AttachMoneyIcon />, path: "/manager/income" }
             ]
         },
         {
@@ -269,13 +264,13 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "ACTIVIDAD",
             items: [
-                { label: "Calendario", icon: <CalendarTodayIcon />, path: "/artist/activity" }
+                { label: "Calendario", icon: <CalendarTodayIcon />, path: "/artist/activities" }
             ]
         },
         {
             title: "INGRESOS",
             items: [
-                { label: "Mis Ingresos", icon: <AttachMoneyIcon />, path: "/artist/earnings" }
+                { label: "Mis Ingresos", icon: <AttachMoneyIcon />, path: "/artist/income" }
             ]
         },
         {

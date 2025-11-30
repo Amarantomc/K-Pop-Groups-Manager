@@ -3,6 +3,7 @@ import type { RoleConfig } from '../types/types';
 export const ROLE_CONFIG: Record<string, RoleConfig> = {
   // ADMIN - Acceso solo a rutas de admin
   admin: {
+    dashboard: '/admin/dashboard',
     allowedRoutes: ['/admin/*', '/dashboard', '/profile'],
     sidebarItems: [
       'dashboard',
@@ -30,6 +31,7 @@ export const ROLE_CONFIG: Record<string, RoleConfig> = {
   
   // DIRECTOR - Acceso solo a rutas de director
   director: {
+    dashboard: '/director/dashboard',
     allowedRoutes: ['/director/*', '/dashboard', '/profile'],
     sidebarItems: [
       'dashboard',
@@ -53,6 +55,7 @@ export const ROLE_CONFIG: Record<string, RoleConfig> = {
   
   // MANAGER - Acceso solo a rutas de manager
   manager: {
+    dashboard: '/manager/dashboard',
     allowedRoutes: ['/manager/*', '/dashboard', '/profile'],
     sidebarItems: [
       'dashboard',
@@ -77,11 +80,12 @@ export const ROLE_CONFIG: Record<string, RoleConfig> = {
   
   // ARTIST - Acceso solo a rutas de artist
   artist: {
+    dashboard: '/artist/dashboard',
     allowedRoutes: ['/artist/*', '/dashboard', '/profile'],
     sidebarItems: [
       'dashboard',
       'calendar',
-      'my_earnings',
+      'incomes',
       'my_requests',
       'profile'
     ],
@@ -90,6 +94,7 @@ export const ROLE_CONFIG: Record<string, RoleConfig> = {
   
   // APPRENTICE - Acceso solo a rutas de apprentice
   apprentice: {
+    dashboard: '/apprentice/dashboard',
     allowedRoutes: ['/apprentice/*', '/dashboard', '/profile'],
     sidebarItems: [
       'dashboard',

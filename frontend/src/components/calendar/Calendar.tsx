@@ -20,6 +20,7 @@ interface CalendarProps{
     renderEventIcon? : (type : string) => JSX.Element,
     addButtonText? : string
     onAddClick? : (date : Date) => void
+    onDateClick? : (date : string) => void
 }
 
 export default function Calendar({
@@ -29,8 +30,9 @@ export default function Calendar({
     renderEventItem,
     renderEventIcon,
     addButtonText,
-    onAddClick
-}): CalendarProps {
+    onAddClick,
+    onDateClick
+}: CalendarProps) {
     const [currentDate,setCurrentDate] = useState(new Date());
 
     const getDaysInMonth = (date : Date) => {
@@ -83,10 +85,17 @@ export default function Calendar({
             currentDate.getMonth() === new Date().getMonth() &&
             currentDate.getFullYear() === new Date().getFullYear()
 
+            const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+            
             days.push(
-                <div key={day} className={`calendar-day ${isToday ? "calendar-day-today" : ""} ${
+                <div 
+                    key={day} 
+                    className={`calendar-day ${isToday ? "calendar-day-today" : ""} ${
                         dayEvents.length > 0 ? "calendar-day-has-activity" : ""
-                    }`}>
+                    }`}
+                    onClick={() => dayEvents.length > 0 && onDateClick && onDateClick(dateStr)}
+                    style={{ cursor: dayEvents.length > 0 ? 'pointer' : 'default' }}
+                >
                         <span className="calendar-day-number">{day}</span>
 
                          {dayEvents.length > 0 && (

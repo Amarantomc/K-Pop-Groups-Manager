@@ -1,8 +1,8 @@
 // Ubicación: src/App.tsx
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { AuthProvider } from './contextsLocal/AuthContext';
 import AppRouter from './contexts/routes/AppRouter';
+import { AuthProvider } from './contextsLocal/AuthContext';
 import './App.css';
 
 // DebugAuth removed
