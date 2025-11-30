@@ -27,6 +27,7 @@ export class UpdateActivityUseCase {
       await this.unitOfWork.commit();
       return ActivityResponseDto.fromEntity(activity);
     } catch (error) {
+       
       await this.unitOfWork.rollback();
       throw error;
     }

@@ -46,14 +46,21 @@ export class ActivityRepository implements IActivityRepository {
     return activity ? ActivityResponseDto.toEntity(activity) : null;
     }
 async update(id: string, data: Partial<UpdateActivityDto>): Promise<Activity> {
-      const activity = await this.db.actividad.update({
+     
+    const activity = await this.db.actividad.update({
       where: { id: Number(id) },
-      data,
+      data:{
+         responsable:data.responsible,
+         lugar:data.place,
+         fecha:data.date,
+         tipoActividad:data.activityType
+      },
       include: {
         Ingreso: true,
         Artistas: true
       }
     });
+    
 
     return ActivityResponseDto.toEntity(activity);
         

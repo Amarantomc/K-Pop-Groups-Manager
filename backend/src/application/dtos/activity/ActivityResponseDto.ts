@@ -30,7 +30,7 @@ export class ActivityResponseDto {
       activity.id,
       activity.responsible,
       activity.activityType.toString(),
-      activity.date.toString(),
+      activity.date.toDateString(),
       activity.place
     );
   }

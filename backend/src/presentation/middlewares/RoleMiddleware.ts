@@ -5,7 +5,7 @@ import { Role } from '../../domain/enums/Role';
 export class RoleMiddleware {
   static authorize(...allowedRoles: Role[]) {
     return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-        console.log(req.user);
+        
         if (!req.user) {
         return res.status(401).json({
           success: false,

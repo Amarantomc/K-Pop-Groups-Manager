@@ -7,7 +7,7 @@ export class Activity {
     readonly id: number;
     readonly responsible: string;
     readonly activityType: ActivityTypes|string;
-    readonly date: Date | string;
+    readonly date: Date ;
     readonly place: string;
     readonly artists: Artist[];
     //readonly groups: Group[];
@@ -17,7 +17,7 @@ export class Activity {
         id: number;
         responsible: string;
         activityType: string;
-        date: Date | string;
+        date: Date ;
         place: string;
         artists: Artist[];
         //groups: Group[];
