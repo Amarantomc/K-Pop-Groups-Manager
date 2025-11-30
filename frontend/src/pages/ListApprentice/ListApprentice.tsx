@@ -98,7 +98,7 @@ const ListApprentice: React.FC = () => {
             <div className="agency-header">
               <Header title="Aprendices" description="Listado y gestión de aprendices" showlogo={false} collapsed={collapsed} setCollapsed={setCollapsed}/>
             </div>
-            <Datatable columns={apprenticeColumns} rows={apprenticeRows} onDelete={askDelete} onEditSave={handleEditSave} constraints={apprenticeConstraints}/>
+            <Datatable columns={apprenticeColumns} rows={apprenticeRows} onDelete={askDelete} onEditSave={handleEditSave} constraints={apprenticeConstraints} createEntity="apprentice"/>
             </div>
             <ConfirmDialog message="¿Está seguro que desea eliminar este aprendiz?" open={openConfirm} onCancel={() => setOpenConfirm(false)} onConfirm={handleDelete}>
             </ConfirmDialog>
