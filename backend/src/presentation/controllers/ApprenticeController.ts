@@ -19,7 +19,7 @@ constructor(@inject(Types.CreateApprenticeUseCase)  private createApprenticeUseC
             @inject(Types.DeleteApprenticeUseCase) private deleteApprenticeUseCase:DeleteApprenticeUseCase,
             @inject(Types.UpdateApprenticeUseCase) private updateApprenticeUseCase:UpdateApprenticeUseCase,
             @inject(Types.ListApprenticeUseCase) private listApprenticeUseCase:ListApprenticeUseCase,
-             @inject(Types.ListByAgencyUseCase) private listByAgencyUseCase: ListByAgencyUseCase){}
+             @inject(Types.ListByAgencyUseCase) private listByAgencyUseCase: ListByAgencyUseCase,
             @inject(Types.GetApprenticeByNameUseCase) private getByNameApprenticeUseCase:GetApprenticeByNameUseCase,
           ){}
 

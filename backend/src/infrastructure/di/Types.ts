@@ -27,6 +27,7 @@ const Types = {
   UpdateApprenticeUseCase: Symbol.for('UpdateApprenticeUseCase'),
   ListApprenticeUseCase :Symbol.for('ListApprenticeUseCase'),
   ListByAgencyUseCase :Symbol.for('ListByAgencyUseCase'),
+  GetApprenticeByNameUseCase :Symbol.for('GetApprenticeByNameUseCase'),
 
   CreateAgencyUseCase :Symbol.for('CreateAgencyUseCase'),
   DeleteAgencyUseCase :Symbol.for('DeleteAgencyUseCase'),
