@@ -28,6 +28,7 @@ export class ActivityRepository implements IActivityRepository {
         lugar: data.place
       } 
     });
+    
     return ActivityResponseDto.toEntity(activity);
     }
     async findById(id: string): Promise<Activity | null> {

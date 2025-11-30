@@ -16,7 +16,7 @@ export class CreateActivityUseCase {
   async execute(command: CreateActivityDto): Promise<ActivityResponseDto> {
     try {
       await this.unitOfWork.beginTransaction();
-
+      
       const activity = await this.activityRepository.create(command);
 
       await this.unitOfWork.commit();

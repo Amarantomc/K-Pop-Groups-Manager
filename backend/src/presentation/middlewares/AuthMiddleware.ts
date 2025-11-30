@@ -26,13 +26,14 @@ export class AuthMiddleware {
             error: 'Token is required'
           });
         }
-
+        
         const decoded = jwt.verify(
           token,
           process.env.JWT_SECRET || 'secret'
         ) as any;
-
+          
         (req as AuthenticatedRequest).user = decoded;
+        
         next();
       } catch (error: any) {
         return res.status(401).json({

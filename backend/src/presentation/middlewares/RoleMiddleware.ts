@@ -12,7 +12,7 @@ export class RoleMiddleware {
           error: 'Authentication required'
         });
       }
-
+      
       if (!allowedRoles.includes(req.user.role.toLowerCase() as Role)) {
         return res.status(403).json({
           success: false,

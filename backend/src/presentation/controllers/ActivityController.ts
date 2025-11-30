@@ -25,6 +25,7 @@ export class ActivityController {
   async createActivity(req: Request, res: Response) {
     try {
       const activityDto = CreateActivityDto.Create(req.body);
+      
       const activity = await this.createActivityUseCase.execute(activityDto);
       
       res.status(201).json({
