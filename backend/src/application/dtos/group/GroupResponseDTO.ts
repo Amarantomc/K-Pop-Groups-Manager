@@ -22,9 +22,9 @@ export class GroupResponseDTO {
 			group.debut,
 			group.status,
 			group.memberCount,
-			group.agency,
-			group.concept,
-			group.visualConcept,
+			group.agency.id,
+			group.concept.id,
+			group.visualConcept.id,
 			group.members,
 			group.albums,
 			group.activities
@@ -38,7 +38,7 @@ export class GroupResponseDTO {
 			debut: group.fechaDebut,
 			memberCount: group.Nomiembros,
 			status: group.estadoGrupo,
-			agency: group.agency, // No existe idAgencia en la tabla de BD
+			agency: group.Agencias.connect,
 			concept: group.idConcepto,
 			visualConcept: group.visualConcept, // No existe idConceptoVisual en la tabla de BD
 		});

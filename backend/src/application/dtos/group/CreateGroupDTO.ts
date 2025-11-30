@@ -10,6 +10,7 @@ export class CreateGroupDTO {
 		public readonly IdConcept: number,
 		public readonly IdVisualConcept: number,
 		public readonly members: number[],
+		public readonly roles: string[],
 		public readonly albums?: number[],
 		public readonly activities?: number[]
 	) {}
@@ -40,6 +41,18 @@ export class CreateGroupDTO {
 			throw new Error(
 				"Group's members list must be a nonempty array of numbers"
 			);
+		if (
+			!Array.isArray(body.roles) ||
+			body.roles.length == 0 ||
+			!body.roles.every((r: any) => typeof r === "string")
+		)
+			throw new Error(
+				"Group member roles list must be a nonempty array of strings"
+			);
+		if (body.roles.length != body.members.length)
+			throw new Error(
+				"Group member roles list must be the same length as member list"
+			);
 
 		return new CreateGroupDTO(
 			body.name,
@@ -50,6 +63,7 @@ export class CreateGroupDTO {
 			Number(body.IdConcept),
 			Number(body.IdVisualConcept),
 			body.members.map((member: any) => Number(member)),
+			body.roles.map((role: any) => String(role)),
 			body.albums?.map((album: any) => Number(album)),
 			body.activities?.map((activity: any) => Number(activity))
 		);
