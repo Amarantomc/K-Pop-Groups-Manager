@@ -37,13 +37,13 @@ onConfirm,onCancel}) =>{
                     </DialogContent>
 
                     <DialogActions>
-                        <Button onClick={onCancel}>
+                       {showDeleteButton && (<Button onClick={onCancel}>
                             {cancelText}
-                        </Button>
-
-                        {showDeleteButton && (<Button onClick={onConfirm}>
-                            {confirmText}
                         </Button>)}
+
+                        <Button onClick={onConfirm}>
+                            {confirmText}
+                        </Button>
                     </DialogActions>
                 </Dialog>
                 </React.Fragment>
