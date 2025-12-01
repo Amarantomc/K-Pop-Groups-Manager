@@ -25,19 +25,20 @@ export class VisualConceptRepository implements IVisualConceptRepository
         
         const visualConcept= await this.db.ConceptoVisual.create({
             data:{
-                descripcion: data.picture,
+                imagen: data.picture,
             }
         })
         
         
         return VisualConceptResponseDto.toEntity(visualConcept)
     }
+
     async findById(id: any): Promise<VisualConcept | null> {
-         id=(Number)(id)
-        const visualConcept=await this.db.ConceptoVisual.findUnique({
-           where:{id}
-        })
-        return visualConcept ? VisualConceptResponseDto.toEntity(visualConcept) : null
+        const numericId = Number(id);
+        const visualConcept = await this.db.ConceptoVisual.findUnique({
+            where: { idConcepto: numericId } // ✅ nombre correcto
+        });
+        return visualConcept ? VisualConceptResponseDto.toEntity(visualConcept) : null;
     }
 
     async update(id: string, data: Partial<CreateVisualConceptDto>): Promise<VisualConcept> {
@@ -50,15 +51,33 @@ export class VisualConceptRepository implements IVisualConceptRepository
       
         return VisualConceptResponseDto.toEntity(VisualConcept);
       }
-   async delete(id: string): Promise<void> {
-    try {
-      await this.db.ConceptoVisual.delete({
-        where: { id: Number(id) },
-      });
-    } catch (error) {
-      throw new Error(`Error deleting Visual Concept with id ${id}: ${error}`);
-    }
-  }
+      
+      async delete(id: string): Promise<void> {
+        try {
+          // Borrar primero los ConceptoVisual relacionados
+          await this.db.ConceptoVisual.deleteMany({
+            where: { idConcepto: Number(id) }
+          });
+      
+          // Luego borrar el Concepto
+          await this.db.Concepto.delete({
+            where: { id }
+          });
+
+          //actualizar en la tabla grupo-concepto el nuevo id de concepto *momentaneo
+          await this.db.grupo.update({
+            where:{ id: Number(id) },
+            data: {
+              idConcepto: -1
+            }
+            
+          });
+
+        } catch (error) {
+          console.error(`Error deleting concept with id ${id}:`, error);
+          throw error;
+        }
+      }
 
     async findAll(): Promise<VisualConcept[]> {
       const visualConcepts = await this.db.ConceptoVisual.findMany();

@@ -9,7 +9,7 @@ export class VisualConceptResponseDto{
     static fromEntity(visualConcept: any): VisualConceptResponseDto {
         return new VisualConceptResponseDto(
             visualConcept.id,
-            visualConcept.nombre,
+            visualConcept.picture,
         );
       }
 
