@@ -21,9 +21,9 @@ const Profile: React.FC = () => {
     
     if (roleNormalized === 'manager' || roleNormalized === 'director') {
       return [...baseFields, ...managerDirectorFields];
-    } else if (roleNormalized === 'apprentice') {
+    } else if (roleNormalized === 'apprentice' || roleNormalized === 'aprendiz') {
       return [...baseFields];
-    } else if (roleNormalized === 'artist') {
+    } else if (roleNormalized === 'artist' || roleNormalized === 'artista') {
       return [...baseFields];
     }
     
