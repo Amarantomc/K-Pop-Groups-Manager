@@ -72,6 +72,13 @@ import { PopularityListRepository } from '../repositories/PopularityListReposito
 import { PopularityListController } from '../../presentation/controllers/PopularityListController';
 import { ListPopularityListUseCase } from '../../application/usesCase/popularityList/ListPopularityListUseCase';
 
+import type { CreateApplicationUseCase } from "../../application/usesCase/application(solicitud)/CreateApplicatonUseCase";
+import type { GetApplicationUseCase } from "../../application/usesCase/application(solicitud)/GetApplicationUseCase";
+import type { DeleteApplicationUseCase } from "../../application/usesCase/application(solicitud)/DeleteApplicationUseCase";
+import type { ListApplicationUseCase } from "../../application/usesCase/application(solicitud)/ListApplicationUseCase";
+import { CreateApplicationDto } from "../../application/dtos/application(solicitud)/CreateApplicationDto";
+import type { UpdateApplicationUseCase } from "../../application/usesCase/application(solicitud)/UpdateApplicationUseCase";
+import type { FindByApprenticeUseCase } from "../../application/usesCase/application(solicitud)/FindByApprenticeUseCase";
  
 
  

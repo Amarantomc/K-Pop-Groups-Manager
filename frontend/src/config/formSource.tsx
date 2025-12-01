@@ -10,7 +10,7 @@ export type Field = {
     id: string;
     name: string;
     label: string;
-    type: 'text' | 'email' | 'password' | 'number' | 'date' | 'time' | 'select' | 'textarea' | 'checkbox' | 'file' | 'hidden';
+    type: 'text' | 'email' | 'password' | 'number' | 'date' | 'time' | 'select' | 'textarea' | 'checkbox' | 'file' | 'hidden' | 'group';
     placeholder?: string;
     required?: boolean;
     options?: FieldOption[];
@@ -24,6 +24,8 @@ export type Field = {
     pattern?: string; // regex string
     accept?: string; // para input file: 'image/*'
     maxFileSizeMB?: number;
+    // Para type === 'group'
+    fields?: Field[];
 };
 
 // Enums y utilidades para convertirlos a opciones del select
@@ -50,10 +52,10 @@ export type GroupStatus = typeof GROUP_STATUS[number];
 export const CONTRACT_STATUS = ['activo', 'en_renovacion', 'finalizado', 'rescindido'] as const;
 export type ContractStatus = typeof CONTRACT_STATUS[number];
 
-export const ACTIVITY_TYPES = ['individual','grupal'] as const;
+export const ACTIVITY_TYPES = ['individual', 'grupal'] as const;
 export type ActivityType = typeof ACTIVITY_TYPES[number];
 
-export const ROLE_TYPES = ['Admin', 'Manager', 'Director','Artista', 'Aprendiz'] as const;
+export const ROLE_TYPES = ['Admin', 'Manager', 'Director', 'Artista', 'Aprendiz'] as const;
 export type RoleType = typeof ROLE_TYPES[number];
 
 export const INCOME_TYPES = ['ventas', 'concierto', 'publicidad', 'otros'] as const;
@@ -72,10 +74,9 @@ export const enumToOptions = (list: readonly string[]): FieldOption[] => {
 // Usuario (auth)
 export const userFields: Field[] = [
     { id: 'username', name: 'name', label: 'Nombre de usuario', type: 'text', placeholder: 'usuario', required: true },
-    { id: 'email', name: 'email', label: 'Correo electrónico', type: 'email', placeholder: 'correo@ejemplo.com', required: true },
+    { id: 'email', name: 'email', label: 'Correo electrónico', type: 'email', placeholder: 'correo@gmail.com', required: true },
     { id: 'password', name: 'password', label: 'Contraseña', type: 'password', required: true },
-    // El backend espera el campo 'rol' (no 'role') — sincronizamos el nombre con el API
-    { id: 'role', name: 'rol', label: 'Rol de usuario', type: 'select', options: enumToOptions(ROLE_TYPES), required: true }
+    { id: 'role', name: 'role', label: 'Rol de usuario', type: 'select', options: enumToOptions(ROLE_TYPES), required: true }
 ];
 
 // Agencia
@@ -179,13 +180,22 @@ export const incomeFields: Field[] = [
     { id: 'date', name: 'date', label: 'Fecha Ingreso', type: 'date' },
     { id: 'incomeType', name: 'incomeType', label: 'Tipo Ingreso', type: 'select', options: enumToOptions(INCOME_TYPES) },
     { id: 'responsible', name: 'responsible', label: 'Responsable Ingreso', type: 'text' },
+]
+//Solicitud - subgrupo descripción del grupo
+const descriptionRequest: Field[] = [
+    { id: 'groupId', name: 'groupId', label: 'ID Grupo', type: 'text' },
+    { id: 'name', name: 'name', label: 'Nombre Grupo', type: 'text', required: true },
+    { id: 'debutDate', name: 'debutDate', label: 'Fecha Debut', type: 'date' },
+    { id: 'members', name: 'members', label: 'No Miembros', type: 'number', min: 0 },
+    { id: 'status', name: 'status', label: 'Estado Grupo', type: 'select', options: enumToOptions(GROUP_STATUS) },
 ];
-
 // Solicitud
 export const requestFields: Field[] = [
     { id: 'requestId', name: 'requestId', label: 'ID Solicitud', type: 'text' },
     { id: 'requestStatus', name: 'requestStatus', label: 'Solicitud', type: 'select', options: enumToOptions(REQUEST_STATUS) },
     { id: 'date', name: 'date', label: 'Fecha Solicitud', type: 'date' },
+    { id: 'description', name: 'description', label: 'Descripción', type: 'group', fields: descriptionRequest },
+    { id: 'status', name: 'status', label: 'Estado Grupo', type: 'select', options: enumToOptions(GROUP_STATUS) },
 ];
 
 // Contrato

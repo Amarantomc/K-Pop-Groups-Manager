@@ -7,6 +7,7 @@ import { useEffect , useState  } from "react"
 import { agencyConstraints } from "../../config/modalConstraints"
 import ConfirmDialog from "../../components/confirmDialog/ConfirmDialog"
 import Header from "../../components/header/Header"
+import PageLayout from "../../components/pageLayout/PageLayout"
 import { useAuth } from "../../contextsLocal/AuthContext"
 
 
@@ -17,6 +18,7 @@ const ListAgency: React.FC = () => {
     const [agencyRows, setAgencyRows] = useState<any[]>([])
     const [agencyToDelete,setAgencyToDelete] = useState<number | null>(null)
     const [openConfirm,setOpenConfirm] = useState(false)
+    const [isLoading, setIsLoading] = useState(false);
 
     const askDelete = (id : number) =>{
       setAgencyToDelete(id)
@@ -155,20 +157,35 @@ const ListAgency: React.FC = () => {
     });
     setAgencyRows(prev => prev.map(a => (a.id === updated.id ? updated : a)));
   };
-    const [collapsed,setcollapsed] = useState(false)
-    return (
-        <div className="listAgencySideBar">
-            <Sidebar collapsed={collapsed} role={user?.role || 'admin'}/>
-            <div className="listAgencyNavBar">
-                    <div className="agency-header">
-                            <Header title="Agencias" description="Listado y gestión de agencias." showlogo={false} collapsed={collapsed} setCollapsed={setcollapsed}/>
-                    </div>
-                    <Datatable columns={agencyColumns} rows={agencyRows} onDelete={askDelete} onEditSave={handleEditSave} onCreateSave={handleCreateSave} constraints={agencyConstraints} createEntity="agency"/>
-            <ConfirmDialog message="¿Está seguro que desea eliminar esta agencia?" open={openConfirm} onCancel={() => setOpenConfirm(false)} onConfirm={handleDelete}showDeleteButton={false} >
-            </ConfirmDialog>
-            </div>
+     return (
+    <PageLayout 
+      title="Agencias" 
+      description={
+        "Listado y gestión de agencias."
+      }
+    >
+      {isLoading ? (
+        <div style={{ textAlign: 'center', padding: '20px' }}>
+          Cargando Agencias...
         </div>
-    )
+      ) : (<>
+        <Datatable
+          columns={agencyColumns}
+          rows={agencyRows}
+          pagesize={10}
+          onDelete={askDelete}
+          onEditSave={handleEditSave}
+          onCreateSave={handleCreateSave}
+          constraints={agencyConstraints}
+          createEntity="agency"
+          showEditButton={true}
+        />
+        <ConfirmDialog message="¿Está seguro que desea eliminar esta agencia?" open={openConfirm} onCancel={() => setOpenConfirm(false)} onConfirm={handleDelete}>
+          </ConfirmDialog>
+        </>
+      )}
+    </PageLayout>
+  );
 }
 
 export default ListAgency
