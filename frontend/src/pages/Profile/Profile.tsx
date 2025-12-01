@@ -11,6 +11,27 @@ import "./profile.css";
 const Profile: React.FC = () => {
   const { user } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
+<<<<<<< HEAD
+=======
+  const [selectedRole, setSelectedRole] = useState<string>('');
+  
+  // Campos dinámicos basados en el rol seleccionado
+  const userFormFields = useMemo<Field[]>(() => {
+    const baseFields = formFieldsByEntity['user'] || [];
+    const roleNormalized = selectedRole.toLowerCase();
+    
+    if (roleNormalized === 'manager' || roleNormalized === 'director') {
+      return [...baseFields, ...managerDirectorFields];
+    } else if (roleNormalized === 'apprentice' || roleNormalized === 'aprendiz') {
+      return [...baseFields];
+    } else if (roleNormalized === 'artist' || roleNormalized === 'artista') {
+      return [...baseFields];
+    }
+    
+    return baseFields;
+  }, [selectedRole]);
+  
+>>>>>>> 8358d55 (update)
   // Normalizar campos (solo los que usamos: name, email, rol)
   const u: any = user as any;
   const displayName = u?.name ?? 'Usuario';
