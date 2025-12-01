@@ -44,7 +44,7 @@ export class AlbumRepository implements IAlbumRepository {
 		return album ? AlbumResponseDTO.toEntity(album) : null;
 	}
 
-	async update(id: string, data: any): Promise<Album> {
+	async update(id: string, data: Partial<Album>): Promise<Album> {
 		const updated = await this.db.album.update({
 			where: { id: Number(id) },
 			data,
