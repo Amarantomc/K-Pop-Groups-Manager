@@ -11,12 +11,17 @@ export class GetPopularityListUseCase{
 
     async excute(popularityListId:string): Promise<PopularityListResponseDto> {
 
-            const popularityList = await this.popularityListRepository.findById(popularityListId);
+        try {
+             const popularityList = await this.popularityListRepository.findById(popularityListId);
             if(!popularityList)
             {
                 throw new Error('Popularity List not found');
             }
 
             return new PopularityListResponseDto(popularityList.id, popularityList.name, popularityList.listType,popularityList.songs);
+        } catch (error) {
+            throw error
+        }    
+       
     }
 }

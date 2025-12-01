@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Container } from "inversify";
 import { PrismaClient } from "../../generated/prisma";
 import { Types } from "./Types";
@@ -86,6 +87,93 @@ import { ListSongsUseCase } from "../../application/usesCase/song/ListSongsUseCa
 import { FindSongByTitleUseCase } from "../../application/usesCase/song/FindSongByTitleUseCase";
 import { SongRepository } from "../../infrastructure/repositories/SongRepository";
 import type { ISongRepository } from "../../application/interfaces/repositories/ISongRepository";
+=======
+
+import { Container } from 'inversify';
+import { PrismaClient } from '../../generated/prisma';
+import { Types } from './Types';
+import type { IUnitOfWork } from '../../application/interfaces/IUnitOfWork';
+import type { IUserRepository } from '../../application/interfaces/repositories/IUserRepository';
+import { UnitOfWork } from '../PrismaUnitOfWork';
+import { UserRepository } from '../repositories/UserRepository';
+import  { CreateUserUseCase } from '../../application/usesCase/user/CreateUser';
+import  { GetUserUseCase } from '../../application/usesCase/user/GetUserUseCase';
+import  { UserController } from '../../presentation/controllers/UserController';
+import { LoginUserUseCase } from '../../application/usesCase/user/LoginUserUseCase';
+import  { AuthController } from '../../presentation/controllers/AuthController';
+import  { GetUsersUseCase } from '../../application/usesCase/user/GerUsersUseCase';
+import  { GetApprenticeUseCase } from '../../application/usesCase/apprentice/GetApprenticeUseCase';
+import type { IApprenticeRepository } from '../../application/interfaces/repositories/IApprenticeRepository';
+import { ApprenticeRepository } from '../repositories/ApprenticeRepository';
+import  { UpdateApprenticeUseCase } from '../../application/usesCase/apprentice/UpdateApprentice';
+import { DeleteApprenticeUseCase } from '../../application/usesCase/apprentice/DeleteApprentice';
+import  { CreateApprenticeUseCase } from '../../application/usesCase/apprentice/CreateApprentice';
+import { ApprenticeController } from '../../presentation/controllers/ApprenticeController';
+import  { AgencyController } from '../../presentation/controllers/AgencyController';
+import  { CreateAgencyUseCase } from '../../application/usesCase/agency/CreateAgencyUseCase';
+import { DeleteAgencyUseCase } from '../../application/usesCase/agency/DeleteAgencyUseCase';
+import { FindAgenciesByAddressUseCase } from '../../application/usesCase/agency/FindAgenciesByAddressUseCase';
+import { FindAgenciesByFoundationUseCase } from '../../application/usesCase/agency/FindAgenciesByFoundationUseCase';
+import { FindAgenciesByNameUseCase } from '../../application/usesCase/agency/FindAgenciesByNameUseCase';
+import { GetAgencyUseCase } from '../../application/usesCase/agency/GetAgencyUseCase';
+import { ListAgenciesUseCase } from '../../application/usesCase/agency/ListAgenciesUseCase';
+import { UpdateAgencyUseCase } from '../../application/usesCase/agency/UpdateAgencyUseCase';
+import type { IAgencyRepository } from '../../application/interfaces/repositories/IAgencyRepository';
+import { AgencyRepository } from '../repositories/AgencyRepository';
+import { DeleteUserUseCase } from '../../application/usesCase/user/DeleteUserUseCase';
+import { UpdateUserUseCase } from '../../application/usesCase/user/UpdateUserUseCase';
+import { ListApprenticeUseCase } from '../../application/usesCase/apprentice/ListApprenticeUseCase';
+import type { IArtistRepository } from '../../application/interfaces/repositories/IArtistRepository';
+import { ArtistRepository } from '../repositories/ArtistRepository';
+import { ArtistController } from '../../presentation/controllers/ArtistController';
+import { CreateArtistUseCase } from '../../application/usesCase/artist/CreateArtistUseCase';
+import { UpdateArtistUseCase } from '../../application/usesCase/artist/UpdateArtistUseCase';
+import { DeleteArtistUseCase } from '../../application/usesCase/artist/DeleteArtistUseCase';
+import { FindArtistByIdUseCase } from '../../application/usesCase/artist/FindArtistByIdUseCase';
+import  { GetAllArtistsUseCase } from '../../application/usesCase/artist/GetAllArtistsUseCase';
+import  { FindArtistByAgencyUseCase } from '../../application/usesCase/artist/FindArtistByAgencyUseCase';
+import { ListByAgencyUseCase } from '../../application/usesCase/apprentice/ListByAgencyUseCase';
+import { GetApprenticeByNameUseCase } from '../../application/usesCase/apprentice/GetApprenticeByNameUseCase';
+import { ConceptController } from '../../presentation/controllers/ConceptController';
+import type { IConceptRepository } from '../../application/interfaces/repositories/IConceptRepository';
+import { ConceptRepository } from '../repositories/ConceptRepository';
+import { CreateConceptUseCase } from '../../application/usesCase/concept/CreateConcept';
+import { DeleteConceptUseCase } from '../../application/usesCase/concept/DeleteConcept';
+import { GetConceptUseCase } from '../../application/usesCase/concept/GetConceptUseCase';
+import { ListConceptUseCase } from '../../application/usesCase/concept/ListConceptUSeCase';
+import { UpdateConceptUseCase } from '../../application/usesCase/concept/UpdateConcept';
+import type { IActivityRepository } from '../../application/interfaces/repositories/IActivityRepository';
+import { CreateActivityUseCase } from '../../application/usesCase/activity/CreateActivityUseCase';
+import { DeleteActivityUseCase } from '../../application/usesCase/activity/DeleteActivityUseCase';
+import { FindActivityByIdUseCase } from '../../application/usesCase/activity/FindActivityByIdUseCase';
+import { GetAllActivitiesUseCase } from '../../application/usesCase/activity/GetAllActivitiesUseCase';
+import { UpdateActivityUseCase } from '../../application/usesCase/activity/UpdateActivityUseCase';
+import { ActivityController } from '../../presentation/controllers/ActivityController';
+import { ActivityRepository } from '../repositories/ActivityRepository';
+import { FindActivitiesByArtist } from '../../application/usesCase/activity/FindActivitiesByArtist';
+import { AddArtistToActivityUseCase } from '../../application/usesCase/activity/AddArtistToActivityUseCase';
+import type { IPopularityListRepository } from '../../application/interfaces/repositories/IPopularityListRepository';
+import { CreatePopularityListUseCase } from '../../application/usesCase/popularityList/CreatePopularityListUseCase';
+import { GetPopularityListUseCase } from '../../application/usesCase/popularityList/GetPopularityListUseCase';
+import { DeletePopularityListUseCase } from '../../application/usesCase/popularityList/DeletePopularityListUseCase';
+import { UpdatePopularityListUseCase } from '../../application/usesCase/popularityList/UpdatePopularityListUseCase';
+import { AddSongToPopularityListUseCase } from '../../application/usesCase/popularityList/AddSongToPopularityListUseCase';
+import { PopularityListRepository } from '../repositories/PopularityListRepository';
+import { PopularityListController } from '../../presentation/controllers/PopularityListController';
+import { ListPopularityListUseCase } from '../../application/usesCase/popularityList/ListPopularityListUseCase';
+
+import type { CreateApplicationUseCase } from "../../application/usesCase/application(solicitud)/CreateApplicatonUseCase";
+import type { GetApplicationUseCase } from "../../application/usesCase/application(solicitud)/GetApplicationUseCase";
+import type { DeleteApplicationUseCase } from "../../application/usesCase/application(solicitud)/DeleteApplicationUseCase";
+import type { ListApplicationUseCase } from "../../application/usesCase/application(solicitud)/ListApplicationUseCase";
+import { CreateApplicationDto } from "../../application/dtos/application(solicitud)/CreateApplicationDto";
+import type { UpdateApplicationUseCase } from "../../application/usesCase/application(solicitud)/UpdateApplicationUseCase";
+import type { FindByApprenticeUseCase } from "../../application/usesCase/application(solicitud)/FindByApprenticeUseCase";
+ 
+
+ 
+ 
+>>>>>>> f036841 (Some Fixes (#104))
 
 // Use Cases
 
@@ -313,10 +401,16 @@ container
 	.to(GetPopularityListUseCase)
 	.inTransientScope();
 
+<<<<<<< HEAD
 container
 	.bind<GetPopularityListUseCase>(Types.ListPopularityListsUseCase)
 	.to(GetPopularityListUseCase)
 	.inTransientScope();
+=======
+container.bind<ListPopularityListUseCase>(Types.ListPopularityListsUseCase)
+  .to(ListPopularityListUseCase)
+  .inTransientScope();
+>>>>>>> f036841 (Some Fixes (#104))
 
 container
 	.bind<DeletePopularityListUseCase>(Types.DeletePopularityListUseCase)
@@ -474,10 +568,18 @@ container
 	.to(ActivityController)
 	.inTransientScope();
 
+<<<<<<< HEAD
 container
 	.bind<AlbumController>(Types.AlbumController)
 	.to(AlbumController)
 	.inSingletonScope();
+=======
+  container.bind<PopularityListController>(Types.PopularityListController)
+  .to(PopularityListController)
+  .inTransientScope();
+
+  
+>>>>>>> f036841 (Some Fixes (#104))
 
 container
 	.bind<SongController>(Types.SongController)
