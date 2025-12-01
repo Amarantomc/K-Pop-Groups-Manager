@@ -70,7 +70,77 @@ const ListAgency: React.FC = () => {
     }
   };
 
-     const handleEditSave = async (updated: any) => {
+  const handleCreateSave = (data: any) => {
+    // Enviar al backend
+    const API_BASE = 'http://localhost:3000';
+    const payload: Record<string, any> = {};
+    if (data instanceof FormData) {
+      data.forEach((v, k) => { payload[k] = v; });
+    } else Object.assign(payload, data);
+
+    (async () => {
+      try {
+        // Normalizaciones para coincidir con CreateAgencyDTO: name, address, foundation
+        if (!payload.address && payload.location) payload.address = payload.location;
+        if (!payload.foundation && payload.foundedAt) payload.foundation = payload.foundedAt;
+
+        // Validación cliente mínima
+        if (!payload.name || !payload.address || !payload.foundation) {
+          alert('Faltan campos requeridos: name, address o foundation');
+          return;
+        }
+
+        // Asegurar fecha ISO para foundation
+        try {
+          const d = new Date(payload.foundation);
+          if (!isNaN(d.getTime())) payload.foundation = d.toISOString();
+        } catch (e) { /* ignore */ }
+
+        const token = localStorage.getItem('token');
+        const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+
+        const url = `${API_BASE}/api/agency/`;
+        if (import.meta.env.MODE === 'development') console.debug('[ListAgency] POST', url, 'payload:', payload);
+
+        // Endpoint para crear agencia: POST /api/agency/
+        const res = await fetch(url, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(payload),
+        });
+
+        if (!res.ok) {
+          // intentar leer JSON o texto crudo para dar feedback útil
+          let msg = 'Error al crear agencia';
+          try {
+            const txt = await res.text();
+            try { const j = JSON.parse(txt); msg = j?.message || j?.error || txt || msg; }
+            catch { msg = txt || msg; }
+          } catch (e) {}
+          alert(msg);
+          return;
+        }
+
+        const result = await res.json().catch(() => null);
+        if (result?.data) {
+          const createdAgency = {
+            id: result.data.id,
+            name: result.data.name,
+            location: result.data.address,
+            founded: result.data.foundation,
+          };
+          setAgencyRows(prev => [...prev, createdAgency]);
+        }
+        alert('Agencia creada correctamente');
+      } catch (err) {
+        console.error('Error creando agencia:', err);
+        alert(err instanceof Error ? err.message : 'Error de red');
+      }
+    })();
+  };
+
+  const handleEditSave = async (updated: any) => {
     await fetch(`http://localhost:3000/api/agency/${updated.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -93,8 +163,8 @@ const ListAgency: React.FC = () => {
                     <div className="agency-header">
                             <Header title="Agencias" description="Listado y gestión de agencias." showlogo={false} collapsed={collapsed} setCollapsed={setcollapsed}/>
                     </div>
-                    <Datatable columns={agencyColumns} rows={agencyRows} onDelete={askDelete} onEditSave = {handleEditSave} constraints={agencyConstraints}/>
-            <ConfirmDialog message="¿Está seguro que desea eliminar esta agencia?" open={openConfirm} onCancel={() => setOpenConfirm(false)} onConfirm={handleDelete}showDeleteButton={false}>
+                    <Datatable columns={agencyColumns} rows={agencyRows} onDelete={askDelete} onEditSave={handleEditSave} onCreateSave={handleCreateSave} constraints={agencyConstraints} createEntity="agency"/>
+            <ConfirmDialog message="¿Está seguro que desea eliminar esta agencia?" open={openConfirm} onCancel={() => setOpenConfirm(false)} onConfirm={handleDelete}showDeleteButton={false} >
             </ConfirmDialog>
             </div>
         </div>

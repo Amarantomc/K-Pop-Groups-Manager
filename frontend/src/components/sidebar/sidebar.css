@@ -19,10 +19,11 @@
     transition: all 0.3s ease;
 }
 .top{
-    height: 50px;
+    height: 80px;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 10px;
 }
 .logo {
     width: 160px; /* ajusta el tamaño según tu diseño */
@@ -36,6 +37,7 @@ hr{
 }
 .center{
     padding-left: 10px;
+    padding-bottom: 30px;
 }
 ul{
     list-style: none;

@@ -1,10 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */ 
 import React, { useEffect, useState } from 'react';
-import Sidebar from '../../components/sidebar/Sidebar';
+import PageLayout from '../../components/pageLayout/PageLayout';
 import "./Dashboard.css"
-import Header from '../../components/header/Header';
-import { useAuth } from '../../contextsLocal/AuthContext';
-
 
 const Dashboard : React.FC = () =>{
   const [agenciesCount, setAgenciesCount] = useState<number | null>(null);
@@ -70,35 +67,28 @@ const Dashboard : React.FC = () =>{
   }, []);
 
   const renderValue = (v: number | null) => v == null ? '—' : String(v);
-  const [collapsed, setCollapsed] = useState(false);
-  const { user } = useAuth();
-  return (
-    <div className='dashboard-sidebar'>
-      <Sidebar collapsed={collapsed} role={user?.role || 'admin'}/>
-      <div className='dashboard-navbar'>
-        <div className='dashboard-content'>
-          <Header title='Bienvenido a Gestión de Agencias del K-Pop' 
-          description='Administra agencias, artistas y actividades desde este panel. Aquí tienes un resumen rápido para comenzar.'
-          collapsed={collapsed} 
-          setCollapsed={setCollapsed}/>
 
-          <div className='quick-stats'>
-            <div className='stat'>
-              <div className='stat-value'>{renderValue(agenciesCount)}</div>
-              <div className='stat-label'>Agencias</div>
-            </div>
-            <div className='stat'>
-              <div className='stat-value'>{renderValue(apprenticesCount)}</div>
-              <div className='stat-label'>Aprendices</div>
-            </div>
-            <div className='stat'>
-              <div className='stat-value'>{renderValue(usersCount)}</div>
-              <div className='stat-label'>Usuarios</div>
-            </div>
-          </div>
+  return (
+    <PageLayout 
+      title='Bienvenido a Gestión de Agencias del K-Pop' 
+      description='Administra agencias, artistas y actividades desde este panel. Aquí tienes un resumen rápido para comenzar.'
+      className='dashboard-page'
+    >
+      <div className='quick-stats'>
+        <div className='stat'>
+          <div className='stat-value'>{renderValue(agenciesCount)}</div>
+          <div className='stat-label'>Agencias</div>
+        </div>
+        <div className='stat'>
+          <div className='stat-value'>{renderValue(apprenticesCount)}</div>
+          <div className='stat-label'>Aprendices</div>
+        </div>
+        <div className='stat'>
+          <div className='stat-value'>{renderValue(usersCount)}</div>
+          <div className='stat-label'>Usuarios</div>
         </div>
       </div>
-    </div>
+    </PageLayout>
   )
 }
 

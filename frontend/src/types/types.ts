@@ -1,6 +1,14 @@
 
 export type UserRole = 'admin' | 'manager' | 'artist' | 'apprentice' | 'director';
 
+// ProfileData contiene los IDs importantes según el rol del usuario
+export interface ProfileData {
+  apprenticeId?: string;  // Para rol apprentice y artist
+  artistId?: string;      // Para rol artist
+  groupId?: string;       // Para rol artist (si pertenece a un grupo)
+  agencyId?: string;      // Para todos excepto admin
+}
+
 export interface User {
   id: string;
   name: string;
@@ -11,6 +19,7 @@ export interface User {
   avatar?: string;
   isVerified: boolean;
   avatarUrl?: string | null;
+  profileData?: ProfileData;         // Datos del perfil según el rol
 }
 
 export interface RoleConfig {
@@ -23,6 +32,8 @@ export interface RoleConfig {
 export interface AuthResponse {
   user: User;
   token: string;
+  role: UserRole;
+  profileData?: ProfileData;
 }
 
 export interface LoginFormData {

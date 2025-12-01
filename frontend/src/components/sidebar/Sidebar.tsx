@@ -23,7 +23,6 @@ const Sidebar : React.FC<SidebarProps> = ({collapsed,role}) => {
             <div className="top">
                 {!collapsed && <img src={logo} alt="KPop-Dashboard" className="logo"/>}
             </div>
-            <hr/>
             {!collapsed && (<div className="center">
                 {menuSections.map((section) =>{
                     return (

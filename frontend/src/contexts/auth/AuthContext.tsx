@@ -39,7 +39,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const userData = localStorage.getItem('user');
+    //const userData = localStorage.getItem('user');
     const rememberMe = localStorage.getItem('rememberMe');
     const expiration = localStorage.getItem('rememberMeExpiration');
 
@@ -71,25 +71,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     }
 
-    if (token && userData) {
-      const parsedUser = JSON.parse(userData);
-      // 🔧 NORMALIZAR DATOS AL CARGAR (por si hay sesiones antiguas)
-      const normalizedUser = {
-        ...parsedUser,
-        role: (parsedUser.role || parsedUser.rol || 'apprentice').toLowerCase() as UserRole
-      };
-      setUser(normalizedUser);
-    }
     setIsLoading(false);
   }, []);
 
-  const login = async (data: LoginFormData, rememberMe: boolean = false): Promise<void> => {
+  const login = async (loginData: LoginFormData, rememberMe: boolean = false): Promise<void> => {
     try {
       setIsLoading(true);
       // Inicio del proceso de login
 
       // Llamada real al endpoint de autenticación
-      const requestBody = { email: data.email, password: data.password};
+      const requestBody = { email: loginData.email, password: loginData.password};
 
       if (import.meta.env.MODE === 'development') {
         // mostrar en consola petición para depuración local
@@ -123,14 +114,27 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       if (!res.ok) {
         let errMsg = 'Credenciales inválidas';
-        if (responseJson) errMsg = responseJson?.message || responseJson?.error || errMsg;
+        // El backend retorna { success: false, error: "mensaje" }
+        if (responseJson) errMsg = responseJson?.error || responseJson?.message || errMsg;
         else if (rawText) errMsg = rawText;
         throw new Error(errMsg);
       }
 
-      // aceptar varias formas de respuesta: { token, user }, { data: { token, user } }, { accessToken }
-      const token = responseJson?.token || responseJson?.data?.token || responseJson?.accessToken || responseJson?.access_token;
-      let userObj = responseJson?.user || responseJson?.data?.user || responseJson?.userData || null;
+      // El backend retorna: { success: true, data: { user, token, expiresIn } }
+      if (!responseJson?.success || !responseJson?.data) {
+        throw new Error('Formato de respuesta inválido del servidor');
+      }
+
+      const { data } = responseJson;
+      const token = data.token;
+      let userObj = data.user;
+      const roleFromBackend = userObj?.role;
+      const profileData = null; // El backend actual no retorna profileData en login
+
+      console.log("USEROBJ", userObj);
+      console.log("TOKEN", token);
+      console.log("ROLE", roleFromBackend);
+      console.log("PROFILE_DATA", profileData);
 
       // Si recibimos token pero no user, intentar obtener /api/auth/me
       if (token && !userObj) {
@@ -160,13 +164,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       localStorage.setItem('token', token);
 
       if (userObj) {
-        // 🔧 NORMALIZAR DATOS DEL BACKEND
-        // El backend devuelve "rol" pero necesitamos "role"
         // El backend devuelve "Admin" pero necesitamos "admin" (minúsculas)
         const normalizedUser = {
           ...userObj,
-          role: (userObj.role || userObj.rol || 'apprentice').toLowerCase() as UserRole
+          role: (roleFromBackend || userObj.role || 'apprentice').toLowerCase() as UserRole,
+          profileData: profileData || userObj.profileData || undefined
         };
+        
+        // Si profileData tiene agencyId, también copiarlo al nivel superior para compatibilidad
+        if (normalizedUser.profileData?.agencyId && !normalizedUser.agencyId) {
+          normalizedUser.agencyId = normalizedUser.profileData.agencyId;
+        }
         
         localStorage.setItem('user', JSON.stringify(normalizedUser));
         setUser(normalizedUser);
