@@ -1,4 +1,4 @@
-import { PopularityList } from "../../domain";
+
 
 
 // src/infrastructure/di/TYPES.ts
@@ -66,14 +66,22 @@ const Types = {
   ValidateTokenUseCase: Symbol.for('ValidateTokenUseCase'),
 
 
-  CreateActivityUseCase: Symbol.for('CreateActivityUseCase'),
+CreateActivityUseCase: Symbol.for('CreateActivityUseCase'),
 UpdateActivityUseCase: Symbol.for('UpdateActivityUseCase'),
 DeleteActivityUseCase: Symbol.for('DeleteActivityUseCase'),
 FindActivityByIdUseCase: Symbol.for('FindActivityByIdUseCase'),
 GetAllActivitiesUseCase: Symbol.for('GetAllActivitiesUseCase'),
 FindActivitiesByArtist :Symbol.for('FindActivitiesByArtist'),
 AddArtistToActivityUseCase:Symbol.for('AddArtistToActivityUseCase'),
-  
+ 
+
+CreateApplicationUseCase : Symbol.for('CreateApplicationUseCase'),
+GetApplicationUseCase : Symbol.for('GetApplicationUseCase'),
+DeleteApplicationUseCase : Symbol.for('DeleteApplicationUseCase'),
+UpdateApplicationUseCase : Symbol.for('UpdateApplicationUseCase'),
+ListApplicationUseCase : Symbol.for('ListApplicationUseCase'),
+FindByApprenticeUseCase : Symbol.for('FindByApprenticeUseCase'),
+
   // Presentation
   UserController: Symbol.for('UserController'),
   AuthController: Symbol.for('AuthController'),
@@ -83,6 +91,7 @@ AddArtistToActivityUseCase:Symbol.for('AddArtistToActivityUseCase'),
   ConceptController : Symbol.for('ConceptController'),
   ActivityController: Symbol.for('ActivityController'),
   PopularityListController : Symbol.for('PopularityListController'),
+  ApplicationController : Symbol.for('ApplicationController'),
 
 };
 
