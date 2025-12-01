@@ -1,25 +1,3 @@
- 
-	CreateGroupUseCase: Symbol.for("CreateGroupUseCase"),
-	DeleteGroupUseCase: Symbol.for("DeleteGroupUseCase"),
-	FindGroupsByNameUseCase: Symbol.for("FindGroupsByNameUseCase"),
-	FindGroupsByDebutUseCase: Symbol.for("FindGroupsByDebutUseCase"),
-	FindGroupsByStatusUseCase: Symbol.for("FindGroupsByStatusUseCase"),
-	FindGroupsByMemberCountUseCase: Symbol.for("FindGroupsByMemberCountUseCase"),
-	FindGroupsByMemberUseCase: Symbol.for("FindGroupsByMemberUseCase"),
-	FindGroupsByAgencyUseCase: Symbol.for("FindGroupsByAgencyUseCase"),
-	FindGroupsByConceptUseCase: Symbol.for("FindGroupsByConceptUseCase"),
-	FindGroupsByVisualConceptUseCase: Symbol.for("FindGroupsByVisualConceptUseCase"),
-	GetGroupUseCase: Symbol.for("GetGroupUseCase"),
-	UpdateGroupUseCase: Symbol.for("UpdateGroupUseCase"),
-	ListGroupsUseCase: Symbol.for("ListGroupsUseCase"),
-	AddMembersUseCase: Symbol.for("AddMembersUseCase"),
-	RemoveMembersUseCase: Symbol.for("RemoveMembersUseCase"),
-	AddAlbumsUseCase: Symbol.for("AddAlbumsUseCase"),
-	AddActivitiesUseCase: Symbol.for("AddActivitiesUseCase"),
- 
-
-
-
 // src/infrastructure/di/TYPES.ts
 const Types = {
   // Database
@@ -33,8 +11,8 @@ const Types = {
   IArtistRepository : Symbol.for('IArtistRepository'),
   IConceptRepository: Symbol.for('IConceptRepository'),
   IActivityRepository: Symbol.for('IActivityRepository'),
-
   IPopularityListRepository: Symbol.for('IPopularityListRepository'),
+  IGroupRepository : Symbol.for('IGroupRepository'),
   
   // Application Use Cases
   CreateUserUseCase: Symbol.for('CreateUserUseCase'),
@@ -101,6 +79,25 @@ UpdateApplicationUseCase : Symbol.for('UpdateApplicationUseCase'),
 ListApplicationUseCase : Symbol.for('ListApplicationUseCase'),
 FindByApprenticeUseCase : Symbol.for('FindByApprenticeUseCase'),
 
+
+	CreateGroupUseCase: Symbol.for("CreateGroupUseCase"),
+	DeleteGroupUseCase: Symbol.for("DeleteGroupUseCase"),
+	FindGroupsByNameUseCase: Symbol.for("FindGroupsByNameUseCase"),
+	FindGroupsByDebutUseCase: Symbol.for("FindGroupsByDebutUseCase"),
+	FindGroupsByStatusUseCase: Symbol.for("FindGroupsByStatusUseCase"),
+	FindGroupsByMemberCountUseCase: Symbol.for("FindGroupsByMemberCountUseCase"),
+	FindGroupsByMemberUseCase: Symbol.for("FindGroupsByMemberUseCase"),
+	FindGroupsByAgencyUseCase: Symbol.for("FindGroupsByAgencyUseCase"),
+	FindGroupsByConceptUseCase: Symbol.for("FindGroupsByConceptUseCase"),
+	FindGroupsByVisualConceptUseCase: Symbol.for("FindGroupsByVisualConceptUseCase"),
+	GetGroupUseCase: Symbol.for("GetGroupUseCase"),
+	UpdateGroupUseCase: Symbol.for("UpdateGroupUseCase"),
+	ListGroupsUseCase: Symbol.for("ListGroupsUseCase"),
+	AddMembersUseCase: Symbol.for("AddMembersUseCase"),
+	RemoveMembersUseCase: Symbol.for("RemoveMembersUseCase"),
+	AddAlbumsUseCase: Symbol.for("AddAlbumsUseCase"),
+	AddActivitiesUseCase: Symbol.for("AddActivitiesUseCase"),
+
   // Presentation
   UserController: Symbol.for('UserController'),
   AuthController: Symbol.for('AuthController'),
@@ -111,13 +108,9 @@ FindByApprenticeUseCase : Symbol.for('FindByApprenticeUseCase'),
   ActivityController: Symbol.for('ActivityController'),
   PopularityListController : Symbol.for('PopularityListController'),
   ApplicationController : Symbol.for('ApplicationController'),
+  GroupController :Symbol.for('GroupController')
 
-	// Presentation
-	UserController: Symbol.for("UserController"),
-	AuthController: Symbol.for("AuthController"),
-	ApprenticeController: Symbol.for("ApprenticeController"),
-	AgencyController: Symbol.for("AgencyController"),
-	GroupController: Symbol.for("GroupController"),
+ 
 };
 
 export { Types };
