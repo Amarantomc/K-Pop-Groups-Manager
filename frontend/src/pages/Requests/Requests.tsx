@@ -6,7 +6,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import DataTable from '../../components/datatable/Datatable';
 import PageLayout from '../../components/pageLayout/PageLayout';
-import { useAuth } from '../../contextsLocal/AuthContext';
+import { useAuth } from '../../contexts/auth/AuthContext';
 
 interface Request {
   id: number;
@@ -25,8 +25,6 @@ const Requests: React.FC = () => {
   // Manejar aprobación de solicitud (Director)
   const handleApprove = async (id: number) => {
     try {
-      // Descomentar cuando el backend esté listo
-      /*
       const response = await fetch(`http://localhost:3000/api/requests/${id}/approve`, {
         method: 'PATCH',
         headers: {
@@ -38,23 +36,22 @@ const Requests: React.FC = () => {
       if (!response.ok) {
         throw new Error('Error al aprobar solicitud');
       }
-      */
 
       // Actualizar estado local
       setRequests(prev =>
         prev.map(req => req.id === id ? { ...req, status: 'approved' } : req)
       );
       console.log('Solicitud aprobada:', id);
+      alert('Solicitud aprobada exitosamente');
     } catch (error) {
       console.error('Error al aprobar solicitud:', error);
+      alert('Error al aprobar la solicitud');
     }
   };
 
   // Manejar rechazo de solicitud (Director)
   const handleReject = async (id: number) => {
     try {
-      // Descomentar cuando el backend esté listo
-      /*
       const response = await fetch(`http://localhost:3000/api/requests/${id}/reject`, {
         method: 'PATCH',
         headers: {
@@ -66,23 +63,22 @@ const Requests: React.FC = () => {
       if (!response.ok) {
         throw new Error('Error al rechazar solicitud');
       }
-      */
 
       // Actualizar estado local
       setRequests(prev =>
         prev.map(req => req.id === id ? { ...req, status: 'rejected' } : req)
       );
       console.log('Solicitud rechazada:', id);
+      alert('Solicitud rechazada');
     } catch (error) {
       console.error('Error al rechazar solicitud:', error);
+      alert('Error al rechazar la solicitud');
     }
   };
 
   // Crear grupo (Manager)
   const handleCreateGroup = async (requestId: number, groupName: string) => {
     try {
-      // Descomentar cuando el backend esté listo
-      /*
       const response = await fetch(`http://localhost:3000/api/groups`, {
         method: 'POST',
         headers: {
@@ -100,8 +96,7 @@ const Requests: React.FC = () => {
         throw new Error('Error al crear grupo');
       }
 
-      const newGroup = await response.json();
-      */
+      await response.json();
 
       // Actualizar estado local
       setRequests(prev =>
@@ -277,8 +272,6 @@ const Requests: React.FC = () => {
             return;
         }
 
-        // Descomentar cuando el backend esté listo
-        /*
         const response = await fetch(`http://localhost:3000${endpoint}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -290,10 +283,9 @@ const Requests: React.FC = () => {
         }
 
         const data = await response.json();
-        setRequests(data);
-        */
+        setRequests(data.data || data);
 
-        // DATOS DE PRUEBA 
+        /* DATOS DE PRUEBA - COMENTADO
         const mockRequests: Request[] = [
           {
             id: 1,
@@ -330,6 +322,7 @@ const Requests: React.FC = () => {
         }
 
         setRequests(filteredRequests);
+        */
 
       } catch (error) {
         console.error('Error al cargar solicitudes:', error);
@@ -342,15 +335,68 @@ const Requests: React.FC = () => {
   }, [user]);
 
   const handleDelete = async (id: number) => {
-    console.log('Eliminar solicitud:', id);
-    setRequests(prev => prev.filter(req => req.id !== id));
+    try {
+      const response = await fetch(`http://localhost:3000/api/requests/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al eliminar solicitud');
+      }
+
+      setRequests(prev => prev.filter(req => req.id !== id));
+    } catch (error) {
+      console.error('Error al eliminar solicitud:', error);
+    }
   };
 
   const handleEditSave = async (updatedRow: Request) => {
-    console.log('Actualizar solicitud:', updatedRow);
-    setRequests(prev => 
-      prev.map(req => req.id === updatedRow.id ? updatedRow : req)
-    );
+    try {
+      const response = await fetch(`http://localhost:3000/api/requests/${updatedRow.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(updatedRow)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al actualizar solicitud');
+      }
+
+      const data = await response.json();
+      setRequests(prev => 
+        prev.map(req => req.id === updatedRow.id ? (data.data || data) : req)
+      );
+    } catch (error) {
+      console.error('Error al actualizar solicitud:', error);
+    }
+  };
+
+  const handleCreateSave = async (newRow: Omit<Request, 'id'>) => {
+    try {
+      const response = await fetch('http://localhost:3000/api/requests', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(newRow)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al crear solicitud');
+      }
+
+      const data = await response.json();
+      setRequests(prev => [...prev, (data.data || data)]);
+    } catch (error) {
+      console.error('Error al crear solicitud:', error);
+    }
   };
 
   if (!user) {
@@ -379,6 +425,7 @@ const Requests: React.FC = () => {
         pagesize={10}
         onDelete={handleDelete}
         onEditSave={handleEditSave}
+        onCreateSave={handleCreateSave}
         showEditButton={user.role === 'manager' || user.role === 'director' || user.role === 'admin'}
       />
       )}

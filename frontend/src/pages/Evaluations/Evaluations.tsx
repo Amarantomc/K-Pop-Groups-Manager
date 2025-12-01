@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import type { GridColDef } from '@mui/x-data-grid';
 import DataTable from '../../components/datatable/Datatable';
 import PageLayout from '../../components/pageLayout/PageLayout';
-import { useAuth } from '../../contextsLocal/AuthContext';
+import { useAuth } from '../../contexts/auth/AuthContext';
 
 interface Evaluation {
   id: number;
@@ -77,10 +77,8 @@ const Evaluations: React.FC = () => {
         if (!user) return;
 
         // Obtener el apprenticeId del usuario actual
-        // const apprenticeId = user.profileData?.apprenticeId || user.id;
+        const apprenticeId = user.profileData?.apprenticeId || user.id;
 
-        // Descomentar cuando el backend esté listo
-        /*
         const response = await fetch(`http://localhost:3000/api/evaluations?apprenticeId=${apprenticeId}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -92,10 +90,9 @@ const Evaluations: React.FC = () => {
         }
 
         const data = await response.json();
-        setEvaluations(data);
-        */
+        setEvaluations(data.data || data);
 
-        // DATOS DE PRUEBA 
+        /* DATOS DE PRUEBA - COMENTADO
         const mockEvaluations: Evaluation[] = [
           {
             id: 1,
@@ -136,6 +133,7 @@ const Evaluations: React.FC = () => {
         ];
 
         setEvaluations(mockEvaluations);
+        */
 
       } catch (error) {
         console.error('Error al cargar evaluaciones:', error);
@@ -148,15 +146,68 @@ const Evaluations: React.FC = () => {
   }, [user]);
 
   const handleDelete = async (id: number) => {
-    console.log('Eliminar evaluación:', id);
-    setEvaluations(prev => prev.filter(evaluation => evaluation.id !== id));
+    try {
+      const response = await fetch(`http://localhost:3000/api/evaluations/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al eliminar evaluación');
+      }
+
+      setEvaluations(prev => prev.filter(evaluation => evaluation.id !== id));
+    } catch (error) {
+      console.error('Error al eliminar evaluación:', error);
+    }
   };
 
   const handleEditSave = async (updatedRow: Evaluation) => {
-    console.log('Actualizar evaluación:', updatedRow);
-    setEvaluations(prev => 
-      prev.map(evaluation => evaluation.id === updatedRow.id ? updatedRow : evaluation)
-    );
+    try {
+      const response = await fetch(`http://localhost:3000/api/evaluations/${updatedRow.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(updatedRow)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al actualizar evaluación');
+      }
+
+      const data = await response.json();
+      setEvaluations(prev => 
+        prev.map(evaluation => evaluation.id === updatedRow.id ? (data.data || data) : evaluation)
+      );
+    } catch (error) {
+      console.error('Error al actualizar evaluación:', error);
+    }
+  };
+
+  const handleCreateSave = async (newRow: Omit<Evaluation, 'id'>) => {
+    try {
+      const response = await fetch('http://localhost:3000/api/evaluations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(newRow)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al crear evaluación');
+      }
+
+      const data = await response.json();
+      setEvaluations(prev => [...prev, (data.data || data)]);
+    } catch (error) {
+      console.error('Error al crear evaluación:', error);
+    }
   };
 
   if (!user) {

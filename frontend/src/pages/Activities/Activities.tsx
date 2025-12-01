@@ -5,7 +5,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Calendar from '../../components/calendar/Calendar';
 import DataTable from '../../components/datatable/Datatable';
 import PageLayout from '../../components/pageLayout/PageLayout';
-import { useAuth } from '../../contextsLocal/AuthContext';
+import { useAuth } from '../../contexts/auth/AuthContext';
 import './Activities.css';
 
 interface Activity {
@@ -100,8 +100,6 @@ const Activities: React.FC = () => {
       try {
         if (!user) return;
 
-        //Descomentar cuando el backend esté listo
-        /*
         let endpoint = '';
         
         // Switch case según el rol del usuario
@@ -141,10 +139,9 @@ const Activities: React.FC = () => {
         }
 
         const data = await response.json();
-        setActivities(data);
-        */
+        setActivities(data.data || data);
 
-        // DATOS DE PRUEBA 
+        /* DATOS DE PRUEBA - COMENTADO
         const mockActivities: Activity[] = [
           {
             id: 1,
@@ -219,6 +216,7 @@ const Activities: React.FC = () => {
         }
 
         setActivities(filteredActivities);
+        */
 
       } catch (error) {
         console.error('Error al cargar actividades:', error);
@@ -231,15 +229,68 @@ const Activities: React.FC = () => {
   }, [user]);
 
   const handleDelete = async (id: number) => {
-    console.log('Eliminar actividad:', id);
-    setActivities(prev => prev.filter(activity => activity.id !== id));
+    try {
+      const response = await fetch(`http://localhost:3000/api/activities/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al eliminar actividad');
+      }
+
+      setActivities(prev => prev.filter(activity => activity.id !== id));
+    } catch (error) {
+      console.error('Error al eliminar actividad:', error);
+    }
   };
 
   const handleEditSave = async (updatedRow: Activity) => {
-    console.log('Actualizar actividad:', updatedRow);
-    setActivities(prev => 
-      prev.map(activity => activity.id === updatedRow.id ? updatedRow : activity)
-    );
+    try {
+      const response = await fetch(`http://localhost:3000/api/activities/${updatedRow.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(updatedRow)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al actualizar actividad');
+      }
+
+      const data = await response.json();
+      setActivities(prev => 
+        prev.map(activity => activity.id === updatedRow.id ? (data.data || data) : activity)
+      );
+    } catch (error) {
+      console.error('Error al actualizar actividad:', error);
+    }
+  };
+
+  const handleCreateSave = async (newRow: Omit<Activity, 'id'>) => {
+    try {
+      const response = await fetch('http://localhost:3000/api/activities', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(newRow)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al crear actividad');
+      }
+
+      const data = await response.json();
+      setActivities(prev => [...prev, (data.data || data)]);
+    } catch (error) {
+      console.error('Error al crear actividad:', error);
+    }
   };
 
   // Manejar selección de fecha en el calendario
@@ -254,49 +305,55 @@ const Activities: React.FC = () => {
   const handleAcceptActivity = async () => {
     if (!selectedActivity) return;
 
-    console.log('Aceptar actividad:', selectedActivity.id);
-    
-    // TODO: Llamada al backend
-    /*
-    await fetch(`http://localhost:3000/api/activities/${selectedActivity.id}/validate`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      },
-      body: JSON.stringify({ validated: true })
-    });
-    */
+    try {
+      const response = await fetch(`http://localhost:3000/api/activities/${selectedActivity.id}/validate`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ validated: true })
+      });
 
-    // Actualizar estado local
-    setActivities(prev =>
-      prev.map(a => a.id === selectedActivity.id ? { ...a, status: 'confirmed' } : a)
-    );
-    setSelectedActivity({ ...selectedActivity, status: 'confirmed' });
+      if (!response.ok) {
+        throw new Error('Error al aceptar actividad');
+      }
+
+      // Actualizar estado local
+      setActivities(prev =>
+        prev.map(a => a.id === selectedActivity.id ? { ...a, status: 'confirmed' } : a)
+      );
+      setSelectedActivity({ ...selectedActivity, status: 'confirmed' });
+    } catch (error) {
+      console.error('Error al aceptar actividad:', error);
+    }
   };
 
   const handleRejectActivity = async () => {
     if (!selectedActivity) return;
 
-    console.log('Rechazar actividad:', selectedActivity.id);
-    
-    // TODO: Llamada al backend
-    /*
-    await fetch(`http://localhost:3000/api/activities/${selectedActivity.id}/validate`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      },
-      body: JSON.stringify({ validated: false })
-    });
-    */
+    try {
+      const response = await fetch(`http://localhost:3000/api/activities/${selectedActivity.id}/validate`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ validated: false })
+      });
 
-    // Actualizar estado local
-    setActivities(prev =>
-      prev.map(a => a.id === selectedActivity.id ? { ...a, status: 'cancelled' } : a)
-    );
-    setSelectedActivity({ ...selectedActivity, status: 'cancelled' });
+      if (!response.ok) {
+        throw new Error('Error al rechazar actividad');
+      }
+
+      // Actualizar estado local
+      setActivities(prev =>
+        prev.map(a => a.id === selectedActivity.id ? { ...a, status: 'cancelled' } : a)
+      );
+      setSelectedActivity({ ...selectedActivity, status: 'cancelled' });
+    } catch (error) {
+      console.error('Error al rechazar actividad:', error);
+    }
   };
 
   // Obtener color según tipo de actividad
@@ -568,6 +625,7 @@ const Activities: React.FC = () => {
                   pagesize={10}
                   onDelete={handleDelete}
                   onEditSave={handleEditSave}
+                  onCreateSave={handleCreateSave}
                   showEditButton={true}
                 />
               </div>

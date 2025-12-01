@@ -9,9 +9,10 @@ type FormProps = {
     initialValues?: Record<string, any>;
     mode?: 'add' | 'edit';
     submitLabel?: string;
+    onChange?: (fieldName: string, value: any) => void;
 };
 
-const Form: React.FC<FormProps> = ({ fields, entity, onSubmit, initialValues = {}, mode = 'add', submitLabel }) => {
+const Form: React.FC<FormProps> = ({ fields, entity, onSubmit, initialValues = {}, mode = 'add', submitLabel, onChange }) => {
     const validateValue = (f: Field, raw: any): { ok: boolean; msg?: string } => {
         // normalize value
         if (raw instanceof File) {
@@ -177,6 +178,9 @@ const Form: React.FC<FormProps> = ({ fields, entity, onSubmit, initialValues = {
                                 max: f.max,
                                 minLength: f.minLength,
                                 maxLength: f.maxLength,
+                                onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                                    if (onChange) onChange(f.name, e.target.value);
+                                }
                             };
                             if (f.type !== 'password' && typeof value !== 'undefined') {
                                 inputProps.defaultValue = value;
@@ -198,7 +202,15 @@ const Form: React.FC<FormProps> = ({ fields, entity, onSubmit, initialValues = {
                             return (
                                 <div className="form-group" key={key}>
                                     <label htmlFor={key}>{f.label}</label>
-                                    <select id={key} name={f.name} required={!!f.required} defaultValue={initialValues?.[f.name] ?? ''}>
+                                    <select 
+                                        id={key} 
+                                        name={f.name} 
+                                        required={!!f.required} 
+                                        defaultValue={initialValues?.[f.name] ?? ''}
+                                        onChange={(e) => {
+                                            if (onChange) onChange(f.name, e.target.value);
+                                        }}
+                                    >
                                         <option value="">-- Seleccionar --</option>
                                         {f.options?.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
                                     </select>
