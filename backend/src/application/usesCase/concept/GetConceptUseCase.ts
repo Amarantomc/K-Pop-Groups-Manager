@@ -9,12 +9,18 @@ export class GetConceptUseCase{
 
     async excute(conceptId:string): Promise<ConceptResponseDto> {
 
-            const concept = await this.conceptRepository.findById(conceptId);
+        try {
+                const concept = await this.conceptRepository.findById(conceptId);
             if(!concept)
             {
                 throw new Error('Concept not found');
             }
 
             return new ConceptResponseDto(concept.id, concept.name, concept.description);
+        } catch (error) {
+            throw error
+        }    
+        
+
     }
 }
