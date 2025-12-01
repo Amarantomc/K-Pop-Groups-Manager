@@ -14,7 +14,7 @@ export class AlbumResponseDTO {
 		public readonly awards: Array<number>
 	) {}
 
-	static fromEntity(album: Album) {
+	static fromEntity(album: Album): AlbumResponseDTO {
 		return new AlbumResponseDTO(
 			album.id,
 			album.title,
@@ -29,7 +29,7 @@ export class AlbumResponseDTO {
 		);
 	}
 
-	static fromEntities(albums: Array<Album>) {
+	static fromEntities(albums: Array<Album>): AlbumResponseDTO[] {
 		return albums.map((album) => this.fromEntity(album));
 	}
 
@@ -45,5 +45,9 @@ export class AlbumResponseDTO {
 			artists: album.LanzamientoArtista || [],
 			groups: album.LanzamientoGrupo || [],
 		});
+	}
+
+	static toEntities(albums: any[]): Album[] {
+		return albums.map((album) => this.toEntity(album));
 	}
 }
