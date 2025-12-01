@@ -80,8 +80,6 @@ const Artist: React.FC = () => {
       try {
         if (!user) return;
 
-        // Descomentar cuando el backend esté listo
-        /*
         let endpoint = '';
         
         switch (user.role) {
@@ -110,10 +108,9 @@ const Artist: React.FC = () => {
         }
 
         const data = await response.json();
-        setArtists(data);
-        */
+        setArtists(data.data || data);
 
-        // DATOS DE PRUEBA
+        /* DATOS DE PRUEBA - COMENTADO
         const mockArtists: Artist[] = [
           {
             id: 1,
@@ -189,6 +186,7 @@ const Artist: React.FC = () => {
         }
 
         setArtists(filteredArtists);
+        */
 
       } catch (error) {
         console.error('Error al cargar artistas:', error);
@@ -201,15 +199,68 @@ const Artist: React.FC = () => {
   }, [user]);
 
   const handleDelete = async (id: number) => {
-    console.log('Eliminar artista:', id);
-    setArtists(prev => prev.filter(artist => artist.id !== id));
+    try {
+      const response = await fetch(`http://localhost:3000/api/artists/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al eliminar artista');
+      }
+
+      setArtists(prev => prev.filter(artist => artist.id !== id));
+    } catch (error) {
+      console.error('Error al eliminar artista:', error);
+    }
   };
 
   const handleEditSave = async (updatedRow: Artist) => {
-    console.log('Actualizar artista:', updatedRow);
-    setArtists(prev => 
-      prev.map(artist => artist.id === updatedRow.id ? updatedRow : artist)
-    );
+    try {
+      const response = await fetch(`http://localhost:3000/api/artists/${updatedRow.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(updatedRow)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al actualizar artista');
+      }
+
+      const data = await response.json();
+      setArtists(prev => 
+        prev.map(artist => artist.id === updatedRow.id ? (data.data || data) : artist)
+      );
+    } catch (error) {
+      console.error('Error al actualizar artista:', error);
+    }
+  };
+
+  const handleCreateSave = async (newRow: Omit<Artist, 'id'>) => {
+    try {
+      const response = await fetch('http://localhost:3000/api/artists', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(newRow)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al crear artista');
+      }
+
+      const data = await response.json();
+      setArtists(prev => [...prev, (data.data || data)]);
+    } catch (error) {
+      console.error('Error al crear artista:', error);
+    }
   };
 
   if (!user || (user.role !== 'manager' && user.role !== 'director' && user.role !== 'admin')) {
@@ -242,6 +293,7 @@ const Artist: React.FC = () => {
           pagesize={10}
           onDelete={handleDelete}
           onEditSave={handleEditSave}
+          onCreateSave={handleCreateSave}
           showEditButton={true}
         />
       )}

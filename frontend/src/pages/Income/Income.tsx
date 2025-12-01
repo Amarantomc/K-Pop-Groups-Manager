@@ -109,8 +109,6 @@ const Income: React.FC = () => {
             return;
         }
 
-        // Descomentar cuando el backend esté listo
-        /*
         const response = await fetch(`http://localhost:3000${endpoint}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -122,10 +120,9 @@ const Income: React.FC = () => {
         }
 
         const data = await response.json();
-        setIncomes(data);
-        */
+        setIncomes(data.data || data);
 
-        // DATOS DE PRUEBA 
+        /* DATOS DE PRUEBA - COMENTADO
         const mockIncomes: Income[] = [
           {
             id: 1,
@@ -190,6 +187,7 @@ const Income: React.FC = () => {
         }
 
         setIncomes(filteredIncomes);
+        */
 
       } catch (error) {
         console.error('Error al cargar ingresos:', error);
@@ -202,16 +200,68 @@ const Income: React.FC = () => {
   }, [user]);
 
   const handleDelete = async (id: number) => {
-    // TODO: Implementar eliminación en el backend
-    console.log('Eliminar ingreso:', id);
-    setIncomes(prev => prev.filter(income => income.id !== id));
+    try {
+      const response = await fetch(`http://localhost:3000/api/incomes/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al eliminar ingreso');
+      }
+
+      setIncomes(prev => prev.filter(income => income.id !== id));
+    } catch (error) {
+      console.error('Error al eliminar ingreso:', error);
+    }
   };
 
   const handleEditSave = async (updatedRow: Income) => {
-    console.log('Actualizar ingreso:', updatedRow);
-    setIncomes(prev => 
-      prev.map(income => income.id === updatedRow.id ? updatedRow : income)
-    );
+    try {
+      const response = await fetch(`http://localhost:3000/api/incomes/${updatedRow.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(updatedRow)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al actualizar ingreso');
+      }
+
+      const data = await response.json();
+      setIncomes(prev => 
+        prev.map(income => income.id === updatedRow.id ? (data.data || data) : income)
+      );
+    } catch (error) {
+      console.error('Error al actualizar ingreso:', error);
+    }
+  };
+
+  const handleCreateSave = async (newRow: Omit<Income, 'id'>) => {
+    try {
+      const response = await fetch('http://localhost:3000/api/incomes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(newRow)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al crear ingreso');
+      }
+
+      const data = await response.json();
+      setIncomes(prev => [...prev, (data.data || data)]);
+    } catch (error) {
+      console.error('Error al crear ingreso:', error);
+    }
   };
 
   if (!user) {
@@ -240,6 +290,7 @@ const Income: React.FC = () => {
           pagesize={10}
           onDelete={handleDelete}
           onEditSave={handleEditSave}
+          onCreateSave={handleCreateSave}
           showEditButton={user.role === 'manager' || user.role === 'director' || user.role === 'admin'}
         />
       )}

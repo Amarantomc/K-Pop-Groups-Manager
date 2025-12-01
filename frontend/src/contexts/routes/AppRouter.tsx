@@ -1,14 +1,14 @@
-
 import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { getRoleConfig } from '../../config/roles technical ';
 import { useAuth } from '../auth/AuthContext';
 import Activities from '../../pages/Activities/Activities';
-//import Agency from '../../pages/Agency/Agency';
-//import Apprentice from '../../pages/Apprentice/Apprentice';
+import Albums from '../../pages/Albums/Albums';
 import Artist from '../../pages/Artist/Artist';
+import Contracts from '../../pages/Contracts/Contracts';
 import Dashboard from '../../pages/Dashboard/Dashboard';
 import Evaluations from '../../pages/Evaluations/Evaluations';
+import Groups from '../../pages/Groups/Groups';
 import Income from '../../pages/Income/Income';
 import ListAgency from '../../pages/ListAgency/ListAgency';
 import ListApprentice from '../../pages/ListApprentice/ListApprentice';
@@ -65,29 +65,34 @@ const AppRouter: React.FC = () => {
           <ListAgency />
         </ProtectedRoute>
       } />
-      {/*<Route path="/admin/listAgency" element={
-        <ProtectedRoute allowedRoles={['admin']}>
-          <Agency />
-        </ProtectedRoute>
-      } />*/}
       <Route path="/admin/apprentices" element={
         <ProtectedRoute allowedRoles={['admin']}>
           <ListApprentice />
         </ProtectedRoute>
       } />
-      {/*<Route path="/admin/listApprentice" element={
-        <ProtectedRoute allowedRoles={['admin']}>
-          <Apprentice />
-        </ProtectedRoute>
-      } />*/}
       <Route path="/admin/Artist" element={
         <ProtectedRoute allowedRoles={['admin']}>
           <Artist />
         </ProtectedRoute>
       } />
+      <Route path="/admin/Groups" element={
+        <ProtectedRoute allowedRoles={['admin']}>
+          <Groups />
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/listAlbums" element={
+        <ProtectedRoute allowedRoles={['admin']}>
+          <Albums />
+        </ProtectedRoute>
+      } />
       <Route path="/admin/Activities" element={
         <ProtectedRoute allowedRoles={['admin']}>
           <Activities />
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/contracts" element={
+        <ProtectedRoute allowedRoles={['admin']}>
+          <Contracts />
         </ProtectedRoute>
       } />
       <Route path="/admin/income" element={
@@ -105,7 +110,7 @@ const AppRouter: React.FC = () => {
           <Profile />
         </ProtectedRoute>
       } />
-       <Route path="/admin/listUsers" element={
+      <Route path="/admin/listUsers" element={
         <ProtectedRoute allowedRoles={['admin']}>
           <ListUsers />
         </ProtectedRoute>
@@ -117,11 +122,6 @@ const AppRouter: React.FC = () => {
           <Dashboard />
         </ProtectedRoute>
       } />
-      {/*<Route path="/director/apprentices" element={
-        <ProtectedRoute allowedRoles={['director']}>
-          <Apprentice />
-        </ProtectedRoute>
-      } />*/}
       <Route path="/director/apprentices" element={
         <ProtectedRoute allowedRoles={['director']}>
           <ListApprentice />
@@ -132,9 +132,24 @@ const AppRouter: React.FC = () => {
           <Artist />
         </ProtectedRoute>
       } />
+      <Route path="/director/Groups" element={
+        <ProtectedRoute allowedRoles={['director']}>
+          <Groups />
+        </ProtectedRoute>
+      } />
+      <Route path="/director/Albums" element={
+        <ProtectedRoute allowedRoles={['director']}>
+          <Albums />
+        </ProtectedRoute>
+      } />
       <Route path="/director/Activities" element={
         <ProtectedRoute allowedRoles={['director']}>
           <Activities />
+        </ProtectedRoute>
+      } />
+      <Route path="/director/contracts" element={
+        <ProtectedRoute allowedRoles={['director']}>
+          <Contracts />
         </ProtectedRoute>
       } />
       <Route path="/director/income" element={
@@ -157,11 +172,6 @@ const AppRouter: React.FC = () => {
           <ListUsers />
         </ProtectedRoute>
       } />
-       <Route path="/director/listUsers" element={
-        <ProtectedRoute allowedRoles={['director']}>
-          <ListUsers />
-        </ProtectedRoute>
-      } />
 
       {/* RUTAS SOLO PARA MANAGER */}
       <Route path="/manager/dashboard" element={
@@ -174,19 +184,29 @@ const AppRouter: React.FC = () => {
           <ListApprentice />
         </ProtectedRoute>
       } />
-      {/*<Route path="/manager/listApprentice" element={
-        <ProtectedRoute allowedRoles={['manager']}>
-          <ListApprentice />
-        </ProtectedRoute>
-      } />*/}
       <Route path="/manager/Artist" element={
         <ProtectedRoute allowedRoles={['manager']}>
           <Artist />
         </ProtectedRoute>
       } />
+      <Route path="/manager/Groups" element={
+        <ProtectedRoute allowedRoles={['manager']}>
+          <Groups />
+        </ProtectedRoute>
+      } />
+      <Route path="/manager/Albums" element={
+        <ProtectedRoute allowedRoles={['manager']}>
+          <Albums />
+        </ProtectedRoute>
+      } />
       <Route path="/manager/Activities" element={
         <ProtectedRoute allowedRoles={['manager']}>
           <Activities />
+        </ProtectedRoute>
+      } />
+      <Route path="/manager/contracts" element={
+        <ProtectedRoute allowedRoles={['manager']}>
+          <Contracts />
         </ProtectedRoute>
       } />
       <Route path="/manager/income" element={
@@ -209,11 +229,6 @@ const AppRouter: React.FC = () => {
           <ListUsers />
         </ProtectedRoute>
       } />
-       <Route path="/manager/listUsers" element={
-        <ProtectedRoute allowedRoles={['manager']}>
-          <ListUsers />
-        </ProtectedRoute>
-      } />
 
       {/* RUTAS SOLO PARA ARTIST */}
       <Route path="/artist/dashboard" element={
@@ -221,7 +236,7 @@ const AppRouter: React.FC = () => {
           <Dashboard />
         </ProtectedRoute>
       } />
-      <Route path="/artist/activities" element={
+      <Route path="/artist/Activities" element={
         <ProtectedRoute allowedRoles={['artist']}>
           <Activities />
         </ProtectedRoute>

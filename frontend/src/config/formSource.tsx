@@ -95,6 +95,7 @@ export const apprenticeFields: Field[] = [
     { id: 'age', name: 'age', label: 'Edad', type: 'number', min: 15, required: true },
     { id: 'trainingLv', name: 'trainingLv', label: 'Nivel Entrenamiento', type: 'number', min: 0, required: true },
     { id: 'status', name: 'status', label: 'Estado Aprendiz', type: 'select', options: APPRENTICE_STATUS_OPTIONS, required: true },
+    { id: 'agencyId', name: 'agencyId', label: 'ID de Agencia', type: 'number', required: true, min: 1 },
 ];
 
 // Artista
@@ -208,6 +209,31 @@ export const contractFields: Field[] = [
     { id: 'initialTerms', name: 'initialTerms', label: 'Condiciones Iniciales', type: 'textarea' },
     { id: 'revenueSplit', name: 'revenueSplit', label: 'Distribución de Ingresos', type: 'text' },
     { id: 'status', name: 'status', label: 'Estado Contrato', type: 'select', options: enumToOptions(CONTRACT_STATUS) },
+];
+
+// Mapeo de roles UI (español) a valores del backend (inglés con mayúscula inicial)
+export const ROLE_MAPPING: Record<string, string> = {
+    'Admin': 'Admin',
+    'Manager': 'Manager',
+    'Director': 'Director',
+    'Artista': 'Artist',
+    'Aprendiz': 'Apprentice'
+};
+
+// Campos adicionales para manager/director
+export const managerDirectorFields: Field[] = [
+    { id: 'agencyId', name: 'agencyId', label: 'ID de Agencia', type: 'number', placeholder: '1', required: true, min: 1 }
+];
+
+// Campos adicionales para aprendiz
+export const apprenticeUserFields: Field[] = [
+    { id: 'IdAp', name: 'IdAp', label: 'ID de Aprendiz', type: 'number', placeholder: '1', required: true, min: 1 }
+];
+
+// Campos adicionales para artista
+export const artistUserFields: Field[] = [
+    { id: 'IdAp', name: 'IdAp', label: 'ID de Aprendiz', type: 'number', placeholder: '1', required: true, min: 1 },
+    { id: 'IdGr', name: 'IdGr', label: 'ID de Grupo', type: 'number', placeholder: '1', required: true, min: 1 }
 ];
 
 // Utilidad: obtener campos por entidad

@@ -1,16 +1,35 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Form from "../../components/form/Form";
 import Header from '../../components/header/Header';
 import Sidebar from '../../components/sidebar/Sidebar';
-import formFieldsByEntity from "../../config/formSource";
+import formFieldsByEntity, { managerDirectorFields, ROLE_MAPPING } from "../../config/formSource";
+import type { Field } from "../../config/formSource";
 import { useAuth } from '../../contexts/auth/AuthContext';
 import "./profile.css";
 
 const Profile: React.FC = () => {
   const { user } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
+  const [selectedRole, setSelectedRole] = useState<string>('');
+  
+  // Campos dinámicos basados en el rol seleccionado
+  const userFormFields = useMemo<Field[]>(() => {
+    const baseFields = formFieldsByEntity['user'] || [];
+    const roleNormalized = selectedRole.toLowerCase();
+    
+    if (roleNormalized === 'manager' || roleNormalized === 'director') {
+      return [...baseFields, ...managerDirectorFields];
+    } else if (roleNormalized === 'apprentice') {
+      return [...baseFields];
+    } else if (roleNormalized === 'artist') {
+      return [...baseFields];
+    }
+    
+    return baseFields;
+  }, [selectedRole]);
+  
   // Normalizar campos (solo los que usamos: name, email, rol)
   const u: any = user as any;
   const displayName = u?.name ?? 'Usuario';
@@ -77,6 +96,12 @@ const Profile: React.FC = () => {
   };
 
   const handleSubmit = (data: FormData | Record<string, any>) => {
+    // Verificar que solo el admin pueda crear usuarios
+    if (user?.role !== 'admin') {
+      alert('No tienes permisos para crear usuarios. Solo el administrador puede realizar esta acción.');
+      return;
+    }
+
     // Envío real al backend: POST http://localhost:3000/api/user/
     const API_BASE = 'http://localhost:3000';
     const payload: Record<string, any> = {};
@@ -85,107 +110,49 @@ const Profile: React.FC = () => {
     } else {
       Object.assign(payload, data);
     }
+    
+    // Detectar el rol seleccionado del formulario
+    const formRole = (payload.rol || payload.role || '').toLowerCase();
+    if (formRole) {
+      setSelectedRole(formRole);
+    }
 
     (async () => {
       try {
   // aqui va el endpoint
-  try { console.log('Creando usuario - payload:', payload); } catch(e) {}
+  console.log('=== INICIO CREACIÓN DE USUARIO ===');
+  console.log('Payload recibido del formulario:', payload);
 
         // Compatibilidad: si backend espera 'name' en lugar de 'username', rellenarlo desde username
         if (!payload.name && payload.username) {
           payload.name = payload.username;
         }
 
-        // Normalizar el rol (el backend espera 'role' en minúsculas)
-        const userRole = (payload.rol || payload.role || '').toLowerCase();
-        payload.role = userRole; // Asegurar que se envíe como 'role'
-        delete payload.rol; // Eliminar 'rol' si existe
+        // Normalizar el rol usando el mapeo correcto
+        // El formulario envía: Admin, Manager, Director, Artista, Aprendiz
+        // El backend valida con 'role in Role' y espera las keys: Admin, Manager, Director, Artist, Apprentice
+        let userRole = payload.rol || payload.role || '';
         
-        const username = payload.name || payload.username;
+        console.log('Rol recibido del formulario:', userRole);
+        
+        // Usar el mapeo para convertir del formulario a las keys del backend
+        if (ROLE_MAPPING[userRole]) {
+          userRole = ROLE_MAPPING[userRole];
+        }
+        
+        console.log('Rol normalizado para backend:', userRole);
+        
+        payload.role = userRole;
+        delete payload.rol; // Eliminar 'rol' si existe
 
         // Limpiar campos innecesarios antes de procesar
         delete payload.username; // El backend espera 'name', no 'username'
 
-        // Validar rol
-        const validRoles = ['admin', 'manager', 'director', 'apprentice', 'artist'];
+        // Validar rol (con mayúscula inicial como espera el backend)
+        const validRoles = ['Admin', 'Manager', 'Director', 'Apprentice', 'Artist'];
         if (!validRoles.includes(userRole)) {
           alert(`Rol inválido: ${userRole}. Debe ser uno de: ${validRoles.join(', ')}`);
           return;
-        }
-
-        // Agregar agencyId del usuario actual para manager/director
-        if ((userRole === 'manager' || userRole === 'director') && user?.agencyId) {
-          payload.agencyId = user.agencyId;
-        }
-
-        // Consulta al backend para obtener IDs según el rol usando el username
-        if (userRole === 'apprentice') {
-          // Para aprendiz: buscar ID por nombre de usuario
-          if (!username) {
-            alert('Debe proporcionar el nombre de usuario');
-            return;
-          }
-
-          try {
-            const apprenticeRes = await fetch(`${API_BASE}/api/apprentice?name=${encodeURIComponent(username)}`);
-            if (!apprenticeRes.ok) {
-              alert('No se encontró el aprendiz con ese nombre');
-              return;
-            }
-            const apprenticeData = await apprenticeRes.json();
-            if (!apprenticeData.data || apprenticeData.data.length === 0) {
-              alert('No se encontró el aprendiz con ese nombre');
-              return;
-            }
-            payload.IdAp = apprenticeData.data[0].id;
-          } catch (error) {
-            console.error('Error al buscar aprendiz:', error);
-            alert('Error al buscar el aprendiz en el sistema');
-            return;
-          }
-        }
-
-        if (userRole === 'artist') {
-          // Para artista: buscar ID de aprendiz y de grupo usando el username
-          if (!username) {
-            alert('Debe proporcionar el nombre de usuario');
-            return;
-          }
-
-          try {
-            // Buscar el aprendiz por nombre de usuario
-            const apprenticeRes = await fetch(`${API_BASE}/api/apprentice?name=${encodeURIComponent(username)}`);
-            if (!apprenticeRes.ok) {
-              alert('No se encontró el aprendiz con ese nombre');
-              return;
-            }
-            const apprenticeData = await apprenticeRes.json();
-            if (!apprenticeData.data || apprenticeData.data.length === 0) {
-              alert('No se encontró el aprendiz con ese nombre');
-              return;
-            }
-            payload.IdAp = apprenticeData.data[0].id;
-
-            // Solicitar nombre del grupo al usuario
-            const groupName = prompt('Ingrese el nombre del grupo (opcional, presione Cancelar para omitir):');
-            if (groupName && groupName.trim()) {
-              const groupRes = await fetch(`${API_BASE}/api/group?name=${encodeURIComponent(groupName.trim())}`);
-              if (!groupRes.ok) {
-                alert('No se encontró el grupo con ese nombre');
-                return;
-              }
-              const groupData = await groupRes.json();
-              if (!groupData.data || groupData.data.length === 0) {
-                alert('No se encontró el grupo con ese nombre');
-                return;
-              }
-              payload.IdGr = groupData.data[0].id;
-            }
-          } catch (error) {
-            console.error('Error al buscar aprendiz/grupo:', error);
-            alert('Error al buscar los datos en el sistema');
-            return;
-          }
         }
 
   // Obtener token de autenticación
@@ -194,6 +161,129 @@ const Profile: React.FC = () => {
           alert('Debe iniciar sesión para crear usuarios');
           return;
         }
+        
+        console.log('Token obtenido, procesando según rol...');
+
+        // Función auxiliar para buscar agencia por nombre
+        const getAgencyIdByName = async (agencyName: string): Promise<number | null> => {
+          try {
+            const headers: Record<string, string> = {};
+            if (token) headers['Authorization'] = `Bearer ${token}`;
+
+            // El backend espera query params para buscar por nombre
+            const url = `${API_BASE}/api/agency/search/agency_name?name=${encodeURIComponent(agencyName)}`;
+            console.log('Consultando', url);
+            const res = await fetch(url, { headers });
+            console.log('Respuesta agency/search/agency_name - status:', res.status);
+
+            if (!res.ok) {
+              const raw = await res.text().catch(() => '');
+              console.error('Error obteniendo agencia, status:', res.status, raw);
+              return null;
+            }
+
+            const data = await res.json().catch(() => null);
+            console.log('Datos recibidos de agency/search:', data);
+
+            // La API puede devolver la agencia directamente o dentro de data
+            const agency = data?.data ?? data;
+            if (!agency) {
+              console.warn('Respuesta vacía al buscar agencia:', agencyName);
+              return null;
+            }
+
+            // Si devuelve un array, tomar el primero
+            if (Array.isArray(agency)) {
+              if (agency.length === 0) return null;
+              return agency[0]?.id ?? null;
+            }
+
+            // Si devuelve el objeto de la agencia, devolver su id
+            return agency.id ?? null;
+          } catch (error) {
+            console.error('Error buscando agencia:', error);
+            return null;
+          }
+        };
+
+        // Función auxiliar para buscar aprendiz por nombre
+        const getApprenticeIdByName = async (apprenticeName: string): Promise<number | null> => {
+          try {
+            const headers: Record<string, string> = {};
+            if (token) headers['Authorization'] = `Bearer ${token}`;
+            
+            // Usar endpoint específico del backend: /api/apprentice/name/:name
+            const url = `${API_BASE}/api/apprentice/name/${encodeURIComponent(apprenticeName)}`;
+            console.log('Consultando', url);
+            const res = await fetch(url, { headers });
+            console.log('Respuesta apprentice/name - status:', res.status);
+            
+            if (!res.ok) {
+              console.error('Error obteniendo aprendiz, status:', res.status);
+              return null;
+            }
+            
+            const data = await res.json();
+            console.log('Aprendiz obtenido:', data);
+            
+            // El backend puede devolver el aprendiz directamente o dentro de data
+            const apprentice = data?.data ?? data;
+            if (!apprentice || !apprentice.id) {
+              console.warn('No se encontró aprendiz:', apprenticeName);
+              return null;
+            }
+            
+            return apprentice.id;
+          } catch (error) {
+            console.error('Error buscando aprendiz:', error);
+            return null;
+          }
+        };
+
+        // Función auxiliar para buscar artista por IdAp (apprenticeId) y obtener su IdGr
+        const getArtistGroupByApprenticeId = async (apprenticeId: number): Promise<number | null> => {
+          try {
+            const headers: Record<string, string> = {};
+            if (token) headers['Authorization'] = `Bearer ${token}`;
+            
+            console.log('Buscando artista con apprenticeId:', apprenticeId);
+            const res = await fetch(`${API_BASE}/api/artist`, { headers });
+            console.log('Respuesta artistas - status:', res.status);
+            
+            if (!res.ok) {
+              console.error('Error obteniendo artistas, status:', res.status);
+              return null;
+            }
+            
+            const data = await res.json();
+            console.log('Artistas obtenidos:', data);
+            
+            const artists = data.data || data;
+            console.log('Total artistas:', artists.length);
+            
+            // Buscar artista por apprenticeId (IdAp)
+            const artist = artists.find((a: any) => 
+              a.apprenticeId === apprenticeId || 
+              a.IdAp === apprenticeId ||
+              a.idAp === apprenticeId
+            );
+            
+            console.log('Artista encontrado:', artist);
+            
+            if (!artist) {
+              console.warn('No se encontró artista con apprenticeId:', apprenticeId);
+              return null;
+            }
+            
+            // Retornar el IdGr (groupId)
+            const groupId = artist.groupId || artist.IdGr || artist.idGr || null;
+            console.log('Grupo del artista (IdGr):', groupId);
+            return groupId;
+          } catch (error) {
+            console.error('Error buscando artista por apprenticeId:', error);
+            return null;
+          }
+        };
 
         // Limpiar payload: enviar solo los campos que el backend espera
         const finalPayload: Record<string, any> = {
@@ -203,19 +293,77 @@ const Profile: React.FC = () => {
           role: payload.role
         };
 
-        // Agregar campos opcionales según el rol
-        if (userRole === 'manager' || userRole === 'director') {
-          if (payload.agencyId) finalPayload.agencyId = payload.agencyId;
-        } else if (userRole === 'apprentice') {
-          if (payload.IdAp) finalPayload.IdAp = payload.IdAp;
-        } else if (userRole === 'artist') {
-          if (payload.IdAp) finalPayload.IdAp = payload.IdAp;
-          if (payload.IdGr) finalPayload.IdGr = payload.IdGr;
+        // Obtener IDs consultando al backend según el rol
+        // userRole ya está con mayúscula inicial después del mapeo
+        
+        if (userRole === 'Manager' || userRole === 'Director') {
+          console.log('Procesando Manager/Director...');
+          if (!payload.agencyName) {
+            alert('Debe proporcionar el nombre de la agencia');
+            return;
+          }
+          console.log('Buscando agencia:', payload.agencyName);
+          const agencyId = await getAgencyIdByName(payload.agencyName);
+          if (!agencyId) {
+            alert(`No se encontró la agencia con nombre: ${payload.agencyName}`);
+            return;
+          }
+          console.log('Agencia encontrada con ID:', agencyId);
+          finalPayload.agencyId = agencyId;
+          
+        } else if (userRole === 'Apprentice') {
+          console.log('Procesando Apprentice...');
+          if (!payload.name) {
+            alert('Debe proporcionar el nombre de usuario');
+            return;
+          }
+          
+          console.log('Buscando aprendiz por nombre de usuario:', payload.name);
+          const apprenticeId = await getApprenticeIdByName(payload.name);
+          if (!apprenticeId) {
+            alert(`No se encontró el aprendiz con nombre: ${payload.name}`);
+            return;
+          }
+          console.log('Aprendiz encontrado con ID:', apprenticeId);
+          
+          finalPayload.IdAp = apprenticeId;
+          
+        } else if (userRole === 'Artist') {
+          console.log('Procesando Artist...');
+          if (!payload.name) {
+            alert('Debe proporcionar el nombre de usuario');
+            return;
+          }
+          
+          // Paso 1: Buscar el aprendiz por nombre para obtener IdAp
+          console.log('Paso 1: Buscando aprendiz por nombre:', payload.name);
+          const apprenticeId = await getApprenticeIdByName(payload.name);
+          if (!apprenticeId) {
+            alert(`No se encontró el aprendiz con nombre: ${payload.name}`);
+            return;
+          }
+          console.log('Aprendiz encontrado con ID:', apprenticeId);
+          
+          // Paso 2: Buscar el artista usando IdAp para obtener IdGr
+          console.log('Paso 2: Buscando artista con apprenticeId:', apprenticeId);
+          const groupId = await getArtistGroupByApprenticeId(apprenticeId);
+          
+          if (!groupId) {
+            alert(`El aprendiz "${payload.name}" no está registrado como artista o no tiene grupo asignado`);
+            return;
+          }
+          console.log('Artista encontrado con IdGr:', groupId);
+          
+          // Asignar ambos IDs al payload
+          finalPayload.IdAp = apprenticeId;
+          finalPayload.IdGr = groupId;
+        } else {
+          console.log('Rol Admin - no requiere campos adicionales');
         }
 
         console.log('Payload final a enviar:', finalPayload);
 
-        const res = await fetch(`${API_BASE}/api/user/`, {
+        const res = await fetch(`${API_BASE}/api/user`, {
           method: 'POST',
           headers: { 
             'Content-Type': 'application/json',
@@ -224,22 +372,27 @@ const Profile: React.FC = () => {
           body: JSON.stringify(finalPayload),
         });
 
+        console.log('Response status:', res.status);
+        
         const responseData = await res.json().catch(() => null);
+        console.log('Response data:', responseData);
         
         if (!res.ok) {
           // El backend retorna { success: false, error: "mensaje" }
-          const msg = responseData?.error || responseData?.message || 'Error al crear usuario';
+          const msg = responseData?.error || responseData?.message || `Error al crear usuario (${res.status})`;
           alert(msg);
+          console.error('Error del servidor:', responseData);
           return;
         }
 
         // El backend retorna { success: true, data: {...} }
         if (responseData?.success) {
           alert('Usuario creado correctamente');
+          setShowUserForm(false);
         } else {
           alert('Usuario creado pero respuesta inesperada');
+          console.warn('Respuesta inesperada:', responseData);
         }
-        setShowUserForm(false);
       } catch (err) {
         console.error('Error creando usuario:', err);
         alert(err instanceof Error ? err.message : 'Error de red');
@@ -308,16 +461,28 @@ const Profile: React.FC = () => {
           </div>
 
           {/* Contenedor con los dos botones solicitados debajo del header/tarjeta */}
-          <div className="profile-button-row" style={{ marginTop: 18 }}>
-            <button className="primary-btn" onClick={() => { setShowUserForm(!showUserForm); setShowPasswordForm(false); }}>
-              Añadir usuario
-            </button>
-          </div>
+          {user?.role === 'admin' && (
+            <div className="profile-button-row" style={{ marginTop: 18 }}>
+              <button className="primary-btn" onClick={() => { setShowUserForm(!showUserForm); setShowPasswordForm(false); }}>
+                Añadir usuario
+              </button>
+            </div>
+          )}
 
-          {showUserForm && (
+          {showUserForm && user?.role === 'admin' && (
             <div className="Profile-form">
               <div className="form-center">
-                <Form fields={formFieldsByEntity['user']} entity="Usuario" onSubmit={handleSubmit} />
+                <Form 
+                  fields={userFormFields} 
+                  entity="Usuario" 
+                  onSubmit={handleSubmit}
+                  onChange={(fieldName, value) => {
+                    // Detectar cambios en el campo 'role' o 'rol'
+                    if (fieldName === 'role' || fieldName === 'rol') {
+                      setSelectedRole(String(value || ''));
+                    }
+                  }}
+                />
               </div>
             </div>
           )}
