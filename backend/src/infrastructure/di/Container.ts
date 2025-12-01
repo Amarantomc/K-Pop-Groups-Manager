@@ -60,6 +60,8 @@ import { GetAllActivitiesUseCase } from '../../application/usesCase/activity/Get
 import { UpdateActivityUseCase } from '../../application/usesCase/activity/UpdateActivityUseCase';
 import { ActivityController } from '../../presentation/controllers/ActivityController';
 import { ActivityRepository } from '../repositories/ActivityRepository';
+import { FindActivitiesByArtist } from '../../application/usesCase/activity/FindActivitiesByArtist';
+import { AddArtistToActivityUseCase } from '../../application/usesCase/activity/AddArtistToActivityUseCase';
 
  
 
@@ -268,6 +270,14 @@ container.bind<FindActivityByIdUseCase>(Types.FindActivityByIdUseCase)
 
 container.bind<GetAllActivitiesUseCase>(Types.GetAllActivitiesUseCase)
   .to(GetAllActivitiesUseCase)
+  .inTransientScope();
+
+container.bind<FindActivitiesByArtist>(Types.FindActivitiesByArtist)
+  .to(FindActivitiesByArtist)
+  .inTransientScope();
+
+  container.bind<AddArtistToActivityUseCase>(Types.AddArtistToActivityUseCase)
+  .to(AddArtistToActivityUseCase)
   .inTransientScope();
 
 // container.bind<ValidateTokenUseCase>(ValidateTokenUseCase)

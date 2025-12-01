@@ -24,11 +24,14 @@ export class ActivityRoutes {
     
     this.router.get('/', (req, res) => this.activityController.getAll(req, res));
     
+    this.router.get('/:apprenticeId&:groupId',(req,res)=> this.activityController.findByArtist(req,res))
     this.router.get('/:id', (req, res) => this.activityController.findById(req, res));
     
     this.router.put('/:id', RoleMiddleware.onlyStaff(), (req, res) => this.activityController.updateActivity(req, res));
     
     this.router.delete('/:id', RoleMiddleware.onlyStaff(), (req, res) => this.activityController.deleteActivity(req, res));
+
+    this.router.post('/addArtist',RoleMiddleware.onlyStaff(),(req,res)=> this.activityController.addArtist(req,res))
 
     
   }

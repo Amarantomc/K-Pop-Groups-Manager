@@ -6,17 +6,22 @@ import type { CreateActivityDto } from "../../application/dtos/activity/CreateAc
 import type { UpdateActivityDto } from "../../application/dtos/activity/UpdateActivityDto";
 import type { Activity } from "../../domain";
 import { ActivityResponseDto } from "../../application/dtos/activity/ActivityResponseDto";
+import type { Prisma } from "@prisma/client";
+import type { PrismaClient } from "../../generated/prisma";
+import type { ArtistOnActivityDto } from "../../application/dtos/activity/ArtistOnActivityDto";
 
 @injectable()
 export class ActivityRepository implements IActivityRepository {
 
   constructor( @inject(Types.PrismaClient) private prisma:any,
                 @inject(Types.IUnitOfWork) private unitOfWork:IUnitOfWork) {}
+
+
    
 
      private get db() {
     return this.unitOfWork.getTransaction();
-  }
+    }
 
    
     async create(data: CreateActivityDto): Promise<Activity> {
@@ -100,4 +105,30 @@ async getAll(): Promise<Activity[]> {
     });
     return ActivityResponseDto.toEntities(activities);
     }
+
+    async findByArtist(apprenticeId: number, groupId: number): Promise<Activity[]> {
+       const activities= await this.db.actividad.findMany({
+        where:{
+           Artistas:{
+             some:{
+              idAp:apprenticeId,
+              idGr:groupId
+             }
+           }
+        }
+
+       })
+       return ActivityResponseDto.toEntities(activities)
+  }
+
+   async addArtist(command: ArtistOnActivityDto): Promise<void> {
+        await this.db.artistaEnActividad.create({
+          data:{
+            idAct:command.activityId,
+            idAp:command.apprenticeId,
+            idGr:command.groupId,
+            aceptado:command.accepted
+          }
+        })
+  }
 }

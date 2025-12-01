@@ -10,6 +10,9 @@ import type { GetAllActivitiesUseCase } from "../../application/usesCase/activit
 import { CreateActivityDto } from "../../application/dtos/activity/CreateActivityDto";
 import type { Request, Response } from 'express';
 import { UpdateActivityDto } from "../../application/dtos/activity/UpdateActivityDto";
+import type { FindActivitiesByArtist } from "../../application/usesCase/activity/FindActivitiesByArtist";
+import type { AddArtistToActivityUseCase } from "../../application/usesCase/activity/AddArtistToActivityUseCase";
+import { ArtistOnActivityDto } from "../../application/dtos/activity/ArtistOnActivityDto";
 
 @injectable()
 export class ActivityController {
@@ -19,6 +22,8 @@ export class ActivityController {
     @inject(Types.DeleteActivityUseCase) private deleteActivityUseCase: DeleteActivityUseCase,
     @inject(Types.FindActivityByIdUseCase) private findActivityByIdUseCase: FindActivityByIdUseCase,
     @inject(Types.GetAllActivitiesUseCase) private getAllActivitiesUseCase: GetAllActivitiesUseCase,
+    @inject(Types.FindActivitiesByArtist) private findActivitiesByArtist: FindActivitiesByArtist,
+    @inject(Types.AddArtistToActivityUseCase) private addArtistToActivity: AddArtistToActivityUseCase
 
   ) {}
 
@@ -107,5 +112,40 @@ export class ActivityController {
       });
     }
   }
- 
+  
+  async findByArtist(req: Request, res: Response) {
+    try {
+      
+      const { apprenticeId,groupId } = req.params;
+      const activities = await this.findActivitiesByArtist.execute({apprenticeId: Number(apprenticeId), groupId: Number(groupId)})
+      
+      res.json({
+        success: true,
+        data: activities
+      });
+    } catch (error: any) {
+      res.status(404).json({
+        success: false,
+        error: error.message
+      });
+    }
+  }
+
+  async addArtist(req: Request, res: Response) {
+    try {
+      
+      const dto=ArtistOnActivityDto.createToAdd(req.body)
+      await this.addArtistToActivity.execute(dto)
+      
+      res.json({
+        success: true,
+        data: "Artist Linked to Activity"
+      });
+    } catch (error: any) {
+      res.status(404).json({
+        success: false,
+        error: error.message
+      });
+    }
+  }
 }
