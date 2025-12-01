@@ -1,3 +1,22 @@
+ 
+	CreateGroupUseCase: Symbol.for("CreateGroupUseCase"),
+	DeleteGroupUseCase: Symbol.for("DeleteGroupUseCase"),
+	FindGroupsByNameUseCase: Symbol.for("FindGroupsByNameUseCase"),
+	FindGroupsByDebutUseCase: Symbol.for("FindGroupsByDebutUseCase"),
+	FindGroupsByStatusUseCase: Symbol.for("FindGroupsByStatusUseCase"),
+	FindGroupsByMemberCountUseCase: Symbol.for("FindGroupsByMemberCountUseCase"),
+	FindGroupsByMemberUseCase: Symbol.for("FindGroupsByMemberUseCase"),
+	FindGroupsByAgencyUseCase: Symbol.for("FindGroupsByAgencyUseCase"),
+	FindGroupsByConceptUseCase: Symbol.for("FindGroupsByConceptUseCase"),
+	FindGroupsByVisualConceptUseCase: Symbol.for("FindGroupsByVisualConceptUseCase"),
+	GetGroupUseCase: Symbol.for("GetGroupUseCase"),
+	UpdateGroupUseCase: Symbol.for("UpdateGroupUseCase"),
+	ListGroupsUseCase: Symbol.for("ListGroupsUseCase"),
+	AddMembersUseCase: Symbol.for("AddMembersUseCase"),
+	RemoveMembersUseCase: Symbol.for("RemoveMembersUseCase"),
+	AddAlbumsUseCase: Symbol.for("AddAlbumsUseCase"),
+	AddActivitiesUseCase: Symbol.for("AddActivitiesUseCase"),
+ 
 
 
 
@@ -93,6 +112,12 @@ FindByApprenticeUseCase : Symbol.for('FindByApprenticeUseCase'),
   PopularityListController : Symbol.for('PopularityListController'),
   ApplicationController : Symbol.for('ApplicationController'),
 
+	// Presentation
+	UserController: Symbol.for("UserController"),
+	AuthController: Symbol.for("AuthController"),
+	ApprenticeController: Symbol.for("ApprenticeController"),
+	AgencyController: Symbol.for("AgencyController"),
+	GroupController: Symbol.for("GroupController"),
 };
 
 export { Types };
