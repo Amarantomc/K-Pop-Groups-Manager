@@ -62,6 +62,7 @@ export const MenuByRole: Record<string, MenuSection[]> = {
                 { label: "Mostrar Aprendices", icon: <SchoolIcon />, path: "/admin/apprentices" }
             ]
         },
+<<<<<<< HEAD
         {
             title: "ARTISTA",
             items: [
@@ -108,6 +109,50 @@ export const MenuByRole: Record<string, MenuSection[]> = {
                 { label: "Solicitudes", icon: <NotificationsIcon />, path: "/admin/requests" }
             ]
         },
+=======
+        // {
+        //     title: "ARTISTA",
+        //     items: [
+        //         { label: "Gestión de Artistas", icon: <PeopleIcon />, path: "/admin/Artist" }
+        //     ]
+        // },
+        // {
+        //     title: "GRUPO ",
+        //     items: [
+        //         { label: "Mostrar Grupos", icon: <PeopleIcon />, path: "/admin/Groups" }
+        //     ]
+        // },
+        // {
+        //     title: "ALBUM",
+        //     items: [
+        //         { label: "Mostrar Álbumes", icon: <AlbumIcon />, path: "/admin/listAlbums" }
+        //     ]
+        // },
+        // {
+        //     title: "ACTIVIDAD",
+        //     items: [
+        //         { label: "Mostrar Actividades", icon: <CalendarTodayIcon />, path: "/admin/Activities" }
+        //     ]
+        // },
+        // {
+        //     title: "CONTRATO",
+        //     items: [
+        //         { label: "Mostrar Contratos", icon: <WorkIcon />, path: "/admin/contracts" }
+        //     ]
+        // },
+        // {
+        //     title: "INGRESOS",
+        //     items: [
+        //         { label: "Ingresos del Sistema", icon: <AttachMoneyIcon />, path: "/admin/income" }
+        //     ]
+        // },
+        // {
+        //     title: "SOLICITUD",
+        //     items: [
+        //         { label: "Solicitudes", icon: <NotificationsIcon />, path: "/admin/requests" }
+        //     ]
+        // },
+>>>>>>> d6ac524 (fix add button)
         {
             title: "CUENTA",
             items: [

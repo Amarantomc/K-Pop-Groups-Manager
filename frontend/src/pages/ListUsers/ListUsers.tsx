@@ -233,6 +233,7 @@ const ListUsers: React.FC = () => {
           onCreateSave={handleCreateSave}
           createEntity="user"
           showEditButton={false}
+          showCreateButton={false}
         />
         <ConfirmDialog message="¿Está seguro que desea eliminar este usuario?" open={openConfirm} onCancel={() => setOpenConfirm(false)} onConfirm={handleDelete}>
           </ConfirmDialog>
