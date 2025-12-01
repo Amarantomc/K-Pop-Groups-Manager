@@ -24,10 +24,11 @@ interface DataTableProps {
   showEditButton? : boolean,
   constraints? : Record<string, FieldConstraint>;
   createEntity? : string;
+  showCreateButton? : boolean
 }
 
 
-const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , checkboxSelection = false , onDelete, onEditSave, onCreateSave , showEditButton = true , constraints, createEntity}) => {
+const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , checkboxSelection = false , onDelete, onEditSave, onCreateSave , showEditButton = true , constraints, createEntity,showCreateButton=true}) => {
   const paginationModel = { page: 0, pageSize: pagesize };
 
    const [editModalOpen, setEditModalOpen] = useState(false);
@@ -86,7 +87,8 @@ const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , c
 
   return (
         <>
-        <div className='datatable-header'>
+        {showCreateButton &&
+        (<div className='datatable-header'>
             <button className='add-button' onClick={handleCreateOpen}>
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -102,7 +104,7 @@ const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , c
                 </svg>
                 Agregar
             </button>
-        </div>
+        </div>)}
         <div className="datatable">
         <DataGrid
             rows={rows || []}
