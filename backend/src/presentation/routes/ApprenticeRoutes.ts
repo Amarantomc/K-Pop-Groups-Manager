@@ -27,7 +27,7 @@ export class ApprenticeRoutes{
     this.router.get('/agency/:id',(req, res) => this.apprenticeController.listByAgency(req,res))
 
    
-    this.router.get('/:name', (req, res) => this.apprenticeController.getByNameApprentice(req,res))
+    this.router.get('/name/:name', (req, res) => this.apprenticeController.getByNameApprentice(req,res))
     
   }
 
