@@ -1,7 +1,7 @@
 //import type Group from "./Group"
 
 
-export default class Concept{
+export  class Concept{
     readonly id:number
     readonly name: string
     readonly description:string
