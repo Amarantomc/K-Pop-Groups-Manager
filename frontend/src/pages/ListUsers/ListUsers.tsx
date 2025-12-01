@@ -1,14 +1,17 @@
-import "../../styles/listUsers.css"
-import Sidebar from "../../components/sidebar/Sidebar"
-// import Navbar from "../../components/navbar/Navbar"
-import Datatable from "../../components/datatable/Datatable"
-import { userColumns } from "../../datatableSource"
-import React from "react"
-import { useEffect , useState } from "react"
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useEffect, useState } from "react";
+import Datatable from "../../components/datatable/Datatable";
+import Header from "../../components/header/Header";
+import Sidebar from "../../components/sidebar/Sidebar";
+import { agencyColumns, userColumns } from "../../config/datatableSource";
+import { useAuth } from "../../contextsLocal/AuthContext";
+import PageLayout from "../../components/pageLayout/PageLayout";
+import "./listUsers.css";
 
 const ListUsers: React.FC = () => {
-
+    const { user } = useAuth();
     const [userRows, setUserRows] = useState<any[]>([])
+    const [isLoading,setIsLoading] = useState(false)
 
     useEffect(
             () => {
@@ -55,23 +58,162 @@ const ListUsers: React.FC = () => {
     }
   };
 
-    return (
-        <div className="listUsersSideBar">
-            <Sidebar/>
-            <div className="listUsersNavBar">
-            {/* <Navbar/> */}
-            <div className="agency-header">
-              <div className="welcome-card">
-                <div className="welcome-text">
-                  <h1>Usuarios</h1>
-                  <p className="hint">Listado y gestión de usuarios.</p>
-                </div>
-              </div>
-            </div>
-            <Datatable columns={userColumns} rows={userRows} onDelete={handleDelete} showEditButton={false}/>
-            </div>
+  const handleCreateSave = async (data: FormData | Record<string, any>) => {
+    const API_BASE = 'http://localhost:3000';
+    const payload: Record<string, any> = {};
+    if (data instanceof FormData) {
+      data.forEach((v, k) => { payload[k] = v; });
+    } else {
+      Object.assign(payload, data);
+    }
+
+    try {
+      // Compatibilidad: si backend espera 'name' en lugar de 'username', rellenarlo desde username
+      if (!payload.name && payload.username) {
+        payload.name = payload.username;
+      }
+
+      // Obtener el rol y el username
+      const userRole = (payload.rol || payload.role || '').toLowerCase();
+      const username = payload.name || payload.username;
+
+      // Agregar agencyId del usuario actual para todos los roles excepto admin
+      if (userRole !== 'admin' && user?.agencyId) {
+        payload.agencyId = user.agencyId;
+      }
+
+      const token = localStorage.getItem('token');
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
+      // Consulta al backend para obtener IDs según el rol usando el username
+      if (userRole === 'aprendiz' || userRole === 'apprentice') {
+        // Para aprendiz: buscar ID por nombre de usuario
+        if (!username) {
+          alert('Debe proporcionar el nombre de usuario');
+          return;
+        }
+
+        try {
+          const apprenticeRes = await fetch(`${API_BASE}/api/apprentice?name=${encodeURIComponent(username)}`, { headers });
+          if (!apprenticeRes.ok) {
+            alert('No se encontró el aprendiz con ese nombre');
+            return;
+          }
+          const apprenticeData = await apprenticeRes.json();
+          if (!apprenticeData.data || apprenticeData.data.length === 0) {
+            alert('No se encontró el aprendiz con ese nombre');
+            return;
+          }
+          payload.apprenticeId = apprenticeData.data[0].id;
+        } catch (error) {
+          console.error('Error al buscar aprendiz:', error);
+          alert('Error al buscar el aprendiz en el sistema');
+          return;
+        }
+      }
+
+      if (userRole === 'artista' || userRole === 'artist') {
+        // Para artista: buscar ID de aprendiz y de grupo usando el username
+        if (!username) {
+          alert('Debe proporcionar el nombre de usuario');
+          return;
+        }
+
+        try {
+          // Buscar el aprendiz por nombre de usuario
+          const apprenticeRes = await fetch(`${API_BASE}/api/apprentice?name=${encodeURIComponent(username)}`, { headers });
+          if (!apprenticeRes.ok) {
+            alert('No se encontró el aprendiz con ese nombre');
+            return;
+          }
+          const apprenticeData = await apprenticeRes.json();
+          if (!apprenticeData.data || apprenticeData.data.length === 0) {
+            alert('No se encontró el aprendiz con ese nombre');
+            return;
+          }
+          payload.apprenticeId = apprenticeData.data[0].id;
+
+          // Solicitar nombre del grupo al usuario
+          const groupName = prompt('Ingrese el nombre del grupo (opcional, presione Cancelar para omitir):');
+          if (groupName && groupName.trim()) {
+            const groupRes = await fetch(`${API_BASE}/api/group?name=${encodeURIComponent(groupName.trim())}`, { headers });
+            if (!groupRes.ok) {
+              alert('No se encontró el grupo con ese nombre');
+              return;
+            }
+            const groupData = await groupRes.json();
+            if (!groupData.data || groupData.data.length === 0) {
+              alert('No se encontró el grupo con ese nombre');
+              return;
+            }
+            payload.groupId = groupData.data[0].id;
+          }
+        } catch (error) {
+          console.error('Error al buscar aprendiz/grupo:', error);
+          alert('Error al buscar los datos en el sistema');
+          return;
+        }
+      }
+
+      const res = await fetch(`${API_BASE}/api/user/`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        // intentar leer JSON o texto crudo para dar feedback útil
+        let msg = 'Error al crear usuario';
+        try {
+          const txt = await res.text();
+          try { const j = JSON.parse(txt); msg = j?.message || j?.error || txt || msg; }
+          catch { msg = txt || msg; }
+        } catch (e) { }
+        alert(msg);
+        return;
+      }
+
+      const createdUser = await res.json().catch(() => null);
+      if (createdUser?.data) {
+        // Agregar el nuevo usuario a la tabla
+        const newRow = {
+          id: createdUser.data.id ?? Date.now(),
+          username: createdUser.data.name,
+          email: createdUser.data.email,
+        };
+        setUserRows((prev) => [...prev, newRow]);
+      }
+      alert('Usuario creado correctamente');
+    } catch (err) {
+      console.error('Error creando usuario:', err);
+      alert(err instanceof Error ? err.message : 'Error de red');
+    }
+  };
+        return (
+    <PageLayout 
+      title="Usuarios" 
+      description={
+        "Listado y gestión de usuarios."
+      }
+    >
+      {isLoading ? (
+        <div style={{ textAlign: 'center', padding: '20px' }}>
+          Cargando Agencias...
         </div>
-    )
+      ) : (
+        <Datatable
+          columns={userColumns}
+          rows={userRows}
+          pagesize={10}
+          onDelete={handleDelete}
+          onCreateSave={handleCreateSave}
+          createEntity="user"
+          showEditButton={false}
+        />
+      )}
+    </PageLayout>
+  );
 }
 
 export default ListUsers

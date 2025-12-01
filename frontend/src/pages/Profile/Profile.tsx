@@ -1,13 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import Form from "../../components/form/Form";
+import Header from '../../components/header/Header';
 import Sidebar from '../../components/sidebar/Sidebar';
-// import NavBar from '../../components/navbar/Navbar';
-import '../../styles/profile.css';
-import Form from '../../components/form/Form';
-import formFieldsByEntity from '../../formSource';
-import { useAuth } from '../../contexts/AuthContext';
+import formFieldsByEntity from "../../config/formSource";
+import { useAuth } from '../../contexts/auth/AuthContext';
+import "./profile.css";
 
 const Profile: React.FC = () => {
   const { user } = useAuth();
+  const [collapsed, setCollapsed] = useState(false);
   // Normalizar campos (solo los que usamos: name, email, rol)
   const u: any = user as any;
   const displayName = u?.name ?? 'Usuario';
@@ -92,26 +95,150 @@ const Profile: React.FC = () => {
         if (!payload.name && payload.username) {
           payload.name = payload.username;
         }
-  const res = await fetch(`${API_BASE}/api/user/`, {
+
+        // Normalizar el rol (el backend espera 'role' en minúsculas)
+        const userRole = (payload.rol || payload.role || '').toLowerCase();
+        payload.role = userRole; // Asegurar que se envíe como 'role'
+        delete payload.rol; // Eliminar 'rol' si existe
+        
+        const username = payload.name || payload.username;
+
+        // Limpiar campos innecesarios antes de procesar
+        delete payload.username; // El backend espera 'name', no 'username'
+
+        // Validar rol
+        const validRoles = ['admin', 'manager', 'director', 'apprentice', 'artist'];
+        if (!validRoles.includes(userRole)) {
+          alert(`Rol inválido: ${userRole}. Debe ser uno de: ${validRoles.join(', ')}`);
+          return;
+        }
+
+        // Agregar agencyId del usuario actual para manager/director
+        if ((userRole === 'manager' || userRole === 'director') && user?.agencyId) {
+          payload.agencyId = user.agencyId;
+        }
+
+        // Consulta al backend para obtener IDs según el rol usando el username
+        if (userRole === 'apprentice') {
+          // Para aprendiz: buscar ID por nombre de usuario
+          if (!username) {
+            alert('Debe proporcionar el nombre de usuario');
+            return;
+          }
+
+          try {
+            const apprenticeRes = await fetch(`${API_BASE}/api/apprentice?name=${encodeURIComponent(username)}`);
+            if (!apprenticeRes.ok) {
+              alert('No se encontró el aprendiz con ese nombre');
+              return;
+            }
+            const apprenticeData = await apprenticeRes.json();
+            if (!apprenticeData.data || apprenticeData.data.length === 0) {
+              alert('No se encontró el aprendiz con ese nombre');
+              return;
+            }
+            payload.IdAp = apprenticeData.data[0].id;
+          } catch (error) {
+            console.error('Error al buscar aprendiz:', error);
+            alert('Error al buscar el aprendiz en el sistema');
+            return;
+          }
+        }
+
+        if (userRole === 'artist') {
+          // Para artista: buscar ID de aprendiz y de grupo usando el username
+          if (!username) {
+            alert('Debe proporcionar el nombre de usuario');
+            return;
+          }
+
+          try {
+            // Buscar el aprendiz por nombre de usuario
+            const apprenticeRes = await fetch(`${API_BASE}/api/apprentice?name=${encodeURIComponent(username)}`);
+            if (!apprenticeRes.ok) {
+              alert('No se encontró el aprendiz con ese nombre');
+              return;
+            }
+            const apprenticeData = await apprenticeRes.json();
+            if (!apprenticeData.data || apprenticeData.data.length === 0) {
+              alert('No se encontró el aprendiz con ese nombre');
+              return;
+            }
+            payload.IdAp = apprenticeData.data[0].id;
+
+            // Solicitar nombre del grupo al usuario
+            const groupName = prompt('Ingrese el nombre del grupo (opcional, presione Cancelar para omitir):');
+            if (groupName && groupName.trim()) {
+              const groupRes = await fetch(`${API_BASE}/api/group?name=${encodeURIComponent(groupName.trim())}`);
+              if (!groupRes.ok) {
+                alert('No se encontró el grupo con ese nombre');
+                return;
+              }
+              const groupData = await groupRes.json();
+              if (!groupData.data || groupData.data.length === 0) {
+                alert('No se encontró el grupo con ese nombre');
+                return;
+              }
+              payload.IdGr = groupData.data[0].id;
+            }
+          } catch (error) {
+            console.error('Error al buscar aprendiz/grupo:', error);
+            alert('Error al buscar los datos en el sistema');
+            return;
+          }
+        }
+
+  // Obtener token de autenticación
+        const token = localStorage.getItem('token');
+        if (!token) {
+          alert('Debe iniciar sesión para crear usuarios');
+          return;
+        }
+
+        // Limpiar payload: enviar solo los campos que el backend espera
+        const finalPayload: Record<string, any> = {
+          email: payload.email,
+          name: payload.name,
+          password: payload.password,
+          role: payload.role
+        };
+
+        // Agregar campos opcionales según el rol
+        if (userRole === 'manager' || userRole === 'director') {
+          if (payload.agencyId) finalPayload.agencyId = payload.agencyId;
+        } else if (userRole === 'apprentice') {
+          if (payload.IdAp) finalPayload.IdAp = payload.IdAp;
+        } else if (userRole === 'artist') {
+          if (payload.IdAp) finalPayload.IdAp = payload.IdAp;
+          if (payload.IdGr) finalPayload.IdGr = payload.IdGr;
+        }
+
+        console.log('Payload final a enviar:', finalPayload);
+
+        const res = await fetch(`${API_BASE}/api/user/`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(finalPayload),
         });
 
+        const responseData = await res.json().catch(() => null);
+        
         if (!res.ok) {
-          // intentar leer JSON o texto crudo para dar feedback útil
-          let msg = 'Error al crear usuario';
-          try {
-            const txt = await res.text();
-            try { const j = JSON.parse(txt); msg = j?.message || j?.error || txt || msg; }
-            catch { msg = txt || msg; }
-          } catch(e) {}
+          // El backend retorna { success: false, error: "mensaje" }
+          const msg = responseData?.error || responseData?.message || 'Error al crear usuario';
           alert(msg);
           return;
         }
 
-  await res.json().catch(() => null);
-  alert('Usuario creado correctamente');
+        // El backend retorna { success: true, data: {...} }
+        if (responseData?.success) {
+          alert('Usuario creado correctamente');
+        } else {
+          alert('Usuario creado pero respuesta inesperada');
+        }
         setShowUserForm(false);
       } catch (err) {
         console.error('Error creando usuario:', err);
@@ -119,32 +246,38 @@ const Profile: React.FC = () => {
       }
     })();
   };
-
+  
   return (
     <div className="Profile-sidebar">
-      <Sidebar />
+      <Sidebar collapsed={collapsed} role={user?.role || 'admin'}/>
       <div className="Profile-navbar">
         {/* <NavBar /> */}
 
         <div className="Profile-content">
-          <div className='welcome-card'>
-            <div className='welcome-text'>
-              <h1>Perfil</h1>
-              <p className='hint'>Información y ajustes de tu cuenta</p>
-            </div>
-          </div>
+          <Header title='Perfil' description='Información y ajustes de tu cuenta' showlogo={false} collapsed={collapsed} setCollapsed={setCollapsed}/>
 
           {/* Mostrar datos del usuario logueado en tarjeta principal */}
           <div className="profile-container" style={{ marginTop: 12 }}>
             {user ? (<>
               <div className="profile-card">
                 <div className="profile-top" style={{ alignItems: 'center', display: 'flex' }}>
-                  {/* Avatar: si el usuario tiene avatarUrl, mostrar imagen, si no, inicial */}
-                  <img
-                    src={user.avatarUrl ?? '/avatar-placeholder.svg'}
-                    alt={user.name ?? 'Avatar'}
-                    className="profile-avatar-img"
-                  />
+                  {/* Avatar: si el usuario tiene avatarUrl, mostrar imagen, si no, icono por defecto */}
+                  {user.avatarUrl ? (
+                    <img
+                      src={user.avatarUrl}
+                      alt={user.name ?? 'Avatar'}
+                      className="profile-avatar-img"
+                    />
+                  ) : (
+                    <AccountCircleIcon 
+                      className="profile-avatar-icon"
+                      sx={{ 
+                        fontSize: 80, 
+                        color: '#7451f8',
+                        marginRight: '20px'
+                      }}
+                    />
+                  )}
 
                   {/* Meta principal: nombre, email y rol */}
                   <div className="profile-meta">

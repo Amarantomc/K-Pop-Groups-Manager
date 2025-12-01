@@ -1,20 +1,39 @@
-// Ubicación: src/types/index.ts
+
+export type UserRole = 'admin' | 'manager' | 'artist' | 'apprentice' | 'director';
+
+// ProfileData contiene los IDs importantes según el rol del usuario
+export interface ProfileData {
+  apprenticeId?: string;  // Para rol apprentice y artist
+  artistId?: string;      // Para rol artist
+  groupId?: string;       // Para rol artist (si pertenece a un grupo)
+  agencyId?: string;      // Para todos excepto admin
+}
+
 export interface User {
-  rol: string;
   id: string;
-  email: string;
   name: string;
+  email: string;
+  role: UserRole;                    
+  agencyId?: string;                 // Para managers, artistas, aprendices
+  permissions: string[];             // Permisos específicos
+  avatar?: string;
   isVerified: boolean;
-  // Opcionales adicionales usados en UI
   avatarUrl?: string | null;
-  phone?: string | null;
-  address?: string | null;
-  country?: string | null;
+  profileData?: ProfileData;         // Datos del perfil según el rol
+}
+
+export interface RoleConfig {
+  dashboard: string;
+  allowedRoutes: string[];
+  sidebarItems: string[];
+  defaultRedirect: string;
 }
 
 export interface AuthResponse {
   user: User;
   token: string;
+  role: UserRole;
+  profileData?: ProfileData;
 }
 
 export interface LoginFormData {
@@ -29,7 +48,6 @@ export interface RegisterFormData {
   confirmPassword: string;
 }
 
-// Frontend models for Hito 1
 export interface Artista {
   id: string;
   nombre: string;

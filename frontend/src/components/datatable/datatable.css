@@ -1,0 +1,87 @@
+.datatable{
+    display: flex;
+    height: auto;
+    padding: 12px;
+    max-width: 100%;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 6px 24px rgba(15,23,42,0.06);
+    border: 1px solid #eef2ff;
+}
+.delete-bton{
+    margin-left: 4px;
+}
+.datatable .MuiDataGrid-root {
+    border: none;
+}
+.datatable .MuiDataGrid-columnHeaders{
+    column-gap: 10px;
+    background: linear-gradient(90deg, #f8fafc, #ffffff);
+    border-bottom: 1px solid #eef2ff;
+}
+.datatable .MuiDataGrid-columnHeaderTitle {
+    font-weight: 700;
+    color: #0f172a;
+}
+.datatable .MuiDataGrid-row {
+    transition: background .12s ease, transform .06s ease;
+}
+.datatable .MuiDataGrid-row:hover {
+    background: rgba(79,70,229,0.03);
+}
+.datatable .MuiDataGrid-cell {
+    padding: 14px 12px;
+    color: #475569;
+}
+.datatable .MuiDataGrid-footerContainer {
+    border-top: 1px solid #f1f5f9;
+    background: transparent;
+    padding: 8px 12px;
+}
+.cellAction{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.viewButton{
+    padding: 6px 8px;
+    border-radius: 6px;
+    color: #0f172a;
+    border: 1px solid rgba(15,23,42,0.06);
+    background: #fff;
+    cursor: pointer;
+    font-weight: 600;
+}
+.deleteButton{
+    padding: 6px 8px;
+    border-radius: 6px;
+    color: #b91c1c;
+    border: 1px solid rgba(220, 20, 60, 0.08);
+    background: #fff;
+    cursor: pointer;
+    font-weight: 600;
+}
+.add-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #ec4899 0%, #a855f7 100%);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+}
+.add-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
+}
+.datatable-header{ 
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 0.3;
+}

@@ -9,12 +9,23 @@ export class DeleteApprenticeUseCase {
                 @inject(Types.IUnitOfWork)  private unitOfWork: IUnitOfWork) {}
 
   async execute(apprenticeId: string): Promise<void> {
-    const apprentice = await this.apprenticeRepository.findById(apprenticeId);
+    
+    try {
+       await this.unitOfWork.beginTransaction();  
+      const apprentice = await this.apprenticeRepository.findById(apprenticeId);
 
-    if (!apprentice) {
-      throw new Error("Apprentice not found");
-    }
+        if (!apprentice) {
+            throw new Error("Apprentice not found");
+          }
 
     await this.apprenticeRepository.delete(apprenticeId);
+    await this.unitOfWork.commit();
+    } catch (error) {
+      await this.unitOfWork.rollback();
+      throw error;
+    }
+    
+    
+   
   }
 }

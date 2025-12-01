@@ -1,13 +1,17 @@
-import React from 'react';
+/* eslint-disable no-empty */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useState } from 'react';
 import Sidebar from '../../components/sidebar/Sidebar';
-// import NavBar from '../../components/navbar/Navbar'
-import "../../styles/agency.css"
-// import logo from '../../assets/k-pop-logo.png';
+import "./agency.css"
 import Form from '../../components/form/Form';
-import formFieldsByEntity from '../../formSource';
+import formFieldsByEntity from '../../config/formSource';
+import Header from '../../components/header/Header';
+import { useAuth } from '../../contexts/auth/AuthContext';
 
 
 const Agency : React.FC = () =>{
+  const { user } = useAuth();
   const handleSubmit = (data: FormData | Record<string, any>) => {
     // Enviar al backend
     const API_BASE = 'http://localhost:3000';
@@ -69,22 +73,15 @@ const Agency : React.FC = () =>{
       }
     })();
   };
-
+  const [collapsed,setcollapsed] = useState(false)
   return (
     <div className='Agency-sidebar'>
-      <Sidebar/>
+      <Sidebar collapsed={collapsed} role={user?.role || 'admin'}/>
       <div className='Agency-navbar'>
-        {/* <NavBar/> */}
 
         <div className='Agency-content'>
           <div className="agency-header">
-            <div className='welcome-card'>
-              {/* <img src={logo} alt='IS-K Pop' className='welcome-logo' /> */}
-              <div className='welcome-text'>
-                <h1>Agency</h1>
-                <p className="hint">Usa este formulario para crear o editar registros.</p>
-              </div>
-            </div>
+            <Header title='Agencias' description='Usa este formulario para crear o editar registros.' showlogo={false} collapsed={collapsed} setCollapsed={setcollapsed}/>
           </div>
 
           {/* Formulario mostrado siempre, directamente */}
