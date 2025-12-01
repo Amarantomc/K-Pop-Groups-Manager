@@ -7,6 +7,7 @@ import { ApprenticeRoutes } from "./ApprenticeRoutes";
 import { AgencyRoutes } from "./agencyRoutes";
 import { ArtistRoutes } from "./ArtistRoutes";
 import { ConceptRoutes } from "./ConceptRoutes";
+import { ActivityRoutes } from "./ActivityRoutes";
 
 const rootRouter: Router = Router();
 const userRoutes = new UserRoutes();
@@ -15,12 +16,14 @@ const authRoutes=new AuthRoutes()
 const apprenticeRoute=new ApprenticeRoutes()
 const artistRoutes=new ArtistRoutes()
 const conceptRoutes=new ConceptRoutes()
+const activityRoutes = new ActivityRoutes();
 
 rootRouter.use("/auth", authRoutes.getRouter());
 rootRouter.use("/user", userRoutes.getRouter());
 rootRouter.use("/agency", agencyRoutes.getRouter());
 rootRouter.use('/apprentice',apprenticeRoute.getRouter())
 rootRouter.use("/artist", artistRoutes.getRouter());
-rootRouter.use("/concept", artistRoutes.getRouter());
+rootRouter.use("/concept", conceptRoutes.getRouter());
+rootRouter.use("/activity", activityRoutes.getRouter());
 
 export default rootRouter;

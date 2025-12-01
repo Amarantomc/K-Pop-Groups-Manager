@@ -13,6 +13,8 @@ const Types = {
   IAgencyRepository : Symbol.for('IAgencyRepository'),
   IArtistRepository : Symbol.for('IArtistRepository'),
   IConceptRepository: Symbol.for('IConceptRepository'),
+  IActivityRepository: Symbol.for('IActivityRepository'),
+
   IPopularityListRepository: Symbol.for('IPopularityListRepository'),
   
   // Application Use Cases
@@ -62,6 +64,15 @@ const Types = {
    
   LoginUserUseCase: Symbol.for('LoginUserUseCase'),
   ValidateTokenUseCase: Symbol.for('ValidateTokenUseCase'),
+
+
+  CreateActivityUseCase: Symbol.for('CreateActivityUseCase'),
+UpdateActivityUseCase: Symbol.for('UpdateActivityUseCase'),
+DeleteActivityUseCase: Symbol.for('DeleteActivityUseCase'),
+FindActivityByIdUseCase: Symbol.for('FindActivityByIdUseCase'),
+GetAllActivitiesUseCase: Symbol.for('GetAllActivitiesUseCase'),
+FindActivitiesByArtist :Symbol.for('FindActivitiesByArtist'),
+AddArtistToActivityUseCase:Symbol.for('AddArtistToActivityUseCase'),
   
   // Presentation
   UserController: Symbol.for('UserController'),
@@ -70,6 +81,7 @@ const Types = {
   AgencyController : Symbol.for('AgencyController'),
   ArtistController : Symbol.for('ArtistController'),
   ConceptController : Symbol.for('ConceptController'),
+  ActivityController: Symbol.for('ActivityController'),
   PopularityListController : Symbol.for('PopularityListController'),
 
 };
