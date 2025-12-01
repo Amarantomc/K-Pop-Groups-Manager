@@ -69,6 +69,9 @@ import { DeletePopularityListUseCase } from '../../application/usesCase/populari
 import { UpdatePopularityListUseCase } from '../../application/usesCase/popularityList/UpdatePopularityListUseCase';
 import { AddSongToPopularityListUseCase } from '../../application/usesCase/popularityList/AddSongToPopularityListUseCase';
 import { PopularityListRepository } from '../repositories/PopularityListRepository';
+import { PopularityListController } from '../../presentation/controllers/PopularityListController';
+import { ListPopularityListUseCase } from '../../application/usesCase/popularityList/ListPopularityListUseCase';
+
 import type { CreateApplicationUseCase } from "../../application/usesCase/application(solicitud)/CreateApplicatonUseCase";
 import type { GetApplicationUseCase } from "../../application/usesCase/application(solicitud)/GetApplicationUseCase";
 import type { DeleteApplicationUseCase } from "../../application/usesCase/application(solicitud)/DeleteApplicationUseCase";
@@ -265,8 +268,8 @@ container.bind<GetPopularityListUseCase>(Types.GetPopularityListUseCase)
   .to(GetPopularityListUseCase)
   .inTransientScope();
 
-container.bind<GetPopularityListUseCase>(Types.ListPopularityListsUseCase)
-  .to(GetPopularityListUseCase)
+container.bind<ListPopularityListUseCase>(Types.ListPopularityListsUseCase)
+  .to(ListPopularityListUseCase)
   .inTransientScope();
 
 container.bind<DeletePopularityListUseCase>(Types.DeletePopularityListUseCase)
@@ -347,6 +350,10 @@ container.bind<AgencyController>(Types.AgencyController)
 
   container.bind<ActivityController>(Types.ActivityController)
   .to(ActivityController)
+  .inTransientScope();
+
+  container.bind<PopularityListController>(Types.PopularityListController)
+  .to(PopularityListController)
   .inTransientScope();
 
   
