@@ -5,7 +5,7 @@ import Form from "../../components/form/Form";
 import Header from '../../components/header/Header';
 import Sidebar from '../../components/sidebar/Sidebar';
 import formFieldsByEntity from "../../config/formSource";
-import { useAuth } from '../../contextsLocal/AuthContext';
+import { useAuth } from '../../contexts/auth/AuthContext';
 import "./profile.css";
 
 const Profile: React.FC = () => {
@@ -96,17 +96,30 @@ const Profile: React.FC = () => {
           payload.name = payload.username;
         }
 
-        // Obtener el rol y el username
+        // Normalizar el rol (el backend espera 'role' en minúsculas)
         const userRole = (payload.rol || payload.role || '').toLowerCase();
+        payload.role = userRole; // Asegurar que se envíe como 'role'
+        delete payload.rol; // Eliminar 'rol' si existe
+        
         const username = payload.name || payload.username;
 
-        // Agregar agencyId del usuario actual para todos los roles excepto admin
-        if (userRole !== 'admin' && user?.agencyId) {
+        // Limpiar campos innecesarios antes de procesar
+        delete payload.username; // El backend espera 'name', no 'username'
+
+        // Validar rol
+        const validRoles = ['admin', 'manager', 'director', 'apprentice', 'artist'];
+        if (!validRoles.includes(userRole)) {
+          alert(`Rol inválido: ${userRole}. Debe ser uno de: ${validRoles.join(', ')}`);
+          return;
+        }
+
+        // Agregar agencyId del usuario actual para manager/director
+        if ((userRole === 'manager' || userRole === 'director') && user?.agencyId) {
           payload.agencyId = user.agencyId;
         }
 
         // Consulta al backend para obtener IDs según el rol usando el username
-        if (userRole === 'aprendiz' || userRole === 'apprentice') {
+        if (userRole === 'apprentice') {
           // Para aprendiz: buscar ID por nombre de usuario
           if (!username) {
             alert('Debe proporcionar el nombre de usuario');
@@ -124,7 +137,7 @@ const Profile: React.FC = () => {
               alert('No se encontró el aprendiz con ese nombre');
               return;
             }
-            payload.apprenticeId = apprenticeData.data[0].id;
+            payload.IdAp = apprenticeData.data[0].id;
           } catch (error) {
             console.error('Error al buscar aprendiz:', error);
             alert('Error al buscar el aprendiz en el sistema');
@@ -132,7 +145,7 @@ const Profile: React.FC = () => {
           }
         }
 
-        if (userRole === 'artista' || userRole === 'artist') {
+        if (userRole === 'artist') {
           // Para artista: buscar ID de aprendiz y de grupo usando el username
           if (!username) {
             alert('Debe proporcionar el nombre de usuario');
@@ -151,7 +164,7 @@ const Profile: React.FC = () => {
               alert('No se encontró el aprendiz con ese nombre');
               return;
             }
-            payload.apprenticeId = apprenticeData.data[0].id;
+            payload.IdAp = apprenticeData.data[0].id;
 
             // Solicitar nombre del grupo al usuario
             const groupName = prompt('Ingrese el nombre del grupo (opcional, presione Cancelar para omitir):');
@@ -166,7 +179,7 @@ const Profile: React.FC = () => {
                 alert('No se encontró el grupo con ese nombre');
                 return;
               }
-              payload.groupId = groupData.data[0].id;
+              payload.IdGr = groupData.data[0].id;
             }
           } catch (error) {
             console.error('Error al buscar aprendiz/grupo:', error);
@@ -175,26 +188,57 @@ const Profile: React.FC = () => {
           }
         }
 
-  const res = await fetch(`${API_BASE}/api/user/`, {
+  // Obtener token de autenticación
+        const token = localStorage.getItem('token');
+        if (!token) {
+          alert('Debe iniciar sesión para crear usuarios');
+          return;
+        }
+
+        // Limpiar payload: enviar solo los campos que el backend espera
+        const finalPayload: Record<string, any> = {
+          email: payload.email,
+          name: payload.name,
+          password: payload.password,
+          role: payload.role
+        };
+
+        // Agregar campos opcionales según el rol
+        if (userRole === 'manager' || userRole === 'director') {
+          if (payload.agencyId) finalPayload.agencyId = payload.agencyId;
+        } else if (userRole === 'apprentice') {
+          if (payload.IdAp) finalPayload.IdAp = payload.IdAp;
+        } else if (userRole === 'artist') {
+          if (payload.IdAp) finalPayload.IdAp = payload.IdAp;
+          if (payload.IdGr) finalPayload.IdGr = payload.IdGr;
+        }
+
+        console.log('Payload final a enviar:', finalPayload);
+
+        const res = await fetch(`${API_BASE}/api/user/`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(finalPayload),
         });
 
+        const responseData = await res.json().catch(() => null);
+        
         if (!res.ok) {
-          // intentar leer JSON o texto crudo para dar feedback útil
-          let msg = 'Error al crear usuario';
-          try {
-            const txt = await res.text();
-            try { const j = JSON.parse(txt); msg = j?.message || j?.error || txt || msg; }
-            catch { msg = txt || msg; }
-          } catch(e) {}
+          // El backend retorna { success: false, error: "mensaje" }
+          const msg = responseData?.error || responseData?.message || 'Error al crear usuario';
           alert(msg);
           return;
         }
 
-  await res.json().catch(() => null);
-  alert('Usuario creado correctamente');
+        // El backend retorna { success: true, data: {...} }
+        if (responseData?.success) {
+          alert('Usuario creado correctamente');
+        } else {
+          alert('Usuario creado pero respuesta inesperada');
+        }
         setShowUserForm(false);
       } catch (err) {
         console.error('Error creando usuario:', err);

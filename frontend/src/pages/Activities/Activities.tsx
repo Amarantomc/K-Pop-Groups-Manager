@@ -5,7 +5,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Calendar from '../../components/calendar/Calendar';
 import DataTable from '../../components/datatable/Datatable';
 import PageLayout from '../../components/pageLayout/PageLayout';
-import { useAuth } from '../../contextsLocal/AuthContext';
+import { useAuth } from '../../contexts/auth/AuthContext';
 import './Activities.css';
 
 interface Activity {

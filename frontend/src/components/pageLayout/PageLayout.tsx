@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Sidebar from '../sidebar/Sidebar';
 import Header from '../header/Header';
-import { useAuth } from '../../contextsLocal/AuthContext';
+import { useAuth } from '../../contexts/auth/AuthContext';
 import './PageLayout.css';
 
 interface PageLayoutProps {

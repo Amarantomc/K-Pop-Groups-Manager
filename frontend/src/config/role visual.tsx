@@ -1,6 +1,6 @@
 import type React from "react";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import AddBusinessIcon from '@mui/icons-material/AddBusiness';
+//import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import AlbumIcon from '@mui/icons-material/Album';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
@@ -12,7 +12,7 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import LogoutIcon from '@mui/icons-material/Logout';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import PeopleIcon from '@mui/icons-material/People';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
+//import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import SchoolIcon from '@mui/icons-material/School';
 import ViewTimelineIcon from '@mui/icons-material/ViewTimeline';
 import WorkIcon from '@mui/icons-material/Work';
@@ -53,15 +53,13 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "AGENCIA",
             items: [
-                { label: "Añadir Agencia", icon: <AddBusinessIcon />, path: "/admin/agency" },
-                { label: "Mostrar Agencias", icon: <BusinessIcon />, path: "/admin/listAgency" }
+                { label: "Mostrar Agencias", icon: <BusinessIcon />, path: "/admin/agency" }
             ]
         },
         {
             title: "APRENDIZ",
             items: [
-                { label: "Añadir Aprendiz", icon: <PersonAddIcon />, path: "/admin/apprentices" },
-                { label: "Mostrar Aprendices", icon: <SchoolIcon />, path: "/admin/listApprentice" }
+                { label: "Mostrar Aprendices", icon: <SchoolIcon />, path: "/admin/apprentices" }
             ]
         },
         {
@@ -101,7 +99,7 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "INGRESOS",
             items: [
-                { label: "Mis Ingresos", icon: <AttachMoneyIcon />, path: "/manager/income" }
+                { label: "Ingresos del Sistema", icon: <AttachMoneyIcon />, path: "/manager/income" }
             ]
         },
         {
@@ -129,7 +127,7 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "APRENDIZ",
             items: [
-                { label: "Mostrar Aprendices", icon: <SchoolIcon />, path: "/admin/listApprentice" }
+                { label: "Mostrar Aprendices", icon: <SchoolIcon />, path: "/director/apprentices" }
             ]
         },
         {
@@ -174,13 +172,14 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "SOLICITUD",
             items: [
-                { label: "Solicitudes", icon: <AssessmentIcon />, path: "/director/requests" }
+                { label: "Solicitudes", icon: <NotificationsIcon />, path: "/director/requests" }
             ]
         },
         {
             title: "CUENTA",
             items: [
                 { label: "Perfil", icon: <AccountCircleIcon />, path: "/director/profile" },
+                { label: "Usuarios Registrados", icon: <PeopleIcon />, path: "/director/listUsers" },
                 { label: "Cerrar Sesión", icon: <LogoutIcon />, path: "/login" }
             ]
         }
@@ -196,8 +195,7 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "APRENDIZ",
             items: [
-                { label: "Añadir Aprendiz", icon: <PersonAddIcon />, path: "/manager/apprentices" },
-                { label: "Mostrar Aprendices", icon: <SchoolIcon />, path: "/manager/listApprentice" }
+                { label: "Mostrar Aprendices", icon: <SchoolIcon />, path: "/manager/apprentices" }
             ]
         },
         {
@@ -249,6 +247,7 @@ export const MenuByRole: Record<string, MenuSection[]> = {
             title: "CUENTA",
             items: [
                 { label: "Perfil", icon: <AccountCircleIcon />, path: "/manager/profile" },
+                { label: "Usuarios Registrados", icon: <PeopleIcon />, path: "/manager/listUsers" },
                 { label: "Cerrar Sesión", icon: <LogoutIcon />, path: "/login" }
             ]
         }
