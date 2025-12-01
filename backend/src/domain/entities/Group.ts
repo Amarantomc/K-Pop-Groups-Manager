@@ -1,7 +1,7 @@
 import { GroupStatus } from "../enums/GroupStatus";
 import { Agency } from "./Agency";
 import { Concept } from "./Concept";
-import { VisualConcept } from "./VisualConcept";
+//import { VisualConcept } from "./VisualConcept";
 
 export class Group {
 	readonly id: number;
@@ -11,7 +11,7 @@ export class Group {
 	readonly memberCount: number;
 	readonly agency: Agency;
 	readonly concept: Concept;
-	readonly visualConcept: VisualConcept;
+	//readonly visualConcept: VisualConcept;
 
 	constructor(attrs: {
 		id: number;
@@ -21,7 +21,7 @@ export class Group {
 		memberCount: number;
 		agency: Agency;
 		concept: Concept;
-		visualConcept: VisualConcept;
+		//visualConcept: VisualConcept;
 	}) {
 		this.id = attrs.id;
 		this.name = attrs.name;
@@ -30,6 +30,6 @@ export class Group {
 		this.memberCount = attrs.memberCount;
 		this.agency = attrs.agency;
 		this.concept = attrs.concept;
-		this.visualConcept = attrs.visualConcept;
+		//this.visualConcept = attrs.visualConcept;
 	}
 }
