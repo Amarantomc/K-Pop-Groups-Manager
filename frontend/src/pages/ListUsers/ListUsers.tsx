@@ -4,7 +4,7 @@ import Datatable from "../../components/datatable/Datatable";
 import Header from "../../components/header/Header";
 import Sidebar from "../../components/sidebar/Sidebar";
 import { userColumns } from "../../config/datatableSource";
-import { useAuth } from "../../contextsLocal/AuthContext";
+import { useAuth } from "../../contexts/auth/AuthContext";
 import "./listUsers.css";
 
 const ListUsers: React.FC = () => {

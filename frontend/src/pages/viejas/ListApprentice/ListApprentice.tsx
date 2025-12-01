@@ -1,15 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import "./listApprentice.css"
-import Sidebar from "../../components/sidebar/Sidebar"
-// import Navbar from "../../components/navbar/Navbar"
-import Datatable from "../../components/datatable/Datatable"
-import { apprenticeColumns } from "../../config/datatableSource"
-import React from "react"
-import { useEffect , useState  } from "react"
-import { apprenticeConstraints } from "../../config/modalConstraints"
-import Header from "../../components/header/Header"
-import ConfirmDialog from "../../components/confirmDialog/ConfirmDialog"
-import { useAuth } from "../../contexts/auth/AuthContext"
+import React, { useEffect, useState } from "react";
+import ConfirmDialog from "../../../components/confirmDialog/ConfirmDialog";
+import Datatable from "../../../components/datatable/Datatable";
+import Header from "../../../components/header/Header";
+import Sidebar from "../../../components/sidebar/Sidebar";
+import { apprenticeColumns } from "../../../config/datatableSource";
+import { apprenticeConstraints } from "../../../config/modalConstraints";
+import { useAuth } from "../../../contexts/auth/AuthContext";
+import "./listApprentice.css";
 
 
 const ListApprentice: React.FC = () => {

@@ -7,6 +7,11 @@
 - **Password:** admin123
 - **Dashboard:** /admin/dashboard
 
+### 🎬 Director
+- **Email:** director@test.com
+- **Password:** director123
+- **Dashboard:** /director/dashboard
+
 ### 📊 Manager  
 - **Email:** manager@test.com
 - **Password:** manager123
@@ -22,10 +27,6 @@
 - **Password:** apprentice123
 - **Dashboard:** /apprentice/dashboard
 
-### 🎬 Director
-- **Email:** director@test.com
-- **Password:** director123
-- **Dashboard:** /director/dashboard
 
 ---
 

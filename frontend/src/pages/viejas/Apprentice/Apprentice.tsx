@@ -7,7 +7,7 @@ import Form from '../../components/form/Form';
 import formFieldsByEntity, { APPRENTICE_STATUS, APPRENTICE_STATUS_OPTIONS } from '../../config/formSource';
 import "./apprentice.css";
 import Header from '../../components/header/Header';
-import { useAuth } from '../../contexts/auth/AuthContext';
+import { useAuth } from '../../../contexts/auth/AuthContext';
 
 const Apprentice: React.FC = () => {
   const { user } = useAuth();

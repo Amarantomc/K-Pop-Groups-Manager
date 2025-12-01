@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import type { GridColDef } from '@mui/x-data-grid';
 import DataTable from '../../components/datatable/Datatable';
 import PageLayout from '../../components/pageLayout/PageLayout';
-import { useAuth } from '../../contextsLocal/AuthContext';
+import { useAuth } from '../../contexts/auth/AuthContext';
 
 interface Artist {
   id: number;

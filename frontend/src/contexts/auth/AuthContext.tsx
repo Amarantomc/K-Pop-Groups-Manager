@@ -129,7 +129,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const token = data.token;
       let userObj = data.user;
       const roleFromBackend = userObj?.role;
-      const profileData = null; // El backend actual no retorna profileData en login
+      const profileData = userObj?.profileData; // profileData viene dentro de user
 
       console.log("USEROBJ", userObj);
       console.log("TOKEN", token);
@@ -164,16 +164,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       localStorage.setItem('token', token);
 
       if (userObj) {
-        // El backend devuelve "Admin" pero necesitamos "admin" (minúsculas)
+        // El backend devuelve role en mayúsculas/minúsculas mixtas, normalizamos a minúsculas
         const normalizedUser = {
           ...userObj,
           role: (roleFromBackend || userObj.role || 'apprentice').toLowerCase() as UserRole,
+          // profileData ya viene dentro de userObj, pero lo normalizamos por si acaso
           profileData: profileData || userObj.profileData || undefined
         };
         
-        // Si profileData tiene agencyId, también copiarlo al nivel superior para compatibilidad
-        if (normalizedUser.profileData?.agencyId && !normalizedUser.agencyId) {
-          normalizedUser.agencyId = normalizedUser.profileData.agencyId;
+        // Si profileData tiene agencyId (para Manager/Director), copiarlo al nivel superior
+        if (normalizedUser.profileData?.agenciaId && !normalizedUser.agencyId) {
+          normalizedUser.agencyId = normalizedUser.profileData.agenciaId;
         }
         
         localStorage.setItem('user', JSON.stringify(normalizedUser));

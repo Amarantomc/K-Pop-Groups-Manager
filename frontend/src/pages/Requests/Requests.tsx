@@ -6,7 +6,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import DataTable from '../../components/datatable/Datatable';
 import PageLayout from '../../components/pageLayout/PageLayout';
-import { useAuth } from '../../contextsLocal/AuthContext';
+import { useAuth } from '../../contexts/auth/AuthContext';
 
 interface Request {
   id: number;

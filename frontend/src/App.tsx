@@ -2,7 +2,7 @@
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import AppRouter from './contexts/routes/AppRouter';
-import { AuthProvider } from './contextsLocal/AuthContext';
+import { AuthProvider } from './contexts/auth/AuthContext';
 import './App.css';
 
 // DebugAuth removed
