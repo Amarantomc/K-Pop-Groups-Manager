@@ -20,12 +20,16 @@ export class AlbumRepository implements IAlbumRepository {
 	async create(data: CreateAlbumDTO): Promise<Album> {
 		const album = await this.db.album.create({
 			data: {
+				idGrupo: 1,
+				idArt: 1,
 				titulo: data.title,
-				fechaLanzamiento: data.releaseDate,
+				fechaLanzamiento: new Date(data.releaseDate),
 				productor: data.producer,
-				NoCanciones: data.noSongs,
-				NoCopiasVendidas: data.noCopiesSold,
-				Canciones: data.songs,
+				NoCanciones: data.songs.length,
+				NoCopiasVendidas: 0,
+				Canciones: {
+					connect: data.songs.map((song) => ({ id: song })),
+				},
 			},
 		});
 		return AlbumResponseDTO.toEntity(album);
@@ -60,7 +64,7 @@ export class AlbumRepository implements IAlbumRepository {
 	}
 
 	async findByTitle(title: string): Promise<Album | null> {
-		const album = await this.db.album.findUnique({
+		const album = await this.db.album.findFirst({
 			where: { titulo: title },
 			include: {
 				Canciones: true,

@@ -35,4 +35,8 @@ export class AlbumRoutes {
 			this.albumController.findAlbumByTitle(req, res)
 		);
 	}
+
+	public getRouter(): Router {
+		return this.router;
+	}
 }

@@ -8,7 +8,7 @@ import { AlbumResponseDTO } from "../../dtos/album/AlbumResponseDTO";
 @injectable()
 export class CreateAlbumUseCase {
 	constructor(
-		@inject(Types.IAgencyRepository) private albumRepository: IAlbumRepository,
+		@inject(Types.IAlbumRepository) private albumRepository: IAlbumRepository,
 		@inject(Types.IUnitOfWork) private unitOfWork: IUnitOfWork
 	) {}
 

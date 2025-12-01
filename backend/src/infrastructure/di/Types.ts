@@ -1,10 +1,4 @@
-import { CreateAlbumUseCase } from "../../application/usesCase/album/CreateAlbumUseCase";
-import type { DeleteAlbumUseCase } from "../../application/usesCase/album/DeleteAlbumUseCAse";
-import { FindAlbumByTitleUseCase } from "../../application/usesCase/album/FindByTitleUseCase";
-import type { GetAlbumUseCase } from "../../application/usesCase/album/GetAlbumUseCase";
-import type { UpdateAlbumUseCase } from "../../application/usesCase/album/UpdateAlbumUseCase";
 import { PopularityList } from "../../domain";
-import { AlbumController } from "../../presentation/controllers/AlbumController";
 
 // src/infrastructure/di/TYPES.ts
 const Types = {

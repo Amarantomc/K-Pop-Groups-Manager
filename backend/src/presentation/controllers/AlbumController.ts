@@ -7,7 +7,7 @@ import { GetAlbumUseCase } from "../../application/usesCase/album/GetAlbumUseCas
 import { ListAlbumsUseCase } from "../../application/usesCase/album/ListAlbumsUseCase";
 import { DeleteAlbumUseCase } from "../../application/usesCase/album/DeleteAlbumUseCAse";
 import { UpdateAlbumUseCase } from "../../application/usesCase/album/UpdateAlbumUseCase";
-import { FindAlbumByTitleUseCase } from "../../application/usesCase/album/FindByTitleUseCase";
+import { FindAlbumByTitleUseCase } from "../../application/usesCase/album/FindAlbumByTitleUseCase";
 import { CreateAlbumDTO } from "../../application/dtos/album/CreateAlbumDTO";
 
 @injectable()
