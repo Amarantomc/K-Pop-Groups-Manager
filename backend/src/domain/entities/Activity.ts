@@ -7,21 +7,21 @@ export class Activity {
     readonly id: number;
     readonly responsible: string;
     readonly activityType: ActivityTypes|string;
-    readonly date: Date | string;
+    readonly date: Date ;
     readonly place: string;
     readonly artists: Artist[];
     //readonly groups: Group[];
-    readonly income: Income;
+    //readonly income: Income | null;
 
     constructor(attrs: {
         id: number;
         responsible: string;
         activityType: string;
-        date: Date | string;
+        date: Date ;
         place: string;
         artists: Artist[];
         //groups: Group[];
-        income: Income;
+       // income: Income ;
     }) {
         this.id = attrs.id;
         this.responsible = attrs.responsible;
@@ -30,6 +30,6 @@ export class Activity {
         this.place = attrs.place;
         this.artists = attrs.artists;
         //this.groups = attrs.groups;
-        this.income = attrs.income;
+        //this.income = attrs.income;
     }
 }

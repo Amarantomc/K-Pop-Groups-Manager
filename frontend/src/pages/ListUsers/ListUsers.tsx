@@ -6,18 +6,33 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import { agencyColumns, userColumns } from "../../config/datatableSource";
 import { useAuth } from "../../contexts/auth/AuthContext";
 import PageLayout from "../../components/pageLayout/PageLayout";
+import ConfirmDialog from "../../components/confirmDialog/ConfirmDialog";
 import "./listUsers.css";
 
 const ListUsers: React.FC = () => {
     const { user } = useAuth();
     const [userRows, setUserRows] = useState<any[]>([])
     const [isLoading,setIsLoading] = useState(false)
+    const[openAccept,setOpenAccept] = useState(false)
+    const [openConfirm,setOpenConfirm] = useState(false)
+    const [userToDelete,setUserToDelete] = useState<number | null>(null)
+
+    const askDelete = (id : number) =>{
+      setUserToDelete(id)
+      setOpenConfirm(true)
+    }
 
     useEffect(
             () => {
                 const fetchUsers = async () => {
                     try{
-                        const response = await fetch("http://localhost:3000/api/user")
+                        const token = localStorage.getItem('token')
+                        const response = await fetch('http://localhost:3000/api/user', {
+  headers: {
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  }
+});
                         if(!response.ok){
                             throw new Error("Error al obtener los usuarios")
                         }
@@ -38,23 +53,30 @@ const ListUsers: React.FC = () => {
             },[]
         )
 
-            const handleDelete = async (id: number) => {
+            const handleDelete = async () => {
     try {
-      const confirmDelete = window.confirm("¿Estás seguro de eliminar este usuario?");
-      if (!confirmDelete) return;
+        if(userToDelete === null) return;
 
-      const response = await fetch(`http://localhost:3000/api/user/${id}`, {
+      const token = localStorage.getItem('token');
+        const headers: Record<string,string> = {};
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+
+      const response = await fetch(`http://localhost:3000/api/user/${userToDelete}`, {
         method: "DELETE",
+        headers
       });
 
       const result = await response.json();
       if (result.success) {
-        setUserRows((prev) => prev.filter((user) => user.id !== id));
+        setUserRows((prev) => prev.filter((user) => user.id !== userToDelete));
       } else {
         alert("Error al eliminar el usuario");
       }
     } catch (error) {
       console.error("Error al eliminar:", error);
+    }finally{
+      setOpenConfirm(false);
+      setUserToDelete(null)
     }
   };
 
@@ -184,7 +206,8 @@ const ListUsers: React.FC = () => {
         };
         setUserRows((prev) => [...prev, newRow]);
       }
-      alert('Usuario creado correctamente');
+      // alert('Usuario creado correctamente');
+      setOpenAccept(true)
     } catch (err) {
       console.error('Error creando usuario:', err);
       alert(err instanceof Error ? err.message : 'Error de red');
@@ -199,18 +222,23 @@ const ListUsers: React.FC = () => {
     >
       {isLoading ? (
         <div style={{ textAlign: 'center', padding: '20px' }}>
-          Cargando Agencias...
+          Cargando Usuarios...
         </div>
-      ) : (
+      ) : (<>
         <Datatable
           columns={userColumns}
           rows={userRows}
           pagesize={10}
-          onDelete={handleDelete}
+          onDelete={askDelete}
           onCreateSave={handleCreateSave}
           createEntity="user"
           showEditButton={false}
         />
+        <ConfirmDialog message="¿Está seguro que desea eliminar este usuario?" open={openConfirm} onCancel={() => setOpenConfirm(false)} onConfirm={handleDelete}>
+          </ConfirmDialog>
+        <ConfirmDialog message="Usuario creado correctamente" open={openAccept} onCancel={() => setOpenAccept(false)} onConfirm={() => setOpenAccept(false) } confirmText="Aceptar" showDeleteButton={false}>
+          </ConfirmDialog>
+        </>
       )}
     </PageLayout>
   );

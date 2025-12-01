@@ -31,7 +31,13 @@ const ListApprentice: React.FC = () => {
                 () => {
                     const fetchApprentices = async () => {
                         try{
-                            const response = await fetch("http://localhost:3000/api/apprentice")
+                             const token = localStorage.getItem('token')
+                        const response = await fetch('http://localhost:3000/api/apprentice', {
+                                    headers: {
+                                                'Authorization': `Bearer ${token}`,
+                                                'Content-Type': 'application/json'
+                                              }
+                                });
                             if(!response.ok){
                                 throw new Error("Error al obtener los aprendices")
                             }
