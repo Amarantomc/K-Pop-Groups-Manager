@@ -1,0 +1,506 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\geometry{a4paper, landscape, margin=1.5cm}
+
+\title{Documentación de Endpoints de la API}
+\author{IS-K Pop Backend}
+\date{30 de noviembre de 2025}
+
+\begin{document}
+
+\maketitle
+
+\section*{Información General}
+
+\textbf{Base URL:} \texttt{http://localhost:\{PORT\}/api}
+
+\section{Autenticación (\texttt{/auth})}
+
+\begin{longtable}{lllll}
+\toprule
+\textbf{Método} & \textbf{URL} & \textbf{Autenticación} & \textbf{Rol Requerido} & \textbf{Descripción} \\
+\midrule
+\endhead
+POST & \texttt{/api/auth/login} & No & - & Iniciar sesión \\
+\bottomrule
+\end{longtable}
+
+\subsection*{POST /api/auth/login - Estructura}
+
+\textbf{Request Body:}
+\begin{verbatim}
+{
+  "email": "usuario@gmail.com",
+  "password": "password123"
+}
+\end{verbatim}
+
+\textbf{Response Exitosa (200):}
+\begin{verbatim}
+{
+  "success": true,
+  "data": {
+    "user": {
+      "id": 1,
+      "email": "usuario@gmail.com",
+      "name": "Nombre Usuario",
+      "role": "admin",
+      "profileData": {
+        "agenciaId": 1  // Para manager/director
+        // o "aprendizId": 1  // Para apprentice
+        // o "artistaIdAp": 1, "artistaIdGr": 1  // Para artist
+      }
+    },
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "expiresIn": 3600
+  }
+}
+\end{verbatim}
+
+\textbf{Response Error (401):}
+\begin{verbatim}
+{
+  "success": false,
+  "error": "Invalid credentials"
+}
+\end{verbatim}
+
+\section{Usuarios (\texttt{/user})}
+
+\begin{longtable}{lllll}
+\toprule
+\textbf{Método} & \textbf{URL} & \textbf{Autenticación} & \textbf{Rol Requerido} & \textbf{Descripción} \\
+\midrule
+\endhead
+POST & \texttt{/api/user} & Sí & Admin & Crear usuario \\
+GET & \texttt{/api/user} & Sí & - & Listar usuarios \\
+GET & \texttt{/api/user/:id} & Sí & - & Obtener usuario por ID \\
+PUT & \texttt{/api/user/:id} & Sí & Admin & Actualizar usuario \\
+DELETE & \texttt{/api/user/:id} & Sí & Admin & Eliminar usuario \\
+\bottomrule
+\end{longtable}
+
+\subsection*{POST /api/user/ - Crear Usuario}
+
+\textbf{Headers:} \texttt{Authorization: Bearer \{token\}}
+
+\textbf{Request Body - Admin:}
+\begin{verbatim}
+{
+  "email": "admin@test.com",
+  "name": "Admin Usuario",
+  "password": "password123",
+  "role": "admin"
+}
+\end{verbatim}
+
+\textbf{Request Body - Manager/Director:}
+\begin{verbatim}
+{
+  "email": "manager@test.com",
+  "name": "Manager Usuario",
+  "password": "password123",
+  "role": "manager",
+  "agencyId": 1
+}
+\end{verbatim}
+
+\textbf{Request Body - Apprentice:}
+\begin{verbatim}
+{
+  "email": "apprentice@test.com",
+  "name": "Aprendiz Usuario",
+  "password": "password123",
+  "role": "apprentice",
+  "IdAp": 1
+}
+\end{verbatim}
+
+\textbf{Request Body - Artist:}
+\begin{verbatim}
+{
+  "email": "artist@test.com",
+  "name": "Artista Usuario",
+  "password": "password123",
+  "role": "artist",
+  "IdAp": 1,
+  "IdGr": 1
+}
+\end{verbatim}
+
+\textbf{Response Exitosa (201):}
+\begin{verbatim}
+{
+  "success": true,
+  "data": {
+    "id": 5,
+    "email": "usuario@test.com",
+    "name": "Usuario",
+    "role": "manager",
+    "profileData": { "agenciaId": 1 }
+  }
+}
+\end{verbatim}
+
+\textbf{Response Error (400):}
+\begin{verbatim}
+{
+  "success": false,
+  "error": "Missing required fields"
+}
+\end{verbatim}
+
+\subsection*{GET /api/user/ - Listar Usuarios}
+
+\textbf{Response Exitosa (200):}
+\begin{verbatim}
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "email": "admin@gmail.com",
+      "name": "Admin Usuario",
+      "role": "admin",
+      "profileData": {}
+    }
+  ]
+}
+\end{verbatim}
+
+\subsection*{GET /api/user/:id - Obtener Usuario}
+
+\textbf{Response Exitosa (200):}
+\begin{verbatim}
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "email": "usuario@test.com",
+    "name": "Usuario",
+    "role": "manager",
+    "profileData": { "agenciaId": 1 }
+  }
+}
+\end{verbatim}
+
+\subsection*{PUT /api/user/:id - Actualizar Usuario}
+
+\textbf{Request Body:} Campos opcionales a actualizar
+
+\textbf{Response Exitosa (200):}
+\begin{verbatim}
+{
+  "success": true,
+  "data": { /* Usuario actualizado */ }
+}
+\end{verbatim}
+
+\subsection*{DELETE /api/user/:id - Eliminar Usuario}
+
+\textbf{Response Exitosa (200):}
+\begin{verbatim}
+{
+  "success": true,
+  "message": "User deleted successfully"
+}
+\end{verbatim}
+
+\section{Agencias (\texttt{/agency})}
+
+\begin{longtable}{lllll}
+\toprule
+\textbf{Método} & \textbf{URL} & \textbf{Autenticación} & \textbf{Rol Requerido} & \textbf{Descripción} \\
+\midrule
+\endhead
+POST & \texttt{/api/agency} & Sí & Staff & Crear agencia \\
+GET & \texttt{/api/agency} & Sí & - & Listar todas las agencias \\
+GET & \texttt{/api/agency/:id} & Sí & - & Obtener agencia por ID \\
+PUT & \texttt{/api/agency/:id} & Sí & Staff & Actualizar agencia \\
+DELETE & \texttt{/api/agency/:id} & Sí & Staff & Eliminar agencia \\
+GET & \texttt{/api/agency/search/agency\_name} & Sí & - & Buscar agencias por nombre \\
+GET & \texttt{/api/agency/search/agency\_address} & Sí & - & Buscar agencias por dirección \\
+GET & \texttt{/api/agency/search/agency\_foundation} & Sí & - & Buscar por fecha fundación \\
+\bottomrule
+\end{longtable}
+
+\subsection*{POST /api/agency/ - Crear Agencia}
+
+\textbf{Request Body:}
+\begin{verbatim}
+{
+  "name": "SM Entertainment",
+  "address": "Seúl, Corea del Sur",
+  "foundation": "1995-02-14"
+}
+\end{verbatim}
+
+\textbf{Response Exitosa (201):}
+\begin{verbatim}
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "nombre": "SM Entertainment",
+    "ubicacion": "Seúl, Corea del Sur",
+    "fechaFundacion": "1995-02-14T00:00:00.000Z"
+  }
+}
+\end{verbatim}
+
+\subsection*{GET /api/agency/ - Listar Agencias}
+
+\textbf{Response Exitosa (200):}
+\begin{verbatim}
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "nombre": "SM Entertainment",
+      "ubicacion": "Seúl",
+      "fechaFundacion": "1995-02-14T00:00:00.000Z"
+    }
+  ]
+}
+\end{verbatim}
+
+\subsection*{GET /api/agency/:id - Obtener Agencia}
+
+\textbf{Response Exitosa (200):} Mismo formato que GET individual
+
+\subsection*{GET /api/agency/search/agency\_name?name=X}
+
+\textbf{Query Params:} \texttt{name}
+
+\textbf{Response:} Array de agencias que coincidan
+
+\section{Aprendices (\texttt{/apprentice})}
+
+\begin{longtable}{lllll}
+\toprule
+\textbf{Método} & \textbf{URL} & \textbf{Autenticación} & \textbf{Rol Requerido} & \textbf{Descripción} \\
+\midrule
+\endhead
+POST & \texttt{/api/apprentice/:id} & Sí & Staff & Crear aprendiz \\
+GET & \texttt{/api/apprentice} & Sí & - & Listar todos los aprendices \\
+GET & \texttt{/api/apprentice/:id} & Sí & - & Obtener aprendiz por ID \\
+GET & \texttt{/api/apprentice/:name} & Sí & - & Obtener aprendiz por nombre \\
+GET & \texttt{/api/apprentice/agency/:id} & Sí & - & Listar aprendices por agencia \\
+PUT & \texttt{/api/apprentice/:id} & Sí & Staff & Actualizar aprendiz \\
+DELETE & \texttt{/api/apprentice/:id} & Sí & Staff & Eliminar aprendiz \\
+\bottomrule
+\end{longtable}
+
+\subsection*{POST /api/apprentice/:id - Crear Aprendiz}
+
+\textbf{URL Param:} \texttt{id} - ID de la agencia
+
+\textbf{Request Body:}
+\begin{verbatim}
+{
+  "name": "Kim Minju",
+  "dateOfBirth": "2001-02-05",
+  "age": 22,
+  "trainingLv": 3,
+  "status": "En entrenamiento"
+}
+\end{verbatim}
+
+\textbf{Validaciones:}
+\begin{itemize}
+    \item \texttt{age} $\geq$ 15
+    \item \texttt{trainingLv} $\geq$ 0
+\end{itemize}
+
+\textbf{Response Exitosa (201):}
+\begin{verbatim}
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "nombreCompleto": "Kim Minju",
+    "fechaNacimiento": "2001-02-05T00:00:00.000Z",
+    "edad": 22,
+    "nivelEntrenamiento": 3,
+    "estadoAprendiz": "En entrenamiento"
+  }
+}
+\end{verbatim}
+
+\subsection*{GET /api/apprentice/ - Listar Aprendices}
+
+\textbf{Response Exitosa (200):}
+\begin{verbatim}
+{
+  "success": true,
+  "data": [ /* Array de aprendices */ ]
+}
+\end{verbatim}
+
+\subsection*{GET /api/apprentice?name=X - Buscar por Nombre}
+
+\textbf{Query Params:} \texttt{name}
+
+\textbf{Response:} Aprendiz(es) que coincidan con el nombre
+
+\section{Artistas (\texttt{/artist})}
+
+\begin{longtable}{lllll}
+\toprule
+\textbf{Método} & \textbf{URL} & \textbf{Autenticación} & \textbf{Rol Requerido} & \textbf{Descripción} \\
+\midrule
+\endhead
+POST & \texttt{/api/artist} & Sí & Staff & Crear artista \\
+GET & \texttt{/api/artist} & Sí & Agency Access & Listar todos los artistas \\
+GET & \texttt{/api/artist/:apprenticeId\&:groupId} & Sí & - & Obtener artista por IDs \\
+GET & \texttt{/api/artist/:id} & Sí & - & Obtener artistas por agencia \\
+PUT & \texttt{/api/artist/:apprenticeId\&:groupId} & Sí & Staff & Actualizar artista \\
+DELETE & \texttt{/api/artist/:apprenticeId\&:groupId} & Sí & Staff & Eliminar artista \\
+\bottomrule
+\end{longtable}
+
+\subsection*{POST /api/artist/ - Crear Artista}
+
+\textbf{Request Body:}
+\begin{verbatim}
+{
+  "apprenticeId": 1,
+  "groupId": 1,
+  "stageName": "Lisa",
+  "debutDate": "2016-08-08",
+  "status": "Activo"
+}
+\end{verbatim}
+
+\textbf{Response Exitosa (201):}
+\begin{verbatim}
+{
+  "success": true,
+  "data": {
+    "idAp": 1,
+    "idGr": 1,
+    "nombreArtistico": "Lisa",
+    "fsechaDebut": "2016-08-08T00:00:00.000Z",
+    "estadoArtista": "Activo"
+  }
+}
+\end{verbatim}
+
+\subsection*{GET /api/artist/ - Listar Artistas}
+
+\textbf{Response Exitosa (200):}
+\begin{verbatim}
+{
+  "success": true,
+  "data": [ /* Array de artistas */ ]
+}
+\end{verbatim}
+
+\subsection*{GET /api/artist/:apprenticeId\&:groupId - Obtener Artista}
+
+\textbf{Nota:} Usa llave compuesta (apprenticeId y groupId)
+
+\section{Conceptos (\texttt{/concept})}
+
+\begin{longtable}{lllll}
+\toprule
+\textbf{Método} & \textbf{URL} & \textbf{Autenticación} & \textbf{Rol Requerido} & \textbf{Descripción} \\
+\midrule
+\endhead
+POST & \texttt{/api/concept} & No & - & Crear concepto \\
+GET & \texttt{/api/concept} & No & - & Listar todos los conceptos \\
+GET & \texttt{/api/concept/:id} & No & - & Obtener concepto por ID \\
+PUT & \texttt{/api/concept/:id} & No & - & Actualizar concepto \\
+DELETE & \texttt{/api/concept/:id} & No & - & Eliminar concepto \\
+\bottomrule
+\end{longtable}
+
+\subsection*{POST /api/concept/ - Crear Concepto}
+
+\textbf{Request Body:}
+\begin{verbatim}
+{
+  "description": "Concepto futurista y tecnológico"
+}
+\end{verbatim}
+
+\textbf{Response Exitosa (201):}
+\begin{verbatim}
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "descripcion": "Concepto futurista y tecnológico"
+  }
+}
+\end{verbatim}
+
+\subsection*{GET /api/concept/ - Listar Conceptos}
+
+\textbf{Response Exitosa (200):}
+\begin{verbatim}
+{
+  "success": true,
+  "data": [ /* Array de conceptos */ ]
+}
+\end{verbatim}
+
+\section{Notas Importantes}
+
+\subsection*{Estructura de Respuestas}
+
+\textbf{Todas las respuestas exitosas:}
+\begin{verbatim}
+{
+  "success": true,
+  "data": { ... }  // o [ ... ] para arrays
+}
+\end{verbatim}
+
+\textbf{Todas las respuestas con error:}
+\begin{verbatim}
+{
+  "success": false,
+  "error": "Mensaje de error descriptivo"
+}
+\end{verbatim}
+
+\subsection*{Códigos HTTP}
+\begin{itemize}
+    \item \textbf{200 OK:} Operación exitosa (GET, PUT, DELETE)
+    \item \textbf{201 Created:} Recurso creado (POST)
+    \item \textbf{400 Bad Request:} Datos inválidos
+    \item \textbf{401 Unauthorized:} Sin autenticación o credenciales inválidas
+    \item \textbf{403 Forbidden:} Sin permisos
+    \item \textbf{404 Not Found:} Recurso no encontrado
+    \item \textbf{500 Internal Server Error:} Error del servidor
+\end{itemize}
+
+\subsection*{Autenticación}
+Los endpoints que requieren autenticación necesitan un token JWT en el header:
+
+\texttt{Authorization: Bearer \{token\}}
+
+\subsection*{Roles Disponibles}
+\begin{itemize}
+    \item \textbf{Admin}: Acceso completo al sistema
+    \item \textbf{Staff}: Director/Manager - puede gestionar agencias, aprendices y artistas
+    \item \textbf{Agency Access}: Acceso relacionado con agencias específicas
+\end{itemize}
+
+\subsection*{Advertencia}
+\textcolor{red}{\textbf{Conflicto detectado:}} En el archivo \texttt{index.ts} línea 23, las rutas de \texttt{/concept} están usando \texttt{artistRoutes.getRouter()} en lugar de \texttt{conceptRoutes.getRouter()}. Se recomienda corregir esto.
+
+\subsection*{Configuración}
+El puerto debe ser configurado en el archivo \texttt{secrets.ts}.
+
+\end{document}
