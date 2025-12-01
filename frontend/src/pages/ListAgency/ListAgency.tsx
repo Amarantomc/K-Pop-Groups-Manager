@@ -8,7 +8,7 @@ import { agencyConstraints } from "../../config/modalConstraints"
 import ConfirmDialog from "../../components/confirmDialog/ConfirmDialog"
 import Header from "../../components/header/Header"
 import PageLayout from "../../components/pageLayout/PageLayout"
-import { useAuth } from "../../contextsLocal/AuthContext"
+import { useAuth } from "../../contexts/auth/AuthContext"
 
 
 
@@ -19,6 +19,7 @@ const ListAgency: React.FC = () => {
     const [agencyToDelete,setAgencyToDelete] = useState<number | null>(null)
     const [openConfirm,setOpenConfirm] = useState(false)
     const [isLoading, setIsLoading] = useState(false);
+    const[openAccept,setOpenAccept]=useState(false)
 
     const askDelete = (id : number) =>{
       setAgencyToDelete(id)
@@ -28,7 +29,13 @@ const ListAgency: React.FC = () => {
         () => {
             const fetchAgencies = async () => {
                 try{
-                    const response = await fetch("http://localhost:3000/api/agency")
+                        const token = localStorage.getItem('token')
+                        const response = await fetch('http://localhost:3000/api/agency', {
+                                    headers: {
+                                                'Authorization': `Bearer ${token}`,
+                                                'Content-Type': 'application/json'
+                                              }
+                                });
                     if(!response.ok){
                         throw new Error("Error al obtener las agencias")
                     }
@@ -52,9 +59,13 @@ const ListAgency: React.FC = () => {
 
       const handleDelete = async () => {
         if(agencyToDelete === null) return;
+        const token = localStorage.getItem('token');
+        const headers: Record<string,string> = {};
+        if (token) headers['Authorization'] = `Bearer ${token}`;
     try {
       const response = await fetch(`http://localhost:3000/api/agency/${agencyToDelete}`, {
         method: "DELETE",
+        headers
       });
 
       const result = await response.json();
@@ -134,7 +145,8 @@ const ListAgency: React.FC = () => {
           };
           setAgencyRows(prev => [...prev, createdAgency]);
         }
-        alert('Agencia creada correctamente');
+        setOpenAccept(true)
+        // alert('Agencia creada correctamente');
       } catch (err) {
         console.error('Error creando agencia:', err);
         alert(err instanceof Error ? err.message : 'Error de red');
@@ -143,9 +155,12 @@ const ListAgency: React.FC = () => {
   };
 
   const handleEditSave = async (updated: any) => {
+    const token = localStorage.getItem('token');
+        const headers: Record<string,string> = { 'Content-Type': 'application/json' };
+        if (token) headers['Authorization'] = `Bearer ${token}`;
     await fetch(`http://localhost:3000/api/agency/${updated.id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify(
         {
             name: updated.name,
@@ -181,6 +196,8 @@ const ListAgency: React.FC = () => {
           showEditButton={true}
         />
         <ConfirmDialog message="¿Está seguro que desea eliminar esta agencia?" open={openConfirm} onCancel={() => setOpenConfirm(false)} onConfirm={handleDelete}>
+          </ConfirmDialog>
+          <ConfirmDialog message="Agencia creada correctamente" open={openAccept} onCancel={() => setOpenAccept(false)} onConfirm={() => setOpenAccept(false) } confirmText="Aceptar" showDeleteButton={false}>
           </ConfirmDialog>
         </>
       )}
