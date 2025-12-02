@@ -23,6 +23,7 @@ export class UserFactory {
                 if (!profileData?.agenciaId) {
                     throw new Error("Manager user requires agencyId")
                 }
+                
                 return new ManagerUser({
                     id: user.id,
                     name: user.name,
