@@ -10,6 +10,7 @@ import type { GetUsersUseCase } from "../../application/usesCase/user/GerUsersUs
 import type { DeleteUserUseCase } from "../../application/usesCase/user/DeleteUserUseCase";
 import type { UpdateUserUseCase } from "../../application/usesCase/user/UpdateUserUseCase";
 import { UserResponseDto } from "../../application/dtos/user/UserResponseDto";
+import { UpdateUserDto } from "../../application/dtos/user/UpdateUserDto";
 
 @injectable()
 export class UserController {
@@ -104,7 +105,8 @@ constructor(@inject(Types.CreateUserUseCase)  private createUserUseCase:CreateUs
     async updateUser(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const user = await this.updateUserUseCase.execute(id!,req.body)
+      const data=UpdateUserDto.create(id,req.body)
+      const user = await this.updateUserUseCase.execute(data)
 
        
 
