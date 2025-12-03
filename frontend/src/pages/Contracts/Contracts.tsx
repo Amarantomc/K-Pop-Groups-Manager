@@ -26,9 +26,9 @@ const Contracts: React.FC = () => {
   const baseColumns: GridColDef[] = [
     { field: 'artistName', headerName: 'Artista', width: 180 },
     { field: 'groupName', headerName: 'Grupo', width: 150 },
-    { 
-      field: 'contractType', 
-      headerName: 'Tipo de Contrato', 
+    {
+      field: 'contractType',
+      headerName: 'Tipo de Contrato',
       width: 160,
       renderCell: (params) => {
         const typeLabels: Record<string, string> = {
@@ -40,30 +40,30 @@ const Contracts: React.FC = () => {
         return typeLabels[params.value] || params.value;
       }
     },
-    { 
-      field: 'startDate', 
-      headerName: 'Fecha Inicio', 
+    {
+      field: 'startDate',
+      headerName: 'Fecha Inicio',
       width: 130,
       valueFormatter: (params) => {
         return new Date(params).toLocaleDateString('es-ES');
       }
     },
-    { 
-      field: 'endDate', 
-      headerName: 'Fecha Fin', 
+    {
+      field: 'endDate',
+      headerName: 'Fecha Fin',
       width: 130,
       valueFormatter: (params) => {
         return new Date(params).toLocaleDateString('es-ES');
       }
     },
-    { 
-      field: 'value', 
-      headerName: 'Valor', 
+    {
+      field: 'value',
+      headerName: 'Valor',
       width: 140,
       renderCell: (params) => {
         const value = params.value as number;
         return (
-          <span style={{ 
+          <span style={{
             color: '#10b981',
             fontWeight: 700,
             fontSize: '15px'
@@ -73,9 +73,9 @@ const Contracts: React.FC = () => {
         );
       }
     },
-    { 
-      field: 'status', 
-      headerName: 'Estado', 
+    {
+      field: 'status',
+      headerName: 'Estado',
       width: 130,
       renderCell: (params) => {
         const statusColors: Record<string, string> = {
@@ -91,22 +91,22 @@ const Contracts: React.FC = () => {
           'pending': 'Pendiente'
         };
         return (
-          <span style={{ 
+          <span style={{
             color: statusColors[params.value] || '#6b7280',
-            fontWeight: 600 
+            fontWeight: 600
           }}>
             {statusLabels[params.value] || params.value}
           </span>
         );
       }
     },
-    { 
-      field: 'terms', 
-      headerName: 'Términos', 
+    {
+      field: 'terms',
+      headerName: 'Términos',
       width: 200,
       renderCell: (params) => (
-        <div style={{ 
-          whiteSpace: 'normal', 
+        <div style={{
+          whiteSpace: 'normal',
           lineHeight: '1.4',
           padding: '8px 0'
         }}>
@@ -117,8 +117,8 @@ const Contracts: React.FC = () => {
   ];
 
   // Agregar columna de agencia solo para admin
-  const columns = user?.role === 'admin' 
-    ? [...baseColumns, { field: 'agencyName', headerName: 'Agencia', width: 150 }] 
+  const columns = user?.role === 'admin'
+    ? [...baseColumns, { field: 'agencyName', headerName: 'Agencia', width: 150 }]
     : baseColumns;
 
   useEffect(() => {
@@ -128,7 +128,7 @@ const Contracts: React.FC = () => {
         if (!user) return;
 
         let endpoint = '';
-        
+
         switch (user.role) {
           case 'manager':
             endpoint = `/api/contracts?agencyId=${user.agencyId}`;
@@ -144,6 +144,10 @@ const Contracts: React.FC = () => {
             return;
         }
 
+        // ============================================
+        // SECCIÓN: BACKEND ENDPOINT
+        // Descomenta esta sección para usar el backend real
+        // ============================================
         const response = await fetch(`http://localhost:3000${endpoint}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -156,80 +160,89 @@ const Contracts: React.FC = () => {
 
         const data = await response.json();
         setContracts(data.data || data);
+        // ============================================
+        // FIN SECCIÓN: BACKEND ENDPOINT
+        // ============================================
 
-        /* DATOS DE PRUEBA - COMENTADO
-        const mockContracts: Contract[] = [
-          {
-            id: 1,
-            artistName: 'Lee Min-ho',
-            groupName: 'Phoenix',
-            contractType: 'exclusive',
-            startDate: '2023-01-15',
-            endDate: '2028-01-14',
-            value: 500000,
-            status: 'active',
-            agencyName: 'K-Pop Stars Agency',
-            terms: 'Contrato exclusivo de 5 años con opción de renovación'
-          },
-          {
-            id: 2,
-            artistName: 'Kim Ji-soo',
-            groupName: 'Starlight',
-            contractType: 'exclusive',
-            startDate: '2022-06-01',
-            endDate: '2027-05-31',
-            value: 450000,
-            status: 'active',
-            agencyName: 'K-Pop Stars Agency',
-            terms: 'Contrato exclusivo con cláusulas de distribución internacional'
-          },
-          {
-            id: 3,
-            artistName: 'Park Soo-young',
-            groupName: 'Dreamers',
-            contractType: 'production',
-            startDate: '2024-03-01',
-            endDate: '2026-02-28',
-            value: 200000,
-            status: 'active',
-            agencyName: 'K-Pop Stars Agency',
-            terms: 'Contrato de producción para 2 álbumes'
-          },
-          {
-            id: 4,
-            artistName: 'Choi Min-jun',
-            groupName: 'Thunder Squad',
-            contractType: 'non_exclusive',
-            startDate: '2023-09-01',
-            endDate: '2025-08-31',
-            value: 150000,
-            status: 'pending',
-            agencyName: 'Global Entertainment',
-            terms: 'Contrato no exclusivo con derechos de distribución compartidos'
-          },
-          {
-            id: 5,
-            artistName: 'Jung Ha-neul',
-            groupName: undefined,
-            contractType: 'distribution',
-            startDate: '2021-02-01',
-            endDate: '2024-01-31',
-            value: 100000,
-            status: 'expired',
-            agencyName: 'Global Entertainment',
-            terms: 'Contrato de distribución para mercados asiáticos'
-          }
-        ];
+        // ============================================
+        //SECCIÓN: DATOS DEMO
+        //============================================
+        /*
+     const mockContracts: Contract[] = [
+       {
+         id: 1,
+         artistName: 'Lee Min-ho',
+         groupName: 'Phoenix',
+         contractType: 'exclusive',
+         startDate: '2023-01-15',
+         endDate: '2028-01-14',
+         value: 500000,
+         status: 'active',
+         agencyName: 'K-Pop Stars Agency',
+         terms: 'Contrato exclusivo de 5 años con opción de renovación'
+       },
+       {
+         id: 2,
+         artistName: 'Kim Ji-soo',
+         groupName: 'Starlight',
+         contractType: 'exclusive',
+         startDate: '2022-06-01',
+         endDate: '2027-05-31',
+         value: 450000,
+         status: 'active',
+         agencyName: 'K-Pop Stars Agency',
+         terms: 'Contrato exclusivo con cláusulas de distribución internacional'
+       },
+       {
+         id: 3,
+         artistName: 'Park Soo-young',
+         groupName: 'Dreamers',
+         contractType: 'production',
+         startDate: '2024-03-01',
+         endDate: '2026-02-28',
+         value: 200000,
+         status: 'active',
+         agencyName: 'K-Pop Stars Agency',
+         terms: 'Contrato de producción para 2 álbumes'
+       },
+       {
+         id: 4,
+         artistName: 'Choi Min-jun',
+         groupName: 'Thunder Squad',
+         contractType: 'non_exclusive',
+         startDate: '2023-09-01',
+         endDate: '2025-08-31',
+         value: 150000,
+         status: 'pending',
+         agencyName: 'Global Entertainment',
+         terms: 'Contrato no exclusivo con derechos de distribución compartidos'
+       },
+       {
+         id: 5,
+         artistName: 'Jung Ha-neul',
+         groupName: undefined,
+         contractType: 'distribution',
+         startDate: '2021-02-01',
+         endDate: '2024-01-31',
+         value: 100000,
+         status: 'expired',
+         agencyName: 'Global Entertainment',
+         terms: 'Contrato de distribución para mercados asiáticos'
+       }
+     ];
 
-        // Filtrar según rol para la demo
-        let filteredContracts = mockContracts;
-        if (user.role === 'manager' || user.role === 'director') {
-          // Filtrar por agencia (en demo mostramos los de K-Pop Stars Agency)
-          filteredContracts = mockContracts.filter(contract => contract.agencyName === 'K-Pop Stars Agency');
-        }
+     // Filtrar según rol para la demo
+     let filteredContracts = mockContracts;
+     if (user.role === 'manager' || user.role === 'director') {
+       // Filtrar por agencia (en demo mostramos los de K-Pop Stars Agency)
+       filteredContracts = mockContracts.filter(contract => contract.agencyName === 'K-Pop Stars Agency');
+     }
 
-        setContracts(filteredContracts);
-        */
+     setContracts(filteredContracts);
+     */
+        //============================================
+        //FIN SECCIÓN: DATOS DEMO
+        //============================================ 
 
       } catch (error) {
         console.error('Error al cargar contratos:', error);
@@ -276,7 +289,7 @@ const Contracts: React.FC = () => {
       }
 
       const data = await response.json();
-      setContracts(prev => 
+      setContracts(prev =>
         prev.map(contract => contract.id === updatedRow.id ? (data.data || data) : contract)
       );
     } catch (error) {
@@ -321,13 +334,13 @@ const Contracts: React.FC = () => {
   }
 
   return (
-    <PageLayout 
-      title="Gestión de Contratos" 
+    <PageLayout
+      title="Gestión de Contratos"
       description={
         user.role === 'manager' ? 'Administra todos los contratos de los artistas de tu agencia' :
-        user.role === 'director' ? 'Supervisa todos los contratos de la agencia' :
-        user.role === 'admin' ? 'Vista global de todos los contratos del sistema' :
-        'Gestión de contratos'
+          user.role === 'director' ? 'Supervisa todos los contratos de la agencia' :
+            user.role === 'admin' ? 'Vista global de todos los contratos del sistema' :
+              'Gestión de contratos'
       }
     >
       {isLoading ? (
