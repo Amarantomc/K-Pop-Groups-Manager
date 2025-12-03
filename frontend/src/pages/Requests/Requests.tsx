@@ -120,18 +120,18 @@ const Requests: React.FC = () => {
   const baseColumns: GridColDef[] = [
     { field: 'apprenticeName', headerName: 'Aprendiz', width: 180 },
     { field: 'groupName', headerName: 'Nombre del Grupo', width: 180 },
-    { 
-      field: 'createdAt', 
-      headerName: 'Fecha de Solicitud', 
+    {
+      field: 'createdAt',
+      headerName: 'Fecha de Solicitud',
       width: 150,
       valueFormatter: (params) => {
         return new Date(params).toLocaleDateString('es-ES');
       }
     },
     { field: 'agencyName', headerName: 'Agencia', width: 150 },
-    { 
-      field: 'status', 
-      headerName: 'Estado', 
+    {
+      field: 'status',
+      headerName: 'Estado',
       width: 130,
       renderCell: (params) => {
         const statusColors: Record<string, string> = {
@@ -141,14 +141,14 @@ const Requests: React.FC = () => {
           'completed': '#6366f1'
         };
         return (
-          <span style={{ 
+          <span style={{
             color: statusColors[params.value] || '#6b7280',
-            fontWeight: 600 
+            fontWeight: 600
           }}>
-            {params.value === 'pending' ? 'Pendiente' : 
-             params.value === 'approved' ? 'Aprobada' : 
-             params.value === 'rejected' ? 'Rechazada' : 
-             params.value === 'completed' ? 'Finalizada' : params.value}
+            {params.value === 'pending' ? 'Pendiente' :
+              params.value === 'approved' ? 'Aprobada' :
+                params.value === 'rejected' ? 'Rechazada' :
+                  params.value === 'completed' ? 'Finalizada' : params.value}
           </span>
         );
       }
@@ -204,12 +204,12 @@ const Requests: React.FC = () => {
       if (user?.role === 'manager') {
         const isCompleted = request.status === 'completed';
         const isApproved = request.status === 'approved';
-        
+
         return (
           <Tooltip title={
             isCompleted ? 'Grupo ya creado' :
-            isApproved ? 'Crear grupo' : 
-            'Solo disponible para solicitudes aprobadas'
+              isApproved ? 'Crear grupo' :
+                'Solo disponible para solicitudes aprobadas'
           }>
             <span>
               <IconButton
@@ -245,7 +245,7 @@ const Requests: React.FC = () => {
         if (!user) return;
 
         let endpoint = '';
-        
+
         switch (user.role) {
           case 'apprentice':
             // Solicitudes del aprendiz específico en su agencia
@@ -277,8 +277,15 @@ const Requests: React.FC = () => {
             return;
         }
 
+<<<<<<< HEAD
         // Descomentar cuando el backend esté listo
         /*
+=======
+        // ============================================
+        // SECCIÓN: BACKEND ENDPOINT
+        // ============================================
+
+>>>>>>> 8ea7c42 (update endpoint artist)
         const response = await fetch(`http://localhost:3000${endpoint}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -290,10 +297,22 @@ const Requests: React.FC = () => {
         }
 
         const data = await response.json();
+<<<<<<< HEAD
         setRequests(data);
         */
 
         // DATOS DE PRUEBA 
+=======
+        setRequests(data.data || data);
+        // ============================================
+        // FIN SECCIÓN: BACKEND ENDPOINT
+        // ============================================
+
+        // ============================================
+        // SECCIÓN: DATOS DEMO
+        //============================================
+        /*
+>>>>>>> 8ea7c42 (update endpoint artist)
         const mockRequests: Request[] = [
           {
             id: 1,
@@ -330,6 +349,13 @@ const Requests: React.FC = () => {
         }
 
         setRequests(filteredRequests);
+<<<<<<< HEAD
+=======
+        */
+        // ============================================
+        // FIN SECCIÓN: DATOS DEMO
+        // ============================================ 
+>>>>>>> 8ea7c42 (update endpoint artist)
 
       } catch (error) {
         console.error('Error al cargar solicitudes:', error);
@@ -347,10 +373,56 @@ const Requests: React.FC = () => {
   };
 
   const handleEditSave = async (updatedRow: Request) => {
+<<<<<<< HEAD
     console.log('Actualizar solicitud:', updatedRow);
     setRequests(prev => 
       prev.map(req => req.id === updatedRow.id ? updatedRow : req)
     );
+=======
+    try {
+      const response = await fetch(`http://localhost:3000/api/requests/${updatedRow.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(updatedRow)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al actualizar solicitud');
+      }
+
+      const data = await response.json();
+      setRequests(prev =>
+        prev.map(req => req.id === updatedRow.id ? (data.data || data) : req)
+      );
+    } catch (error) {
+      console.error('Error al actualizar solicitud:', error);
+    }
+  };
+
+  const handleCreateSave = async (newRow: Omit<Request, 'id'>) => {
+    try {
+      const response = await fetch('http://localhost:3000/api/requests', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(newRow)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al crear solicitud');
+      }
+
+      const data = await response.json();
+      setRequests(prev => [...prev, (data.data || data)]);
+    } catch (error) {
+      console.error('Error al crear solicitud:', error);
+    }
+>>>>>>> 8ea7c42 (update endpoint artist)
   };
 
   if (!user) {
@@ -358,21 +430,22 @@ const Requests: React.FC = () => {
   }
 
   return (
-    <PageLayout 
-      title="Solicitudes de Creación de Grupos" 
+    <PageLayout
+      title="Solicitudes de Creación de Grupos"
       description={
-      user.role === 'apprentice' || user.role === 'artist' ? 'Aquí puedes ver las solicitudes de creación de grupos. Envía nuevas solicitudes y consulta su flujo en la agencia' :
-      user.role === 'manager' ? 'Mira todas las solicitudes de tu agencia.' :
-      user.role === 'director' ? 'Revisa las solicitudes de tu agencia y supervisa el flujo de ellas.' :
-      user.role === 'admin' ? 'Consulta y gestiona todas las solicitudes del sistema y realiza tareas administrativas cuando sea necesario.' :
-      'Gestiona y consulta las solicitudes de creación de grupos'
+        user.role === 'apprentice' || user.role === 'artist' ? 'Aquí puedes ver las solicitudes de creación de grupos. Envía nuevas solicitudes y consulta su flujo en la agencia' :
+          user.role === 'manager' ? 'Mira todas las solicitudes de tu agencia.' :
+            user.role === 'director' ? 'Revisa las solicitudes de tu agencia y supervisa el flujo de ellas.' :
+              user.role === 'admin' ? 'Consulta y gestiona todas las solicitudes del sistema y realiza tareas administrativas cuando sea necesario.' :
+                'Gestiona y consulta las solicitudes de creación de grupos'
       }
     >
       {isLoading ? (
-      <div style={{ textAlign: 'center', padding: '20px' }}>
-        Cargando solicitudes...
-      </div>
+        <div style={{ textAlign: 'center', padding: '20px' }}>
+          Cargando solicitudes...
+        </div>
       ) : (
+<<<<<<< HEAD
       <DataTable
         columns={columns}
         rows={requests}
@@ -381,6 +454,17 @@ const Requests: React.FC = () => {
         onEditSave={handleEditSave}
         showEditButton={user.role === 'manager' || user.role === 'director' || user.role === 'admin'}
       />
+=======
+        <DataTable
+          columns={columns}
+          rows={requests}
+          pagesize={10}
+          onDelete={handleDelete}
+          onEditSave={handleEditSave}
+          onCreateSave={handleCreateSave}
+          showEditButton={user.role === 'manager' || user.role === 'director' || user.role === 'admin'}
+        />
+>>>>>>> 8ea7c42 (update endpoint artist)
       )}
     </PageLayout>
   );

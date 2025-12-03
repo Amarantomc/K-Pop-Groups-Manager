@@ -65,27 +65,49 @@ const AppRouter: React.FC = () => {
           <ListAgency />
         </ProtectedRoute>
       } />
+<<<<<<< HEAD
       {/*<Route path="/admin/listAgency" element={
         <ProtectedRoute allowedRoles={['admin']}>
           <Agency />
         </ProtectedRoute>
       } />*/}
       <Route path="/admin/apprentices" element={
+=======
+      <Route path="/admin/apprentice" element={
+>>>>>>> 8ea7c42 (update endpoint artist)
         <ProtectedRoute allowedRoles={['admin']}>
           <ListApprentice />
         </ProtectedRoute>
       } />
+<<<<<<< HEAD
       {/*<Route path="/admin/listApprentice" element={
         <ProtectedRoute allowedRoles={['admin']}>
           <Apprentice />
         </ProtectedRoute>
       } />*/}
       <Route path="/admin/Artist" element={
+=======
+      <Route path="/admin/artists" element={
+>>>>>>> 8ea7c42 (update endpoint artist)
         <ProtectedRoute allowedRoles={['admin']}>
           <Artist />
         </ProtectedRoute>
       } />
+<<<<<<< HEAD
       <Route path="/admin/Activities" element={
+=======
+      <Route path="/admin/groups" element={
+        <ProtectedRoute allowedRoles={['admin']}>
+          <Groups />
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/albums" element={
+        <ProtectedRoute allowedRoles={['admin']}>
+          <Albums />
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/activities" element={
+>>>>>>> 8ea7c42 (update endpoint artist)
         <ProtectedRoute allowedRoles={['admin']}>
           <Activities />
         </ProtectedRoute>
@@ -95,7 +117,7 @@ const AppRouter: React.FC = () => {
           <Income />
         </ProtectedRoute>
       } />
-      <Route path="/admin/requests" element={
+      <Route path="/admin/request" element={
         <ProtectedRoute allowedRoles={['admin']}>
           <Requests />
         </ProtectedRoute>
@@ -117,22 +139,40 @@ const AppRouter: React.FC = () => {
           <Dashboard />
         </ProtectedRoute>
       } />
+<<<<<<< HEAD
       {/*<Route path="/director/apprentices" element={
         <ProtectedRoute allowedRoles={['director']}>
           <Apprentice />
         </ProtectedRoute>
       } />*/}
       <Route path="/director/apprentices" element={
+=======
+      <Route path="/director/apprentice" element={
+>>>>>>> 8ea7c42 (update endpoint artist)
         <ProtectedRoute allowedRoles={['director']}>
           <ListApprentice />
         </ProtectedRoute>
       } />
-      <Route path="/director/Artist" element={
+      <Route path="/director/artists" element={
         <ProtectedRoute allowedRoles={['director']}>
           <Artist />
         </ProtectedRoute>
       } />
+<<<<<<< HEAD
       <Route path="/director/Activities" element={
+=======
+      <Route path="/director/group" element={
+        <ProtectedRoute allowedRoles={['director']}>
+          <Groups />
+        </ProtectedRoute>
+      } />
+      <Route path="/director/Albums" element={
+        <ProtectedRoute allowedRoles={['director']}>
+          <Albums />
+        </ProtectedRoute>
+      } />
+      <Route path="/director/activities" element={
+>>>>>>> 8ea7c42 (update endpoint artist)
         <ProtectedRoute allowedRoles={['director']}>
           <Activities />
         </ProtectedRoute>
@@ -142,7 +182,7 @@ const AppRouter: React.FC = () => {
           <Income />
         </ProtectedRoute>
       } />
-      <Route path="/director/requests" element={
+      <Route path="/director/request" element={
         <ProtectedRoute allowedRoles={['director']}>
           <Requests />
         </ProtectedRoute>
@@ -152,6 +192,7 @@ const AppRouter: React.FC = () => {
           <Profile />
         </ProtectedRoute>
       } />
+<<<<<<< HEAD
       <Route path="/director/listUsers" element={
         <ProtectedRoute allowedRoles={['director']}>
           <ListUsers />
@@ -162,6 +203,8 @@ const AppRouter: React.FC = () => {
           <ListUsers />
         </ProtectedRoute>
       } />
+=======
+>>>>>>> 8ea7c42 (update endpoint artist)
 
       {/* RUTAS SOLO PARA MANAGER */}
       <Route path="/manager/dashboard" element={
@@ -169,22 +212,40 @@ const AppRouter: React.FC = () => {
           <Dashboard />
         </ProtectedRoute>
       } />
-      <Route path="/manager/apprentices" element={
+      <Route path="/manager/apprentice" element={
         <ProtectedRoute allowedRoles={['manager']}>
           <ListApprentice />
         </ProtectedRoute>
       } />
+<<<<<<< HEAD
       {/*<Route path="/manager/listApprentice" element={
         <ProtectedRoute allowedRoles={['manager']}>
           <ListApprentice />
         </ProtectedRoute>
       } />*/}
       <Route path="/manager/Artist" element={
+=======
+      <Route path="/manager/artists" element={
+>>>>>>> 8ea7c42 (update endpoint artist)
         <ProtectedRoute allowedRoles={['manager']}>
           <Artist />
         </ProtectedRoute>
       } />
+<<<<<<< HEAD
       <Route path="/manager/Activities" element={
+=======
+      <Route path="/manager/group" element={
+        <ProtectedRoute allowedRoles={['manager']}>
+          <Groups />
+        </ProtectedRoute>
+      } />
+      <Route path="/manager/Albums" element={
+        <ProtectedRoute allowedRoles={['manager']}>
+          <Albums />
+        </ProtectedRoute>
+      } />
+      <Route path="/manager/activities" element={
+>>>>>>> 8ea7c42 (update endpoint artist)
         <ProtectedRoute allowedRoles={['manager']}>
           <Activities />
         </ProtectedRoute>
@@ -194,7 +255,7 @@ const AppRouter: React.FC = () => {
           <Income />
         </ProtectedRoute>
       } />
-      <Route path="/manager/requests" element={
+      <Route path="/manager/request" element={
         <ProtectedRoute allowedRoles={['manager']}>
           <Requests />
         </ProtectedRoute>
@@ -204,6 +265,7 @@ const AppRouter: React.FC = () => {
           <Profile />
         </ProtectedRoute>
       } />
+<<<<<<< HEAD
       <Route path="/manager/listUsers" element={
         <ProtectedRoute allowedRoles={['manager']}>
           <ListUsers />
@@ -214,6 +276,8 @@ const AppRouter: React.FC = () => {
           <ListUsers />
         </ProtectedRoute>
       } />
+=======
+>>>>>>> 8ea7c42 (update endpoint artist)
 
       {/* RUTAS SOLO PARA ARTIST */}
       <Route path="/artist/dashboard" element={
@@ -231,7 +295,7 @@ const AppRouter: React.FC = () => {
           <Income />
         </ProtectedRoute>
       } />
-      <Route path="/artist/requests" element={
+      <Route path="/artist/request" element={
         <ProtectedRoute allowedRoles={['artist']}>
           <Requests />
         </ProtectedRoute>
@@ -253,7 +317,7 @@ const AppRouter: React.FC = () => {
           <Evaluations />
         </ProtectedRoute>
       } />
-      <Route path="/apprentice/requests" element={
+      <Route path="/apprentice/request" element={
         <ProtectedRoute allowedRoles={['apprentice']}>
           <Requests />
         </ProtectedRoute>

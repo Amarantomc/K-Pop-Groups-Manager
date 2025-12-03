@@ -32,9 +32,9 @@ const Activities: React.FC = () => {
     { field: 'artistName', headerName: 'Artista', width: 150 },
     { field: 'groupName', headerName: 'Grupo', width: 130 },
     { field: 'title', headerName: 'Título', width: 180 },
-    { 
-      field: 'type', 
-      headerName: 'Tipo', 
+    {
+      field: 'type',
+      headerName: 'Tipo',
       width: 120,
       renderCell: (params) => {
         const typeColors: Record<string, string> = {
@@ -45,22 +45,22 @@ const Activities: React.FC = () => {
           'meeting': '#10b981'
         };
         return (
-          <span style={{ 
+          <span style={{
             color: typeColors[params.value] || '#6b7280',
-            fontWeight: 600 
+            fontWeight: 600
           }}>
             {params.value === 'concert' ? 'Concierto' :
-             params.value === 'rehearsal' ? 'Ensayo' :
-             params.value === 'recording' ? 'Grabación' :
-             params.value === 'promotion' ? 'Promoción' :
-             params.value === 'meeting' ? 'Reunión' : params.value}
+              params.value === 'rehearsal' ? 'Ensayo' :
+                params.value === 'recording' ? 'Grabación' :
+                  params.value === 'promotion' ? 'Promoción' :
+                    params.value === 'meeting' ? 'Reunión' : params.value}
           </span>
         );
       }
     },
-    { 
-      field: 'date', 
-      headerName: 'Fecha', 
+    {
+      field: 'date',
+      headerName: 'Fecha',
       width: 120,
       valueFormatter: (params) => {
         return new Date(params).toLocaleDateString('es-ES');
@@ -68,9 +68,9 @@ const Activities: React.FC = () => {
     },
     { field: 'time', headerName: 'Hora', width: 100 },
     { field: 'location', headerName: 'Ubicación', width: 150 },
-    { 
-      field: 'status', 
-      headerName: 'Estado', 
+    {
+      field: 'status',
+      headerName: 'Estado',
       width: 120,
       renderCell: (params) => {
         const statusColors: Record<string, string> = {
@@ -80,14 +80,14 @@ const Activities: React.FC = () => {
           'completed': '#6366f1'
         };
         return (
-          <span style={{ 
+          <span style={{
             color: statusColors[params.value] || '#6b7280',
-            fontWeight: 600 
+            fontWeight: 600
           }}>
             {params.value === 'pending' ? 'Pendiente' :
-             params.value === 'confirmed' ? 'Confirmada' :
-             params.value === 'cancelled' ? 'Cancelada' :
-             params.value === 'completed' ? 'Completada' : params.value}
+              params.value === 'confirmed' ? 'Confirmada' :
+                params.value === 'cancelled' ? 'Cancelada' :
+                  params.value === 'completed' ? 'Completada' : params.value}
           </span>
         );
       }
@@ -103,33 +103,34 @@ const Activities: React.FC = () => {
         //Descomentar cuando el backend esté listo
         /*
         let endpoint = '';
-        
+
         // Switch case según el rol del usuario
         switch (user.role) {
           case 'artist':
             // Actividades del artista específico
-            endpoint = `/api/activities?artistId=${user.profileData?.artistId || user.id}`;
+            endpoint = `/api/activity?artistId=${user.profileData?.artistId || user.id}`;
             break;
 
           case 'manager':
-            // Todas las actividades de todos los artistas de la agencia del manager
-            endpoint = `/api/activities?agencyId=${user.agencyId}`;
-            break;
-
           case 'director':
-            // Todas las actividades de todos los artistas de la agencia del director
-            endpoint = `/api/activities?agencyId=${user.agencyId}`;
+            // Todas las actividades de todos los artistas de la agencia del manager o director
+            endpoint = `/api/activity?agencyId=${user.agencyId}`;
             break;
 
           case 'admin':
             // Todas las actividades del sistema
-            endpoint = '/api/activities';
+            endpoint = '/api/activity';
             break;
 
           default:
             console.error('Rol no reconocido:', user.role);
             return;
         }
+
+        // ============================================
+        // SECCIÓN: BACKEND ENDPOINT
+        // ============================================
+
         const response = await fetch(`http://localhost:3000${endpoint}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -144,6 +145,7 @@ const Activities: React.FC = () => {
         setActivities(data);
         */
 
+<<<<<<< HEAD
         // DATOS DE PRUEBA 
         const mockActivities: Activity[] = [
           {
@@ -207,18 +209,98 @@ const Activities: React.FC = () => {
             description: 'Planificación de actividades Q1 2026'
           }
         ];
+=======
+        // ============================================
+        // FIN SECCIÓN: BACKEND ENDPOINT
+        // ============================================
+>>>>>>> 8ea7c42 (update endpoint artist)
 
-        // Filtrar según rol
-        let filteredActivities = mockActivities;
-        if (user.role === 'artist') {
-          filteredActivities = mockActivities.filter(a => a.id <= 3);
-        } else if (user.role === 'manager' || user.role === 'director') {
-          filteredActivities = mockActivities.filter(a => 
-            ['Lee Min-ho', 'Kim Ji-soo'].includes(a.artistName)
-          );
-        }
+        //============================================
+        //SECCIÓN: DATOS DEMO
+        //============================================
+        /*
+     const mockActivities: Activity[] = [
+       {
+         id: 1,
+         artistName: user.role === 'artist' ? user.name || 'Lee Min-ho' : 'Lee Min-ho',
+         groupName: 'Phoenix',
+         title: 'Concierto Seoul Music Festival',
+         type: 'concert',
+         date: '2025-12-05',
+         time: '19:00',
+         location: 'Olympic Stadium, Seoul',
+         status: 'confirmed',
+         description: 'Presentación principal en el festival de música'
+       },
+       {
+         id: 2,
+         artistName: user.role === 'artist' ? user.name || 'Lee Min-ho' : 'Kim Ji-soo',
+         groupName: 'Starlight',
+         title: 'Ensayo General',
+         type: 'rehearsal',
+         date: '2025-12-02',
+         time: '14:00',
+         location: 'Estudio A - K-Pop Stars Agency',
+         status: 'confirmed',
+         description: 'Ensayo para próximo showcase'
+       },
+       {
+         id: 3,
+         artistName: user.role === 'artist' ? user.name || 'Lee Min-ho' : 'Lee Min-ho',
+         groupName: 'Phoenix',
+         title: 'Grabación Nuevo Single',
+         type: 'recording',
+         date: '2025-12-08',
+         time: '10:00',
+         location: 'Big Hit Studio',
+         status: 'pending',
+         description: 'Sesión de grabación para el comeback'
+       },
+       {
+         id: 4,
+         artistName: user.role === 'artist' ? user.name || 'Lee Min-ho' : 'Park Soo-young',
+         groupName: 'Dreamers',
+         title: 'Evento Promocional',
+         type: 'promotion',
+         date: '2025-12-10',
+         time: '16:00',
+         location: 'Centro Comercial COEX',
+         status: 'confirmed',
+         description: 'Firma de autógrafos y meet & greet'
+       },
+       {
+         id: 5,
+         artistName: user.role === 'artist' ? user.name || 'Lee Min-ho' : 'Kim Ji-soo',
+         groupName: 'Starlight',
+         title: 'Reunión con Management',
+         type: 'meeting',
+         date: '2025-12-03',
+         time: '11:00',
+         location: 'Oficina K-Pop Stars Agency',
+         status: 'pending',
+         description: 'Planificación de actividades Q1 2026'
+       }
+     ];
 
+<<<<<<< HEAD
         setActivities(filteredActivities);
+=======
+     // Filtrar según rol
+     let filteredActivities = mockActivities;
+     if (user.role === 'artist') {
+       filteredActivities = mockActivities.filter(a => a.id <= 3);
+     } else if (user.role === 'manager' || user.role === 'director') {
+       filteredActivities = mockActivities.filter(a => 
+         ['Lee Min-ho', 'Kim Ji-soo'].includes(a.artistName)
+       );
+     }
+
+     setActivities(filteredActivities);
+     */
+        // ============================================
+        // FIN SECCIÓN: DATOS DEMO
+        // ============================================
+>>>>>>> 8ea7c42 (update endpoint artist)
 
       } catch (error) {
         console.error('Error al cargar actividades:', error);
@@ -236,10 +318,56 @@ const Activities: React.FC = () => {
   };
 
   const handleEditSave = async (updatedRow: Activity) => {
+<<<<<<< HEAD
     console.log('Actualizar actividad:', updatedRow);
     setActivities(prev => 
       prev.map(activity => activity.id === updatedRow.id ? updatedRow : activity)
     );
+=======
+    try {
+      const response = await fetch(`http://localhost:3000/api/activities/${updatedRow.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(updatedRow)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al actualizar actividad');
+      }
+
+      const data = await response.json();
+      setActivities(prev =>
+        prev.map(activity => activity.id === updatedRow.id ? (data.data || data) : activity)
+      );
+    } catch (error) {
+      console.error('Error al actualizar actividad:', error);
+    }
+  };
+
+  const handleCreateSave = async (newRow: Omit<Activity, 'id'>) => {
+    try {
+      const response = await fetch('http://localhost:3000/api/activities', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(newRow)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al crear actividad');
+      }
+
+      const data = await response.json();
+      setActivities(prev => [...prev, (data.data || data)]);
+    } catch (error) {
+      console.error('Error al crear actividad:', error);
+    }
+>>>>>>> 8ea7c42 (update endpoint artist)
   };
 
   // Manejar selección de fecha en el calendario
@@ -361,14 +489,14 @@ const Activities: React.FC = () => {
   }));
 
   return (
-    <PageLayout 
-      title="Actividades" 
+    <PageLayout
+      title="Actividades"
       description={
         user.role === 'artist' ? 'Consulta y valida todas tus actividades programadas (conciertos, ensayos, grabaciones, etc.)' :
-        user.role === 'manager' ? 'Gestiona y programa actividades para todos los artistas de tu agencia' :
-        user.role === 'director' ? 'Supervisa todas las actividades programadas de los artistas de la agencia' :
-        user.role === 'admin' ? 'Vista global de todas las actividades del sistema' :
-        'Gestión de actividades'
+          user.role === 'manager' ? 'Gestiona y programa actividades para todos los artistas de tu agencia' :
+            user.role === 'director' ? 'Supervisa todas las actividades programadas de los artistas de la agencia' :
+              user.role === 'admin' ? 'Vista global de todas las actividades del sistema' :
+                'Gestión de actividades'
       }
     >
       {isLoading ? (
@@ -393,7 +521,7 @@ const Activities: React.FC = () => {
                   <div className="activity-details">
                     <div className="activity-header">
                       <h2 className="activity-title">{selectedActivity.title}</h2>
-                      <span 
+                      <span
                         className="activity-type-badge"
                         style={{ backgroundColor: getTypeColor(selectedActivity.type) }}
                       >
@@ -426,9 +554,9 @@ const Activities: React.FC = () => {
 
                       <div className="info-item">
                         <span className="info-label">Estado</span>
-                        <span 
+                        <span
                           className="status-badge"
-                          style={{ 
+                          style={{
                             backgroundColor: getStatusColor(selectedActivity.status),
                             color: 'white'
                           }}
@@ -455,14 +583,14 @@ const Activities: React.FC = () => {
                     {/* Botones de validación para artistas */}
                     {selectedActivity.status === 'pending' && (
                       <div className="validation-buttons">
-                        <button 
+                        <button
                           className="validation-btn accept-btn"
                           onClick={handleAcceptActivity}
                         >
                           <CheckCircleIcon />
                           Aceptar Actividad
                         </button>
-                        <button 
+                        <button
                           className="validation-btn reject-btn"
                           onClick={handleRejectActivity}
                         >
@@ -493,7 +621,7 @@ const Activities: React.FC = () => {
                     <div className="activity-details">
                       <div className="activity-header">
                         <h2 className="activity-title">{selectedActivity.title}</h2>
-                        <span 
+                        <span
                           className="activity-type-badge"
                           style={{ backgroundColor: getTypeColor(selectedActivity.type) }}
                         >
@@ -536,9 +664,9 @@ const Activities: React.FC = () => {
 
                         <div className="info-item">
                           <span className="info-label">Estado</span>
-                          <span 
+                          <span
                             className="status-badge"
-                            style={{ 
+                            style={{
                               backgroundColor: getStatusColor(selectedActivity.status),
                               color: 'white'
                             }}
