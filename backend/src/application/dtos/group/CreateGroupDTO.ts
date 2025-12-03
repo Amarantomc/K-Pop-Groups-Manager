@@ -16,43 +16,23 @@ export class CreateGroupDTO {
 	) {}
 
 	static Create(body: any): CreateGroupDTO {
-		if (!body.name) throw new Error("Missing group name");
-		if (!body.debut) throw new Error("Missing group's debut date");
-		if (isNaN(Date.parse(body.debut)))
-			throw new Error("Invalid debut date format");
-		if (!body.status) throw new Error("Missing group's status");
-		if (!(body.status in GroupStatus)) throw new Error("Invalid group status");
-		if (!body.IdAgency) throw new Error("Missing group's agency ID");
-		if (isNaN(Number(body.IdAgency)))
-			throw new Error("Group's agency ID must be a number");
-		if (!body.IdConcept) throw new Error("Missing group's concept ID");
-		if (isNaN(Number(body.IdConcept)))
-			throw new Error("Group's concept ID must be a number");
-		if (!body.IdVisualConcept)
-			throw new Error("Missing group's visual concept ID");
-		if (isNaN(Number(body.IdVisualConcept)))
-			throw new Error("Group's visual concept ID must be a number");
-		if (!body.members) throw new Error("Missing group's members list");
-		if (
-			!Array.isArray(body.members) ||
-			body.members.length == 0 ||
-			!body.members.every((m: any) => typeof m === "number" && !isNaN(m))
-		)
-			throw new Error(
-				"Group's members list must be a nonempty array of numbers"
-			);
-		if (
-			!Array.isArray(body.roles) ||
-			body.roles.length == 0 ||
-			!body.roles.every((r: any) => typeof r === "string")
-		)
-			throw new Error(
-				"Group member roles list must be a nonempty array of strings"
-			);
-		if (body.roles.length != body.members.length)
-			throw new Error(
-				"Group member roles list must be the same length as member list"
-			);
+		
+		if(!body.name|| !body.debut|| !body.status|| !body.IdAgency|| !body.IdConcept|| !body.IdVisualConcept|| !body.members|| !body.roles){
+			throw new Error("Missing required fields");
+		}
+		
+		if (!(body.status in GroupStatus)){
+			throw new Error("Invalid group status");
+		} 
+		 
+		if (!Array.isArray(body.members) ||body.members.length == 0|| !Array.isArray(body.roles)||body.roles.length == 0){
+			throw new Error("Group's members and roles must be non-empty arrays");
+		}
+		 
+		if (body.roles.length != body.members.length){
+			throw new Error("Group member roles list must be the same length as member list");
+		}
+
 
 		return new CreateGroupDTO(
 			body.name,

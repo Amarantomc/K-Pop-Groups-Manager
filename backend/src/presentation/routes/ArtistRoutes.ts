@@ -23,8 +23,9 @@ import { AuthMiddleware, type AuthenticatedRequest } from "../middlewares/AuthMi
     this.router.get('/:apprenticeId&:groupId', (req, res) => this.artistController.findById(req,res))
     this.router.put('/:apprenticeId&:groupId',RoleMiddleware.onlyStaff(), (req, res) => this.artistController.updateArtist(req, res))
     this.router.delete('/:apprenticeId&:groupId',RoleMiddleware.onlyStaff(), (req, res) => this.artistController.deleteArtist(req, res))
-    this.router.get('/',RoleMiddleware.requireAgencyAccess,(req, res) => this.artistController.getAll(req, res))
-    this.router.get('/:id', (req, res) => this.artistController.getArtistsByAgency(req, res));
+    
+    this.router.get('/',(req, res) => this.artistController.getAll(req, res))
+    this.router.get('/:id',RoleMiddleware.requireAgencyAccess, (req, res) => this.artistController.getArtistsByAgency(req, res));
    
   }
 

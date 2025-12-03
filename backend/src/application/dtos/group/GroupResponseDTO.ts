@@ -42,8 +42,8 @@ export class GroupResponseDTO {
 			concept:
 				group.concept ||
 				group.concepto ||
-				(group.idConcepto ? { id: group.idConcepto } : null),
-			visualConcept: group.visualConcept || null,
+				(group.idConcepto ? { id: group.idConcepto } : null)
+			
 		});
 	}
 
