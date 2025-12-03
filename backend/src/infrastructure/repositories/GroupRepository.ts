@@ -6,6 +6,7 @@ import type { Group } from "../../domain/entities/Group";
 import type { GroupStatus } from "../../domain/enums/GroupStatus";
 import type { UnitOfWork } from "../PrismaUnitOfWork";
 import { Types } from "../di/Types";
+import { Artist } from "../../domain/entities/Artist";
 
 // ! Hay que crear la relación de grupo y concepto visual en la base de datos y actualizar los métodos que usan toEntity y actualizar el mismo toEntity
 
@@ -420,12 +421,19 @@ export class GroupRepository implements IGroupRepository {
 			});
 			await this.db.grupo.update({
 				where: { id: groupId },
-				data: { Nomiembros: { increment: 1 } },
+				data: { Nomiembros: { increment: 1 },
+						Artista: { connect: { idAp: artistIds[i] } } },
 			});
+			await this.db.artista.update({
+				where: { idAp: artistIds[i] },
+				data:{idGr: groupId},
+			})
+						
+				}
 		}
-	}
+	
 
-	async removeMembers(groupId: number, artistIds: number[]): Promise<void> {
+async removeMembers(groupId: number, artistIds: number[]): Promise<void> {
 		const today = new Date();
 		for (const artistId of artistIds) {
 			const artist = await this.db.artistaEnGrupo.findFirst({

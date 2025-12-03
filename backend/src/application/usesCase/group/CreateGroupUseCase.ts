@@ -14,10 +14,7 @@ export class CreateGroupUseCase {
 
 	async execute(command: CreateGroupDTO): Promise<GroupResponseDTO> {
 		try {
-			if (!command.members || command.members.length == 0)
-				throw new Error("Members has to be a non empty array");
-			if (!command.roles || command.roles.length == 0)
-				throw new Error("Roles has to be a non empty array");
+			 
 
 			await this.unitOfWork.beginTransaction();
 
