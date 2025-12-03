@@ -42,51 +42,51 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "APRENDIZ",
             items: [
-                { label: "Mostrar Aprendices", icon: <SchoolIcon />, path: "/admin/apprentices" }
+                { label: "Mostrar Aprendices", icon: <SchoolIcon />, path: "/admin/apprentice" }
             ]
         },
-        // {
-        //     title: "ARTISTA",
-        //     items: [
-        //         { label: "Gestión de Artistas", icon: <PeopleIcon />, path: "/admin/Artist" }
-        //     ]
-        // },
-        // {
-        //     title: "GRUPO ",
-        //     items: [
-        //         { label: "Mostrar Grupos", icon: <PeopleIcon />, path: "/admin/Groups" }
-        //     ]
-        // },
-        // {
-        //     title: "ALBUM",
-        //     items: [
-        //         { label: "Mostrar Álbumes", icon: <AlbumIcon />, path: "/admin/listAlbums" }
-        //     ]
-        // },
-        // {
-        //     title: "ACTIVIDAD",
-        //     items: [
-        //         { label: "Mostrar Actividades", icon: <CalendarTodayIcon />, path: "/admin/Activities" }
-        //     ]
-        // },
-        // {
-        //     title: "CONTRATO",
-        //     items: [
-        //         { label: "Mostrar Contratos", icon: <WorkIcon />, path: "/admin/contracts" }
-        //     ]
-        // },
-        // {
-        //     title: "INGRESOS",
-        //     items: [
-        //         { label: "Ingresos del Sistema", icon: <AttachMoneyIcon />, path: "/admin/income" }
-        //     ]
-        // },
-        // {
-        //     title: "SOLICITUD",
-        //     items: [
-        //         { label: "Solicitudes", icon: <NotificationsIcon />, path: "/admin/requests" }
-        //     ]
-        // },
+        {
+            title: "ARTISTA",
+            items: [
+            { label: "Gestión de Artistas", icon: <PeopleIcon />, path: "/admin/artists" }
+            ]
+        },
+        {
+            title: "GRUPO ",
+            items: [
+            { label: "Mostrar Grupos", icon: <PeopleIcon />, path: "/admin/groups" }
+            ]
+        },
+        {
+            title: "ALBUM",
+            items: [
+            { label: "Mostrar Álbumes", icon: <AlbumIcon />, path: "/admin/albums" }
+            ]
+        },
+        {
+            title: "ACTIVIDAD",
+            items: [
+            { label: "Mostrar Actividades", icon: <CalendarTodayIcon />, path: "/admin/activities" }
+            ]
+        },
+        {
+            title: "CONTRATO",
+            items: [
+            { label: "Mostrar Contratos", icon: <WorkIcon />, path: "/admin/contracts" }
+            ]
+        },
+        {
+            title: "INGRESOS",
+            items: [
+            { label: "Ingresos del Sistema", icon: <AttachMoneyIcon />, path: "/admin/income" }
+            ]
+        },
+        {
+            title: "SOLICITUD",
+            items: [
+            { label: "Solicitudes", icon: <NotificationsIcon />, path: "/admin/request" }
+            ]
+        },
         {
             title: "CUENTA",
             items: [
@@ -106,19 +106,19 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "APRENDIZ",
             items: [
-                { label: "Mostrar Aprendices", icon: <SchoolIcon />, path: "/director/apprentices" }
+                { label: "Mostrar Aprendices", icon: <SchoolIcon />, path: "/director/apprentice" }
             ]
         },
         {
             title: "ARTISTA",
             items: [
-                { label: "Gestión de Artistas", icon: <PeopleIcon />, path: "/director/Artist" }
+                { label: "Gestión de Artistas", icon: <PeopleIcon />, path: "/director/artists" }
             ]
         },
         {
             title: "GRUPO ",
             items: [
-                { label: "Mostrar Grupos", icon: <PeopleIcon />, path: "/director/Groups" }
+                { label: "Mostrar Grupos", icon: <PeopleIcon />, path: "/director/group" }
             ]
         },
         {
@@ -130,7 +130,7 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "ACTIVIDAD",
             items: [
-                { label: "Gestión de Actividades", icon: <CalendarTodayIcon />, path: "/director/Activities"}
+                { label: "Gestión de Actividades", icon: <CalendarTodayIcon />, path: "/director/activities"}
             ]
         },
         {
@@ -148,14 +148,14 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "SOLICITUD",
             items: [
-                { label: "Solicitudes", icon: <NotificationsIcon />, path: "/director/requests" }
+                { label: "Solicitudes", icon: <NotificationsIcon />, path: "/director/request" }
             ]
         },
         {
             title: "CUENTA",
             items: [
                 { label: "Perfil", icon: <AccountCircleIcon />, path: "/director/profile" },
-                { label: "Usuarios Registrados", icon: <PeopleIcon />, path: "/director/listUsers" },
+               // { label: "Usuarios Registrados", icon: <PeopleIcon />, path: "/director/listUsers" },
                 { label: "Cerrar Sesión", icon: <LogoutIcon />, path: "/login" }
             ]
         }
@@ -171,19 +171,19 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "APRENDIZ",
             items: [
-                { label: "Mostrar Aprendices", icon: <SchoolIcon />, path: "/manager/apprentices" }
+                { label: "Mostrar Aprendices", icon: <SchoolIcon />, path: "/manager/apprentice" }
             ]
         },
         {
             title: "ARTISTA",
             items: [
-                { label: "Gestión de Artistas", icon: <PeopleIcon />, path: "/manager/Artist" }
+                { label: "Gestión de Artistas", icon: <PeopleIcon />, path: "/manager/artists" }
             ]
         },
         {
             title: "GRUPO ",
             items: [
-                { label: "Mostrar Grupos", icon: <PeopleIcon />, path: "/manager/Groups" }
+                { label: "Mostrar Grupos", icon: <PeopleIcon />, path: "/manager/group" }
             ]
         },
         {
@@ -195,7 +195,7 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "ACTIVIDAD",
             items: [
-                { label: "Gestión de Actividades", icon: <CalendarTodayIcon />, path: "/manager/Activities"}
+                { label: "Gestión de Actividades", icon: <CalendarTodayIcon />, path: "/manager/activities"}
             ]
         },
         {
@@ -213,14 +213,14 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "SOLICITUD",
             items: [
-                { label: "Solicitudes", icon: <NotificationsIcon />, path: "/manager/requests" }
+                { label: "Solicitudes", icon: <NotificationsIcon />, path: "/manager/request" }
             ]
         },
         {
             title: "CUENTA",
             items: [
                 { label: "Perfil", icon: <AccountCircleIcon />, path: "/manager/profile" },
-                { label: "Usuarios Registrados", icon: <PeopleIcon />, path: "/manager/listUsers" },
+               // { label: "Usuarios Registrados", icon: <PeopleIcon />, path: "/manager/listUsers" },
                 { label: "Cerrar Sesión", icon: <LogoutIcon />, path: "/login" }
             ]
         }
@@ -236,7 +236,7 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "ACTIVIDAD",
             items: [
-                { label: "Calendario", icon: <CalendarTodayIcon />, path: "/artist/Activities" }
+                { label: "Calendario", icon: <CalendarTodayIcon />, path: "/artist/activities" }
             ]
         },
         {
@@ -248,7 +248,7 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "SOLICITUD",
             items: [
-                { label: "Mis Solicitudes", icon: <NotificationsIcon />, path: "/artist/requests" }
+                { label: "Mis Solicitudes", icon: <NotificationsIcon />, path: "/artist/request" }
             ]
         },
         {
@@ -276,7 +276,7 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "SOLICITUD",
             items: [
-                { label: "Mis Solicitudes", icon: <NotificationsIcon />, path: "/apprentice/requests" }
+                { label: "Mis Solicitudes", icon: <NotificationsIcon />, path: "/apprentice/request" }
             ]
         },
         {

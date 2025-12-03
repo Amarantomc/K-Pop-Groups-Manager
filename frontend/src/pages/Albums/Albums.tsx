@@ -26,9 +26,9 @@ const Albums: React.FC = () => {
     { field: 'title', headerName: 'Título', width: 200 },
     { field: 'artistName', headerName: 'Artista', width: 180 },
     { field: 'groupName', headerName: 'Grupo', width: 150 },
-    { 
-      field: 'releaseDate', 
-      headerName: 'Fecha de Lanzamiento', 
+    {
+      field: 'releaseDate',
+      headerName: 'Fecha de Lanzamiento',
       width: 160,
       valueFormatter: (params) => {
         return new Date(params).toLocaleDateString('es-ES');
@@ -36,9 +36,9 @@ const Albums: React.FC = () => {
     },
     { field: 'genre', headerName: 'Género', width: 130 },
     { field: 'totalTracks', headerName: 'Canciones', width: 100 },
-    { 
-      field: 'status', 
-      headerName: 'Estado', 
+    {
+      field: 'status',
+      headerName: 'Estado',
       width: 130,
       renderCell: (params) => {
         const statusColors: Record<string, string> = {
@@ -54,9 +54,9 @@ const Albums: React.FC = () => {
           'cancelled': 'Cancelado'
         };
         return (
-          <span style={{ 
+          <span style={{
             color: statusColors[params.value] || '#6b7280',
-            fontWeight: 600 
+            fontWeight: 600
           }}>
             {statusLabels[params.value] || params.value}
           </span>
@@ -66,8 +66,8 @@ const Albums: React.FC = () => {
   ];
 
   // Agregar columna de agencia solo para admin
-  const columns = user?.role === 'admin' 
-    ? [...baseColumns, { field: 'agencyName', headerName: 'Agencia', width: 150 }] 
+  const columns = user?.role === 'admin'
+    ? [...baseColumns, { field: 'agencyName', headerName: 'Agencia', width: 150 }]
     : baseColumns;
 
   useEffect(() => {
@@ -77,7 +77,7 @@ const Albums: React.FC = () => {
         if (!user) return;
 
         let endpoint = '';
-        
+
         switch (user.role) {
           case 'manager':
             endpoint = `/api/albums?agencyId=${user.agencyId}`;
@@ -93,6 +93,9 @@ const Albums: React.FC = () => {
             return;
         }
 
+        // ============================================
+        // SECCIÓN: BACKEND ENDPOINT
+        // ============================================
         const response = await fetch(`http://localhost:3000${endpoint}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -105,75 +108,84 @@ const Albums: React.FC = () => {
 
         const data = await response.json();
         setAlbums(data.data || data);
+        // ============================================
+        // FIN SECCIÓN: BACKEND ENDPOINT
+        // ============================================
 
-        /* DATOS DE PRUEBA - COMENTADO
-        const mockAlbums: Album[] = [
-          {
-            id: 1,
-            title: 'Rising Phoenix',
-            artistName: 'Lee Min-ho',
-            groupName: 'Phoenix',
-            releaseDate: '2025-10-15',
-            genre: 'K-Pop',
-            totalTracks: 12,
-            status: 'released',
-            agencyName: 'K-Pop Stars Agency'
-          },
-          {
-            id: 2,
-            title: 'Starlight Dreams',
-            artistName: 'Kim Ji-soo',
-            groupName: 'Starlight',
-            releaseDate: '2025-11-20',
-            genre: 'K-Pop',
-            totalTracks: 10,
-            status: 'released',
-            agencyName: 'K-Pop Stars Agency'
-          },
-          {
-            id: 3,
-            title: 'Dreamscape',
-            artistName: 'Park Soo-young',
-            groupName: 'Dreamers',
-            releaseDate: '2025-12-25',
-            genre: 'Pop',
-            totalTracks: 8,
-            status: 'upcoming',
-            agencyName: 'K-Pop Stars Agency'
-          },
-          {
-            id: 4,
-            title: 'Thunder Strikes',
-            artistName: 'Choi Min-jun',
-            groupName: 'Thunder Squad',
-            releaseDate: '2025-09-10',
-            genre: 'Hip-Hop',
-            totalTracks: 15,
-            status: 'released',
-            agencyName: 'Global Entertainment'
-          },
-          {
-            id: 5,
-            title: 'New Beginnings',
-            artistName: 'Lee Min-ho',
-            groupName: 'Phoenix',
-            releaseDate: '2026-02-14',
-            genre: 'K-Pop',
-            totalTracks: 14,
-            status: 'recording',
-            agencyName: 'K-Pop Stars Agency'
-          }
-        ];
+        // ============================================
+        //SECCIÓN: DATOS DEMO
+        //============================================
+        /*
+     const mockAlbums: Album[] = [
+       {
+         id: 1,
+         title: 'Rising Phoenix',
+         artistName: 'Lee Min-ho',
+         groupName: 'Phoenix',
+         releaseDate: '2025-10-15',
+         genre: 'K-Pop',
+         totalTracks: 12,
+         status: 'released',
+         agencyName: 'K-Pop Stars Agency'
+       },
+       {
+         id: 2,
+         title: 'Starlight Dreams',
+         artistName: 'Kim Ji-soo',
+         groupName: 'Starlight',
+         releaseDate: '2025-11-20',
+         genre: 'K-Pop',
+         totalTracks: 10,
+         status: 'released',
+         agencyName: 'K-Pop Stars Agency'
+       },
+       {
+         id: 3,
+         title: 'Dreamscape',
+         artistName: 'Park Soo-young',
+         groupName: 'Dreamers',
+         releaseDate: '2025-12-25',
+         genre: 'Pop',
+         totalTracks: 8,
+         status: 'upcoming',
+         agencyName: 'K-Pop Stars Agency'
+       },
+       {
+         id: 4,
+         title: 'Thunder Strikes',
+         artistName: 'Choi Min-jun',
+         groupName: 'Thunder Squad',
+         releaseDate: '2025-09-10',
+         genre: 'Hip-Hop',
+         totalTracks: 15,
+         status: 'released',
+         agencyName: 'Global Entertainment'
+       },
+       {
+         id: 5,
+         title: 'New Beginnings',
+         artistName: 'Lee Min-ho',
+         groupName: 'Phoenix',
+         releaseDate: '2026-02-14',
+         genre: 'K-Pop',
+         totalTracks: 14,
+         status: 'recording',
+         agencyName: 'K-Pop Stars Agency'
+       }
+     ];
 
-        // Filtrar según rol para la demo
-        let filteredAlbums = mockAlbums;
-        if (user.role === 'manager' || user.role === 'director') {
-          // Filtrar por agencia (en demo mostramos los de K-Pop Stars Agency)
-          filteredAlbums = mockAlbums.filter(album => album.agencyName === 'K-Pop Stars Agency');
-        }
+     // Filtrar según rol para la demo
+     let filteredAlbums = mockAlbums;
+     if (user.role === 'manager' || user.role === 'director') {
+       // Filtrar por agencia (en demo mostramos los de K-Pop Stars Agency)
+       filteredAlbums = mockAlbums.filter(album => album.agencyName === 'K-Pop Stars Agency');
+     }
 
-        setAlbums(filteredAlbums);
-        */
+     setAlbums(filteredAlbums);
+     */
+        //============================================
+        //FIN SECCIÓN: DATOS DEMO
+        //============================================ 
 
       } catch (error) {
         console.error('Error al cargar álbumes:', error);
@@ -220,7 +232,7 @@ const Albums: React.FC = () => {
       }
 
       const data = await response.json();
-      setAlbums(prev => 
+      setAlbums(prev =>
         prev.map(album => album.id === updatedRow.id ? (data.data || data) : album)
       );
     } catch (error) {
@@ -265,13 +277,13 @@ const Albums: React.FC = () => {
   }
 
   return (
-    <PageLayout 
-      title="Gestión de Álbumes" 
+    <PageLayout
+      title="Gestión de Álbumes"
       description={
         user.role === 'manager' ? 'Administra todos los álbumes de los artistas de tu agencia' :
-        user.role === 'director' ? 'Supervisa todos los álbumes de la agencia' :
-        user.role === 'admin' ? 'Vista global de todos los álbumes del sistema' :
-        'Gestión de álbumes'
+          user.role === 'director' ? 'Supervisa todos los álbumes de la agencia' :
+            user.role === 'admin' ? 'Vista global de todos los álbumes del sistema' :
+              'Gestión de álbumes'
       }
     >
       {isLoading ? (

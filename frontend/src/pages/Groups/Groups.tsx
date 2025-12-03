@@ -23,9 +23,9 @@ const Groups: React.FC = () => {
   // Columnas base del DataTable
   const baseColumns: GridColDef[] = [
     { field: 'name', headerName: 'Nombre del Grupo', width: 200 },
-    { 
-      field: 'debutDate', 
-      headerName: 'Fecha de Debut', 
+    {
+      field: 'debutDate',
+      headerName: 'Fecha de Debut',
       width: 150,
       valueFormatter: (params) => {
         return new Date(params).toLocaleDateString('es-ES');
@@ -33,9 +33,9 @@ const Groups: React.FC = () => {
     },
     { field: 'genre', headerName: 'Género', width: 130 },
     { field: 'memberCount', headerName: 'Miembros', width: 100 },
-    { 
-      field: 'status', 
-      headerName: 'Estado', 
+    {
+      field: 'status',
+      headerName: 'Estado',
       width: 150,
       renderCell: (params) => {
         const statusColors: Record<string, string> = {
@@ -51,22 +51,22 @@ const Groups: React.FC = () => {
           'on_hiatus': 'En Hiato'
         };
         return (
-          <span style={{ 
+          <span style={{
             color: statusColors[params.value] || '#6b7280',
-            fontWeight: 600 
+            fontWeight: 600
           }}>
             {statusLabels[params.value] || params.value}
           </span>
         );
       }
     },
-    { 
-      field: 'description', 
-      headerName: 'Descripción', 
+    {
+      field: 'description',
+      headerName: 'Descripción',
       width: 250,
       renderCell: (params) => (
-        <div style={{ 
-          whiteSpace: 'normal', 
+        <div style={{
+          whiteSpace: 'normal',
           lineHeight: '1.4',
           padding: '8px 0'
         }}>
@@ -77,8 +77,8 @@ const Groups: React.FC = () => {
   ];
 
   // Agregar columna de agencia solo para admin
-  const columns = user?.role === 'admin' 
-    ? [...baseColumns, { field: 'agencyName', headerName: 'Agencia', width: 150 }] 
+  const columns = user?.role === 'admin'
+    ? [...baseColumns, { field: 'agencyName', headerName: 'Agencia', width: 150 }]
     : baseColumns;
 
   useEffect(() => {
@@ -88,22 +88,24 @@ const Groups: React.FC = () => {
         if (!user) return;
 
         let endpoint = '';
-        
+
         switch (user.role) {
           case 'manager':
-            endpoint = `/api/groups?agencyId=${user.agencyId}`;
-            break;
           case 'director':
-            endpoint = `/api/groups?agencyId=${user.agencyId}`;
+            endpoint = `/api/group?agencyId=${user.agencyId}`;
             break;
           case 'admin':
-            endpoint = '/api/groups';
+            endpoint = '/api/group';
             break;
           default:
             console.error('Rol no autorizado:', user.role);
             return;
         }
 
+        // ============================================
+        // SECCIÓN: BACKEND ENDPOINT
+        // Descomenta esta sección para usar el backend real
+        // ============================================
         const response = await fetch(`http://localhost:3000${endpoint}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -116,70 +118,80 @@ const Groups: React.FC = () => {
 
         const data = await response.json();
         setGroups(data.data || data);
+        // ============================================
+        // FIN SECCIÓN: BACKEND ENDPOINT
+        // ============================================
 
-        /* DATOS DE PRUEBA - COMENTADO
-        const mockGroups: Group[] = [
-          {
-            id: 1,
-            name: 'Phoenix',
-            debutDate: '2023-03-15',
-            genre: 'K-Pop',
-            memberCount: 5,
-            agencyName: 'K-Pop Stars Agency',
-            status: 'active',
-            description: 'Grupo de K-Pop con enfoque en performances energéticos y coreografías complejas'
-          },
-          {
-            id: 2,
-            name: 'Starlight',
-            debutDate: '2022-07-22',
-            genre: 'K-Pop',
-            memberCount: 4,
-            agencyName: 'K-Pop Stars Agency',
-            status: 'active',
-            description: 'Girl group conocido por sus conceptos elegantes y vocales poderosos'
-          },
-          {
-            id: 3,
-            name: 'Dreamers',
-            debutDate: '2021-11-08',
-            genre: 'Pop',
-            memberCount: 6,
-            agencyName: 'K-Pop Stars Agency',
-            status: 'active',
-            description: 'Grupo versátil con estilo pop contemporáneo'
-          },
-          {
-            id: 4,
-            name: 'Thunder Squad',
-            debutDate: '2020-05-30',
-            genre: 'Hip-Hop',
-            memberCount: 3,
-            agencyName: 'Global Entertainment',
-            status: 'on_hiatus',
-            description: 'Crew de hip-hop con enfoque en rap y producción'
-          },
-          {
-            id: 5,
-            name: 'Crystal Hearts',
-            debutDate: '2019-02-14',
-            genre: 'R&B',
-            memberCount: 4,
-            agencyName: 'Global Entertainment',
-            status: 'disbanded',
-            description: 'Grupo de R&B disuelto en 2024'
-          }
-        ];
+        // ============================================
+        // SECCIÓN: DATOS DEMO
+        // ============================================
 
-        // Filtrar según rol para la demo
-        let filteredGroups = mockGroups;
-        if (user.role === 'manager' || user.role === 'director') {
-          // Filtrar por agencia (en demo mostramos los de K-Pop Stars Agency)
-          filteredGroups = mockGroups.filter(group => group.agencyName === 'K-Pop Stars Agency');
-        }
+        /*
+     const mockGroups: Group[] = [
+       {
+         id: 1,
+         name: 'Phoenix',
+         debutDate: '2023-03-15',
+         genre: 'K-Pop',
+         memberCount: 5,
+         agencyName: 'K-Pop Stars Agency',
+         status: 'active',
+         description: 'Grupo de K-Pop con enfoque en performances energéticos y coreografías complejas'
+       },
+       {
+         id: 2,
+         name: 'Starlight',
+         debutDate: '2022-07-22',
+         genre: 'K-Pop',
+         memberCount: 4,
+         agencyName: 'K-Pop Stars Agency',
+         status: 'active',
+         description: 'Girl group conocido por sus conceptos elegantes y vocales poderosos'
+       },
+       {
+         id: 3,
+         name: 'Dreamers',
+         debutDate: '2021-11-08',
+         genre: 'Pop',
+         memberCount: 6,
+         agencyName: 'K-Pop Stars Agency',
+         status: 'active',
+         description: 'Grupo versátil con estilo pop contemporáneo'
+       },
+       {
+         id: 4,
+         name: 'Thunder Squad',
+         debutDate: '2020-05-30',
+         genre: 'Hip-Hop',
+         memberCount: 3,
+         agencyName: 'Global Entertainment',
+         status: 'on_hiatus',
+         description: 'Crew de hip-hop con enfoque en rap y producción'
+       },
+       {
+         id: 5,
+         name: 'Crystal Hearts',
+         debutDate: '2019-02-14',
+         genre: 'R&B',
+         memberCount: 4,
+         agencyName: 'Global Entertainment',
+         status: 'disbanded',
+         description: 'Grupo de R&B disuelto en 2024'
+       }
+     ];
 
-        setGroups(filteredGroups);
-        */
+     // Filtrar según rol para la demo
+     let filteredGroups = mockGroups;
+     if (user.role === 'manager' || user.role === 'director') {
+       // Filtrar por agencia (en demo mostramos los de K-Pop Stars Agency)
+       filteredGroups = mockGroups.filter(group => group.agencyName === 'K-Pop Stars Agency');
+     }
+
+     setGroups(filteredGroups);
+     */
+      //============================================
+      //FIN SECCIÓN: DATOS DEMO
+      //============================================ 
 
       } catch (error) {
         console.error('Error al cargar grupos:', error);
@@ -226,7 +238,7 @@ const Groups: React.FC = () => {
       }
 
       const data = await response.json();
-      setGroups(prev => 
+      setGroups(prev =>
         prev.map(group => group.id === updatedRow.id ? (data.data || data) : group)
       );
     } catch (error) {
@@ -271,13 +283,13 @@ const Groups: React.FC = () => {
   }
 
   return (
-    <PageLayout 
-      title="Gestión de Grupos" 
+    <PageLayout
+      title="Gestión de Grupos"
       description={
         user.role === 'manager' ? 'Administra todos los grupos de tu agencia' :
-        user.role === 'director' ? 'Supervisa todos los grupos de la agencia' :
-        user.role === 'admin' ? 'Vista global de todos los grupos del sistema' :
-        'Gestión de grupos'
+          user.role === 'director' ? 'Supervisa todos los grupos de la agencia' :
+            user.role === 'admin' ? 'Vista global de todos los grupos del sistema' :
+              'Gestión de grupos'
       }
     >
       {isLoading ? (
