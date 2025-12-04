@@ -169,6 +169,14 @@ import type { ListApplicationUseCase } from "../../application/usesCase/applicat
 import { CreateApplicationDto } from "../../application/dtos/application(solicitud)/CreateApplicationDto";
 import type { UpdateApplicationUseCase } from "../../application/usesCase/application(solicitud)/UpdateApplicationUseCase";
 import type { FindByApprenticeUseCase } from "../../application/usesCase/application(solicitud)/FindByApprenticeUseCase";
+import { VisualConceptRepository } from '../repositories/VisualConceptRepository';
+import { CreateVisualConceptUseCase } from '../../application/usesCase/visualConcept/CreateVisualConceptUseCase';
+import { DeleteVisualConceptUseCase } from '../../application/usesCase/visualConcept/DeleteVisualConceptUseCase';
+import { GetVisualConceptUseCase } from '../../application/usesCase/visualConcept/GetConceptUseCase';
+import { ListVisualConceptUseCase } from '../../application/usesCase/visualConcept/ListVisualConceptUseCase';
+import { UpdateVisualConceptUseCase } from '../../application/usesCase/visualConcept/UpdateVisualConceptUseCase';
+//import type { IVisualConceptRepository } from '../../application/interfaces/repositories/IVisualConcept';
+import  { VisualConceptController } from '../../presentation/controllers/VisualConceptController';
 import { CreateAwardUseCase } from '../../application/usesCase/award/CreateAwardUseCase';
 import { DeleteAwardUseCase } from '../../application/usesCase/award/DeleteAwardUseCase';
 import { GetAwardUseCase } from '../../application/usesCase/award/GetAwardUseCase';
@@ -625,21 +633,49 @@ container
 >>>>>>> 6f5c07e (Crud award implementation (#116))
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 container
 	.bind<AlbumController>(Types.AlbumController)
 	.to(AlbumController)
 	.inSingletonScope();
 =======
+=======
+  container.bind<VisualConceptController>(Types.VisualConceptController)
+  .to(VisualConceptController)
+  .inTransientScope();
+>>>>>>> 8d68224 (Crud visual concept implemetation (#118))
   container.bind<PopularityListController>(Types.PopularityListController)
   .to(PopularityListController)
   .inTransientScope();
 
   
+<<<<<<< HEAD
 >>>>>>> f036841 (Some Fixes (#104))
 
 container
 	.bind<SongController>(Types.SongController)
 	.to(SongController)
 	.inSingletonScope();
+=======
+  container.bind<CreateVisualConceptUseCase>(Types.CreateVisualConceptUseCase)
+  .to(CreateVisualConceptUseCase)
+  .inTransientScope();
+
+  container.bind<DeleteVisualConceptUseCase>(Types.DeleteVisualConceptUseCase)
+  .to(DeleteVisualConceptUseCase)
+  .inTransientScope();
+
+  container.bind<GetVisualConceptUseCase>(Types.GetVisualConceptUseCase)
+  .to(GetVisualConceptUseCase)
+  .inTransientScope();
+
+  container.bind<ListVisualConceptUseCase>(Types.ListVisualConceptUseCase)
+  .to(ListVisualConceptUseCase)
+  .inTransientScope();
+
+    container.bind<UpdateVisualConceptUseCase>(Types.UpdateVisualConceptUseCase)
+  .to(UpdateVisualConceptUseCase)
+  .inTransientScope();
+>>>>>>> 8d68224 (Crud visual concept implemetation (#118))
 
 export { container };

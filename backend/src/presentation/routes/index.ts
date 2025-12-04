@@ -10,6 +10,7 @@ import { ActivityRoutes } from "./ActivityRoutes";
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { AlbumRoutes } from "./AlbumRoutes";
 import { SongRoutes } from "./SongRoutes";
 =======
@@ -18,6 +19,9 @@ import { PopularityListRoutes } from "./PopularityListRoutes";
 =======
 =======
 >>>>>>> 0d29b15 (Crud award implementation (#117))
+=======
+import { VisualConceptRoutes } from "./VisualConceptRoutes";
+>>>>>>> 8d68224 (Crud visual concept implemetation (#118))
 import { AwardRoutes } from "./AwardRoutes";
 import { PopularityListRoutes } from "./PopularityListRoutes";
 <<<<<<< HEAD
@@ -39,6 +43,7 @@ const activityRoutes = new ActivityRoutes();
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 const albumRoutes = new AlbumRoutes();
 const songRoutes = new SongRoutes();
 =======
@@ -47,6 +52,9 @@ const popularityListRoutes=new PopularityListRoutes()
 =======
 =======
 >>>>>>> 0d29b15 (Crud award implementation (#117))
+=======
+const visualConceptRoutes=new VisualConceptRoutes()
+>>>>>>> 8d68224 (Crud visual concept implemetation (#118))
 const awardRoutes = new AwardRoutes();
 const popularityListRoutes=new PopularityListRoutes()
 <<<<<<< HEAD
@@ -66,6 +74,7 @@ rootRouter.use("/activity", activityRoutes.getRouter());
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 rootRouter.use("/album", albumRoutes.getRouter());
 rootRouter.use("/song", songRoutes.getRouter());
 =======
@@ -74,6 +83,9 @@ rootRouter.use('/populist',popularityListRoutes.getRouter())
 =======
 =======
 >>>>>>> 0d29b15 (Crud award implementation (#117))
+=======
+rootRouter.use("/visual-concept", visualConceptRoutes.getRouter());
+>>>>>>> 8d68224 (Crud visual concept implemetation (#118))
 rootRouter.use("/award", awardRoutes.getRouter());
 
 rootRouter.use('/populist',popularityListRoutes.getRouter())

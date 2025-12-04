@@ -17,6 +17,7 @@ const Types = {
   IArtistRepository : Symbol.for('IArtistRepository'),
   IConceptRepository: Symbol.for('IConceptRepository'),
   IActivityRepository: Symbol.for('IActivityRepository'),
+  IVisualConceptRepository: Symbol.for('IConceptRepository'),
   IAwardRepository: Symbol.for('IAwardRepository'),
   IPopularityListRepository: Symbol.for('IPopularityListRepository'),
   IGroupRepository : Symbol.for('IGroupRepository'),
@@ -57,6 +58,7 @@ const Types = {
 	ListByAgencyUseCase: Symbol.for("ListByAgencyUseCase"),
 	GetApprenticeByNameUseCase: Symbol.for("GetApprenticeByNameUseCase"),
 
+<<<<<<< HEAD
 	CreateAgencyUseCase: Symbol.for("CreateAgencyUseCase"),
 	DeleteAgencyUseCase: Symbol.for("DeleteAgencyUseCase"),
 	FindAgenciesByAddressUseCase: Symbol.for(" FindAgenciesByAddressUseCase"),
@@ -67,6 +69,23 @@ const Types = {
 	GetAgencyUseCase: Symbol.for("GetAgencyUseCase"),
 	UpdateAgencyUseCase: Symbol.for("UpdateAgencyUseCase"),
 	ListAgenciesUseCase: Symbol.for("ListAgenciesUseCase"),
+=======
+  CreateVisualConceptUseCase: Symbol.for('CreateVisualConceptUseCase'),
+  DeleteVisualConceptUseCase: Symbol.for('DeleteVisualConceptUseCase'),
+  GetVisualConceptUseCase: Symbol.for('GetVisualConceptUseCase'),
+  UpdateVisualConceptUseCase: Symbol.for('UpdateVisualConceptUseCase'),
+  ListVisualConceptUseCase :Symbol.for('ListVisualConceptUseCase'),
+
+  CreatePopularityListUseCase: Symbol.for('CreatePopularityListUseCase'),
+  GetPopularityListUseCase: Symbol.for('GetPopularityListUseCase'),
+  ListPopularityListsUseCase: Symbol.for('GetPopularityListsUseCase'),
+  UpdatePopularityListUseCase: Symbol.for('UpdatePopularityListUseCase'),
+  DeletePopularityListUseCase: Symbol.for('DeletePopularityListUseCase'),
+  AddSongToPopularityListUseCase: Symbol.for('AddSongToPopularityListUseCase'),
+   
+  LoginUserUseCase: Symbol.for('LoginUserUseCase'),
+  ValidateTokenUseCase: Symbol.for('ValidateTokenUseCase'),
+>>>>>>> 8d68224 (Crud visual concept implemetation (#118))
 
 	CreateArtistUseCase: Symbol.for("CreateArtistUseCase"),
 	DeleteArtistUseCase: Symbol.for("DeleteArtistUseCase"),
@@ -146,6 +165,7 @@ FindGroupsByVisualConceptUseCase : Symbol.for('FindGroupsByVisualConceptUseCase'
   ActivityController: Symbol.for('ActivityController'),
   PopularityListController : Symbol.for('PopularityListController'),
   ApplicationController : Symbol.for('ApplicationController'),
+  VisualConceptController : Symbol.for('VisualConceptController'),
   AwardController : Symbol.for('AwardController'),
 
 
