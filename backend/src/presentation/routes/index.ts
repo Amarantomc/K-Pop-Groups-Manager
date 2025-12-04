@@ -8,7 +8,7 @@ import { AgencyRoutes } from "./agencyRoutes";
 import { ArtistRoutes } from "./ArtistRoutes";
 import { ConceptRoutes } from "./ConceptRoutes";
 import { ActivityRoutes } from "./ActivityRoutes";
-import { VisualConceptRoutes } from "./VisualConcept";
+import { VisualConceptRoutes } from "./VisualConceptRoutes";
 
 
 const rootRouter: Router = Router();
