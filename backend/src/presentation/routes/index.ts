@@ -10,6 +10,7 @@ import { ConceptRoutes } from "./ConceptRoutes";
 import { ActivityRoutes } from "./ActivityRoutes";
 import { AwardRoutes } from "./AwardRoutes";
 import { PopularityListRoutes } from "./PopularityListRoutes";
+ 
 
 
 const rootRouter: Router = Router();
@@ -24,6 +25,7 @@ const conceptRoutes=new ConceptRoutes()
 const activityRoutes = new ActivityRoutes();
 const awardRoutes = new AwardRoutes();
 const popularityListRoutes=new PopularityListRoutes()
+ 
 
 rootRouter.use("/auth", authRoutes.getRouter());
 rootRouter.use("/user", userRoutes.getRouter());
@@ -36,6 +38,8 @@ rootRouter.use("/artist", artistRoutes.getRouter());
 rootRouter.use("/concept", conceptRoutes.getRouter());
 rootRouter.use("/activity", activityRoutes.getRouter());
 rootRouter.use("/award", awardRoutes.getRouter());
+
 rootRouter.use('/populist',popularityListRoutes.getRouter())
+
 
 export default rootRouter;
