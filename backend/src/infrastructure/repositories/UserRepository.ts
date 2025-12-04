@@ -1,4 +1,4 @@
-import { inject, injectable } from "inversify";
+import { inject, injectable, named } from "inversify";
 import type { CreateUserDto } from "../../application/dtos/user/CreateUserDto";
 import { UserResponseDto } from "../../application/dtos/user/UserResponseDto";
  
@@ -8,6 +8,7 @@ import type { UnitOfWork } from "../PrismaUnitOfWork";
 import { Types } from "../di/Types";
 import { UserFactory } from "../../domain/factories/UserFactory";
 import { Role } from "../../domain/enums/Role";
+import type { UpdateUserDto } from "../../application/dtos/user/UpdateUserDto";
 
  
 @injectable()
@@ -104,16 +105,24 @@ export class UserRepository implements IUserRepository
         perfilArtista: true
       }
         })
+        
         return user ? UserResponseDto.toEntity(user) : null
     }
-    async update(id: string, data: Partial<CreateUserDto>): Promise<User> {
+    async update(id: string, data: Partial<UpdateUserDto>): Promise<User> {
       //Update no hace sobre agencia grupo etc
+      
       const user = await this.db.user.update({
                   where: { id: Number(id) },
-                  data,
+                  data:{
+                    name:data.name,
+                    email:data.email,
+                    password:data.password,
+                    role:data.role
+                  }
                 });
               
-                return this.findById(user.id) as Promise<User>
+      
+      return this.findById(user.id) as Promise<User>
     }
     async delete(id: any): Promise<void> {
         id=(Number)(id)

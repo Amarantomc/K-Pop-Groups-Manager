@@ -24,14 +24,14 @@ const Income: React.FC = () => {
   const baseColumns: GridColDef[] = [
     { field: 'artistName', headerName: 'Artista', width: 180 },
     { field: 'groupName', headerName: 'Grupo', width: 150 },
-    { 
-      field: 'amount', 
-      headerName: 'Monto', 
+    {
+      field: 'amount',
+      headerName: 'Monto',
       width: 140,
       renderCell: (params) => {
         const amount = params.value as number;
         return (
-          <span style={{ 
+          <span style={{
             color: '#10b981',
             fontWeight: 700,
             fontSize: '15px'
@@ -41,18 +41,18 @@ const Income: React.FC = () => {
         );
       }
     },
-    { 
-      field: 'source', 
-      headerName: 'Fuente', 
-      width: 150 
+    {
+      field: 'source',
+      headerName: 'Fuente',
+      width: 150
     },
-    { 
-      field: 'description', 
-      headerName: 'Descripción', 
+    {
+      field: 'description',
+      headerName: 'Descripción',
       width: 250,
       renderCell: (params) => (
-        <div style={{ 
-          whiteSpace: 'normal', 
+        <div style={{
+          whiteSpace: 'normal',
           lineHeight: '1.4',
           padding: '8px 0'
         }}>
@@ -60,9 +60,9 @@ const Income: React.FC = () => {
         </div>
       )
     },
-    { 
-      field: 'incomeDate', 
-      headerName: 'Fecha', 
+    {
+      field: 'incomeDate',
+      headerName: 'Fecha',
       width: 130,
       valueFormatter: (params) => {
         return new Date(params).toLocaleDateString('es-ES');
@@ -71,8 +71,8 @@ const Income: React.FC = () => {
   ];
 
   // Agregar columna de agencia solo para admin
-  const columns = user?.role === 'admin' 
-    ? [...baseColumns, { field: 'agencyName', headerName: 'Agencia', width: 150 }] 
+  const columns = user?.role === 'admin'
+    ? [...baseColumns, { field: 'agencyName', headerName: 'Agencia', width: 150 }]
     : baseColumns;
 
   useEffect(() => {
@@ -82,7 +82,7 @@ const Income: React.FC = () => {
         if (!user) return;
 
         let endpoint = '';
-        
+
         switch (user.role) {
           case 'artist':
             // Ingresos del artista específico
@@ -109,8 +109,10 @@ const Income: React.FC = () => {
             return;
         }
 
-        // Descomentar cuando el backend esté listo
-        /*
+        // ============================================
+        // SECCIÓN: BACKEND ENDPOINT
+        // Descomenta esta sección para usar el backend real
+        // ============================================
         const response = await fetch(`http://localhost:3000${endpoint}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -122,10 +124,15 @@ const Income: React.FC = () => {
         }
 
         const data = await response.json();
-        setIncomes(data);
-        */
+        setIncomes(data.data || data);
+        // ============================================
+        // FIN SECCIÓN: BACKEND ENDPOINT
+        // ============================================
 
-        // DATOS DE PRUEBA 
+        //============================================
+        // SECCIÓN: DATOS DEMO
+        //============================================
+        /*
         const mockIncomes: Income[] = [
           {
             id: 1,
@@ -190,6 +197,10 @@ const Income: React.FC = () => {
         }
 
         setIncomes(filteredIncomes);
+        */
+        // ============================================
+        // FIN SECCIÓN: DATOS DEMO
+        // ============================================ */
 
       } catch (error) {
         console.error('Error al cargar ingresos:', error);
@@ -202,16 +213,68 @@ const Income: React.FC = () => {
   }, [user]);
 
   const handleDelete = async (id: number) => {
-    // TODO: Implementar eliminación en el backend
-    console.log('Eliminar ingreso:', id);
-    setIncomes(prev => prev.filter(income => income.id !== id));
+    try {
+      const response = await fetch(`http://localhost:3000/api/incomes/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al eliminar ingreso');
+      }
+
+      setIncomes(prev => prev.filter(income => income.id !== id));
+    } catch (error) {
+      console.error('Error al eliminar ingreso:', error);
+    }
   };
 
   const handleEditSave = async (updatedRow: Income) => {
-    console.log('Actualizar ingreso:', updatedRow);
-    setIncomes(prev => 
-      prev.map(income => income.id === updatedRow.id ? updatedRow : income)
-    );
+    try {
+      const response = await fetch(`http://localhost:3000/api/incomes/${updatedRow.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(updatedRow)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al actualizar ingreso');
+      }
+
+      const data = await response.json();
+      setIncomes(prev =>
+        prev.map(income => income.id === updatedRow.id ? (data.data || data) : income)
+      );
+    } catch (error) {
+      console.error('Error al actualizar ingreso:', error);
+    }
+  };
+
+  const handleCreateSave = async (newRow: Omit<Income, 'id'>) => {
+    try {
+      const response = await fetch('http://localhost:3000/api/incomes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(newRow)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al crear ingreso');
+      }
+
+      const data = await response.json();
+      setIncomes(prev => [...prev, (data.data || data)]);
+    } catch (error) {
+      console.error('Error al crear ingreso:', error);
+    }
   };
 
   if (!user) {
@@ -219,14 +282,14 @@ const Income: React.FC = () => {
   }
 
   return (
-    <PageLayout 
-      title="Ingresos" 
+    <PageLayout
+      title="Ingresos"
       description={
         user.role === 'artist' ? 'Consulta tus ingresos generados por conciertos, streaming, publicidad y ventas de merchandise' :
-        user.role === 'manager' ? 'Gestiona todos los ingresos de los artistas de tu agencia' :
-        user.role === 'director' ? 'Supervisa todos los ingresos generados por los artistas de la agencia' :
-        user.role === 'admin' ? 'Vista global de todos los ingresos del sistema (próximamente)' :
-        'Gestión de ingresos'
+          user.role === 'manager' ? 'Gestiona todos los ingresos de los artistas de tu agencia' :
+            user.role === 'director' ? 'Supervisa todos los ingresos generados por los artistas de la agencia' :
+              user.role === 'admin' ? 'Vista global de todos los ingresos del sistema (próximamente)' :
+                'Gestión de ingresos'
       }
     >
       {isLoading ? (
@@ -240,6 +303,7 @@ const Income: React.FC = () => {
           pagesize={10}
           onDelete={handleDelete}
           onEditSave={handleEditSave}
+          onCreateSave={handleCreateSave}
           showEditButton={user.role === 'manager' || user.role === 'director' || user.role === 'admin'}
         />
       )}

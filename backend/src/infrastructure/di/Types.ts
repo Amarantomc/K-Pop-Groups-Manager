@@ -1,6 +1,3 @@
-
-
-
 // src/infrastructure/di/TYPES.ts
 const Types = {
   // Database
@@ -15,7 +12,9 @@ const Types = {
   IConceptRepository: Symbol.for('IConceptRepository'),
   IActivityRepository: Symbol.for('IActivityRepository'),
   IVisualConceptRepository: Symbol.for('IConceptRepository'),
+  IAwardRepository: Symbol.for('IAwardRepository'),
   IPopularityListRepository: Symbol.for('IPopularityListRepository'),
+  IGroupRepository : Symbol.for('IGroupRepository'),
   
   // Application Use Cases
   CreateUserUseCase: Symbol.for('CreateUserUseCase'),
@@ -88,6 +87,35 @@ UpdateApplicationUseCase : Symbol.for('UpdateApplicationUseCase'),
 ListApplicationUseCase : Symbol.for('ListApplicationUseCase'),
 FindByApprenticeUseCase : Symbol.for('FindByApprenticeUseCase'),
 
+//#region Award
+CreateAwardUseCase : Symbol.for('CreateAwardUseCase'),
+GetAwardUseCase : Symbol.for('GetAwardUseCase'),
+DeleteAwardUseCase : Symbol.for('DeleteAwardUseCase'),
+UpdateAwardUseCase : Symbol.for('UpdateAwardUseCase'),
+ListAwardUseCase : Symbol.for('ListAwardUseCase'),
+//#endregion
+
+
+//#region Group 
+CreateGroupUseCase : Symbol.for('CreateGroupUseCase'),
+GetGroupUseCase : Symbol.for('GetGroupUseCase'),
+ListGroupsUseCase : Symbol.for('ListGroupsUseCase'),
+UpdateGroupUseCase : Symbol.for('UpdateGroupUseCase'),
+DeleteGroupUseCase : Symbol.for('DeleteGroupUseCase'),
+AddMembersUseCase : Symbol.for('AddMembersUseCase'),
+RemoveMembersUseCase : Symbol.for ('RemoveMembersUseCase'),
+AddAlbumsUseCase : Symbol.for('AddAlbumsUseCase'),
+AddActivitiesUseCase : Symbol.for('AddActivitiesUseCase'),
+FindGroupsByNameUseCase : Symbol.for('FindGroupsByNameUseCase'),
+FindGroupsByDebutUseCase : Symbol.for('FindGroupsByDebutUseCase'),
+FindGroupsByStatusUseCase : Symbol.for('FindGroupsByStatusUseCase'),
+FindGroupsByMemberCountUseCase : Symbol.for('FindGroupsByMemberCountUseCase'),
+FindGroupsByMemberUseCase : Symbol.for('FindGroupsByMemberUseCase'),
+FindGroupsByAgencyUseCase : Symbol.for('FindGroupsByAgencyUseCase'),
+FindGroupsByConceptUseCase : Symbol.for('FindGroupsByConceptUseCase'),
+FindGroupsByVisualConceptUseCase : Symbol.for('FindGroupsByVisualConceptUseCase'),
+//#endregion
+
   // Presentation
   UserController: Symbol.for('UserController'),
   AuthController: Symbol.for('AuthController'),
@@ -99,8 +127,12 @@ FindByApprenticeUseCase : Symbol.for('FindByApprenticeUseCase'),
   PopularityListController : Symbol.for('PopularityListController'),
   ApplicationController : Symbol.for('ApplicationController'),
   VisualConceptController : Symbol.for('VisualConceptController'),
+  AwardController : Symbol.for('AwardController'),
 
 
+  GroupController :Symbol.for('GroupController')
+
+ 
 };
 
 export { Types };

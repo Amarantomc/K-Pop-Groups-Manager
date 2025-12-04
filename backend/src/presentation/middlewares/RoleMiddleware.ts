@@ -51,6 +51,32 @@ export class RoleMiddleware {
     next()
   }
 
+    static updatePropertiesId(){ 
+    return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    const requestedId = Number(req.params.id || req.body.id)
+    const {role,agencyId,IdAp,IdGr,password,name,email}=req.body
+    
+    if(req.user?.role.toString()!="Admin" && (role||agencyId||IdAp||IdGr)){
+       return res.status(403).json({
+        success: false,
+        error: 'You have not Permissions'
+      })
+    }
+  
+
+    
+    //Updatear user distinto al que eres
+    if (req.user?.userId !== requestedId && (password || name || email)) {
+      return res.status(403).json({
+        success: false,
+        error: 'You can only update your own profile'
+      })
+    }
+    
+    next()
+  }
+}
+
   // Métodos auxiliares para roles específicos
   static onlyAdmin() {
     return RoleMiddleware.authorize(Role.Admin);

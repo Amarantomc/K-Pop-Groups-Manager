@@ -11,7 +11,7 @@ export class ConceptResponseDto{
         return new ConceptResponseDto(
             concept.id,
             concept.nombre,
-            concept.descripcion
+            concept.description
         );
       }
 
@@ -19,13 +19,18 @@ export class ConceptResponseDto{
         return new Concept(
             {
                 id: concept.id,
-                name: concept.nombre,
+                
                 description: concept.descripcion,
+                name: concept.nombre,
             }
         );
       }
 
       static fromEntities(concepts: any[]): ConceptResponseDto[] {
         return concepts.map(concept => this.fromEntity(concept));
+      }
+
+       static toEntities(concepts: any[]): Concept[] {
+        return concepts.map(concept => this.toEntity(concept));
       }
 }

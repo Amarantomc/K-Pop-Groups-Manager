@@ -8,7 +8,13 @@ export class ListConceptUseCase {
 	constructor(@inject(Types.IConceptRepository) private conceptRepository: IConceptRepository) {}
 
 	async execute(): Promise<ConceptResponseDto[]> {
+		
+	try {
 		const list = await this.conceptRepository.findAll();
 		return ConceptResponseDto.fromEntities(list)
+		} catch (error) {
+			throw error
+		}
+
 	}
 }

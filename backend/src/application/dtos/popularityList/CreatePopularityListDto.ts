@@ -1,19 +1,20 @@
-import type { Song } from "../../../domain";
+
 
 export class CreatePopularityListDto {
 	constructor(
 		public readonly name: string,
-		public readonly listType: string,
-		public readonly songs: Array<Song>
+		public readonly listType: string
+		
 	) {}
 
 	static create(body: any): CreatePopularityListDto {
-		if (!body.name || !body.listType || !body.songs) {
+		console.log(body)
+		if (!body.name || !body.listType) {
 			throw new Error("Missing required fields");
 		}
-		if(!(body.listType === "Nacional") || !(body.listType === "Internacional")){
-			throw new Error("");
+		if( !(['Nacional','Internacional'].find(x=> x==body.listType))){
+			throw new Error("Invalid Type");
 		}
-		return new CreatePopularityListDto(body.name, body.listType, body.songs);
+		return new CreatePopularityListDto(body.name, body.listType);
 	}
 }
