@@ -2,8 +2,32 @@ import { PopularityList } from "../../domain";
 
 // src/infrastructure/di/TYPES.ts
 const Types = {
+<<<<<<< HEAD
 	// Database
 	PrismaClient: Symbol.for("PrismaClient"),
+=======
+  // Database
+  PrismaClient: Symbol.for('PrismaClient'),
+  
+  //  Interfaces
+  IUnitOfWork: Symbol.for('IUnitOfWork'),
+  IUserRepository: Symbol.for('IUserRepository'),
+  IApprenticeRepository : Symbol.for('IApprenticeRepository'),
+  IAgencyRepository : Symbol.for('IAgencyRepository'),
+  IArtistRepository : Symbol.for('IArtistRepository'),
+  IConceptRepository: Symbol.for('IConceptRepository'),
+  IActivityRepository: Symbol.for('IActivityRepository'),
+  IAwardRepository: Symbol.for('IAwardRepository'),
+  IPopularityListRepository: Symbol.for('IPopularityListRepository'),
+  IGroupRepository : Symbol.for('IGroupRepository'),
+  
+  // Application Use Cases
+  CreateUserUseCase: Symbol.for('CreateUserUseCase'),
+  GetUserUseCase: Symbol.for('GetUserUseCase'),
+  GetUsersUseCase: Symbol.for('GetUsersUseCase'),
+  UpdateUserUseCase: Symbol.for('UpdateUserUseCase'),
+  DeleteUserUseCase: Symbol.for('DeleteUserUseCase'),
+>>>>>>> 6f5c07e (Crud award implementation (#116))
 
 	//  Interfaces
 	IUnitOfWork: Symbol.for("IUnitOfWork"),
@@ -64,6 +88,7 @@ const Types = {
 	DeletePopularityListUseCase: Symbol.for("DeletePopularityListUseCase"),
 	AddSongToPopularityListUseCase: Symbol.for("AddSongToPopularityListUseCase"),
 
+<<<<<<< HEAD
 	LoginUserUseCase: Symbol.for("LoginUserUseCase"),
 	ValidateTokenUseCase: Symbol.for("ValidateTokenUseCase"),
 
@@ -81,6 +106,31 @@ const Types = {
 	UpdateAlbumUseCase: Symbol.for("UpdateAlbumUseCase"),
 	ListAlbumsUseCase: Symbol.for("ListAlbumsUseCase"),
 	FindAlbumByTitleUseCase: Symbol.for("FindAlbumByTitleUseCase"),
+=======
+//#region Award
+CreateAwardUseCase : Symbol.for('CreateAwardUseCase'),
+GetAwardUseCase : Symbol.for('GetAwardUseCase'),
+DeleteAwardUseCase : Symbol.for('DeleteAwardUseCase'),
+UpdateAwardUseCase : Symbol.for('UpdateAwardUseCase'),
+ListAwardUseCase : Symbol.for('ListAwardUseCase'),
+//#endregion
+
+
+  // Presentation
+  UserController: Symbol.for('UserController'),
+  AuthController: Symbol.for('AuthController'),
+  ApprenticeController : Symbol.for('ApprenticeController'),
+  AgencyController : Symbol.for('AgencyController'),
+  ArtistController : Symbol.for('ArtistController'),
+  ConceptController : Symbol.for('ConceptController'),
+  ActivityController: Symbol.for('ActivityController'),
+  PopularityListController : Symbol.for('PopularityListController'),
+  ApplicationController : Symbol.for('ApplicationController'),
+  AwardController : Symbol.for('AwardController'),
+
+
+  GroupController :Symbol.for('GroupController')
+>>>>>>> 6f5c07e (Crud award implementation (#116))
 
 	CreateSongUseCase: Symbol.for("CreateSongUseCase"),
 	GetSongUseCase: Symbol.for("GetSongUseCase"),
