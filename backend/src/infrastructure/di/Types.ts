@@ -14,7 +14,7 @@ const Types = {
   IArtistRepository : Symbol.for('IArtistRepository'),
   IConceptRepository: Symbol.for('IConceptRepository'),
   IActivityRepository: Symbol.for('IActivityRepository'),
-
+  IAwardRepository: Symbol.for('IAwardRepository'),
   IPopularityListRepository: Symbol.for('IPopularityListRepository'),
   
   // Application Use Cases
@@ -82,6 +82,15 @@ UpdateApplicationUseCase : Symbol.for('UpdateApplicationUseCase'),
 ListApplicationUseCase : Symbol.for('ListApplicationUseCase'),
 FindByApprenticeUseCase : Symbol.for('FindByApprenticeUseCase'),
 
+//#region Award
+CreateAwardUseCase : Symbol.for('CreateAwardUseCase'),
+GetAwardUseCase : Symbol.for('GetAwardUseCase'),
+DeleteAwardUseCase : Symbol.for('DeleteAwardUseCase'),
+UpdateAwardUseCase : Symbol.for('UpdateAwardUseCase'),
+ListAwardUseCase : Symbol.for('ListAwardUseCase'),
+//#endregion
+
+
   // Presentation
   UserController: Symbol.for('UserController'),
   AuthController: Symbol.for('AuthController'),
@@ -92,6 +101,9 @@ FindByApprenticeUseCase : Symbol.for('FindByApprenticeUseCase'),
   ActivityController: Symbol.for('ActivityController'),
   PopularityListController : Symbol.for('PopularityListController'),
   ApplicationController : Symbol.for('ApplicationController'),
+  AwardController : Symbol.for('AwardController'),
+
+
 
 };
 
