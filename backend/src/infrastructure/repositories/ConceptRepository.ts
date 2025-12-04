@@ -35,7 +35,7 @@ export class ConceptRepository implements IConceptRepository
     }
     async findById(id: any): Promise<Concept | null> {
          id=(Number)(id)
-        const concept=await this.db.Aprendiz.findUnique({
+        const concept=await this.db.Concepto.findUnique({
            where:{id}
         })
         return concept ? ConceptResponseDto.toEntity(concept) : null
