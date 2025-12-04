@@ -116,6 +116,26 @@ ListAwardUseCase : Symbol.for('ListAwardUseCase'),
 //#endregion
 
 
+//#region Group 
+CreateGroupUseCase : Symbol.for('CreateGroupUseCase'),
+GetGroupUseCase : Symbol.for('GetGroupUseCase'),
+ListGroupsUseCase : Symbol.for('ListGroupsUseCase'),
+UpdateGroupUseCase : Symbol.for('UpdateGroupUseCase'),
+DeleteGroupUseCase : Symbol.for('DeleteGroupUseCase'),
+AddMembersUseCase : Symbol.for('AddMembersUseCase'),
+RemoveMembersUseCase : Symbol.for ('RemoveMembersUseCase'),
+AddAlbumsUseCase : Symbol.for('AddAlbumsUseCase'),
+AddActivitiesUseCase : Symbol.for('AddActivitiesUseCase'),
+FindGroupsByNameUseCase : Symbol.for('FindGroupsByNameUseCase'),
+FindGroupsByDebutUseCase : Symbol.for('FindGroupsByDebutUseCase'),
+FindGroupsByStatusUseCase : Symbol.for('FindGroupsByStatusUseCase'),
+FindGroupsByMemberCountUseCase : Symbol.for('FindGroupsByMemberCountUseCase'),
+FindGroupsByMemberUseCase : Symbol.for('FindGroupsByMemberUseCase'),
+FindGroupsByAgencyUseCase : Symbol.for('FindGroupsByAgencyUseCase'),
+FindGroupsByConceptUseCase : Symbol.for('FindGroupsByConceptUseCase'),
+FindGroupsByVisualConceptUseCase : Symbol.for('FindGroupsByVisualConceptUseCase'),
+//#endregion
+
   // Presentation
   UserController: Symbol.for('UserController'),
   AuthController: Symbol.for('AuthController'),
