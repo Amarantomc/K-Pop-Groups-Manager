@@ -8,6 +8,7 @@ import { AgencyRoutes } from "./agencyRoutes";
 import { ArtistRoutes } from "./ArtistRoutes";
 import { ConceptRoutes } from "./ConceptRoutes";
 import { ActivityRoutes } from "./ActivityRoutes";
+import { AwardRoutes } from "./AwardRoutes";
 
 const rootRouter: Router = Router();
 const userRoutes = new UserRoutes();
@@ -17,6 +18,7 @@ const apprenticeRoute=new ApprenticeRoutes()
 const artistRoutes=new ArtistRoutes()
 const conceptRoutes=new ConceptRoutes()
 const activityRoutes = new ActivityRoutes();
+const awardRoutes = new AwardRoutes();
 
 rootRouter.use("/auth", authRoutes.getRouter());
 rootRouter.use("/user", userRoutes.getRouter());
@@ -25,5 +27,7 @@ rootRouter.use('/apprentice',apprenticeRoute.getRouter())
 rootRouter.use("/artist", artistRoutes.getRouter());
 rootRouter.use("/concept", conceptRoutes.getRouter());
 rootRouter.use("/activity", activityRoutes.getRouter());
+rootRouter.use("/award", awardRoutes.getRouter());
+
 
 export default rootRouter;
