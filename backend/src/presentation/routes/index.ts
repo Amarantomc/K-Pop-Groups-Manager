@@ -8,6 +8,7 @@ import { GroupRoutes } from "./groupRoutes";
 import { ArtistRoutes } from "./ArtistRoutes";
 import { ConceptRoutes } from "./ConceptRoutes";
 import { ActivityRoutes } from "./ActivityRoutes";
+import { VisualConceptRoutes } from "./VisualConceptRoutes";
 import { AwardRoutes } from "./AwardRoutes";
 import { PopularityListRoutes } from "./PopularityListRoutes";
  
@@ -23,6 +24,7 @@ const apprenticeRoute=new ApprenticeRoutes()
 const artistRoutes=new ArtistRoutes()
 const conceptRoutes=new ConceptRoutes()
 const activityRoutes = new ActivityRoutes();
+const visualConceptRoutes=new VisualConceptRoutes()
 const awardRoutes = new AwardRoutes();
 const popularityListRoutes=new PopularityListRoutes()
  
@@ -37,6 +39,7 @@ rootRouter.use('/apprentice',apprenticeRoute.getRouter())
 rootRouter.use("/artist", artistRoutes.getRouter());
 rootRouter.use("/concept", conceptRoutes.getRouter());
 rootRouter.use("/activity", activityRoutes.getRouter());
+rootRouter.use("/visual-concept", visualConceptRoutes.getRouter());
 rootRouter.use("/award", awardRoutes.getRouter());
 
 rootRouter.use('/populist',popularityListRoutes.getRouter())

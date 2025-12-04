@@ -101,6 +101,14 @@ import type { ListApplicationUseCase } from "../../application/usesCase/applicat
 import { CreateApplicationDto } from "../../application/dtos/application(solicitud)/CreateApplicationDto";
 import type { UpdateApplicationUseCase } from "../../application/usesCase/application(solicitud)/UpdateApplicationUseCase";
 import type { FindByApprenticeUseCase } from "../../application/usesCase/application(solicitud)/FindByApprenticeUseCase";
+import { VisualConceptRepository } from '../repositories/VisualConceptRepository';
+import { CreateVisualConceptUseCase } from '../../application/usesCase/visualConcept/CreateVisualConceptUseCase';
+import { DeleteVisualConceptUseCase } from '../../application/usesCase/visualConcept/DeleteVisualConceptUseCase';
+import { GetVisualConceptUseCase } from '../../application/usesCase/visualConcept/GetConceptUseCase';
+import { ListVisualConceptUseCase } from '../../application/usesCase/visualConcept/ListVisualConceptUseCase';
+import { UpdateVisualConceptUseCase } from '../../application/usesCase/visualConcept/UpdateVisualConceptUseCase';
+//import type { IVisualConceptRepository } from '../../application/interfaces/repositories/IVisualConcept';
+import  { VisualConceptController } from '../../presentation/controllers/VisualConceptController';
 import { CreateAwardUseCase } from '../../application/usesCase/award/CreateAwardUseCase';
 import { DeleteAwardUseCase } from '../../application/usesCase/award/DeleteAwardUseCase';
 import { GetAwardUseCase } from '../../application/usesCase/award/GetAwardUseCase';
@@ -509,10 +517,32 @@ container.bind<AgencyController>(Types.AgencyController)
   .to(ActivityController)
   .inTransientScope();
 
+  container.bind<VisualConceptController>(Types.VisualConceptController)
+  .to(VisualConceptController)
+  .inTransientScope();
   container.bind<PopularityListController>(Types.PopularityListController)
   .to(PopularityListController)
   .inTransientScope();
 
   
+  container.bind<CreateVisualConceptUseCase>(Types.CreateVisualConceptUseCase)
+  .to(CreateVisualConceptUseCase)
+  .inTransientScope();
+
+  container.bind<DeleteVisualConceptUseCase>(Types.DeleteVisualConceptUseCase)
+  .to(DeleteVisualConceptUseCase)
+  .inTransientScope();
+
+  container.bind<GetVisualConceptUseCase>(Types.GetVisualConceptUseCase)
+  .to(GetVisualConceptUseCase)
+  .inTransientScope();
+
+  container.bind<ListVisualConceptUseCase>(Types.ListVisualConceptUseCase)
+  .to(ListVisualConceptUseCase)
+  .inTransientScope();
+
+    container.bind<UpdateVisualConceptUseCase>(Types.UpdateVisualConceptUseCase)
+  .to(UpdateVisualConceptUseCase)
+  .inTransientScope();
 
 export { container };

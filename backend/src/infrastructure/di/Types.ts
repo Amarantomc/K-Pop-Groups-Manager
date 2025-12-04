@@ -11,6 +11,7 @@ const Types = {
   IArtistRepository : Symbol.for('IArtistRepository'),
   IConceptRepository: Symbol.for('IConceptRepository'),
   IActivityRepository: Symbol.for('IActivityRepository'),
+  IVisualConceptRepository: Symbol.for('IConceptRepository'),
   IAwardRepository: Symbol.for('IAwardRepository'),
   IPopularityListRepository: Symbol.for('IPopularityListRepository'),
   IGroupRepository : Symbol.for('IGroupRepository'),
@@ -52,6 +53,12 @@ const Types = {
   GetConceptUseCase: Symbol.for('GetConceptUseCase'),
   UpdateConceptUseCase: Symbol.for('UpdateConceptUseCase'),
   ListConceptUseCase :Symbol.for('ListConceptUseCase'),
+
+  CreateVisualConceptUseCase: Symbol.for('CreateVisualConceptUseCase'),
+  DeleteVisualConceptUseCase: Symbol.for('DeleteVisualConceptUseCase'),
+  GetVisualConceptUseCase: Symbol.for('GetVisualConceptUseCase'),
+  UpdateVisualConceptUseCase: Symbol.for('UpdateVisualConceptUseCase'),
+  ListVisualConceptUseCase :Symbol.for('ListVisualConceptUseCase'),
 
   CreatePopularityListUseCase: Symbol.for('CreatePopularityListUseCase'),
   GetPopularityListUseCase: Symbol.for('GetPopularityListUseCase'),
@@ -119,6 +126,7 @@ FindGroupsByVisualConceptUseCase : Symbol.for('FindGroupsByVisualConceptUseCase'
   ActivityController: Symbol.for('ActivityController'),
   PopularityListController : Symbol.for('PopularityListController'),
   ApplicationController : Symbol.for('ApplicationController'),
+  VisualConceptController : Symbol.for('VisualConceptController'),
   AwardController : Symbol.for('AwardController'),
 
 
