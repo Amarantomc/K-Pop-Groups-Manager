@@ -18,10 +18,9 @@ export class PopularityListRepository implements IPopularityListRepository{
       }
       
       async findAll(): Promise<PopularityList[]> {
-          const  popularityLists  = await this.db.ListaPopularidad.findMany({
-          include: {}});
+        const  popularityLists  = await this.db.ListaPopularidad.findMany();
 
-        return PopularityListResponseDto.fromEntities(popularityLists);
+        return PopularityListResponseDto.toEntities(popularityLists);
       }
 
       async findSongByName(songName: string, popularityListId: number): Promise<Song> {
@@ -51,7 +50,7 @@ export class PopularityListRepository implements IPopularityListRepository{
           );
         }
         
-        throw new Error("Not implemented");
+        return match
         //return SongMapper.toEntity(match.cancion);
       }
     async addSongToPopularityList(
@@ -76,12 +75,12 @@ export class PopularityListRepository implements IPopularityListRepository{
                 data:{
                     nombre: data.name,
                     tipoLista: data.listType,
-                    Canciones: data.songs
+                    
                 }
             })
             
             
-            return PopularityListResponseDto.toEntity(PopularityList)
+            return PopularityListResponseDto.toEntity(popularityList)
         }
 
     async findById(id: any): Promise<PopularityList | null> {
@@ -89,7 +88,7 @@ export class PopularityListRepository implements IPopularityListRepository{
             const popularityList=await this.db.ListaPopularidad.findUnique({
                where:{id}
             })
-            return PopularityList ? PopularityListResponseDto.toEntity(PopularityList) : null
+            return popularityList ? PopularityListResponseDto.toEntity(popularityList) : null
         }
 
     async update(id: string, data: Partial<CreatePopularityListDto>): Promise<PopularityList> {
@@ -98,11 +97,11 @@ export class PopularityListRepository implements IPopularityListRepository{
               data: {
                 nombre:data.name,
                 tipoLista:data.listType,
-                Canciones: data.songs
+                
               },
             });
           
-            return PopularityListResponseDto.toEntity(PopularityList);
+            return PopularityListResponseDto.toEntity(popularityList);
           }
 
           async delete(id: string): Promise<void> {

@@ -1,33 +1,16 @@
 import type React from "react";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-//import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import AlbumIcon from '@mui/icons-material/Album';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import BusinessIcon from '@mui/icons-material/Business';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import DescriptionIcon from '@mui/icons-material/Description';
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import LogoutIcon from '@mui/icons-material/Logout';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import PeopleIcon from '@mui/icons-material/People';
-//import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import SchoolIcon from '@mui/icons-material/School';
-import ViewTimelineIcon from '@mui/icons-material/ViewTimeline';
 import WorkIcon from '@mui/icons-material/Work';
-//import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-//import ScheduleIcon from '@mui/icons-material/Schedule';
-//import HistoryIcon from '@mui/icons-material/History';
-//import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
-//import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-//import WarningIcon from '@mui/icons-material/Warning';
-//import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-//import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-//import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-//import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-//import SettingsIcon from '@mui/icons-material/Settings';
-//import BackupIcon from '@mui/icons-material/Backup';
 
 export interface MenuItem {
     label: string;
@@ -59,53 +42,49 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "APRENDIZ",
             items: [
-                { label: "Mostrar Aprendices", icon: <SchoolIcon />, path: "/admin/apprentices" }
+                { label: "Mostrar Aprendices", icon: <SchoolIcon />, path: "/admin/apprentice" }
             ]
         },
         {
             title: "ARTISTA",
             items: [
-                { label: "Gestión de Artistas", icon: <PeopleIcon />, path: "/admin/Artist" }
+            { label: "Gestión de Artistas", icon: <PeopleIcon />, path: "/admin/artists" }
             ]
         },
         {
             title: "GRUPO ",
             items: [
-                { label: "Crear Grupo", icon: <GroupAddIcon />, path: "/manager/groups" },
-                { label: "Mostrar Grupos", icon: <PeopleIcon />, path: "/manager/listGroups" }
+            { label: "Mostrar Grupos", icon: <PeopleIcon />, path: "/admin/groups" }
             ]
         },
         {
             title: "ALBUM",
             items: [
-                { label: "Crear Álbum", icon: <AlbumIcon />, path: "/manager/albums" },
-                { label: "Mostrar Álbumes", icon: <AlbumIcon />, path: "/manager/listAlbums" }
+            { label: "Mostrar Álbumes", icon: <AlbumIcon />, path: "/admin/albums" }
             ]
         },
         {
             title: "ACTIVIDAD",
             items: [
-                { label: "Crear Actividad", icon: <CalendarTodayIcon />, path: "/manager/activities" },
-                { label: "Mostrar Actividades", icon: <ViewTimelineIcon />, path: "/manager/listActivities" }
+            { label: "Mostrar Actividades", icon: <CalendarTodayIcon />, path: "/admin/activities" }
             ]
         },
         {
             title: "CONTRATO",
             items: [
-                { label: "Crear Contrato", icon: <WorkIcon />, path: "/manager/contracts" },
-                { label: "Mostrar Contratos", icon: <DescriptionIcon />, path: "/manager/listContracts" }
+            { label: "Mostrar Contratos", icon: <WorkIcon />, path: "/admin/contracts" }
             ]
         },
         {
             title: "INGRESOS",
             items: [
-                { label: "Ingresos del Sistema", icon: <AttachMoneyIcon />, path: "/manager/income" }
+            { label: "Ingresos del Sistema", icon: <AttachMoneyIcon />, path: "/admin/income" }
             ]
         },
         {
             title: "SOLICITUD",
             items: [
-                { label: "Solicitudes", icon: <NotificationsIcon />, path: "/admin/requests" }
+            { label: "Solicitudes", icon: <NotificationsIcon />, path: "/admin/request" }
             ]
         },
         {
@@ -127,27 +106,25 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "APRENDIZ",
             items: [
-                { label: "Mostrar Aprendices", icon: <SchoolIcon />, path: "/director/apprentices" }
+                { label: "Mostrar Aprendices", icon: <SchoolIcon />, path: "/director/apprentice" }
             ]
         },
         {
             title: "ARTISTA",
             items: [
-                { label: "Gestión de Artistas", icon: <PeopleIcon />, path: "/director/Artist" }
+                { label: "Gestión de Artistas", icon: <PeopleIcon />, path: "/director/artists" }
             ]
         },
         {
             title: "GRUPO ",
             items: [
-                { label: "Crear Grupo", icon: <GroupAddIcon />, path: "/manager/groups" },
-                { label: "Mostrar Grupos", icon: <PeopleIcon />, path: "/manager/listGroups" }
+                { label: "Mostrar Grupos", icon: <PeopleIcon />, path: "/director/group" }
             ]
         },
         {
             title: "ALBUM",
             items: [
-                { label: "Crear Álbum", icon: <AlbumIcon />, path: "/manager/albums" },
-                { label: "Mostrar Álbumes", icon: <AlbumIcon />, path: "/manager/listAlbums" }
+                { label: "Mostrar Álbumes", icon: <AlbumIcon />, path: "/director/Albums" }
             ]
         },
         {
@@ -159,8 +136,7 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "CONTRATO",
             items: [
-                { label: "Crear Contrato", icon: <WorkIcon />, path: "/manager/contracts" },
-                { label: "Mostrar Contratos", icon: <DescriptionIcon />, path: "/manager/listContracts" }
+                { label: "Mostrar Contratos", icon: <WorkIcon />, path: "/director/contracts" }
             ]
         },
         {
@@ -172,14 +148,14 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "SOLICITUD",
             items: [
-                { label: "Solicitudes", icon: <NotificationsIcon />, path: "/director/requests" }
+                { label: "Solicitudes", icon: <NotificationsIcon />, path: "/director/request" }
             ]
         },
         {
             title: "CUENTA",
             items: [
                 { label: "Perfil", icon: <AccountCircleIcon />, path: "/director/profile" },
-                { label: "Usuarios Registrados", icon: <PeopleIcon />, path: "/director/listUsers" },
+               // { label: "Usuarios Registrados", icon: <PeopleIcon />, path: "/director/listUsers" },
                 { label: "Cerrar Sesión", icon: <LogoutIcon />, path: "/login" }
             ]
         }
@@ -195,27 +171,25 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "APRENDIZ",
             items: [
-                { label: "Mostrar Aprendices", icon: <SchoolIcon />, path: "/manager/apprentices" }
+                { label: "Mostrar Aprendices", icon: <SchoolIcon />, path: "/manager/apprentice" }
             ]
         },
         {
             title: "ARTISTA",
             items: [
-                { label: "Gestión de Artistas", icon: <PeopleIcon />, path: "/manager/Artist" }
+                { label: "Gestión de Artistas", icon: <PeopleIcon />, path: "/manager/artists" }
             ]
         },
         {
             title: "GRUPO ",
             items: [
-                { label: "Crear Grupo", icon: <GroupAddIcon />, path: "/manager/groups" },
-                { label: "Mostrar Grupos", icon: <PeopleIcon />, path: "/manager/listGroups" }
+                { label: "Mostrar Grupos", icon: <PeopleIcon />, path: "/manager/group" }
             ]
         },
         {
             title: "ALBUM",
             items: [
-                { label: "Crear Álbum", icon: <AlbumIcon />, path: "/manager/albums" },
-                { label: "Mostrar Álbumes", icon: <AlbumIcon />, path: "/manager/listAlbums" }
+                { label: "Mostrar Álbumes", icon: <AlbumIcon />, path: "/manager/Albums" }
             ]
         },
         {
@@ -227,8 +201,7 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "CONTRATO",
             items: [
-                { label: "Crear Contrato", icon: <WorkIcon />, path: "/manager/contracts" },
-                { label: "Mostrar Contratos", icon: <DescriptionIcon />, path: "/manager/listContracts" }
+                { label: "Mostrar Contratos", icon: <WorkIcon />, path: "/manager/contracts" }
             ]
         },
         {
@@ -240,14 +213,14 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "SOLICITUD",
             items: [
-                { label: "Solicitudes", icon: <NotificationsIcon />, path: "/manager/requests" }
+                { label: "Solicitudes", icon: <NotificationsIcon />, path: "/manager/request" }
             ]
         },
         {
             title: "CUENTA",
             items: [
                 { label: "Perfil", icon: <AccountCircleIcon />, path: "/manager/profile" },
-                { label: "Usuarios Registrados", icon: <PeopleIcon />, path: "/manager/listUsers" },
+               // { label: "Usuarios Registrados", icon: <PeopleIcon />, path: "/manager/listUsers" },
                 { label: "Cerrar Sesión", icon: <LogoutIcon />, path: "/login" }
             ]
         }
@@ -275,7 +248,7 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "SOLICITUD",
             items: [
-                { label: "Mis Solicitudes", icon: <NotificationsIcon />, path: "/artist/requests" }
+                { label: "Mis Solicitudes", icon: <NotificationsIcon />, path: "/artist/request" }
             ]
         },
         {
@@ -303,7 +276,7 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "SOLICITUD",
             items: [
-                { label: "Mis Solicitudes", icon: <NotificationsIcon />, path: "/apprentice/requests" }
+                { label: "Mis Solicitudes", icon: <NotificationsIcon />, path: "/apprentice/request" }
             ]
         },
         {

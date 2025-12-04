@@ -1,8 +1,9 @@
-import type { ContractStatus } from "../enums/contractStatus"
+import type { ContractStatus } from "../enums/ContractStatus"
 
 export default class Contract{
     readonly idAgency:number
-    readonly idArtist:number
+    readonly apprenticeId:number
+    readonly groupId:number
     readonly startDate:Date|string
     readonly completionDate ?:Date|string
     readonly incomeDistribution: string
@@ -11,7 +12,8 @@ export default class Contract{
 
     constructor(attrs:{
         idAgency: number;
-        idArtist: number;
+        apprenticeId:number,
+        groupId:number,
         startDate: Date|string;
         completationDate: Date|string;
         incomeDistribution: string;
@@ -21,7 +23,8 @@ export default class Contract{
     {
         this.idAgency = attrs.idAgency
         this.completionDate = attrs.completationDate
-        this.idArtist = attrs.idArtist
+        this.apprenticeId = attrs.apprenticeId
+        this.groupId = attrs.groupId
         this.incomeDistribution = attrs.incomeDistribution
         this.initialConditions = attrs.initialCondition
         this.startDate = attrs.startDate

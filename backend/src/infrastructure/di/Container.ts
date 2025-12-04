@@ -1,3 +1,25 @@
+ 
+
+import type { IGroupRepository } from "../../application/interfaces/repositories/IGroupRepository";
+import { GroupRepository } from "../repositories/GroupRepository";
+import { GroupController } from "../../presentation/controllers/GroupController";
+import { CreateGroupUseCase } from "../../application/usesCase/group/CreateGroupUseCase";
+import { GetGroupUseCase } from "../../application/usesCase/group/GetGroupUseCase";
+import { ListGroupsUseCase } from "../../application/usesCase/group/ListGroupsUseCase";
+import { UpdateGroupUseCase } from "../../application/usesCase/group/UpdateGroupUseCase";
+import { DeleteGroupUseCase } from "../../application/usesCase/group/DeleteGroupUseCase";
+import { AddMembersUseCase } from "../../application/usesCase/group/AddMembersUseCase";
+import { RemoveMembersUseCase } from "../../application/usesCase/group/RemoveMembersUseCase";
+import { AddAlbumsUseCase } from "../../application/usesCase/group/AddAlbumsUseCase";
+import { AddActivitiesUseCase } from "../../application/usesCase/group/AddActivitiesUseCase";
+import { FindGroupByNameUseCase } from "../../application/usesCase/group/FindGroupByNameUseCase";
+import { FindGroupByDebutUseCase } from "../../application/usesCase/group/FindGroupByDebutUseCase";
+import { FindGroupsByStatusUseCase } from "../../application/usesCase/group/FindGroupsByStatusUseCase";
+import { FindGroupsByMemberCountUseCase } from "../../application/usesCase/group/FindGroupsByMemberCountUseCase";
+import { FindGroupsByMemberUseCase } from "../../application/usesCase/group/FindGroupsByMemberUseCase";
+import { FindGroupsByAgencyUseCase } from "../../application/usesCase/group/FindGroupsByAgencyUseCase";
+import { FindGroupsByConceptUseCase } from "../../application/usesCase/group/FindGroupsByConceptUseCase";
+import { FindGroupByVisualConceptUseCase } from "../../application/usesCase/group/FindGroupByVisualConceptUseCase";
 
 import { Container } from 'inversify';
 import { PrismaClient } from '../../generated/prisma';
@@ -69,6 +91,9 @@ import { DeletePopularityListUseCase } from '../../application/usesCase/populari
 import { UpdatePopularityListUseCase } from '../../application/usesCase/popularityList/UpdatePopularityListUseCase';
 import { AddSongToPopularityListUseCase } from '../../application/usesCase/popularityList/AddSongToPopularityListUseCase';
 import { PopularityListRepository } from '../repositories/PopularityListRepository';
+import { PopularityListController } from '../../presentation/controllers/PopularityListController';
+import { ListPopularityListUseCase } from '../../application/usesCase/popularityList/ListPopularityListUseCase';
+
 import type { CreateApplicationUseCase } from "../../application/usesCase/application(solicitud)/CreateApplicatonUseCase";
 import type { GetApplicationUseCase } from "../../application/usesCase/application(solicitud)/GetApplicationUseCase";
 import type { DeleteApplicationUseCase } from "../../application/usesCase/application(solicitud)/DeleteApplicationUseCase";
@@ -90,34 +115,40 @@ import { AwardRepository } from '../repositories/AwardRepository';
  
 
 // Use Cases
- 
-
- 
 
 const container = new Container();
 
 // Database
-container.bind<PrismaClient>(Types.PrismaClient)
-  .toConstantValue(new PrismaClient())
-   
+container
+	.bind<PrismaClient>(Types.PrismaClient)
+	.toConstantValue(new PrismaClient());
 
 // Unit of Work
-container.bind<IUnitOfWork>(Types.IUnitOfWork)
-  .to(UnitOfWork)
-  .inSingletonScope();
+container
+	.bind<IUnitOfWork>(Types.IUnitOfWork)
+	.to(UnitOfWork)
+	.inSingletonScope();
 
 // Repositories
-container.bind<IUserRepository>(Types.IUserRepository)
-  .to(UserRepository)
-  .inSingletonScope();
+container
+	.bind<IUserRepository>(Types.IUserRepository)
+	.to(UserRepository)
+	.inSingletonScope();
 
-  container.bind<IApprenticeRepository>(Types.IApprenticeRepository)
-  .to(ApprenticeRepository)
-  .inSingletonScope();
+container
+	.bind<IApprenticeRepository>(Types.IApprenticeRepository)
+	.to(ApprenticeRepository)
+	.inSingletonScope();
 
-  container.bind<IAgencyRepository>(Types.IAgencyRepository)
-  .to(AgencyRepository)
-  .inSingletonScope();
+container
+	.bind<IAgencyRepository>(Types.IAgencyRepository)
+	.to(AgencyRepository)
+	.inSingletonScope();
+
+container
+	.bind<IGroupRepository>(Types.IGroupRepository)
+	.to(GroupRepository)
+	.inSingletonScope();
 
   container.bind<IArtistRepository>(Types.IArtistRepository)
   .to(ArtistRepository)
@@ -138,6 +169,91 @@ container.bind<IUserRepository>(Types.IUserRepository)
   .inSingletonScope();
 
 // Use Cases - User
+ // Use Cases - Group
+container
+	.bind<CreateGroupUseCase>(Types.CreateGroupUseCase)
+	.to(CreateGroupUseCase)
+	.inTransientScope();
+
+container
+	.bind<GetGroupUseCase>(Types.GetGroupUseCase)
+	.to(GetGroupUseCase)
+	.inTransientScope();
+
+container
+	.bind<ListGroupsUseCase>(Types.ListGroupsUseCase)
+	.to(ListGroupsUseCase)
+	.inTransientScope();
+
+container
+	.bind<UpdateGroupUseCase>(Types.UpdateGroupUseCase)
+	.to(UpdateGroupUseCase)
+	.inTransientScope();
+
+container
+	.bind<DeleteGroupUseCase>(Types.DeleteGroupUseCase)
+	.to(DeleteGroupUseCase)
+	.inTransientScope();
+
+container
+	.bind<AddMembersUseCase>(Types.AddMembersUseCase)
+	.to(AddMembersUseCase)
+	.inTransientScope();
+
+container
+	.bind<RemoveMembersUseCase>(Types.RemoveMembersUseCase)
+	.to(RemoveMembersUseCase)
+	.inTransientScope();
+
+container
+	.bind<AddAlbumsUseCase>(Types.AddAlbumsUseCase)
+	.to(AddAlbumsUseCase)
+	.inTransientScope();
+
+container
+	.bind<AddActivitiesUseCase>(Types.AddActivitiesUseCase)
+	.to(AddActivitiesUseCase)
+	.inTransientScope();
+
+container
+	.bind<FindGroupByNameUseCase>(Types.FindGroupsByNameUseCase)
+	.to(FindGroupByNameUseCase)
+	.inTransientScope();
+
+container
+	.bind<FindGroupByDebutUseCase>(Types.FindGroupsByDebutUseCase)
+	.to(FindGroupByDebutUseCase)
+	.inTransientScope();
+
+container
+	.bind<FindGroupsByStatusUseCase>(Types.FindGroupsByStatusUseCase)
+	.to(FindGroupsByStatusUseCase)
+	.inTransientScope();
+
+container
+	.bind<FindGroupsByMemberCountUseCase>(Types.FindGroupsByMemberCountUseCase)
+	.to(FindGroupsByMemberCountUseCase)
+	.inTransientScope();
+
+container
+	.bind<FindGroupsByMemberUseCase>(Types.FindGroupsByMemberUseCase)
+	.to(FindGroupsByMemberUseCase)
+	.inTransientScope();
+
+container
+	.bind<FindGroupsByAgencyUseCase>(Types.FindGroupsByAgencyUseCase)
+	.to(FindGroupsByAgencyUseCase)
+	.inTransientScope();
+
+container
+	.bind<FindGroupsByConceptUseCase>(Types.FindGroupsByConceptUseCase)
+	.to(FindGroupsByConceptUseCase)
+	.inTransientScope();
+
+container
+	.bind<FindGroupByVisualConceptUseCase>(Types.FindGroupsByVisualConceptUseCase)
+	.to(FindGroupByVisualConceptUseCase)
+	.inTransientScope();
 container.bind<CreateUserUseCase>(Types.CreateUserUseCase)
   .to(CreateUserUseCase)
   .inTransientScope();
@@ -277,8 +393,8 @@ container.bind<GetPopularityListUseCase>(Types.GetPopularityListUseCase)
   .to(GetPopularityListUseCase)
   .inTransientScope();
 
-container.bind<GetPopularityListUseCase>(Types.ListPopularityListsUseCase)
-  .to(GetPopularityListUseCase)
+container.bind<ListPopularityListUseCase>(Types.ListPopularityListsUseCase)
+  .to(ListPopularityListUseCase)
   .inTransientScope();
 
 container.bind<DeletePopularityListUseCase>(Types.DeletePopularityListUseCase)
@@ -293,11 +409,11 @@ container.bind<UpdatePopularityListUseCase>(Types.UpdatePopularityListUseCase)
   .to(AddSongToPopularityListUseCase)
   .inTransientScope();
 // // Use Cases - Auth
- 
 
-container.bind<LoginUserUseCase>(Types.LoginUserUseCase)
-  .to(LoginUserUseCase)
-  .inTransientScope();
+container
+	.bind<LoginUserUseCase>(Types.LoginUserUseCase)
+	.to(LoginUserUseCase)
+	.inTransientScope();
 
 
   container.bind<CreateActivityUseCase>(Types.CreateActivityUseCase)
@@ -355,6 +471,12 @@ container.bind<FindActivitiesByArtist>(Types.FindActivitiesByArtist)
 //   .inTransientScope();
 
 // Controllers
+
+container
+	.bind<GroupController>(Types.GroupController)
+	.to(GroupController)
+	.inTransientScope();
+
 container.bind<UserController>(Types.UserController)
   .to(UserController)
   .inTransientScope();
@@ -385,6 +507,10 @@ container.bind<AgencyController>(Types.AgencyController)
 
   container.bind<ActivityController>(Types.ActivityController)
   .to(ActivityController)
+  .inTransientScope();
+
+  container.bind<PopularityListController>(Types.PopularityListController)
+  .to(PopularityListController)
   .inTransientScope();
 
   

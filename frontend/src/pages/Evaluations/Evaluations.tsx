@@ -23,20 +23,20 @@ const Evaluations: React.FC = () => {
   const columns: GridColDef[] = [
     { field: 'apprenticeName', headerName: 'Aprendiz', width: 180 },
     { field: 'evaluatorName', headerName: 'Evaluador', width: 180 },
-    { 
-      field: 'category', 
-      headerName: 'Categoría', 
-      width: 150 
+    {
+      field: 'category',
+      headerName: 'Categoría',
+      width: 150
     },
-    { 
-      field: 'score', 
-      headerName: 'Puntuación', 
+    {
+      field: 'score',
+      headerName: 'Puntuación',
       width: 120,
       renderCell: (params) => {
         const score = params.value as number;
         const color = score >= 8 ? '#10b981' : score >= 6 ? '#f59e0b' : '#ef4444';
         return (
-          <span style={{ 
+          <span style={{
             color: color,
             fontWeight: 600,
             fontSize: '16px'
@@ -46,13 +46,13 @@ const Evaluations: React.FC = () => {
         );
       }
     },
-    { 
-      field: 'comments', 
-      headerName: 'Comentarios', 
+    {
+      field: 'comments',
+      headerName: 'Comentarios',
       width: 250,
       renderCell: (params) => (
-        <div style={{ 
-          whiteSpace: 'normal', 
+        <div style={{
+          whiteSpace: 'normal',
           lineHeight: '1.4',
           padding: '8px 0'
         }}>
@@ -60,9 +60,9 @@ const Evaluations: React.FC = () => {
         </div>
       )
     },
-    { 
-      field: 'evaluationDate', 
-      headerName: 'Fecha de Evaluación', 
+    {
+      field: 'evaluationDate',
+      headerName: 'Fecha de Evaluación',
       width: 150,
       valueFormatter: (params) => {
         return new Date(params).toLocaleDateString('es-ES');
@@ -77,10 +77,12 @@ const Evaluations: React.FC = () => {
         if (!user) return;
 
         // Obtener el apprenticeId del usuario actual
-        // const apprenticeId = user.profileData?.apprenticeId || user.id;
+        const apprenticeId = user.profileData?.apprenticeId || user.id;
 
-        // Descomentar cuando el backend esté listo
-        /*
+        // ============================================
+        // SECCIÓN: BACKEND ENDPOINT
+        // Descomenta esta sección para usar el backend real
+        // ============================================
         const response = await fetch(`http://localhost:3000/api/evaluations?apprenticeId=${apprenticeId}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -92,10 +94,15 @@ const Evaluations: React.FC = () => {
         }
 
         const data = await response.json();
-        setEvaluations(data);
-        */
+        setEvaluations(data.data || data);
+        // ============================================
+        // FIN SECCIÓN: BACKEND ENDPOINT
+        // ============================================
 
-        // DATOS DE PRUEBA 
+        //============================================
+        /// SECCIÓN: DATOS DEMO
+        //============================================
+        /*
         const mockEvaluations: Evaluation[] = [
           {
             id: 1,
@@ -136,6 +143,10 @@ const Evaluations: React.FC = () => {
         ];
 
         setEvaluations(mockEvaluations);
+        */
+        // ============================================
+        //FIN SECCIÓN: DATOS DEMO
+        // ============================================ 
 
       } catch (error) {
         console.error('Error al cargar evaluaciones:', error);
@@ -148,15 +159,68 @@ const Evaluations: React.FC = () => {
   }, [user]);
 
   const handleDelete = async (id: number) => {
-    console.log('Eliminar evaluación:', id);
-    setEvaluations(prev => prev.filter(evaluation => evaluation.id !== id));
+    try {
+      const response = await fetch(`http://localhost:3000/api/evaluations/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al eliminar evaluación');
+      }
+
+      setEvaluations(prev => prev.filter(evaluation => evaluation.id !== id));
+    } catch (error) {
+      console.error('Error al eliminar evaluación:', error);
+    }
   };
 
   const handleEditSave = async (updatedRow: Evaluation) => {
-    console.log('Actualizar evaluación:', updatedRow);
-    setEvaluations(prev => 
-      prev.map(evaluation => evaluation.id === updatedRow.id ? updatedRow : evaluation)
-    );
+    try {
+      const response = await fetch(`http://localhost:3000/api/evaluations/${updatedRow.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(updatedRow)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al actualizar evaluación');
+      }
+
+      const data = await response.json();
+      setEvaluations(prev =>
+        prev.map(evaluation => evaluation.id === updatedRow.id ? (data.data || data) : evaluation)
+      );
+    } catch (error) {
+      console.error('Error al actualizar evaluación:', error);
+    }
+  };
+
+  const handleCreateSave = async (newRow: Omit<Evaluation, 'id'>) => {
+    try {
+      const response = await fetch('http://localhost:3000/api/evaluations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(newRow)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al crear evaluación');
+      }
+
+      const data = await response.json();
+      setEvaluations(prev => [...prev, (data.data || data)]);
+    } catch (error) {
+      console.error('Error al crear evaluación:', error);
+    }
   };
 
   if (!user) {
@@ -164,8 +228,8 @@ const Evaluations: React.FC = () => {
   }
 
   return (
-    <PageLayout 
-      title="Evaluaciones" 
+    <PageLayout
+      title="Evaluaciones"
       description="Consulta todas las evaluaciones recibidas y el progreso en diferentes categorías (Vocal, Baile, Expresión Escénica, etc.)"
     >
       {isLoading ? (

@@ -9,6 +9,7 @@ export class ListPopularityListUseCase {
 
 	async execute(): Promise<PopularityListResponseDto[]> {
 		const list = await this.popularityListRepository.findAll();
+		
 		return PopularityListResponseDto.fromEntities(list)
 	}
 }

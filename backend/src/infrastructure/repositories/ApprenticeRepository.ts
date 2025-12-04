@@ -21,8 +21,8 @@ export class ApprenticeRepository implements IApprenticeRepository
 
   async findByName(name: string): Promise<Apprentice|null> {
         name=(String)(name)
-        const apprentice=await this.db.Aprendiz.findUnique({
-           where:{name}
+        const apprentice=await this.db.Aprendiz.findFirst({
+           where:{nombreCompleto:name}
         })
         return apprentice ? ApprenticeResponseDto.toEntity(apprentice) : null
   }

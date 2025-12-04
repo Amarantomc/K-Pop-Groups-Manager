@@ -1,6 +1,3 @@
-
-
-
 // src/infrastructure/di/TYPES.ts
 const Types = {
   // Database
@@ -16,6 +13,7 @@ const Types = {
   IActivityRepository: Symbol.for('IActivityRepository'),
   IAwardRepository: Symbol.for('IAwardRepository'),
   IPopularityListRepository: Symbol.for('IPopularityListRepository'),
+  IGroupRepository : Symbol.for('IGroupRepository'),
   
   // Application Use Cases
   CreateUserUseCase: Symbol.for('CreateUserUseCase'),
@@ -104,7 +102,9 @@ ListAwardUseCase : Symbol.for('ListAwardUseCase'),
   AwardController : Symbol.for('AwardController'),
 
 
+  GroupController :Symbol.for('GroupController')
 
+ 
 };
 
 export { Types };

@@ -93,8 +93,10 @@ export const apprenticeFields: Field[] = [
     { id: 'name', name: 'name', label: 'Nombre Completo', type: 'text', required: true },
     { id: 'dateOfBirth', name: 'dateOfBirth', label: 'Fecha Nacimiento', type: 'date', required: true },
     { id: 'age', name: 'age', label: 'Edad', type: 'number', min: 15, required: true },
+  
     { id: 'trainingLv', name: 'trainingLv', label: 'Nivel Entrenamiento', type: 'number', min: 0, required: true },
     { id: 'status', name: 'status', label: 'Estado Aprendiz', type: 'select', options: APPRENTICE_STATUS_OPTIONS, required: true },
+    { id: 'agencyId', name: 'agencyId', label: 'ID de Agencia', type: 'number', required: true, min: 1 },
 ];
 
 // Artista
@@ -209,6 +211,26 @@ export const contractFields: Field[] = [
     { id: 'revenueSplit', name: 'revenueSplit', label: 'Distribución de Ingresos', type: 'text' },
     { id: 'status', name: 'status', label: 'Estado Contrato', type: 'select', options: enumToOptions(CONTRACT_STATUS) },
 ];
+
+// Mapeo de roles UI (español) a valores del backend (inglés con mayúscula inicial)
+export const ROLE_MAPPING: Record<string, string> = {
+    'Admin': 'Admin',
+    'Manager': 'Manager',
+    'Director': 'Director',
+    'Artista': 'Artist',
+    'Aprendiz': 'Apprentice'
+};
+
+// Campos adicionales para manager/director
+export const managerDirectorFields: Field[] = [
+    { id: 'agencyName', name: 'agencyName', label: 'Nombre de Agencia', type: 'text', placeholder: 'Nombre de la agencia', required: true }
+];
+
+// Campos adicionales para aprendiz (usa el nombre de usuario del campo base)
+export const apprenticeUserFields: Field[] = [];
+
+// Campos adicionales para artista (usa el nombre de usuario del campo base)
+export const artistUserFields: Field[] = [];
 
 // Utilidad: obtener campos por entidad
 export const formFieldsByEntity: Record<string, Field[]> = {

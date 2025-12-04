@@ -26,7 +26,7 @@ export class ConceptRepository implements IConceptRepository
         const concept= await this.db.Concepto.create({
             data:{
                 descripcion: data.description,
-                nombre: data.name
+                //nombre: data.name
             }
         })
         
@@ -53,18 +53,16 @@ export class ConceptRepository implements IConceptRepository
         return ConceptResponseDto.toEntity(concept);
       }
    async delete(id: string): Promise<void> {
-    try {
+     
       await this.db.Concepto.delete({
         where: { id: Number(id) },
       });
-    } catch (error) {
-      throw new Error(`Error deleting concept with id ${id}: ${error}`);
-    }
+     
   }
 
     async findAll(): Promise<Concept[]> {
       const concepts = await this.db.Concepto.findMany();
-
-      return concepts
+      
+      return ConceptResponseDto.toEntities(concepts)
   }
 }

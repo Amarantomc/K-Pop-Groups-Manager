@@ -9,12 +9,20 @@ export class DeleteConceptUseCase {
                 @inject(Types.IUnitOfWork)  private unitOfWork: IUnitOfWork) {}
 
   async execute(conceptId: string): Promise<void> {
-    const concept = await this.conceptRepository.findById(conceptId);
+    
+    try {
+          this.unitOfWork.beginTransaction()
+          const concept = await this.conceptRepository.findById(conceptId);
 
     if (!concept) {
       throw new Error("Concept not found");
     }
-
     await this.conceptRepository.delete(conceptId);
+    this.unitOfWork.commit()
+    } catch (error) {
+       this.unitOfWork.rollback()
+       throw error
+    }
+
   }
 }

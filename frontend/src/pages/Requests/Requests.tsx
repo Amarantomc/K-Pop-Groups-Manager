@@ -25,8 +25,6 @@ const Requests: React.FC = () => {
   // Manejar aprobación de solicitud (Director)
   const handleApprove = async (id: number) => {
     try {
-      // Descomentar cuando el backend esté listo
-      /*
       const response = await fetch(`http://localhost:3000/api/requests/${id}/approve`, {
         method: 'PATCH',
         headers: {
@@ -38,23 +36,22 @@ const Requests: React.FC = () => {
       if (!response.ok) {
         throw new Error('Error al aprobar solicitud');
       }
-      */
 
       // Actualizar estado local
       setRequests(prev =>
         prev.map(req => req.id === id ? { ...req, status: 'approved' } : req)
       );
       console.log('Solicitud aprobada:', id);
+      alert('Solicitud aprobada exitosamente');
     } catch (error) {
       console.error('Error al aprobar solicitud:', error);
+      alert('Error al aprobar la solicitud');
     }
   };
 
   // Manejar rechazo de solicitud (Director)
   const handleReject = async (id: number) => {
     try {
-      // Descomentar cuando el backend esté listo
-      /*
       const response = await fetch(`http://localhost:3000/api/requests/${id}/reject`, {
         method: 'PATCH',
         headers: {
@@ -66,23 +63,22 @@ const Requests: React.FC = () => {
       if (!response.ok) {
         throw new Error('Error al rechazar solicitud');
       }
-      */
 
       // Actualizar estado local
       setRequests(prev =>
         prev.map(req => req.id === id ? { ...req, status: 'rejected' } : req)
       );
       console.log('Solicitud rechazada:', id);
+      alert('Solicitud rechazada');
     } catch (error) {
       console.error('Error al rechazar solicitud:', error);
+      alert('Error al rechazar la solicitud');
     }
   };
 
   // Crear grupo (Manager)
   const handleCreateGroup = async (requestId: number, groupName: string) => {
     try {
-      // Descomentar cuando el backend esté listo
-      /*
       const response = await fetch(`http://localhost:3000/api/groups`, {
         method: 'POST',
         headers: {
@@ -100,8 +96,7 @@ const Requests: React.FC = () => {
         throw new Error('Error al crear grupo');
       }
 
-      const newGroup = await response.json();
-      */
+      await response.json();
 
       // Actualizar estado local
       setRequests(prev =>
@@ -120,18 +115,18 @@ const Requests: React.FC = () => {
   const baseColumns: GridColDef[] = [
     { field: 'apprenticeName', headerName: 'Aprendiz', width: 180 },
     { field: 'groupName', headerName: 'Nombre del Grupo', width: 180 },
-    { 
-      field: 'createdAt', 
-      headerName: 'Fecha de Solicitud', 
+    {
+      field: 'createdAt',
+      headerName: 'Fecha de Solicitud',
       width: 150,
       valueFormatter: (params) => {
         return new Date(params).toLocaleDateString('es-ES');
       }
     },
     { field: 'agencyName', headerName: 'Agencia', width: 150 },
-    { 
-      field: 'status', 
-      headerName: 'Estado', 
+    {
+      field: 'status',
+      headerName: 'Estado',
       width: 130,
       renderCell: (params) => {
         const statusColors: Record<string, string> = {
@@ -141,14 +136,14 @@ const Requests: React.FC = () => {
           'completed': '#6366f1'
         };
         return (
-          <span style={{ 
+          <span style={{
             color: statusColors[params.value] || '#6b7280',
-            fontWeight: 600 
+            fontWeight: 600
           }}>
-            {params.value === 'pending' ? 'Pendiente' : 
-             params.value === 'approved' ? 'Aprobada' : 
-             params.value === 'rejected' ? 'Rechazada' : 
-             params.value === 'completed' ? 'Finalizada' : params.value}
+            {params.value === 'pending' ? 'Pendiente' :
+              params.value === 'approved' ? 'Aprobada' :
+                params.value === 'rejected' ? 'Rechazada' :
+                  params.value === 'completed' ? 'Finalizada' : params.value}
           </span>
         );
       }
@@ -204,12 +199,12 @@ const Requests: React.FC = () => {
       if (user?.role === 'manager') {
         const isCompleted = request.status === 'completed';
         const isApproved = request.status === 'approved';
-        
+
         return (
           <Tooltip title={
             isCompleted ? 'Grupo ya creado' :
-            isApproved ? 'Crear grupo' : 
-            'Solo disponible para solicitudes aprobadas'
+              isApproved ? 'Crear grupo' :
+                'Solo disponible para solicitudes aprobadas'
           }>
             <span>
               <IconButton
@@ -245,7 +240,7 @@ const Requests: React.FC = () => {
         if (!user) return;
 
         let endpoint = '';
-        
+
         switch (user.role) {
           case 'apprentice':
             // Solicitudes del aprendiz específico en su agencia
@@ -277,8 +272,10 @@ const Requests: React.FC = () => {
             return;
         }
 
-        // Descomentar cuando el backend esté listo
-        /*
+        // ============================================
+        // SECCIÓN: BACKEND ENDPOINT
+        // ============================================
+
         const response = await fetch(`http://localhost:3000${endpoint}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -290,10 +287,15 @@ const Requests: React.FC = () => {
         }
 
         const data = await response.json();
-        setRequests(data);
-        */
+        setRequests(data.data || data);
+        // ============================================
+        // FIN SECCIÓN: BACKEND ENDPOINT
+        // ============================================
 
-        // DATOS DE PRUEBA 
+        // ============================================
+        // SECCIÓN: DATOS DEMO
+        //============================================
+        /*
         const mockRequests: Request[] = [
           {
             id: 1,
@@ -330,6 +332,10 @@ const Requests: React.FC = () => {
         }
 
         setRequests(filteredRequests);
+        */
+        // ============================================
+        // FIN SECCIÓN: DATOS DEMO
+        // ============================================ 
 
       } catch (error) {
         console.error('Error al cargar solicitudes:', error);
@@ -342,15 +348,68 @@ const Requests: React.FC = () => {
   }, [user]);
 
   const handleDelete = async (id: number) => {
-    console.log('Eliminar solicitud:', id);
-    setRequests(prev => prev.filter(req => req.id !== id));
+    try {
+      const response = await fetch(`http://localhost:3000/api/requests/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al eliminar solicitud');
+      }
+
+      setRequests(prev => prev.filter(req => req.id !== id));
+    } catch (error) {
+      console.error('Error al eliminar solicitud:', error);
+    }
   };
 
   const handleEditSave = async (updatedRow: Request) => {
-    console.log('Actualizar solicitud:', updatedRow);
-    setRequests(prev => 
-      prev.map(req => req.id === updatedRow.id ? updatedRow : req)
-    );
+    try {
+      const response = await fetch(`http://localhost:3000/api/requests/${updatedRow.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(updatedRow)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al actualizar solicitud');
+      }
+
+      const data = await response.json();
+      setRequests(prev =>
+        prev.map(req => req.id === updatedRow.id ? (data.data || data) : req)
+      );
+    } catch (error) {
+      console.error('Error al actualizar solicitud:', error);
+    }
+  };
+
+  const handleCreateSave = async (newRow: Omit<Request, 'id'>) => {
+    try {
+      const response = await fetch('http://localhost:3000/api/requests', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(newRow)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al crear solicitud');
+      }
+
+      const data = await response.json();
+      setRequests(prev => [...prev, (data.data || data)]);
+    } catch (error) {
+      console.error('Error al crear solicitud:', error);
+    }
   };
 
   if (!user) {
@@ -358,29 +417,30 @@ const Requests: React.FC = () => {
   }
 
   return (
-    <PageLayout 
-      title="Solicitudes de Creación de Grupos" 
+    <PageLayout
+      title="Solicitudes de Creación de Grupos"
       description={
-      user.role === 'apprentice' || user.role === 'artist' ? 'Aquí puedes ver las solicitudes de creación de grupos. Envía nuevas solicitudes y consulta su flujo en la agencia' :
-      user.role === 'manager' ? 'Mira todas las solicitudes de tu agencia.' :
-      user.role === 'director' ? 'Revisa las solicitudes de tu agencia y supervisa el flujo de ellas.' :
-      user.role === 'admin' ? 'Consulta y gestiona todas las solicitudes del sistema y realiza tareas administrativas cuando sea necesario.' :
-      'Gestiona y consulta las solicitudes de creación de grupos'
+        user.role === 'apprentice' || user.role === 'artist' ? 'Aquí puedes ver las solicitudes de creación de grupos. Envía nuevas solicitudes y consulta su flujo en la agencia' :
+          user.role === 'manager' ? 'Mira todas las solicitudes de tu agencia.' :
+            user.role === 'director' ? 'Revisa las solicitudes de tu agencia y supervisa el flujo de ellas.' :
+              user.role === 'admin' ? 'Consulta y gestiona todas las solicitudes del sistema y realiza tareas administrativas cuando sea necesario.' :
+                'Gestiona y consulta las solicitudes de creación de grupos'
       }
     >
       {isLoading ? (
-      <div style={{ textAlign: 'center', padding: '20px' }}>
-        Cargando solicitudes...
-      </div>
+        <div style={{ textAlign: 'center', padding: '20px' }}>
+          Cargando solicitudes...
+        </div>
       ) : (
-      <DataTable
-        columns={columns}
-        rows={requests}
-        pagesize={10}
-        onDelete={handleDelete}
-        onEditSave={handleEditSave}
-        showEditButton={user.role === 'manager' || user.role === 'director' || user.role === 'admin'}
-      />
+        <DataTable
+          columns={columns}
+          rows={requests}
+          pagesize={10}
+          onDelete={handleDelete}
+          onEditSave={handleEditSave}
+          onCreateSave={handleCreateSave}
+          showEditButton={user.role === 'manager' || user.role === 'director' || user.role === 'admin'}
+        />
       )}
     </PageLayout>
   );
