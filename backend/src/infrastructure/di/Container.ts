@@ -101,6 +101,14 @@ import type { ListApplicationUseCase } from "../../application/usesCase/applicat
 import { CreateApplicationDto } from "../../application/dtos/application(solicitud)/CreateApplicationDto";
 import type { UpdateApplicationUseCase } from "../../application/usesCase/application(solicitud)/UpdateApplicationUseCase";
 import type { FindByApprenticeUseCase } from "../../application/usesCase/application(solicitud)/FindByApprenticeUseCase";
+import { CreateAwardUseCase } from '../../application/usesCase/award/CreateAwardUseCase';
+import { DeleteAwardUseCase } from '../../application/usesCase/award/DeleteAwardUseCase';
+import { GetAwardUseCase } from '../../application/usesCase/award/GetAwardUseCase';
+import { ListAwardUseCase } from '../../application/usesCase/award/ListAwardUseCase';
+import { UpdateAwardUseCase } from '../../application/usesCase/award/UpdateAwardUseCase';
+import { AwardController } from '../../presentation/controllers/AwardController';
+import type { IAwardRepository } from '../../application/interfaces/repositories/IAwardRepository';
+import { AwardRepository } from '../repositories/AwardRepository';
  
 
  
@@ -148,6 +156,10 @@ container
 
   container.bind<IConceptRepository>(Types.IConceptRepository)
   .to(ConceptRepository)
+  .inSingletonScope();
+
+  container.bind<IAwardRepository>(Types.IAwardRepository)
+  .to(AwardRepository)
   .inSingletonScope();
 
   container.bind<IActivityRepository>(Types.IActivityRepository)
@@ -432,6 +444,28 @@ container.bind<FindActivitiesByArtist>(Types.FindActivitiesByArtist)
   .to(AddArtistToActivityUseCase)
   .inTransientScope();
 
+  //#region Award Use Case
+  container.bind<CreateAwardUseCase>(Types.CreateAwardUseCase)
+  .to(CreateAwardUseCase)
+  .inTransientScope();
+
+  container.bind<DeleteAwardUseCase>(Types.DeleteAwardUseCase)
+  .to(DeleteAwardUseCase)
+  .inTransientScope();
+
+  container.bind<GetAwardUseCase>(Types.GetAwardUseCase)
+  .to(GetAwardUseCase)
+  .inTransientScope();
+
+  container.bind<ListAwardUseCase>(Types.ListAwardUseCase)
+  .to(ListAwardUseCase)
+  .inTransientScope();
+
+    container.bind<UpdateAwardUseCase>(Types.UpdateAwardUseCase)
+  .to(UpdateAwardUseCase)
+  .inTransientScope();
+//#endregion
+
 // container.bind<ValidateTokenUseCase>(ValidateTokenUseCase)
 //   .to(ValidateTokenUseCase)
 //   .inTransientScope();
@@ -465,6 +499,10 @@ container.bind<AgencyController>(Types.AgencyController)
 
   container.bind<ConceptController>(Types.ConceptController)
   .to(ConceptController)
+  .inTransientScope();
+
+  container.bind<AwardController>(Types.AwardController)
+  .to(AwardController)
   .inTransientScope();
 
   container.bind<ActivityController>(Types.ActivityController)

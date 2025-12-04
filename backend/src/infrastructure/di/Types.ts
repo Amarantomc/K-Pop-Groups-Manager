@@ -11,6 +11,7 @@ const Types = {
   IArtistRepository : Symbol.for('IArtistRepository'),
   IConceptRepository: Symbol.for('IConceptRepository'),
   IActivityRepository: Symbol.for('IActivityRepository'),
+  IAwardRepository: Symbol.for('IAwardRepository'),
   IPopularityListRepository: Symbol.for('IPopularityListRepository'),
   IGroupRepository : Symbol.for('IGroupRepository'),
   
@@ -79,24 +80,14 @@ UpdateApplicationUseCase : Symbol.for('UpdateApplicationUseCase'),
 ListApplicationUseCase : Symbol.for('ListApplicationUseCase'),
 FindByApprenticeUseCase : Symbol.for('FindByApprenticeUseCase'),
 
+//#region Award
+CreateAwardUseCase : Symbol.for('CreateAwardUseCase'),
+GetAwardUseCase : Symbol.for('GetAwardUseCase'),
+DeleteAwardUseCase : Symbol.for('DeleteAwardUseCase'),
+UpdateAwardUseCase : Symbol.for('UpdateAwardUseCase'),
+ListAwardUseCase : Symbol.for('ListAwardUseCase'),
+//#endregion
 
-	CreateGroupUseCase: Symbol.for("CreateGroupUseCase"),
-	DeleteGroupUseCase: Symbol.for("DeleteGroupUseCase"),
-	FindGroupsByNameUseCase: Symbol.for("FindGroupsByNameUseCase"),
-	FindGroupsByDebutUseCase: Symbol.for("FindGroupsByDebutUseCase"),
-	FindGroupsByStatusUseCase: Symbol.for("FindGroupsByStatusUseCase"),
-	FindGroupsByMemberCountUseCase: Symbol.for("FindGroupsByMemberCountUseCase"),
-	FindGroupsByMemberUseCase: Symbol.for("FindGroupsByMemberUseCase"),
-	FindGroupsByAgencyUseCase: Symbol.for("FindGroupsByAgencyUseCase"),
-	FindGroupsByConceptUseCase: Symbol.for("FindGroupsByConceptUseCase"),
-	FindGroupsByVisualConceptUseCase: Symbol.for("FindGroupsByVisualConceptUseCase"),
-	GetGroupUseCase: Symbol.for("GetGroupUseCase"),
-	UpdateGroupUseCase: Symbol.for("UpdateGroupUseCase"),
-	ListGroupsUseCase: Symbol.for("ListGroupsUseCase"),
-	AddMembersUseCase: Symbol.for("AddMembersUseCase"),
-	RemoveMembersUseCase: Symbol.for("RemoveMembersUseCase"),
-	AddAlbumsUseCase: Symbol.for("AddAlbumsUseCase"),
-	AddActivitiesUseCase: Symbol.for("AddActivitiesUseCase"),
 
   // Presentation
   UserController: Symbol.for('UserController'),
@@ -108,6 +99,9 @@ FindByApprenticeUseCase : Symbol.for('FindByApprenticeUseCase'),
   ActivityController: Symbol.for('ActivityController'),
   PopularityListController : Symbol.for('PopularityListController'),
   ApplicationController : Symbol.for('ApplicationController'),
+  AwardController : Symbol.for('AwardController'),
+
+
   GroupController :Symbol.for('GroupController')
 
  
