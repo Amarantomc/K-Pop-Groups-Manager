@@ -69,8 +69,7 @@ export class AlbumController {
 		try {
 			const { id } = req.params;
 			const album = await this.updateAlbumUseCase.execute(id!, req.body);
-			const albumResponse = AlbumResponseDTO.fromEntity(album);
-			res.json({ success: true, data: albumResponse });
+			res.json({ success: true, data: album });
 		} catch (error: any) {
 			res.status(400).json({ success: false, error: error.message });
 		}

@@ -42,8 +42,8 @@ export class AlbumResponseDTO {
 			noSongs: album.NoCanciones,
 			noCopiesSold: album.NoCopiasVendidas,
 			songs: album.Canciones,
-			artists: album.LanzamientoArtista || [],
-			groups: album.LanzamientoGrupo || [],
+			artists: album.LanzamientoArtista,
+			groups: album.LanzamientoGrupo,
 		});
 	}
 

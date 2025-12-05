@@ -32,7 +32,7 @@ export class AlbumRepository implements IAlbumRepository {
 				},
 			},
 		});
-		return AlbumResponseDTO.toEntity(album);
+		return this.findById(album.id) as Promise<Album>;
 	}
 
 	async findById(id: string): Promise<Album | null> {
@@ -51,19 +51,36 @@ export class AlbumRepository implements IAlbumRepository {
 	async update(id: string, data: Partial<Album>): Promise<Album> {
 		const updated = await this.db.album.update({
 			where: { id: Number(id) },
-			data,
+			data: {
+				titulo: data.title,
+				fechaLanzamiento: data.releaseDate
+					? new Date(data.releaseDate)
+					: undefined,
+				productor: data.producer,
+				NoCopiasVendidas: data.noCopiesSold,
+			},
 		});
-		return AlbumResponseDTO.toEntity(updated);
+		return this.findById(updated.id) as Promise<Album>;
 	}
 
-	async delete(id: string): Promise<void> {}
+	async delete(id: string): Promise<void> {
+		throw new Error("Album deletion is not permitted");
+	}
 
 	async findAll(): Promise<Album[]> {
-		const albums = await this.db.album.findMany();
+		const albums = await this.db.album.findMany({
+			include: {
+				Canciones: true,
+				Premios: true,
+				LanzamientoArtista: true,
+				LanzamientoGrupo: true,
+			},
+		});
 		return AlbumResponseDTO.toEntities(albums);
 	}
 
 	async findByTitle(title: string): Promise<Album | null> {
+		console.log(title);
 		const album = await this.db.album.findFirst({
 			where: { titulo: title },
 			include: {
@@ -73,6 +90,7 @@ export class AlbumRepository implements IAlbumRepository {
 				LanzamientoGrupo: true,
 			},
 		});
+		console.log(album);
 		return album ? AlbumResponseDTO.toEntity(album) : null;
 	}
 

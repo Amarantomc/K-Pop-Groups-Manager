@@ -31,7 +31,7 @@ export class AlbumRoutes {
 		this.router.delete("/:id", (req, res) =>
 			this.albumController.deleteAlbum(req, res)
 		);
-		this.router.get("/:title", (req, res) =>
+		this.router.get("/search/:title", (req, res) =>
 			this.albumController.findAlbumByTitle(req, res)
 		);
 	}

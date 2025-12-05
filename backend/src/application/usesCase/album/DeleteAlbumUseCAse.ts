@@ -13,11 +13,15 @@ export class DeleteAlbumUseCase {
 	async execute(id: string): Promise<void> {
 		try {
 			await this.unitOfWork.beginTransaction();
+
+			const album = await this.albumRepository.findById(id);
+			if (!album) throw new Error("Album not found");
+
 			await this.albumRepository.delete(id);
 			await this.unitOfWork.commit();
-		} catch (err) {
-			await this.unitOfWork.rollback();
-			throw err;
+		} catch (error) {
+			await this.unitOfWork.commit();
+			throw error;
 		}
 	}
 }

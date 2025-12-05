@@ -10,7 +10,7 @@ export class CreateAlbumDTO {
 		if (!body.title) throw new Error("Missing album title");
 		if (!body.releaseDate) throw new Error("Missing album release date");
 		if (!body.producer) throw new Error("Missing album producer");
-		if (!body.songs) throw new Error("Missing album's songs");
+		if (!body.songs) throw new Error("Missing album song list");
 		if (
 			!Array.isArray(body.songs) ||
 			body.songs.length == 0 ||
