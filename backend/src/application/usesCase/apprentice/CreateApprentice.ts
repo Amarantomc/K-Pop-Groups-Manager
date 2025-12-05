@@ -5,6 +5,7 @@ import type { IUnitOfWork } from "../../interfaces/IUnitOfWork";
 import type { IApprenticeRepository } from "../../interfaces/repositories/IApprenticeRepository";
 import { inject, injectable } from "inversify";
 import { Types } from "../../../infrastructure/di/Types";
+import e from "express";
 
 
 @injectable()
@@ -17,7 +18,8 @@ export class CreateApprenticeUseCase{
 
     async execute(command:CreateApprenticeDto):Promise<ApprenticeResponseDto>{
         try
-        {
+        {   
+            
             await this.unitOfWork.beginTransaction();
             const apprentice = await this.apprenticeRepository.create(command);
             await this.unitOfWork.commit();
@@ -32,6 +34,7 @@ export class CreateApprenticeUseCase{
             );
         }
         catch(error){
+            
             await this.unitOfWork.rollback();
             throw error;
         }

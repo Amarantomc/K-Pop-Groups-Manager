@@ -6,11 +6,12 @@ export class CreateActivityDto {
     public readonly responsible: string,
     public readonly activityType: string,
     public readonly date: string,
-    public readonly place: string
+    public readonly place: string,
+    public readonly eventType:string
   ) {}
 
   static Create(body: any): CreateActivityDto {
-    if (!body.responsible || !body.activityType || !body.date || !body.place) {
+    if (!body.responsible || !body.activityType || !body.date || !body.place || !body.eventType) {
       throw new Error('Missing required fields');
     }
 
@@ -22,7 +23,8 @@ export class CreateActivityDto {
       body.responsible,
       body.activityType,
       body.date,
-      body.place
+      body.place,
+      body.eventType
     );
   }
 }

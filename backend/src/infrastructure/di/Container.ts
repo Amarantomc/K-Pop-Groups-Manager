@@ -185,6 +185,11 @@ import { UpdateAwardUseCase } from '../../application/usesCase/award/UpdateAward
 import { AwardController } from '../../presentation/controllers/AwardController';
 import type { IAwardRepository } from '../../application/interfaces/repositories/IAwardRepository';
 import { AwardRepository } from '../repositories/AwardRepository';
+import type { IContractRepository } from "../../application/interfaces/repositories/IContractRepository";
+import { ContractRepository } from "../repositories/ContractRepository";
+import { ContractController } from "../../presentation/controllers/ContractController";
+import type { IVisualConceptRepository } from "../../application/interfaces/repositories/IVisualConcept";
+import { CreateContractUseCase } from "../../application/usesCase/contract/CreateContractUseCase";
  
 
  
@@ -206,7 +211,8 @@ container
 	.to(UnitOfWork)
 	.inSingletonScope();
 
-// Repositories
+  //#region Repositories
+  // Repositories
 container
 	.bind<IUserRepository>(Types.IUserRepository)
 	.to(UserRepository)
@@ -263,7 +269,22 @@ container
   .inSingletonScope();
 >>>>>>> 6f5c07e (Crud award implementation (#116))
 
+  container.bind<IContractRepository>(Types.IContractRepository)
+  .to(ContractRepository)
+  .inSingletonScope();
+
+   container.bind<IVisualConceptRepository>(Types.IVisualConceptRepository)
+  .to(VisualConceptRepository)
+  .inSingletonScope();
+
+  //#endregion
+
 // Use Cases - User
+<<<<<<< HEAD
+=======
+ // Use Cases - Group
+ //#region Group
+>>>>>>> 37c9a98 (Some Fixes)
 container
 	.bind<CreateUserUseCase>(Types.CreateUserUseCase)
 	.to(CreateUserUseCase)
@@ -348,6 +369,16 @@ container
 	.bind<FindAgenciesByNameUseCase>(Types.FindAgenciesByNameUseCase)
 	.to(FindAgenciesByNameUseCase)
 	.inTransientScope();
+<<<<<<< HEAD
+=======
+
+  //#endregion
+
+  //#region User
+container.bind<CreateUserUseCase>(Types.CreateUserUseCase)
+  .to(CreateUserUseCase)
+  .inTransientScope();
+>>>>>>> 37c9a98 (Some Fixes)
 
 container
 	.bind<GetAgencyUseCase>(Types.GetAgencyUseCase)
@@ -369,10 +400,20 @@ container
 	.to(CreateArtistUseCase)
 	.inTransientScope();
 
+<<<<<<< HEAD
 container
 	.bind<UpdateArtistUseCase>(Types.UpdateArtistUseCase)
 	.to(UpdateArtistUseCase)
 	.inTransientScope();
+=======
+  //#endregion
+
+  //#region Apprentice
+
+  container.bind<GetApprenticeUseCase>(Types.GetApprenticeUseCase)
+  .to(GetApprenticeUseCase)
+  .inTransientScope();
+>>>>>>> 37c9a98 (Some Fixes)
 
 container
 	.bind<DeleteArtistUseCase>(Types.DeleteArtistUseCase)
@@ -394,6 +435,7 @@ container
 	.to(FindArtistByAgencyUseCase)
 	.inTransientScope();
 
+<<<<<<< HEAD
 container
 	.bind<CreateConceptUseCase>(Types.CreateConceptUseCase)
 	.to(CreateConceptUseCase)
@@ -408,6 +450,21 @@ container
 	.bind<GetConceptUseCase>(Types.GetConceptUseCase)
 	.to(GetConceptUseCase)
 	.inTransientScope();
+=======
+  container.bind<GetApprenticeByNameUseCase>(Types.GetApprenticeByNameUseCase)
+  .to(GetApprenticeByNameUseCase)
+  .inTransientScope();
+ //#endregion
+  
+  //#region Agency
+  container.bind<ListByAgencyUseCase>(Types.ListByAgencyUseCase)
+  .to(ListByAgencyUseCase)
+  .inTransientScope();
+
+  container.bind<CreateAgencyUseCase>(Types.CreateAgencyUseCase)
+  .to(CreateAgencyUseCase)
+  .inTransientScope();
+>>>>>>> 37c9a98 (Some Fixes)
 
 container
 	.bind<ListConceptUseCase>(Types.ListConceptUseCase)
@@ -424,10 +481,90 @@ container
 	.to(CreatePopularityListUseCase)
 	.inTransientScope();
 
+<<<<<<< HEAD
 container
 	.bind<GetPopularityListUseCase>(Types.GetPopularityListUseCase)
 	.to(GetPopularityListUseCase)
 	.inTransientScope();
+=======
+  container.bind<FindAgenciesByNameUseCase>(Types.FindAgenciesByNameUseCase)
+  .to(FindAgenciesByNameUseCase)
+  .inTransientScope();
+
+  container.bind<GetAgencyUseCase>(Types.GetAgencyUseCase)
+  .to(GetAgencyUseCase)
+  .inTransientScope();
+
+  container.bind<ListAgenciesUseCase>(Types.ListAgenciesUseCase)
+  .to(ListAgenciesUseCase)
+  .inTransientScope();
+
+  container.bind<UpdateAgencyUseCase>(Types.UpdateAgencyUseCase)
+  .to(UpdateAgencyUseCase)
+  .inTransientScope();
+  //#endregion
+
+  //#region Artist
+
+  container.bind<CreateArtistUseCase>(Types.CreateArtistUseCase)
+  .to(CreateArtistUseCase)
+  .inTransientScope();
+
+  container.bind<UpdateArtistUseCase>(Types.UpdateArtistUseCase)
+  .to(UpdateArtistUseCase)
+  .inTransientScope();
+  
+  container.bind<DeleteArtistUseCase>(Types.DeleteArtistUseCase)
+  .to(DeleteArtistUseCase)
+  .inTransientScope();
+
+   container.bind<FindArtistByIdUseCase>(Types.FindArtistByIdUseCase)
+  .to(FindArtistByIdUseCase)
+  .inTransientScope();
+
+  container.bind<GetAllArtistsUseCase>(Types.GetAllArtistsUseCase)
+  .to(GetAllArtistsUseCase)
+  .inTransientScope();
+
+  container.bind<FindArtistByAgencyUseCase>(Types.FindArtistByAgencyUseCase)
+  .to(FindArtistByAgencyUseCase)
+  .inTransientScope();
+  //#endregion
+
+  //#region Concept
+
+   container.bind<CreateConceptUseCase>(Types.CreateConceptUseCase)
+  .to(CreateConceptUseCase)
+  .inTransientScope();
+
+  container.bind<DeleteConceptUseCase>(Types.DeleteConceptUseCase)
+  .to(DeleteConceptUseCase)
+  .inTransientScope();
+
+  container.bind<GetConceptUseCase>(Types.GetConceptUseCase)
+  .to(GetConceptUseCase)
+  .inTransientScope();
+
+  container.bind<ListConceptUseCase>(Types.ListConceptUseCase)
+  .to(ListConceptUseCase)
+  .inTransientScope();
+
+    container.bind<UpdateConceptUseCase>(Types.UpdateConceptUseCase)
+  .to(UpdateConceptUseCase)
+  .inTransientScope();
+
+  //#endregion
+
+  //#region Popularity
+
+  container.bind<CreatePopularityListUseCase>(Types.CreatePopularityListUseCase)
+  .to(CreatePopularityListUseCase)
+  .inTransientScope();
+
+container.bind<GetPopularityListUseCase>(Types.GetPopularityListUseCase)
+  .to(GetPopularityListUseCase)
+  .inTransientScope();
+>>>>>>> 37c9a98 (Some Fixes)
 
 <<<<<<< HEAD
 container
@@ -450,21 +587,35 @@ container
 	.to(UpdatePopularityListUseCase)
 	.inTransientScope();
 
+<<<<<<< HEAD
 container
 	.bind<AddSongToPopularityListUseCase>(Types.AddSongToPopularityListUseCase)
 	.to(AddSongToPopularityListUseCase)
 	.inTransientScope();
+=======
+  container.bind<AddSongToPopularityListUseCase>(Types.AddSongToPopularityListUseCase)
+  .to(AddSongToPopularityListUseCase)
+  .inTransientScope();
+
+  //#endregion
+>>>>>>> 37c9a98 (Some Fixes)
 // // Use Cases - Auth
 
+//#region Auth
 container
 	.bind<LoginUserUseCase>(Types.LoginUserUseCase)
 	.to(LoginUserUseCase)
 	.inTransientScope();
+//#endregion
 
+<<<<<<< HEAD
 container
 	.bind<CreateActivityUseCase>(Types.CreateActivityUseCase)
 	.to(CreateActivityUseCase)
 	.inTransientScope();
+=======
+//#region Activity
+>>>>>>> 37c9a98 (Some Fixes)
 
 container
 	.bind<UpdateActivityUseCase>(Types.UpdateActivityUseCase)
@@ -556,6 +707,8 @@ container
 	.to(FindSongByTitleUseCase)
 	.inTransientScope();
 
+  //#endregion
+
   //#region Award Use Case
   container.bind<CreateAwardUseCase>(Types.CreateAwardUseCase)
   .to(CreateAwardUseCase)
@@ -582,7 +735,41 @@ container
 //   .to(ValidateTokenUseCase)
 //   .inTransientScope();
 
+ //#region VisualConcept  
+container.bind<CreateVisualConceptUseCase>(Types.CreateVisualConceptUseCase)
+  .to(CreateVisualConceptUseCase)
+  .inTransientScope();
+
+  container.bind<DeleteVisualConceptUseCase>(Types.DeleteVisualConceptUseCase)
+  .to(DeleteVisualConceptUseCase)
+  .inTransientScope();
+
+  container.bind<GetVisualConceptUseCase>(Types.GetVisualConceptUseCase)
+  .to(GetVisualConceptUseCase)
+  .inTransientScope();
+
+  container.bind<ListVisualConceptUseCase>(Types.ListVisualConceptUseCase)
+  .to(ListVisualConceptUseCase)
+  .inTransientScope();
+
+    container.bind<UpdateVisualConceptUseCase>(Types.UpdateVisualConceptUseCase)
+  .to(UpdateVisualConceptUseCase)
+  .inTransientScope();
+
+  //#endregion
+
+  //#region Contract
+    container.bind<CreateContractUseCase>(Types.CreateContractUseCase)
+  .to(CreateContractUseCase)
+  .inTransientScope();
+  //#endregion
+
 // Controllers
+<<<<<<< HEAD
+=======
+//#region Controllers
+
+>>>>>>> 37c9a98 (Some Fixes)
 container
 	.bind<UserController>(Types.UserController)
 	.to(UserController)
@@ -648,7 +835,11 @@ container
   .to(PopularityListController)
   .inTransientScope();
 
+  container.bind<ContractController>(Types.ContractController)
+  .to(ContractController)
+  .inTransientScope();
   
+<<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> f036841 (Some Fixes (#104))
 
@@ -660,15 +851,14 @@ container
   container.bind<CreateVisualConceptUseCase>(Types.CreateVisualConceptUseCase)
   .to(CreateVisualConceptUseCase)
   .inTransientScope();
+=======
+  //#endregion
+>>>>>>> 37c9a98 (Some Fixes)
 
-  container.bind<DeleteVisualConceptUseCase>(Types.DeleteVisualConceptUseCase)
-  .to(DeleteVisualConceptUseCase)
-  .inTransientScope();
 
-  container.bind<GetVisualConceptUseCase>(Types.GetVisualConceptUseCase)
-  .to(GetVisualConceptUseCase)
-  .inTransientScope();
+  
 
+<<<<<<< HEAD
   container.bind<ListVisualConceptUseCase>(Types.ListVisualConceptUseCase)
   .to(ListVisualConceptUseCase)
   .inTransientScope();
@@ -677,5 +867,7 @@ container
   .to(UpdateVisualConceptUseCase)
   .inTransientScope();
 >>>>>>> 8d68224 (Crud visual concept implemetation (#118))
+=======
+>>>>>>> 37c9a98 (Some Fixes)
 
 export { container };

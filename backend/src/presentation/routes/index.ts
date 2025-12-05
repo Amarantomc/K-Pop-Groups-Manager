@@ -25,9 +25,13 @@ import { VisualConceptRoutes } from "./VisualConceptRoutes";
 import { AwardRoutes } from "./AwardRoutes";
 import { PopularityListRoutes } from "./PopularityListRoutes";
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> origin/master
 >>>>>>> 6f5c07e (Crud award implementation (#116))
 =======
+=======
+import { ContractRoutes } from "./ContractRoutes";
+>>>>>>> 37c9a98 (Some Fixes)
  
 
 >>>>>>> 0d29b15 (Crud award implementation (#117))
@@ -58,9 +62,13 @@ const visualConceptRoutes=new VisualConceptRoutes()
 const awardRoutes = new AwardRoutes();
 const popularityListRoutes=new PopularityListRoutes()
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> origin/master
 >>>>>>> 6f5c07e (Crud award implementation (#116))
 =======
+=======
+const contractRoutes=new ContractRoutes()
+>>>>>>> 37c9a98 (Some Fixes)
  
 >>>>>>> 0d29b15 (Crud award implementation (#117))
 
@@ -90,9 +98,13 @@ rootRouter.use("/award", awardRoutes.getRouter());
 
 rootRouter.use('/populist',popularityListRoutes.getRouter())
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> origin/master
 >>>>>>> 6f5c07e (Crud award implementation (#116))
 =======
+=======
+rootRouter.use('/contract',contractRoutes.getRouter())
+>>>>>>> 37c9a98 (Some Fixes)
 
 >>>>>>> 0d29b15 (Crud award implementation (#117))
 

@@ -30,7 +30,8 @@ export class ActivityRepository implements IActivityRepository {
         responsable: data.responsible,
         tipoActividad: data.activityType,
         fecha: new Date(data.date),
-        lugar: data.place
+        lugar: data.place,
+        tipoEvento: data.eventType
       } 
     });
     

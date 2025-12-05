@@ -25,7 +25,7 @@ private get db() {
     const artist = await this.db.artista.create({
       data: {
         nombreArtistico: data.ArtistName,
-        fsechaDebut: new Date(data.DebutDate),
+        fechaDebut: new Date(data.DebutDate),
         estadoArtista: data.Status,
         idAp: data.ApprenticeId,   
         idGr: data.GroupId          
@@ -99,7 +99,7 @@ private get db() {
                       },
                     data: {
                       nombreArtistico:data.ArtistName,
-                      fsechaDebut:data.DebutDate,
+                      fechaDebut:data.DebutDate,
                       estadoArtista:data.Status
                     }
                   });

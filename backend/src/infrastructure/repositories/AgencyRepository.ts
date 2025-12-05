@@ -19,17 +19,7 @@ export class AgencyRepository implements IAgencyRepository {
 		return this.unitOfWork.getTransaction();
 	}
 
-	private mapPrismaToDomain(raw: any): Agency {
-		if (!raw) return raw;
-		// map DB names to domain names
-		const mapped = {
-			id: raw.id,
-			name: raw.nombre,
-			address: raw.ubicacion,
-			foundation: raw.fechaFundacion,
-		};
-		return AgencyResponseDTO.toEntity(mapped);
-	}
+ 
 
 	async create(data: CreateAgencyDTO): Promise<Agency> {
 		const agency = await this.db.agencia.create({
@@ -40,37 +30,37 @@ export class AgencyRepository implements IAgencyRepository {
 			},
 		});
 
-		return this.mapPrismaToDomain(agency);
+		return AgencyResponseDTO.toEntity(agency);
 	}
 
 	async findById(id: any): Promise<Agency | null> {
 		id = Number(id);
 		const agency = await this.db.agencia.findUnique({ where: { id } });
-		return agency ? this.mapPrismaToDomain(agency) : null;
+		return agency ? AgencyResponseDTO.toEntity(agency) : null;
 	}
 
 	async findByName(name: string): Promise<Agency[]> {
 		const list = await this.db.agencia.findMany({ where: { nombre: name } });
-		return list.map((r: any) => this.mapPrismaToDomain(r));
+		return list.map((r: any) => AgencyResponseDTO.toEntity(r));
 	}
 
 	async findByAddress(address: string): Promise<Agency[]> {
 		const list = await this.db.agencia.findMany({
 			where: { ubicacion: address },
 		});
-		return list.map((r: any) => this.mapPrismaToDomain(r));
+		return list.map((r: any) => AgencyResponseDTO.toEntity(r));
 	}
 
 	async findByFoundation(foundation: Date): Promise<Agency[]> {
 		const list = await this.db.agencia.findMany({
 			where: { fechaFundacion: foundation },
 		});
-		return list.map((r: any) => this.mapPrismaToDomain(r));
+		return list.map((r: any) => AgencyResponseDTO.toEntity(r));
 	}
 
 	async findAll(): Promise<Agency[]> {
 		const list = await this.db.agencia.findMany();
-		return list.map((r: any) => this.mapPrismaToDomain(r));
+		return list.map((r: any) => AgencyResponseDTO.toEntity(r));
 	}
 
 	async update(id: string, data: any): Promise<Agency> {
@@ -85,7 +75,7 @@ export class AgencyRepository implements IAgencyRepository {
 			data: payload,
 		});
 
-		return this.mapPrismaToDomain(updated);
+		return AgencyResponseDTO.toEntity(updated);
 	}
 
 	async delete(id: string): Promise<void> {

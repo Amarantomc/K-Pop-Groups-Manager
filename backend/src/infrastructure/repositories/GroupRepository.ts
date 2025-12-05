@@ -27,17 +27,19 @@ export class GroupRepository implements IGroupRepository {
 				nombreCompleto: data.name,
 				fechaDebut: data.debut,
 				estadoGrupo: data.status,
-				Nomiembros: 0,
+				Nomiembros: data.memberCount,
 				idConcepto: data.IdConcept,
-				// idConceptoVisual: data.IdVisualConcept, // Falta tener la propiedad IdVisualConcept en la base de datos
+				idConceptoVisual: data.IdVisualConcept, 
 				Agencias: { connect: { id: data.IdAgency } },
+				//concepto: { connect: { id: data.IdConcept } },
 			},
 		});
-		this.addMembers(group.id, data.members, data.roles);
-		if (data.albums) this.addAlbums(group.id, data.albums);
-		if (data.activities) this.addActivities(group.id, data.activities);
+		//this.addMembers(group.id, data.members, data.roles);
+		//if (data.albums) this.addAlbums(group.id, data.albums);
+		//if (data.activities) this.addActivities(group.id, data.activities);
 		const updatedGroup = await this.findById(group.id);
 		return updatedGroup!;
+		
 	}
 
 	async findById(id: any): Promise<Group | null> {
@@ -47,7 +49,7 @@ export class GroupRepository implements IGroupRepository {
 			include: {
 				Agencias: true,
 				concepto: true,
-				// conceptoVisual: true,
+				conceptoVisual: true,
 				HistorialArtistas: {
 					where: { fechaFinalizacion: null },
 					select: { idAp: true },
@@ -56,20 +58,10 @@ export class GroupRepository implements IGroupRepository {
 				Actividades: { select: { idAct: true } },
 			},
 		});
+		console.log(group)
 		return !group
 			? null
-			: GroupResponseDTO.toEntity({
-					...group,
-					agency:
-						group.Agencias && group.Agencias.length > 0
-							? group.Agencias[0]
-							: null,
-					concept: group.concepto,
-					visualConcept: null, // group.conceptoVisual,
-					members: group.HistorialArtistas.map((a: any) => a.idAp),
-					albums: group.Album.map((a: any) => a.id),
-					activities: group.Actividades.map((a: any) => a.idAct),
-			  });
+			: GroupResponseDTO.toEntity(group);
 	}
 
 	async update(id: string, data: Partial<CreateGroupDTO>): Promise<Group> {
@@ -84,7 +76,7 @@ export class GroupRepository implements IGroupRepository {
 			include: {
 				Agencias: true,
 				concepto: true,
-				// conceptoVisual: true,
+				conceptoVisual: true,
 				HistorialArtistas: {
 					where: { fechaFinalizacion: null },
 					select: { idAp: true },
@@ -100,7 +92,7 @@ export class GroupRepository implements IGroupRepository {
 					? updated.Agencias[0]
 					: null,
 			concept: updated.concepto,
-			visualConcept: null, // group.conceptoVisual,
+			visualConcept: updated.conceptoVisual,
 			members: updated.HistorialArtistas.map((a: any) => a.idAp),
 			albums: updated.Album.map((a: any) => a.id),
 			activities: updated.Actividades.map((a: any) => a.idAct),
@@ -115,7 +107,7 @@ export class GroupRepository implements IGroupRepository {
 			include: {
 				Agencias: true,
 				concepto: true,
-				// conceptoVisual: true,
+				conceptoVisual: true,
 				HistorialArtistas: {
 					where: { fechaFinalizacion: null },
 					select: { idAp: true },
@@ -124,20 +116,10 @@ export class GroupRepository implements IGroupRepository {
 				Actividades: { select: { idAct: true } },
 			},
 		});
+		
 		return !group
 			? null
-			: GroupResponseDTO.toEntity({
-					...group,
-					agency:
-						group.Agencias && group.Agencias.length > 0
-							? group.Agencias[0]
-							: null,
-					concept: group.concepto,
-					visualConcept: null, // group.conceptoVisual,
-					members: group.HistorialArtistas.map((a: any) => a.idAp),
-					albums: group.Album.map((a: any) => a.id),
-					activities: group.Actividades.map((a: any) => a.idAct),
-			  });
+			: GroupResponseDTO.toEntity(group);
 	}
 
 	async findByDebut(debut: Date): Promise<Group | null> {
@@ -146,7 +128,7 @@ export class GroupRepository implements IGroupRepository {
 			include: {
 				Agencias: true,
 				concepto: true,
-				// conceptoVisual: true,
+				 conceptoVisual: true,
 				HistorialArtistas: {
 					where: { fechaFinalizacion: null },
 					select: { idAp: true },
@@ -164,7 +146,7 @@ export class GroupRepository implements IGroupRepository {
 							? group.Agencias[0]
 							: null,
 					concept: group.concepto,
-					visualConcept: null, // group.conceptoVisual,
+					visualConcept:  group.conceptoVisual,
 					members: group.HistorialArtistas.map((a: any) => a.idAp),
 					albums: group.Album.map((a: any) => a.id),
 					activities: group.Actividades.map((a: any) => a.idAct),
@@ -194,7 +176,7 @@ export class GroupRepository implements IGroupRepository {
 						? group.Agencias[0]
 						: null,
 				concept: group.concepto,
-				visualConcept: null, // group.conceptoVisual,
+				visualConcept:group.conceptoVisual, // group.conceptoVisual,
 				members: group.HistorialArtistas.map((a: any) => a.idAp),
 				albums: group.Album.map((a: any) => a.id),
 				activities: group.Actividades.map((a: any) => a.idAct),
@@ -225,7 +207,7 @@ export class GroupRepository implements IGroupRepository {
 						? group.Agencias[0]
 						: null,
 				concept: group.concepto,
-				visualConcept: null, // group.conceptoVisual,
+				visualConcept:group.conceptoVisual, // group.conceptoVisual,
 				members: group.HistorialArtistas.map((a: any) => a.idAp),
 				albums: group.Album.map((a: any) => a.id),
 				activities: group.Actividades.map((a: any) => a.idAct),
@@ -257,7 +239,7 @@ export class GroupRepository implements IGroupRepository {
 						? artista.grupo.Agencias[0]
 						: null,
 				concept: artista.grupo.concepto,
-				visualConcept: null, // group.conceptoVisual,
+				visualConcept:artista.grupo.conceptoVisual, // group.conceptoVisual,
 				members: artista.grupo.HistorialArtistas.map((a: any) => a.idAp),
 				albums: artista.grupo.Album.map((a: any) => a.id),
 				activities: artista.grupo.Actividades.map((a: any) => a.idAct),
@@ -273,7 +255,7 @@ export class GroupRepository implements IGroupRepository {
 					include: {
 						Agencias: true,
 						concepto: true,
-						// conceptoVisual: true,
+						conceptoVisual: true,
 						HistorialArtistas: {
 							where: { fechaFinalizacion: null },
 							select: { idAp: true },
@@ -294,7 +276,7 @@ export class GroupRepository implements IGroupRepository {
 								? group.Agencias[0]
 								: null,
 						concept: group.concepto,
-						visualConcept: null, // group.conceptoVisual,
+						visualConcept:group.conceptoVisual, // group.conceptoVisual,
 						members: group.HistorialArtistas.map((a: any) => a.idAp),
 						albums: group.Album.map((a: any) => a.id),
 						activities: group.Actividades.map((a: any) => a.idAct),
@@ -325,7 +307,7 @@ export class GroupRepository implements IGroupRepository {
 						? group.Agencias[0]
 						: null,
 				concept: group.concepto,
-				visualConcept: null, // group.conceptoVisual,
+				visualConcept:group.conceptoVisual, // group.conceptoVisual,
 				members: group.HistorialArtistas.map((a: any) => a.idAp),
 				albums: group.Album.map((a: any) => a.id),
 				activities: group.Actividades.map((a: any) => a.idAct),
@@ -362,7 +344,7 @@ export class GroupRepository implements IGroupRepository {
 							? group.Agencias[0]
 							: null,
 					concept: group.concepto,
-					visualConcept: null, // group.conceptoVisual,
+					visualConcept:group.conceptoVisual, // group.conceptoVisual,
 					members: group.HistorialArtistas.map((a: any) => a.idAp),
 					albums: group.Album.map((a: any) => a.id),
 					activities: group.Actividades.map((a: any) => a.idAct),
@@ -391,7 +373,7 @@ export class GroupRepository implements IGroupRepository {
 						? group.Agencias[0]
 						: null,
 				concept: group.concepto,
-				visualConcept: null, // group.conceptoVisual,
+				visualConcept:group.conceptoVisual, // group.conceptoVisual,
 				members: group.HistorialArtistas.map((a: any) => a.idAp),
 				albums: group.Album.map((a: any) => a.id),
 				activities: group.Actividades.map((a: any) => a.idAct),
