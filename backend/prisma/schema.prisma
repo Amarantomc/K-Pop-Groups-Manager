@@ -99,8 +99,8 @@ model Actividad{
   tipoActividad String
   //Nuevo
   tipoEvento String
-  Artistas ArtistaEnActividad[]
-  Grupos GrupoEnActividad[]
+  Personas PersonasEnActividad[]
+  
   Ingreso Ingreso[]
 }
 
@@ -143,7 +143,7 @@ model Grupo{
   concepto Concepto @relation(fields: [idConcepto], references: [id])
   conceptoVisual ConceptoVisual @relation(fields: [idConceptoVisual], references: [id])
 
-  Actividades ArtistaEnActividad[]
+  Actividades PersonasEnActividad[]
   Album Album[]
   Artista Artista[]
   HistorialArtistas ArtistaEnGrupo[]
@@ -179,7 +179,7 @@ model Artista {
   aprendiz  Aprendiz @relation(fields: [idAp],references: [id])
   Contrato Contrato []
   HistorialGrupos ArtistaEnGrupo []
-  Actividades ArtistaEnActividad[]
+  Actividades PersonasEnActividad[]
   Lanzamientos ArtistaLanzaAlbum[]
   SolicitudGrupo ArtistaSolicitaGrupo[]
   Perfil PerfilArtista?
@@ -325,7 +325,7 @@ model EvaluacionAprendiz {
   @@map("EvaluaciónAprendiz")
 }
 
-model ArtistaEnActividad {
+model PersonasEnActividad {
   //Cambiar nombre
   idAp     Int
   idGr     Int
@@ -339,21 +339,10 @@ model ArtistaEnActividad {
   grupos Grupo @relation(fields: [idGrupos], references: [id])
 
   @@id([idAp, idGr, idAct])
-  @@map("ArtistaEnActividad")
+  @@map("PersonasEnActividad")
 }
 
-model GrupoEnActividad {
-  //Eliminar
-  idGr      Int
-  idAct    Int
-  aceptado Boolean
-
-  //grupo Grupo @relation(fields: [idGr], references: [id])
-  actividadGrupal Actividad @relation(fields: [idAct], references: [id])
-
-  @@id([idGr, idAct])
-  @@map("GrupoEnActividad")
-}
+ 
 
 model ArtistaLanzaAlbum {
   idAp             Int
