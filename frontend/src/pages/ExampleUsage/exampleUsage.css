@@ -1,0 +1,76 @@
+.example-usage-content {
+  /* El PageLayout ya maneja el padding y márgenes */
+}
+
+.stats-section,
+.charts-section,
+.combined-section,
+.comparative-section {
+  margin-bottom: 48px;
+}
+
+.stats-section h2,
+.charts-section h2,
+.combined-section h2,
+.comparative-section h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 20px;
+}
+
+.chart-subsection {
+  margin-bottom: 32px;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: 24px;
+}
+
+.code-examples {
+  background-color: #1f2937;
+  padding: 24px;
+  border-radius: 12px;
+  margin-top: 48px;
+}
+
+.code-examples h2 {
+  color: #ffffff;
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+
+.code-examples pre {
+  background-color: #111827;
+  padding: 20px;
+  border-radius: 8px;
+  overflow-x: auto;
+  color: #10b981;
+  font-size: 13px;
+  line-height: 1.6;
+  font-family: 'Courier New', monospace;
+}
+
+@media (max-width: 768px) {
+  .example-usage-page {
+    padding: 16px;
+  }
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-header h1 {
+    font-size: 24px;
+  }
+
+  .code-examples {
+    padding: 16px;
+  }
+
+  .code-examples pre {
+    font-size: 11px;
+  }
+}

@@ -17,6 +17,7 @@ import Login from '../../pages/Login/Login';
 import Profile from '../../pages/Profile/Profile';
 import Requests from '../../pages/Requests/Requests';
 import ProtectedRoute from './ProtectedRoute';
+import Overview from '../../pages/ExampleUsage/ExampleUsage';
 
 const AppRouter: React.FC = () => {
   const { user, isLoading } = useAuth();
@@ -58,6 +59,12 @@ const AppRouter: React.FC = () => {
       <Route path="/admin/dashboard" element={
         <ProtectedRoute allowedRoles={['admin']}>
           <Dashboard />
+        </ProtectedRoute>
+      } />
+        /* RUTA DE EJEMPLO ADICIONAL PARA ADMIN */
+      <Route path="/admin/overview" element={
+        <ProtectedRoute allowedRoles={['admin']}>
+          <Overview />
         </ProtectedRoute>
       } />
       <Route path="/admin/agency" element={

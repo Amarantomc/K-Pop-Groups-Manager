@@ -42,18 +42,84 @@
 .welcome-text h2{ margin: 0 0 6px 0; color: #222; }
 .welcome-text p{ margin: 0; color: #555; }
 
-.quick-stats{
-    display: flex;
-    gap: 20px;
-    justify-content: center;
+.dashboard-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 220px));
+    gap: 1.5rem;
+    margin-top: 20px;
 }
-.stat{
-    background: #fff;
-    padding: 20px 28px;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    min-width: 160px;
-    text-align: center;
+
+/* Estilo mejorado para las StatCards en el dashboard */
+.dashboard-stats-grid .stat-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(24px);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    border: 1px solid rgb(243, 232, 255);
+    box-shadow: 0 25px 50px -12px rgba(147, 51, 234, 0.1);
+    transition: all 0.3s ease;
+    min-height: auto;
 }
-.stat-value{ font-size: 36px; font-weight: 800; color: #0b5cff; }
-.stat-label{ font-size: 14px; color: #666; margin-top: 8px; }
+
+.dashboard-stats-grid .stat-card:hover {
+    box-shadow: 0 25px 50px -12px rgba(147, 51, 234, 0.2);
+    transform: translateY(-0.25rem);
+}
+
+.dashboard-stats-grid .stat-card-header {
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.dashboard-stats-grid .stat-card-icon {
+    width: 4rem;
+    height: 4rem;
+    font-size: 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 10px 15px -3px currentColor;
+}
+
+.dashboard-stats-grid .stat-card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: rgb(31, 41, 55);
+}
+
+.dashboard-stats-grid .stat-card-value {
+    font-size: 1.875rem;
+    font-weight: 700;
+    margin: 0.25rem 0;
+}
+
+.dashboard-stats-grid .stat-card-subtitle {
+    font-size: 0.875rem;
+    color: rgb(107, 114, 128);
+}
+
+.dashboard-stats-grid .stat-card-trend {
+    font-size: 0.875rem;
+}
+
+@media (min-width: 1400px) {
+    .dashboard-stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 220px));
+    }
+}
+
+@media (max-width: 1024px) {
+    .dashboard-stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 200px));
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
