@@ -6,7 +6,8 @@ export class UpdateActivityDto {
     public readonly responsible?: string,
     public readonly activityType?: string,
     public readonly date?: string,
-    public readonly place?: string
+    public readonly place?: string,
+    public readonly eventType?:string
   ) {}
 
   static Create(body: any): UpdateActivityDto {
@@ -18,7 +19,8 @@ export class UpdateActivityDto {
       body.responsible,
       body.activityType,
       body.date,
-      body.place
+      body.place,
+      body.eventType
     );
   }
 }

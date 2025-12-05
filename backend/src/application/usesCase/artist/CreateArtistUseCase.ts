@@ -48,7 +48,8 @@ export class CreateArtistUseCase{
             return ArtistResponseDto.fromEntity(artist)
         }
         catch(error){
-            await this.unitOfWork.rollback();
+            
+          await this.unitOfWork.rollback();
             throw error;
         }
   }

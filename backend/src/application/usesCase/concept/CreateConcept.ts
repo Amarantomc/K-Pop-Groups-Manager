@@ -19,6 +19,7 @@ export class CreateConceptUseCase{
         try
         {
             await this.unitOfWork.beginTransaction();
+            
             const concept = await this.conceptRepository.create(command);
             await this.unitOfWork.commit();
             
@@ -29,6 +30,7 @@ export class CreateConceptUseCase{
             );
         }
         catch(error){
+            console.log(error)
             await this.unitOfWork.rollback();
             throw error;
         }

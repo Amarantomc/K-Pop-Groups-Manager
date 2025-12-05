@@ -44,7 +44,7 @@ export class ArtistResponseDto {
       ApprenticeId:artist.idAp,
       GroupId:artist.idGr,
       ArtistName:artist.nombreArtistico,
-      DebutDate: artist.fsechaDebut,
+      DebutDate: artist.fechaDebut,
       Status:artist.estadoArtista,
  
       }

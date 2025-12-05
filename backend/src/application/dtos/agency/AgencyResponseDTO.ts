@@ -9,6 +9,7 @@ export class AgencyResponseDTO {
 	) {}
 
 	static fromEntity(agency: any): AgencyResponseDTO {
+		
 		return new AgencyResponseDTO(
 			agency.id,
 			agency.name,
@@ -18,11 +19,12 @@ export class AgencyResponseDTO {
 	}
 
 	static toEntity(agency: any): Agency {
+		 
 		return new Agency({
 			id: agency.id,
-			name: agency.name,
-			address: agency.address,
-			foundation: agency.foundation,
+			name: agency.nombre,
+			address: agency.ubicacion,
+			foundation: agency.fechaFundacion,
 		});
 	}
 

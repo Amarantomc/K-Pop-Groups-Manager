@@ -4,12 +4,13 @@ import type { IUnitOfWork } from "../../interfaces/IUnitOfWork";
 import type { IGroupRepository } from "../../interfaces/repositories/IGroupRepository";
 import type { CreateGroupDTO } from "../../dtos/group/CreateGroupDTO";
 import { GroupResponseDTO } from "../../dtos/group/GroupResponseDTO";
+import type { UnitOfWork } from "../../../infrastructure/PrismaUnitOfWork";
 
 @injectable()
 export class CreateGroupUseCase {
 	constructor(
 		@inject(Types.IGroupRepository) private groupRepository: IGroupRepository,
-		@inject(Types.IUnitOfWork) private unitOfWork: IUnitOfWork
+		@inject(Types.IUnitOfWork) private unitOfWork: UnitOfWork
 	) {}
 
 	async execute(command: CreateGroupDTO): Promise<GroupResponseDTO> {
@@ -26,6 +27,7 @@ export class CreateGroupUseCase {
 
 			return GroupResponseDTO.fromEntity(group);
 		} catch (error) {
+			console.log(error)
 			await this.unitOfWork.rollback();
 			throw error;
 		}

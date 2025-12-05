@@ -18,8 +18,8 @@ export class UserRoutes {
   }
 
   private setupRoutes(): void {
-    this.router.use(AuthMiddleware.authenticate())
-    this.router.post('/',RoleMiddleware.onlyAdmin(), (req, res) => this.userController.createUser(req, res))
+    //this.router.use(AuthMiddleware.authenticate())
+    this.router.post('/',  (req, res) => this.userController.createUser(req, res))
     this.router.get('/',RoleMiddleware.onlyAdmin(),(req,res)=>this.userController.getUsers(req,res))
     this.router.get('/:id',RoleMiddleware.onlyAdmin(),(req,res)=>this.userController.getUser(req,res))
     //Cambiar por check de token.user.id==id

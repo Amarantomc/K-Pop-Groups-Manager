@@ -78,8 +78,8 @@ model Agencia{
 }
 model Aprendiz{
   id Int @id @default(autoincrement())
-  idSolicitud Int
-  nombreCompleto String
+  idSolicitud  Int ?
+  nombreCompleto  String
   fechaNacimiento DateTime @default(now())
   edad Int
   nivelEntrenamiento Int
@@ -89,7 +89,7 @@ model Aprendiz{
   Artista Artista ?
   SolicitudGrupo AprendizSolicitaGrupo[]
   Perfil PerfilAprendiz?
-  AprendizEnSolicitud Solicitud @relation(fields: [idSolicitud], references: [id])
+  AprendizEnSolicitud Solicitud ? @relation(fields: [idSolicitud], references: [id])
 }
 model Actividad{
   id Int @id @default(autoincrement())
@@ -171,7 +171,7 @@ model Album{
 model Artista {
   idAp Int @unique
   idGr Int
-  idSolicitud  Int 
+  idSolicitud  Int ?
   nombreArtistico String
   fechaDebut DateTime
   estadoArtista String
@@ -183,7 +183,7 @@ model Artista {
   Lanzamientos ArtistaLanzaAlbum[]
   SolicitudGrupo ArtistaSolicitaGrupo[]
   Perfil PerfilArtista?
-  ArtistaEnSolicutud Solicitud @relation(fields: [idSolicitud],references: [id])
+  ArtistaEnSolicutud Solicitud ?@relation(fields: [idSolicitud],references: [id])
   
 
   
@@ -244,15 +244,15 @@ model Contrato {
 
 model ContratoGrupo{
   id Int @id @default(autoincrement())
-  idAg Int
-  IdGr Int
+  idAg Int 
+  IdGr Int 
   fechaInicio DateTime
-  fechaFinalizacion DateTime
+  fechaFinalizacion DateTime ?
   estado String
   condicionesIniciales String
   distribucionIngresos String
-  Agencia Agencia @relation(fields: [idAg], references: [id],onDelete: Cascade)
-  Grupo  Grupo @relation(fields: [IdGr], references: [id])
+  Agencia Agencia  @relation(fields: [idAg], references: [id],onDelete: Cascade)
+  Grupo  Grupo  @relation(fields: [IdGr], references: [id], onDelete: Cascade)
   
  @@map("ContratoGrupo")
 
@@ -327,18 +327,19 @@ model EvaluacionAprendiz {
 
 model PersonasEnActividad {
   //Cambiar nombre
-  idAp     Int
-  idGr     Int
+  id Int @id @default(autoincrement())
+  idAp     Int ?
+  idGr     Int ?
   idAct    Int
   //Nuevo
-  idGrupos Int
+  idGrupos Int ?
   aceptado Boolean
 
-  artista   Artista   @relation(fields: [idAp, idGr], references: [idAp, idGr])
-  actividad Actividad @relation(fields: [idAct], references: [id])
-  grupos Grupo @relation(fields: [idGrupos], references: [id])
+  artista   Artista ?   @relation(fields: [idAp, idGr], references: [idAp, idGr])
+  actividad Actividad  @relation(fields: [idAct], references: [id])
+  grupos Grupo ? @relation(fields: [idGrupos], references: [id])
 
-  @@id([idAp, idGr, idAct])
+  
   @@map("PersonasEnActividad")
 }
 

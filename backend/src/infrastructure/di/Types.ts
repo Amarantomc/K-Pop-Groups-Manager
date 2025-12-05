@@ -4,6 +4,8 @@ const Types = {
   PrismaClient: Symbol.for('PrismaClient'),
   
   //  Interfaces
+  
+  //#region Repositories 
   IUnitOfWork: Symbol.for('IUnitOfWork'),
   IUserRepository: Symbol.for('IUserRepository'),
   IApprenticeRepository : Symbol.for('IApprenticeRepository'),
@@ -11,10 +13,12 @@ const Types = {
   IArtistRepository : Symbol.for('IArtistRepository'),
   IConceptRepository: Symbol.for('IConceptRepository'),
   IActivityRepository: Symbol.for('IActivityRepository'),
-  IVisualConceptRepository: Symbol.for('IConceptRepository'),
+  IVisualConceptRepository: Symbol.for('IVisualConceptRepository'),
   IAwardRepository: Symbol.for('IAwardRepository'),
   IPopularityListRepository: Symbol.for('IPopularityListRepository'),
   IGroupRepository : Symbol.for('IGroupRepository'),
+  IContractRepository:Symbol.for('IContractRepository'),
+  //#endregion
   
   // Application Use Cases
   CreateUserUseCase: Symbol.for('CreateUserUseCase'),
@@ -116,8 +120,19 @@ FindGroupsByConceptUseCase : Symbol.for('FindGroupsByConceptUseCase'),
 FindGroupsByVisualConceptUseCase : Symbol.for('FindGroupsByVisualConceptUseCase'),
 //#endregion
 
+//#region Contract
+CreateContractUseCase : Symbol.for('CreateContractUseCase'),
+GetContractUseCase : Symbol.for('GetContractUseCase'),
+ListContractsUseCase : Symbol.for('ListContractsUseCase'),
+UpdateContractUseCase : Symbol.for('UpdateContractUseCase'),
+DeleteContractUseCase : Symbol.for('DeleteContractUseCase'),
+//#endregion
+
+  
+ 
+  //#region Controllers 
   // Presentation
-  UserController: Symbol.for('UserController'),
+   UserController: Symbol.for('UserController'),
   AuthController: Symbol.for('AuthController'),
   ApprenticeController : Symbol.for('ApprenticeController'),
   AgencyController : Symbol.for('AgencyController'),
@@ -128,9 +143,9 @@ FindGroupsByVisualConceptUseCase : Symbol.for('FindGroupsByVisualConceptUseCase'
   ApplicationController : Symbol.for('ApplicationController'),
   VisualConceptController : Symbol.for('VisualConceptController'),
   AwardController : Symbol.for('AwardController'),
-
-
-  GroupController :Symbol.for('GroupController')
+  GroupController :Symbol.for('GroupController'),
+  ContractController :Symbol.for('ContractController'),
+  //#endregion
 
  
 };
