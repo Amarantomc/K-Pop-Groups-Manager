@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { Types } from "../../infrastructure/di/Types";
 import type { Request,Response } from "express";
-import Concept from '../../domain/entities/Concept';
+ 
 import type { CreateConceptUseCase } from "../../application/usesCase/concept/CreateConcept";
 import type { GetConceptUseCase } from "../../application/usesCase/concept/GetConceptUseCase";
 import type { DeleteConceptUseCase } from "../../application/usesCase/concept/DeleteConcept";

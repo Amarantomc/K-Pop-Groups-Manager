@@ -1,4 +1,5 @@
-import {Concept } from "../../../domain";
+import { Concept } from "../../../domain/entities/Concept";
+
 
 export class ConceptResponseDto{
     constructor(
@@ -16,6 +17,7 @@ export class ConceptResponseDto{
       }
 
       static toEntity(concept: any): Concept {
+        
         return new Concept(
             {
                 id: concept.id,

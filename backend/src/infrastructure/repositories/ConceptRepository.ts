@@ -26,7 +26,7 @@ export class ConceptRepository implements IConceptRepository
         const concept= await this.db.Concepto.create({
             data:{
                 descripcion: data.description,
-                //nombre: data.name
+                nombre: data.name
             }
         })
         

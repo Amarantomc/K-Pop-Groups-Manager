@@ -11,6 +11,7 @@ import { ActivityRoutes } from "./ActivityRoutes";
 import { VisualConceptRoutes } from "./VisualConceptRoutes";
 import { AwardRoutes } from "./AwardRoutes";
 import { PopularityListRoutes } from "./PopularityListRoutes";
+import { ContractRoutes } from "./ContractRoutes";
  
 
 
@@ -27,6 +28,7 @@ const activityRoutes = new ActivityRoutes();
 const visualConceptRoutes=new VisualConceptRoutes()
 const awardRoutes = new AwardRoutes();
 const popularityListRoutes=new PopularityListRoutes()
+const contractRoutes=new ContractRoutes()
  
 
 rootRouter.use("/auth", authRoutes.getRouter());
@@ -43,6 +45,7 @@ rootRouter.use("/visual-concept", visualConceptRoutes.getRouter());
 rootRouter.use("/award", awardRoutes.getRouter());
 
 rootRouter.use('/populist',popularityListRoutes.getRouter())
+rootRouter.use('/contract',contractRoutes.getRouter())
 
 
 export default rootRouter;

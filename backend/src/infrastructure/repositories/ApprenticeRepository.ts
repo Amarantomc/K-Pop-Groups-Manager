@@ -44,6 +44,7 @@ export class ApprenticeRepository implements IApprenticeRepository
                 estadoAprendiz:data.status              
             }
         })
+        
         //Se registra en Tabla de Relacion
         await this.db.AprendizEnAgencia.create({
           data:{
