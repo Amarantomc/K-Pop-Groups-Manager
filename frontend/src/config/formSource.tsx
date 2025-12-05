@@ -92,7 +92,7 @@ export const apprenticeFields: Field[] = [
     // Campos alineados con CreateApprenticeDto del backend
     { id: 'name', name: 'name', label: 'Nombre Completo', type: 'text', required: true },
     { id: 'dateOfBirth', name: 'dateOfBirth', label: 'Fecha Nacimiento', type: 'date', required: true },
-    { id: 'age', name: 'age', label: 'Edad', type: 'number', min: 15, required: true },
+    //{ id: 'age', name: 'age', label: 'Edad', type: 'number', min: 15, required: true },
   
     { id: 'trainingLv', name: 'trainingLv', label: 'Nivel Entrenamiento', type: 'number', min: 0, required: true },
     { id: 'status', name: 'status', label: 'Estado Aprendiz', type: 'select', options: APPRENTICE_STATUS_OPTIONS, required: true },
@@ -185,11 +185,8 @@ export const incomeFields: Field[] = [
 ]
 //Solicitud - subgrupo descripción del grupo
 const descriptionRequest: Field[] = [
-    { id: 'groupId', name: 'groupId', label: 'ID Grupo', type: 'text' },
     { id: 'name', name: 'name', label: 'Nombre Grupo', type: 'text', required: true },
-    { id: 'debutDate', name: 'debutDate', label: 'Fecha Debut', type: 'date' },
-    { id: 'members', name: 'members', label: 'No Miembros', type: 'number', min: 0 },
-    { id: 'status', name: 'status', label: 'Estado Grupo', type: 'select', options: enumToOptions(GROUP_STATUS) },
+    
 ];
 // Solicitud
 export const requestFields: Field[] = [

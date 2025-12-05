@@ -34,6 +34,12 @@ export const MenuByRole: Record<string, MenuSection[]> = {
             ]
         },
         {
+            title: "PageExample",
+            items: [
+                { label: "Example", icon: <DashboardIcon />, path: "/admin/overview" }
+            ]
+        },
+        {
             title: "AGENCIA",
             items: [
                 { label: "Mostrar Agencias", icon: <BusinessIcon />, path: "/admin/agency" }

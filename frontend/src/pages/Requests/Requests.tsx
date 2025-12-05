@@ -275,7 +275,7 @@ const Requests: React.FC = () => {
         // ============================================
         // SECCIÓN: BACKEND ENDPOINT
         // ============================================
-
+        /*
         const response = await fetch(`http://localhost:3000${endpoint}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -288,6 +288,7 @@ const Requests: React.FC = () => {
 
         const data = await response.json();
         setRequests(data.data || data);
+        */
         // ============================================
         // FIN SECCIÓN: BACKEND ENDPOINT
         // ============================================
@@ -295,7 +296,7 @@ const Requests: React.FC = () => {
         // ============================================
         // SECCIÓN: DATOS DEMO
         //============================================
-        /*
+        
         const mockRequests: Request[] = [
           {
             id: 1,
@@ -332,7 +333,7 @@ const Requests: React.FC = () => {
         }
 
         setRequests(filteredRequests);
-        */
+        
         // ============================================
         // FIN SECCIÓN: DATOS DEMO
         // ============================================ 
