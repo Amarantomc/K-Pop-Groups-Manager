@@ -64,8 +64,7 @@ const ListAgency: React.FC = () => {
         if (token) headers['Authorization'] = `Bearer ${token}`;
     try {
       const response = await fetch(`http://localhost:3000/api/agency/${agencyToDelete}`, {
-        method: "DELETE",
-        headers
+        method: "DELETE"
       });
 
       const result = await response.json();

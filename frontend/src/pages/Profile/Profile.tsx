@@ -76,27 +76,6 @@ const Profile: React.FC = () => {
     }
   };
 
-  // Sanitize user object: return only primitive fields and arrays of primitives
-  const sanitizeUserForUpdate = (u: any) => {
-    const out: Record<string, any> = {};
-    if (!u || typeof u !== 'object') return out;
-    Object.keys(u).forEach((k) => {
-      const v = u[k];
-      const t = typeof v;
-      if (v === null) {
-        out[k] = null;
-      } else if (t === 'string' || t === 'number' || t === 'boolean') {
-        out[k] = v;
-      } else if (Array.isArray(v)) {
-        // include arrays only if they contain primitives
-        const ok = v.every((item) => item === null || ['string', 'number', 'boolean'].includes(typeof item));
-        if (ok) out[k] = v;
-      }
-      // ignore objects, functions, undefined, symbols
-    });
-    return out;
-  };
-
   const handleSubmit = (data: FormData | Record<string, any>) => {
     // Envío real al backend: POST http://localhost:3000/api/user/
     const API_BASE = 'http://localhost:3000';
@@ -306,11 +285,11 @@ const Profile: React.FC = () => {
                     <p className="meta-line"><strong>Email:</strong> {u?.email ?? '-'}</p>
                     <p className="meta-line"><strong>Rol:</strong> {displayRole}</p>
                     <div className="profile-actions">
-                      {/* 
+                      {
                       <button className="btn btn-primary" onClick={() => { setShowPasswordForm(true); setShowUserForm(false); }}>
                         Cambiar contraseña
                       </button>
-                      */}
+                      }
                     </div>
                   </div>
 
@@ -368,48 +347,91 @@ const Profile: React.FC = () => {
                       className="btn-primary"
                       onClick={async () => {
                         // Validaciones cliente
-                        if (pfNew !== pfConfirm) { alert('La nueva contraseña y la confirmación no coinciden'); return; }
-                        if (!user) { alert('No hay usuario autenticado'); return; }
+                        if (!pfCurrent.trim()) {
+                          alert('Debe ingresar la contraseña actual');
+                          return;
+                        }
+                        if (!pfNew.trim()) {
+                          alert('Debe ingresar la nueva contraseña');
+                          return;
+                        }
+                        if (pfNew.length < 6) {
+                          alert('La nueva contraseña debe tener al menos 6 caracteres');
+                          return;
+                        }
+                        if (pfNew !== pfConfirm) {
+                          alert('La nueva contraseña y la confirmación no coinciden');
+                          return;
+                        }
+                        if (!user) {
+                          alert('No hay usuario autenticado');
+                          return;
+                        }
 
                         const API_BASE = 'http://localhost:3000';
                         try {
                           const token = localStorage.getItem('token');
-                          const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-                          if (token) headers['Authorization'] = `Bearer ${token}`;
-
-                          const uid = user.id;
-                          // Intentar endpoint especializado primero
-                          // Enviar la entidad completa del usuario con la nueva contraseña usando PUT
-                          const putUrl = `${API_BASE}/api/user/${uid}`;
-                          // Construir payload sanearizado para evitar objetos anidados o referencias
-                          let userPayload: Record<string, any> = Object.assign({}, user || {});
-                          userPayload.password = pfNew;
-                          userPayload.newPassword = pfNew;
-                          if (pfCurrent) userPayload.currentPassword = pfCurrent;
-                          userPayload = Object.assign(userPayload, sanitizeUserForUpdate(userPayload));
-                          // Log payload and headers in development to help debug backend validation errors
-                          if (import.meta.env.MODE === 'development') {
-                            try { console.debug('[Profile] PUT payload:', JSON.parse(JSON.stringify(userPayload))); } catch(e) { console.debug('[Profile] PUT payload (raw):', userPayload); }
-                            try { console.debug('[Profile] PUT headers:', headers); } catch(e) {}
-                          }
-                          const res = await fetch(putUrl, { method: 'PUT', headers, body: JSON.stringify(userPayload) }).catch(() => null);
-
-                          if (!res || !res.ok) {
-                            const raw = await (res ? res.text().catch(() => '') : Promise.resolve(''));
-                            // Log full response for debugging
-                            try { console.error('[Profile] change-password response:', res?.status, raw); } catch(e) { console.error('[Profile] change-password response error'); }
-                            let msg = 'Error al cambiar contraseña';
-                            try { const j = JSON.parse(raw); msg = j?.message || j?.error || raw || msg; } catch(e) { msg = raw || msg; }
-                            alert(`${msg} (status ${res?.status ?? 'no-res'})`);
+                          if (!token) {
+                            alert('Debe iniciar sesión para cambiar la contraseña');
                             return;
                           }
 
-                          const updated = await res.json().catch(() => null);
-                          if (updated) localStorage.setItem('user', JSON.stringify(updated));
+                          const headers: Record<string, string> = {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                          };
+
+                          // ============================================
+                          // SECCIÓN: BACKEND ENDPOINT PARA CAMBIAR CONTRASEÑA
+                          // ============================================
+                          // Usar el endpoint específico para cambiar contraseña: PUT /api/user/:id
+                          // El backend espera: { currentPassword, newPassword }
+                          const payload = {
+                            currentPassword: pfCurrent,
+                            newPassword: pfNew
+                          };
+
+                          console.log('Cambiando contraseña para usuario:', user.id);
+
+                          const res = await fetch(`${API_BASE}/api/user/${user.id}`, {
+                            method: 'PUT',
+                            headers,
+                            body: JSON.stringify(payload)
+                          });
+
+                          console.log('Response status:', res.status);
+
+                          if (!res.ok) {
+                            const raw = await res.text().catch(() => '');
+                            let msg = 'Error al cambiar contraseña';
+                            try {
+                              const j = JSON.parse(raw);
+                              msg = j?.message || j?.error || raw || msg;
+                            } catch(e) {
+                              msg = raw || msg;
+                            }
+                            alert(msg);
+                            console.error('Error del servidor:', raw);
+                            return;
+                          }
+
+                          const responseData = await res.json().catch(() => null);
+                          console.log('Respuesta del servidor:', responseData);
+
+                          // Actualizar usuario en localStorage si el backend devuelve datos actualizados
+                          if (responseData?.data) {
+                            localStorage.setItem('user', JSON.stringify(responseData.data));
+                          }
 
                           alert('Contraseña cambiada correctamente');
-                          setPfCurrent(''); setPfNew(''); setPfConfirm('');
+                          setPfCurrent('');
+                          setPfNew('');
+                          setPfConfirm('');
                           setShowPasswordForm(false);
+                          // ============================================
+                          // FIN SECCIÓN: BACKEND ENDPOINT
+                          // ============================================
+
                         } catch (err) {
                           console.error('Error cambiando contraseña:', err);
                           alert(err instanceof Error ? err.message : 'Error de red');

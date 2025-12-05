@@ -1,12 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */ 
 import React, { useEffect, useState } from 'react';
 import PageLayout from '../../components/pageLayout/PageLayout';
+import StatCard from '../../components/statCard/StatCard';
+import BusinessIcon from '@mui/icons-material/Business';
+import PeopleIcon from '@mui/icons-material/People';
+import PersonIcon from '@mui/icons-material/Person';
+import GroupsIcon from '@mui/icons-material/Groups';
+import MusicNoteIcon from '@mui/icons-material/MusicNote';
+import EventIcon from '@mui/icons-material/Event';
 import "./Dashboard.css"
 
 const Dashboard : React.FC = () =>{
   const [agenciesCount, setAgenciesCount] = useState<number | null>(null);
   const [apprenticesCount, setApprenticesCount] = useState<number | null>(null);
   const [usersCount, setUsersCount] = useState<number | null>(null);
+  const [artistsCount, setArtistsCount] = useState<number | null>(null);
+  const [groupsCount, setGroupsCount] = useState<number | null>(null);
+  const [albumsCount, setAlbumsCount] = useState<number | null>(null);
+  const [activitiesCount, setActivitiesCount] = useState<number | null>(null);
 
   useEffect(() => {
     const API_BASE = 'http://localhost:3000';
@@ -55,14 +66,22 @@ const Dashboard : React.FC = () =>{
     };
 
     (async () => {
-      const [a, p, u] = await Promise.all([
+      const [a, p, u, ar, g, al, ac] = await Promise.all([
         fetchCount(`${API_BASE}/api/agency/`),
         fetchCount(`${API_BASE}/api/apprentice/`),
         fetchCount(`${API_BASE}/api/user/`),
+        fetchCount(`${API_BASE}/api/artist/`),
+        fetchCount(`${API_BASE}/api/groups/`),
+        fetchCount(`${API_BASE}/api/albums/`),
+        fetchCount(`${API_BASE}/api/activities/`),
       ]);
       setAgenciesCount(a);
       setApprenticesCount(p);
       setUsersCount(u);
+      setArtistsCount(ar);
+      setGroupsCount(g);
+      setAlbumsCount(al);
+      setActivitiesCount(ac);
     })();
   }, []);
 
@@ -74,19 +93,60 @@ const Dashboard : React.FC = () =>{
       description='Administra agencias, artistas y actividades desde este panel. Aquí tienes un resumen rápido para comenzar.'
       className='dashboard-page'
     >
-      <div className='quick-stats'>
-        <div className='stat'>
-          <div className='stat-value'>{renderValue(agenciesCount)}</div>
-          <div className='stat-label'>Agencias</div>
-        </div>
-        <div className='stat'>
-          <div className='stat-value'>{renderValue(apprenticesCount)}</div>
-          <div className='stat-label'>Aprendices</div>
-        </div>
-        <div className='stat'>
-          <div className='stat-value'>{renderValue(usersCount)}</div>
-          <div className='stat-label'>Usuarios</div>
-        </div>
+      <div className='dashboard-stats-grid'>
+        <StatCard
+          title="Agencias"
+          value={renderValue(agenciesCount)}
+          icon={<BusinessIcon />}
+          color="#3b82f6"
+          subtitle="Agencias registradas"
+          trend={agenciesCount !== null && agenciesCount > 5 ? { value: 12, direction: "up" } : undefined}
+        />
+        <StatCard
+          title="Aprendices"
+          value={renderValue(apprenticesCount)}
+          icon={<PeopleIcon />}
+          color="#10b981"
+          subtitle="En entrenamiento"
+          trend={apprenticesCount !== null && apprenticesCount > 0 ? { value: 8, direction: "up" } : undefined}
+        />
+        <StatCard
+          title="Usuarios"
+          value={renderValue(usersCount)}
+          icon={<PersonIcon />}
+          color="#f59e0b"
+          subtitle="Usuarios del sistema"
+        />
+        <StatCard
+          title="Artistas"
+          value={renderValue(artistsCount)}
+          icon={<MusicNoteIcon />}
+          color="#ec4899"
+          subtitle="Artistas activos"
+          trend={artistsCount !== null && artistsCount > 10 ? { value: 15, direction: "up" } : undefined}
+        />
+        <StatCard
+          title="Grupos"
+          value={renderValue(groupsCount)}
+          icon={<GroupsIcon />}
+          color="#8b5cf6"
+          subtitle="Grupos formados"
+        />
+        <StatCard
+          title="Álbumes"
+          value={renderValue(albumsCount)}
+          icon={<MusicNoteIcon />}
+          color="#06b6d4"
+          subtitle="Lanzamientos totales"
+          trend={albumsCount !== null && albumsCount > 20 ? { value: 5, direction: "up" } : undefined}
+        />
+        <StatCard
+          title="Actividades"
+          value={renderValue(activitiesCount)}
+          icon={<EventIcon />}
+          color="#14b8a6"
+          subtitle="Eventos programados"
+        />
       </div>
     </PageLayout>
   )

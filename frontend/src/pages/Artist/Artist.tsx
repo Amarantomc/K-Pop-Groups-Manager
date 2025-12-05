@@ -1,28 +1,23 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react';
 import type { GridColDef } from '@mui/x-data-grid';
 import DataTable from '../../components/datatable/Datatable';
 import PageLayout from '../../components/pageLayout/PageLayout';
 import { useAuth } from '../../contexts/auth/AuthContext';
+import { artistColumns } from '../../config/datatableSource';
 
-interface Artist {
-  id: number;
-  name: string;
-  stageName: string;
-  email: string;
-  phone: string;
-  birthDate: string;
-  nationality: string;
-  genre: string;
-  status: string;
-  agencyName?: string;
-  groupName?: string;
-}
+
 
 const Artist: React.FC = () => {
   const { user } = useAuth();
-  const [artists, setArtists] = useState<Artist[]>([]);
+  const [artistsRows, setArtistsRows] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [apprenticeToDelete, setApprenticeToDelete] = useState<number | null>(null);
+  const [groupToDelete, setGroupToDelete] = useState<number | null>(null);
 
+  const askDelete = (id : number) => {
+    setApprenticeToDelete(id)
+  }
   // Columnas del DataTable
   const baseColumns: GridColDef[] = [
     { field: 'name', headerName: 'Nombre Real', width: 150 },
@@ -113,12 +108,27 @@ const Artist: React.FC = () => {
 
         const data = await response.json();
 <<<<<<< HEAD
+<<<<<<< HEAD
         setArtists(data);
         */
 
         // DATOS DE PRUEBA
 =======
         setArtists(data.data || data);
+=======
+        console.log(data)
+        const formattedData = data.data.map((artist : any , index : number) => ({
+                        id : artist.id ?? index,
+                        ArtistName : artist.ArtistName,
+                        DebutDate : artist.DebutDate,
+                        Status : artist.Status,
+
+                        ApprenticeId : artist.ApprenticeId,
+                        GroupId : artist.GroupId
+                    }))
+                    console.log(formattedData)
+                    setArtistsRows(formattedData)
+>>>>>>> 5768647 (add components)
         // ============================================
         // FIN SECCIÓN: BACKEND ENDPOINT
         // ============================================
@@ -222,8 +232,27 @@ const Artist: React.FC = () => {
   }, [user]);
 
   const handleDelete = async (id: number) => {
+<<<<<<< HEAD
     console.log('Eliminar artista:', id);
     setArtists(prev => prev.filter(artist => artist.id !== id));
+=======
+    try {
+      const response = await fetch(`http://localhost:3000/api/artists/${apprenticeToDelete}&${groupToDelete}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al eliminar artista');
+      }
+
+      setArtistsRows(prev => prev.filter(artist => artist.id !== id));
+    } catch (error) {
+      console.error('Error al eliminar artista:', error);
+    }
+>>>>>>> 5768647 (add components)
   };
 
   const handleEditSave = async (updatedRow: Artist) => {
@@ -248,7 +277,7 @@ const Artist: React.FC = () => {
       }
 
       const data = await response.json();
-      setArtists(prev =>
+      setArtistsRows(prev =>
         prev.map(artist => artist.id === updatedRow.id ? (data.data || data) : artist)
       );
     } catch (error) {
@@ -272,7 +301,7 @@ const Artist: React.FC = () => {
       }
 
       const data = await response.json();
-      setArtists(prev => [...prev, (data.data || data)]);
+      setArtistsRows(prev => [...prev, (data.data || data)]);
     } catch (error) {
       console.error('Error al crear artista:', error);
     }
@@ -304,8 +333,8 @@ const Artist: React.FC = () => {
         </div>
       ) : (
         <DataTable
-          columns={columns}
-          rows={artists}
+          columns={artistColumns}
+          rows={artistsRows}
           pagesize={10}
           onDelete={handleDelete}
           onEditSave={handleEditSave}

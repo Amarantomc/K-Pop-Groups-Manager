@@ -284,8 +284,12 @@ const Requests: React.FC = () => {
         // ============================================
         // SECCIÓN: BACKEND ENDPOINT
         // ============================================
+<<<<<<< HEAD
 
 >>>>>>> 8ea7c42 (update endpoint artist)
+=======
+        /*
+>>>>>>> 5768647 (add components)
         const response = await fetch(`http://localhost:3000${endpoint}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -304,6 +308,7 @@ const Requests: React.FC = () => {
         // DATOS DE PRUEBA 
 =======
         setRequests(data.data || data);
+        */
         // ============================================
         // FIN SECCIÓN: BACKEND ENDPOINT
         // ============================================
@@ -311,8 +316,12 @@ const Requests: React.FC = () => {
         // ============================================
         // SECCIÓN: DATOS DEMO
         //============================================
+<<<<<<< HEAD
         /*
 >>>>>>> 8ea7c42 (update endpoint artist)
+=======
+        
+>>>>>>> 5768647 (add components)
         const mockRequests: Request[] = [
           {
             id: 1,
@@ -350,8 +359,12 @@ const Requests: React.FC = () => {
 
         setRequests(filteredRequests);
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         */
+=======
+        
+>>>>>>> 5768647 (add components)
         // ============================================
         // FIN SECCIÓN: DATOS DEMO
         // ============================================ 

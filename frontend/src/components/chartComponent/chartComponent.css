@@ -1,0 +1,61 @@
+.chart-container {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  margin-bottom: 24px;
+}
+
+.chart-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #f3f4f6;
+}
+
+/* Personalización de tooltips */
+.recharts-tooltip-wrapper {
+  outline: none;
+}
+
+.recharts-default-tooltip {
+  background-color: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  padding: 8px 12px !important;
+}
+
+.recharts-tooltip-label {
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 4px;
+}
+
+.recharts-tooltip-item {
+  color: #6b7280 !important;
+  font-size: 13px;
+}
+
+/* Personalización de leyenda */
+.recharts-legend-wrapper {
+  padding-top: 16px;
+}
+
+.recharts-legend-item-text {
+  color: #6b7280 !important;
+  font-size: 13px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .chart-container {
+    padding: 16px;
+  }
+
+  .chart-title {
+    font-size: 16px;
+  }
+}
