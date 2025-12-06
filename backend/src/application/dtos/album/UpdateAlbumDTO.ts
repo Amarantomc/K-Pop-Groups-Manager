@@ -3,8 +3,7 @@ export class UpdateAlbumDTO {
 		public readonly title: string | undefined,
 		public readonly releaseDate: Date | undefined,
 		public readonly producer: string | undefined,
-		public readonly noCopiesSold: number | undefined,
-		public readonly songs: Array<number> | []
+		public readonly noCopiesSold: number | undefined
 	) {}
 
 	static Create(body: any): UpdateAlbumDTO {
@@ -20,8 +19,7 @@ export class UpdateAlbumDTO {
 			body.title || undefined,
 			body.releaseDate || undefined,
 			body.producer || undefined,
-			body.noCopiesSold || undefined,
-			body.songs || []
+			body.noCopiesSold || undefined
 		);
 	}
 }

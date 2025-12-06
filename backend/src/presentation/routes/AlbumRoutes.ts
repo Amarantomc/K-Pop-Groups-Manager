@@ -14,7 +14,9 @@ export class AlbumRoutes {
 		);
 		this.setupRoutes();
 	}
-
+	// Para los endpoints:
+	//     Create recibe: title: string, releaseDate: Date, producer: string, songs: number[]
+	//     Update recibe: title: string, releaseDate: Date, producer: string, noCopiesSold: number, donde cualquiera puede ser undefined
 	private setupRoutes(): void {
 		this.router.post("/", (req, res) =>
 			this.albumController.createAlbum(req, res)

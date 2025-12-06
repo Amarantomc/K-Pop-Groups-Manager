@@ -20,7 +20,7 @@ export class DeleteAlbumUseCase {
 			await this.albumRepository.delete(id);
 			await this.unitOfWork.commit();
 		} catch (error) {
-			await this.unitOfWork.commit();
+			await this.unitOfWork.rollback();
 			throw error;
 		}
 	}

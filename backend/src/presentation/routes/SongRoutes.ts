@@ -12,7 +12,9 @@ export class SongRoutes {
 		this.songController = container.get<SongController>(Types.SongController);
 		this.setupRoutes();
 	}
-
+	// Para los endpoints:
+	//     Create recibe: title: string, releaseDate: Date, producer: string, genre: string, albums: number[]
+	//     Update recibe Partial de Create: title, releaseDate, producer y genre, donde cualquiera puede ser undefined
 	private setupRoutes(): void {
 		this.router.post("/", (req, res) =>
 			this.songController.createSong(req, res)

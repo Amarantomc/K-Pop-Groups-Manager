@@ -25,6 +25,7 @@ export class UpdateSongUseCase {
 
 			const updated = await this.songRepository.update(id, payload);
 			await this.unitOfWork.commit();
+			console.log(updated);
 
 			return SongResponseDTO.fromEntity(updated);
 		} catch (error) {

@@ -27,7 +27,7 @@ export class CreateAlbumUseCase {
 
 			return AlbumResponseDTO.fromEntity(album);
 		} catch (error) {
-			await this.unitOfWork.commit();
+			await this.unitOfWork.rollback();
 			throw error;
 		}
 	}
