@@ -1,9 +1,10 @@
 import type { Album } from "../../../domain/entities/Album";
 import type { CreateAlbumDTO } from "../../dtos/album/CreateAlbumDTO";
+import type { UpdateAlbumDTO } from "../../dtos/album/UpdateAlbumDTO";
 import type { IBaseRepository } from "./IBaseRepository";
 
 export interface IAlbumRepository
-	extends IBaseRepository<Album, CreateAlbumDTO, any> {
+	extends IBaseRepository<Album, CreateAlbumDTO, UpdateAlbumDTO> {
 	findByTitle(title: string): Promise<Album | null>;
 	findByReleaseDate(releaseDate: Date): Promise<Album | null>;
 	findByProducer(producer: string): Promise<Album[]>;

@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { Types } from "../../../infrastructure/di/Types";
 import type { IUnitOfWork } from "../../interfaces/IUnitOfWork";
 import type { IAlbumRepository } from "../../interfaces/repositories/IAlbumRepository";
-import type { CreateAlbumDTO } from "../../dtos/album/CreateAlbumDTO";
+import type { UpdateAlbumDTO } from "../../dtos/album/UpdateAlbumDTO";
 import { AlbumResponseDTO } from "../../dtos/album/AlbumResponseDTO";
 
 @injectable()
@@ -15,7 +15,7 @@ export class UpdateAlbumUseCase {
 
 	async execute(
 		id: string,
-		payload: Partial<CreateAlbumDTO>
+		payload: UpdateAlbumDTO
 	): Promise<AlbumResponseDTO> {
 		try {
 			await this.unitOfWork.beginTransaction();

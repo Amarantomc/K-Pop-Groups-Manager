@@ -5,6 +5,7 @@ import type { IAlbumRepository } from "../../application/interfaces/repositories
 import type { CreateAlbumDTO } from "../../application/dtos/album/CreateAlbumDTO";
 import { AlbumResponseDTO } from "../../application/dtos/album/AlbumResponseDTO";
 import type { Album } from "../../domain/entities/Album";
+import type { UpdateAlbumDTO } from "../../application/dtos/album/UpdateAlbumDTO";
 
 @injectable()
 export class AlbumRepository implements IAlbumRepository {
@@ -23,7 +24,7 @@ export class AlbumRepository implements IAlbumRepository {
 				idGrupo: 1,
 				idArt: 1,
 				titulo: data.title,
-				fechaLanzamiento: new Date(data.releaseDate),
+				fechaLanzamiento: data.releaseDate,
 				productor: data.producer,
 				NoCanciones: data.songs.length,
 				NoCopiasVendidas: 0,
@@ -48,14 +49,12 @@ export class AlbumRepository implements IAlbumRepository {
 		return album ? AlbumResponseDTO.toEntity(album) : null;
 	}
 
-	async update(id: string, data: Partial<Album>): Promise<Album> {
+	async update(id: string, data: UpdateAlbumDTO): Promise<Album> {
 		const updated = await this.db.album.update({
 			where: { id: Number(id) },
 			data: {
 				titulo: data.title,
-				fechaLanzamiento: data.releaseDate
-					? new Date(data.releaseDate)
-					: undefined,
+				fechaLanzamiento: data.releaseDate,
 				productor: data.producer,
 				NoCopiasVendidas: data.noCopiesSold,
 			},
@@ -190,10 +189,10 @@ export class AlbumRepository implements IAlbumRepository {
 			const awardId = awardIds[i];
 
 			const award = this.db.premio.findUnique({ where: { idPremio: awardId } });
-			if (!award) throw new Error("Award does'nt exist");
+			if (!award) throw new Error("Award not found");
 
 			const awardedAlbum = this.db.albumPremiado.findUnique({
-				where: { idPremio: awardId },
+				where: { idPremio: awardId, idAlb: albumId },
 			});
 			if (awardedAlbum) throw new Error("Awarded album already exists");
 

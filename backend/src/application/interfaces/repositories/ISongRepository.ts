@@ -3,7 +3,7 @@ import type { CreateSongDTO } from "../../dtos/song/CreateSongDTO";
 import type { IBaseRepository } from "./IBaseRepository";
 
 export interface ISongRepository
-	extends IBaseRepository<Song, CreateSongDTO, any> {
+	extends IBaseRepository<Song, CreateSongDTO, Partial<CreateSongDTO>> {
 	findAll(): Promise<Song[]>;
 	findByTitle(title: string): Promise<Song | null>;
 	findByReleaseDate(releaseDate: Date): Promise<Song[]>;
@@ -11,5 +11,9 @@ export interface ISongRepository
 	findByGenre(genre: string): Promise<Song[]>;
 	findByAlbum(idAlbum: number): Promise<Song[]>;
 	findByPopList(idPopList: number): Promise<Song[]>;
-	addPopLists(albumId: number, popListIds: number[]): Promise<void>;
+	addPopLists(
+		songId: number,
+		popListIds: number[],
+		songPositions: number[]
+	): Promise<void>;
 }
