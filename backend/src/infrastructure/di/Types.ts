@@ -82,6 +82,13 @@ const Types = {
 	ListAlbumsUseCase: Symbol.for("ListAlbumsUseCase"),
 	FindAlbumByTitleUseCase: Symbol.for("FindAlbumByTitleUseCase"),
 
+	CreateSongUseCase: Symbol.for("CreateSongUseCase"),
+	GetSongUseCase: Symbol.for("GetSongUseCase"),
+	UpdateSongUseCase: Symbol.for("UpdateSongUseCase"),
+	DeleteSongUseCase: Symbol.for("DeleteSongUseCase"),
+	ListSongsUseCase: Symbol.for("ListSongsUseCase"),
+	FindSongByTitleUseCase: Symbol.for("FindSongByTitleUseCase"),
+
 	// Presentation
 	UserController: Symbol.for("UserController"),
 	AuthController: Symbol.for("AuthController"),
@@ -92,6 +99,7 @@ const Types = {
 	ActivityController: Symbol.for("ActivityController"),
 	PopularityListController: Symbol.for("PopularityListController"),
 	AlbumController: Symbol.for("AlbumController"),
+	SongController: Symbol.for("SongController"),
 };
 
 export { Types };

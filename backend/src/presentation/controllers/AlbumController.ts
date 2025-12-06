@@ -1,7 +1,6 @@
 import { inject, injectable } from "inversify";
 import { Types } from "../../infrastructure/di/Types";
 import type { Request, Response } from "express";
-import { AlbumResponseDTO } from "../../application/dtos/album/AlbumResponseDTO";
 import { CreateAlbumUseCase } from "../../application/usesCase/album/CreateAlbumUseCase";
 import { GetAlbumUseCase } from "../../application/usesCase/album/GetAlbumUseCase";
 import { ListAlbumsUseCase } from "../../application/usesCase/album/ListAlbumsUseCase";
@@ -16,12 +15,12 @@ export class AlbumController {
 		@inject(Types.CreateAlbumUseCase)
 		private createAlbumUseCase: CreateAlbumUseCase,
 		@inject(Types.GetAlbumUseCase) private getAlbumUseCase: GetAlbumUseCase,
-		@inject(Types.ListAlbumsUseCase)
-		private listAlbumsUseCase: ListAlbumsUseCase,
-		@inject(Types.DeleteAlbumUseCase)
-		private deleteAlbumUseCase: DeleteAlbumUseCase,
 		@inject(Types.UpdateAlbumUseCase)
 		private updateAlbumUseCase: UpdateAlbumUseCase,
+		@inject(Types.DeleteAlbumUseCase)
+		private deleteAlbumUseCase: DeleteAlbumUseCase,
+		@inject(Types.ListAlbumsUseCase)
+		private listAlbumsUseCase: ListAlbumsUseCase,
 		@inject(Types.FindAlbumByTitleUseCase)
 		private findAlbumByTitleUseCase: FindAlbumByTitleUseCase
 	) {}
