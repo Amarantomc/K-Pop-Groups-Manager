@@ -76,7 +76,7 @@ export class ContractResponseDto {
         const artist=ArtistResponseDto.toEntity(contract.Artista)
         return ContractFactory.create(agency,type,contract.fechaInicio,contract.condicionesIniciales,contract.distribucionIngresos,contract.estado,artist)
     }else {
-        const group =this.GroupInContractToEntity(contract.Grupo,agency)
+        const group =GroupResponseDTO.toEntitySimple(contract.Grupo,agency)
         return ContractFactory.create(agency,type,contract.fechaInicio,contract.condicionesIniciales,contract.distribucionIngresos,contract.estado,undefined,group,contract.id)
     }
         
@@ -91,13 +91,5 @@ export class ContractResponseDto {
     return contracts.map((c:any) => this.toEntity(c,c.Artista? "Artist": "Group"));
   }
 
-  private static GroupInContractToEntity(group:any,agency:Agency):Group{
-     return new Group({
-      id:group.id,
-      name:group.nombreCompleto,
-      debut:group.fechaDebut,
-      memberCount:group.Nomiembros,
-      status:group.estadoGrupo,
-      agency:agency})
-  }
+   
 }

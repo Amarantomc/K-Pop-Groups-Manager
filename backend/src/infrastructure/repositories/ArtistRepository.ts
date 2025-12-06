@@ -253,19 +253,39 @@ private get db() {
   }
 
    async findByAgency(id: number): Promise<Artist[]> {
-      const artists=await this.db.artista.findMany({
+       const artists=await this.db.artista.findMany({
          where: {
                 aprendiz: {
                     Agencia:{
                       some:{
-                        idAg:id
+                        idAg:1
                       }
                     }
                 }
+            },
+            include:{
+              HistorialGrupos:{
+                include:{
+                  grupo:true
+                }
+              },
+              aprendiz:{
+                 include:{
+                  Agencia:{
+                    include:{
+                      agencia:true
+                    }
+                  }
+                 }
+                  
+              }
             }
 
       })
-      return ArtistResponseDto.toEntities(artists)
+         
+       
+       
+      return ArtistResponseDto.toEntitiesForManager(artists)
   }
 
 
