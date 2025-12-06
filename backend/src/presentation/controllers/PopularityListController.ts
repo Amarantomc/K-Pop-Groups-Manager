@@ -7,8 +7,9 @@ import type { GetPopularityListUseCase } from "../../application/usesCase/popula
 import type { DeletePopularityListUseCase } from "../../application/usesCase/popularityList/DeletePopularityListUseCase";
 import type { UpdatePopularityListUseCase } from "../../application/usesCase/popularityList/UpdatePopularityListUseCase";
 import type { ListPopularityListUseCase } from "../../application/usesCase/popularityList/ListPopularityListUseCase";
-import { CreatePopularityListDto } from "../../application/dtos/popularityList/CreatePopularityListDto";
+ 
 import type { AddSongToPopularityListUseCase } from "../../application/usesCase/popularityList/AddSongToPopularityListUseCase";
+import { CreatePopularityListDto } from "../../application/dtos/popularityList/CreatepopularityListDto";
 
 
 

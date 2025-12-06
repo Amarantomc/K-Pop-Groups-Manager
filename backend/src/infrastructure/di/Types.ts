@@ -122,8 +122,8 @@ FindGroupsByVisualConceptUseCase : Symbol.for('FindGroupsByVisualConceptUseCase'
 
 //#region Contract
 CreateContractUseCase : Symbol.for('CreateContractUseCase'),
-GetContractUseCase : Symbol.for('GetContractUseCase'),
-ListContractsUseCase : Symbol.for('ListContractsUseCase'),
+FindContractByIdUseCase : Symbol.for('FindContractByIdUseCase'),
+GetAllContractsUseCase : Symbol.for('GetAllContractsUseCase'),
 UpdateContractUseCase : Symbol.for('UpdateContractUseCase'),
 DeleteContractUseCase : Symbol.for('DeleteContractUseCase'),
 //#endregion
