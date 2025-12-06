@@ -15,13 +15,16 @@ export class CreateAlbumUseCase {
 	async execute(command: CreateAlbumDTO): Promise<AlbumResponseDTO> {
 		try {
 			await this.unitOfWork.beginTransaction();
+
 			const existingAlbum = await this.albumRepository.findByTitle(
 				command.title
 			);
 			if (existingAlbum)
 				throw new Error("Album with this title already exists");
+
 			const album = await this.albumRepository.create(command);
 			await this.unitOfWork.commit();
+
 			return AlbumResponseDTO.fromEntity(album);
 		} catch (error) {
 			await this.unitOfWork.commit();

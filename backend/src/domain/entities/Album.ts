@@ -1,7 +1,7 @@
 import type { Artist } from "./Artist";
 import type { Group } from "./Group";
+import type { Song } from "./Song";
 import type Award from "./Award";
-import type Song from "./Song";
 
 export class Album {
 	readonly id: number;

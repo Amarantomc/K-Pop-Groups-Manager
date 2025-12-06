@@ -14,6 +14,7 @@ const Types = {
 	IConceptRepository: Symbol.for("IConceptRepository"),
 	IActivityRepository: Symbol.for("IActivityRepository"),
 	IAlbumRepository: Symbol.for("IAlbumRepository"),
+	ISongRepository: Symbol.for("ISongRepository"),
 
 	IPopularityListRepository: Symbol.for("IPopularityListRepository"),
 

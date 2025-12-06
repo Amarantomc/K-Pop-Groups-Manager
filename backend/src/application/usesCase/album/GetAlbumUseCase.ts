@@ -11,7 +11,9 @@ export class GetAlbumUseCase {
 
 	async execute(id: string): Promise<AlbumResponseDTO> {
 		const album = await this.albumRepository.findById(id);
+
 		if (!album) throw new Error("Album not found");
+
 		return AlbumResponseDTO.fromEntity(album);
 	}
 }

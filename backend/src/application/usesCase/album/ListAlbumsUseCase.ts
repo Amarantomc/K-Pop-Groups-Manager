@@ -11,6 +11,7 @@ export class ListAlbumsUseCase {
 
 	async execute(): Promise<AlbumResponseDTO[]> {
 		const albums = await this.albumRepository.findAll();
+
 		return AlbumResponseDTO.fromEntities(albums);
 	}
 }

@@ -1,5 +1,4 @@
-import Song from "../../../domain/entities/Song";
-import PopularityList from "../../../domain/entities/PopularityList";
+import { Song } from "../../../domain/entities/Song";
 
 export class SongResponseDTO {
 	constructor(
@@ -7,9 +6,9 @@ export class SongResponseDTO {
 		public readonly title: string,
 		public readonly releaseDate: string,
 		public readonly producer: string,
-		public readonly gender: string,
-		public readonly popularityLists: number[],
-		public readonly albums: number[]
+		public readonly genre: string,
+		public readonly albums: number[],
+		public readonly popularityLists: number[]
 	) {}
 
 	static fromEntity(song: Song): SongResponseDTO {
@@ -18,9 +17,9 @@ export class SongResponseDTO {
 			song.title,
 			song.releaseDate.toDateString(),
 			song.producer,
-			song.gender,
-			song.popularityLists.map((poplist) => poplist.id),
-			song.albums.map((album) => album.id)
+			song.genre,
+			song.albums.map((album) => album.id),
+			song.popularityLists.map((poplist) => poplist.id)
 		);
 	}
 
@@ -34,9 +33,9 @@ export class SongResponseDTO {
 			title: song.titulo,
 			releaseDate: song.fechaLanzamiento,
 			producer: song.productor,
-			gender: song.genero,
-			popularityLists: song.ListaDePopularidad || [],
-			albums: song.Albums || [],
+			genre: song.genero,
+			albums: song.Albums,
+			popularityLists: song.ListaDePopularidad,
 		});
 	}
 

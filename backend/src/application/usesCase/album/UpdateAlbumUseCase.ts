@@ -27,7 +27,6 @@ export class UpdateAlbumUseCase {
 			await this.unitOfWork.commit();
 			return AlbumResponseDTO.fromEntity(updated);
 		} catch (error) {
-			console.log(error);
 			await this.unitOfWork.rollback();
 			throw error;
 		}
