@@ -77,6 +77,15 @@ import { ListAlbumsUseCase } from "../../application/usesCase/album/ListAlbumsUs
 import { UpdateAlbumUseCase } from "../../application/usesCase/album/UpdateAlbumUseCase";
 import { AlbumRepository } from "../../infrastructure/repositories/AlbumRepository";
 import type { IAlbumRepository } from "../../application/interfaces/repositories/IAlbumRepository";
+import { SongController } from "../../presentation/controllers/SongController";
+import { CreateSongUseCase } from "../../application/usesCase/song/CreateSongUseCase";
+import { GetSongUseCase } from "../../application/usesCase/song/GetSongUseCase";
+import { UpdateSongUseCase } from "../../application/usesCase/song/UpdateSongUseCase";
+import { DeleteSongUseCase } from "../../application/usesCase/song/DeleteSongUseCase";
+import { ListSongsUseCase } from "../../application/usesCase/song/ListSongsUseCase";
+import { FindSongByTitleUseCase } from "../../application/usesCase/song/FindSongByTitleUseCase";
+import { SongRepository } from "../../infrastructure/repositories/SongRepository";
+import type { ISongRepository } from "../../application/interfaces/repositories/ISongRepository";
 
 // Use Cases
 
@@ -126,6 +135,11 @@ container
 container
 	.bind<IAlbumRepository>(Types.IAlbumRepository)
 	.to(AlbumRepository)
+	.inSingletonScope();
+
+container
+	.bind<ISongRepository>(Types.ISongRepository)
+	.to(SongRepository)
 	.inSingletonScope();
 
 container
@@ -390,6 +404,36 @@ container
 	.to(UpdateAlbumUseCase)
 	.inTransientScope();
 
+container
+	.bind<CreateSongUseCase>(Types.CreateSongUseCase)
+	.to(CreateSongUseCase)
+	.inTransientScope();
+
+container
+	.bind<GetSongUseCase>(Types.GetSongUseCase)
+	.to(GetSongUseCase)
+	.inTransientScope();
+
+container
+	.bind<UpdateSongUseCase>(Types.UpdateSongUseCase)
+	.to(UpdateSongUseCase)
+	.inTransientScope();
+
+container
+	.bind<DeleteSongUseCase>(Types.DeleteSongUseCase)
+	.to(DeleteSongUseCase)
+	.inTransientScope();
+
+container
+	.bind<ListSongsUseCase>(Types.ListSongsUseCase)
+	.to(ListSongsUseCase)
+	.inTransientScope();
+
+container
+	.bind<FindSongByTitleUseCase>(Types.FindSongByTitleUseCase)
+	.to(FindSongByTitleUseCase)
+	.inTransientScope();
+
 // container.bind<ValidateTokenUseCase>(ValidateTokenUseCase)
 //   .to(ValidateTokenUseCase)
 //   .inTransientScope();
@@ -433,6 +477,11 @@ container
 container
 	.bind<AlbumController>(Types.AlbumController)
 	.to(AlbumController)
+	.inSingletonScope();
+
+container
+	.bind<SongController>(Types.SongController)
+	.to(SongController)
 	.inSingletonScope();
 
 export { container };
