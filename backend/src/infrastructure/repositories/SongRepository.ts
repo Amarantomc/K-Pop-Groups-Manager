@@ -21,7 +21,7 @@ export class SongRepository implements ISongRepository {
 		const song = await this.db.cancion.create({
 			data: {
 				titulo: data.title,
-				fechaLanzamiento: new Date(data.releaseDate),
+				fechaLanzamiento: data.releaseDate,
 				productor: data.producer,
 				genero: data.genre,
 				Albums: {
@@ -37,7 +37,7 @@ export class SongRepository implements ISongRepository {
 			where: { id: Number(id) },
 			include: {
 				Albums: true,
-				ListaDePopularidad: true,
+				ListasDePopularidad: true,
 			},
 		});
 		return song ? SongResponseDTO.toEntity(song) : null;
@@ -48,9 +48,7 @@ export class SongRepository implements ISongRepository {
 			where: { id: Number(id) },
 			data: {
 				titulo: data.title,
-				fechaLanzamiento: data.releaseDate
-					? new Date(data.releaseDate)
-					: undefined,
+				fechaLanzamiento: data.releaseDate,
 				productor: data.producer,
 				genero: data.genre,
 			},
@@ -66,20 +64,22 @@ export class SongRepository implements ISongRepository {
 		const songs = await this.db.cancion.findMany({
 			include: {
 				Albums: true,
-				ListaDePopularidad: true,
+				ListasDePopularidad: true,
 			},
 		});
 		return SongResponseDTO.toEntities(songs);
 	}
 
 	async findByTitle(title: string): Promise<Song | null> {
+		console.log(title);
 		const song = await this.db.cancion.findFirst({
 			where: { titulo: title },
 			include: {
 				Albums: true,
-				ListaDePopularidad: true,
+				ListasDePopularidad: true,
 			},
 		});
+		console.log(song);
 		return song ? SongResponseDTO.toEntity(song) : null;
 	}
 
@@ -88,7 +88,7 @@ export class SongRepository implements ISongRepository {
 			where: { fechaLanzamiento: releaseDate },
 			include: {
 				Albums: true,
-				ListaDePopularidad: true,
+				ListasDePopularidad: true,
 			},
 		});
 		return songs ? SongResponseDTO.toEntities(songs) : [];
@@ -99,7 +99,7 @@ export class SongRepository implements ISongRepository {
 			where: { productor: producer },
 			include: {
 				Albums: true,
-				ListaDePopularidad: true,
+				ListasDePopularidad: true,
 			},
 		});
 		return songs ? SongResponseDTO.toEntities(songs) : [];
@@ -110,7 +110,7 @@ export class SongRepository implements ISongRepository {
 			where: { genero: genre },
 			include: {
 				Albums: true,
-				ListaDePopularidad: true,
+				ListasDePopularidad: true,
 			},
 		});
 		return songs ? SongResponseDTO.toEntities(songs) : [];
@@ -121,7 +121,7 @@ export class SongRepository implements ISongRepository {
 			where: { Albums: { id: idAlbum } },
 			include: {
 				Albums: true,
-				ListaDePopularidad: true,
+				ListasDePopularidad: true,
 			},
 		});
 		return songs ? SongResponseDTO.toEntities(songs) : [];
@@ -132,7 +132,7 @@ export class SongRepository implements ISongRepository {
 			where: { ListaDePopularidad: { id: idPopList } },
 			include: {
 				Albums: true,
-				ListaDePopularidad: true,
+				ListasDePopularidad: true,
 			},
 		});
 		return songs ? SongResponseDTO.toEntities(songs) : [];

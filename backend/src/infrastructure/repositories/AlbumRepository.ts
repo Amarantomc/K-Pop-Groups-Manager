@@ -4,8 +4,8 @@ import type { UnitOfWork } from "../PrismaUnitOfWork";
 import type { IAlbumRepository } from "../../application/interfaces/repositories/IAlbumRepository";
 import type { CreateAlbumDTO } from "../../application/dtos/album/CreateAlbumDTO";
 import { AlbumResponseDTO } from "../../application/dtos/album/AlbumResponseDTO";
-import type { UpdateAlbumDTO } from "../../application/dtos/album/UpdateAlbumDTO";
 import type { Album } from "../../domain/entities/Album";
+import type { UpdateAlbumDTO } from "../../application/dtos/album/UpdateAlbumDTO";
 
 @injectable()
 export class AlbumRepository implements IAlbumRepository {
@@ -24,7 +24,7 @@ export class AlbumRepository implements IAlbumRepository {
 				idGrupo: 1,
 				idArt: 1,
 				titulo: data.title,
-				fechaLanzamiento: new Date(data.releaseDate),
+				fechaLanzamiento: data.releaseDate,
 				productor: data.producer,
 				NoCanciones: data.songs.length,
 				NoCopiasVendidas: 0,
@@ -54,9 +54,7 @@ export class AlbumRepository implements IAlbumRepository {
 			where: { id: Number(id) },
 			data: {
 				titulo: data.title,
-				fechaLanzamiento: data.releaseDate
-					? new Date(data.releaseDate)
-					: undefined,
+				fechaLanzamiento: data.releaseDate,
 				productor: data.producer,
 				NoCopiasVendidas: data.noCopiesSold,
 			},
@@ -81,6 +79,7 @@ export class AlbumRepository implements IAlbumRepository {
 	}
 
 	async findByTitle(title: string): Promise<Album | null> {
+		console.log(title);
 		const album = await this.db.album.findFirst({
 			where: { titulo: title },
 			include: {
@@ -90,6 +89,7 @@ export class AlbumRepository implements IAlbumRepository {
 				LanzamientoGrupo: true,
 			},
 		});
+		console.log(album);
 		return album ? AlbumResponseDTO.toEntity(album) : null;
 	}
 
