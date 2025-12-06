@@ -109,10 +109,15 @@ const Income: React.FC = () => {
             return;
         }
 
+<<<<<<< HEAD
+        // Descomentar cuando el backend esté listo
+        /*
+=======
         // ============================================
         // SECCIÓN: BACKEND ENDPOINT
         // Descomenta esta sección para usar el backend real
         // ============================================
+>>>>>>> 8ea7c42 (update endpoint artist)
         const response = await fetch(`http://localhost:3000${endpoint}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -124,6 +129,12 @@ const Income: React.FC = () => {
         }
 
         const data = await response.json();
+<<<<<<< HEAD
+        setIncomes(data);
+        */
+
+        // DATOS DE PRUEBA 
+=======
         setIncomes(data.data || data);
         // ============================================
         // FIN SECCIÓN: BACKEND ENDPOINT
@@ -133,6 +144,7 @@ const Income: React.FC = () => {
         // SECCIÓN: DATOS DEMO
         //============================================
         /*
+>>>>>>> 8ea7c42 (update endpoint artist)
         const mockIncomes: Income[] = [
           {
             id: 1,
@@ -197,10 +209,13 @@ const Income: React.FC = () => {
         }
 
         setIncomes(filteredIncomes);
+<<<<<<< HEAD
+=======
         */
         // ============================================
         // FIN SECCIÓN: DATOS DEMO
         // ============================================ */
+>>>>>>> 8ea7c42 (update endpoint artist)
 
       } catch (error) {
         console.error('Error al cargar ingresos:', error);
@@ -213,25 +228,18 @@ const Income: React.FC = () => {
   }, [user]);
 
   const handleDelete = async (id: number) => {
-    try {
-      const response = await fetch(`http://localhost:3000/api/incomes/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al eliminar ingreso');
-      }
-
-      setIncomes(prev => prev.filter(income => income.id !== id));
-    } catch (error) {
-      console.error('Error al eliminar ingreso:', error);
-    }
+    // TODO: Implementar eliminación en el backend
+    console.log('Eliminar ingreso:', id);
+    setIncomes(prev => prev.filter(income => income.id !== id));
   };
 
   const handleEditSave = async (updatedRow: Income) => {
+<<<<<<< HEAD
+    console.log('Actualizar ingreso:', updatedRow);
+    setIncomes(prev => 
+      prev.map(income => income.id === updatedRow.id ? updatedRow : income)
+    );
+=======
     try {
       const response = await fetch(`http://localhost:3000/api/incomes/${updatedRow.id}`, {
         method: 'PUT',
@@ -275,6 +283,7 @@ const Income: React.FC = () => {
     } catch (error) {
       console.error('Error al crear ingreso:', error);
     }
+>>>>>>> 8ea7c42 (update endpoint artist)
   };
 
   if (!user) {
@@ -303,7 +312,6 @@ const Income: React.FC = () => {
           pagesize={10}
           onDelete={handleDelete}
           onEditSave={handleEditSave}
-          onCreateSave={handleCreateSave}
           showEditButton={user.role === 'manager' || user.role === 'director' || user.role === 'admin'}
         />
       )}

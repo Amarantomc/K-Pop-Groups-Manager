@@ -1,19 +1,30 @@
-import type PopularityList from "./PopularityList"
+import type { Album } from "./Album";
+import type PopularityList from "./PopularityList";
 
-export default class Song{
-    readonly id: number
-    readonly title: string
-    readonly releaseDate: Date|string
-    readonly producer: string 
-    readonly gender: string
-    readonly popularityLists: Array<PopularityList>
+export class Song {
+	readonly id: number;
+	readonly title: string;
+	readonly releaseDate: Date;
+	readonly producer: string;
+	readonly genre: string;
+	readonly albums: Array<Album>;
+	readonly popularityLists: Array<PopularityList>;
 
-    constructor (attrs:{id:number,title:string,releaseDate:Date|string,producer:string,gender:string,popularityLists:Array<PopularityList>}){
-        this.id = attrs.id
-        this.title = attrs.title
-        this.releaseDate = attrs.releaseDate
-        this.producer = attrs.producer
-        this.gender = attrs.gender
-        this.popularityLists = attrs.popularityLists
-    }
+	constructor(attrs: {
+		id: number;
+		title: string;
+		releaseDate: Date;
+		producer: string;
+		genre: string;
+		albums: Array<Album>;
+		popularityLists: Array<PopularityList>;
+	}) {
+		this.id = attrs.id;
+		this.title = attrs.title;
+		this.releaseDate = attrs.releaseDate;
+		this.producer = attrs.producer;
+		this.genre = attrs.genre;
+		this.albums = attrs.albums;
+		this.popularityLists = attrs.popularityLists;
+	}
 }

@@ -75,6 +75,8 @@ const Artist: React.FC = () => {
       try {
         if (!user) return;
 
+        // Descomentar cuando el backend esté listo
+        /*
         let endpoint = '';
 
         switch (user.role) {
@@ -105,6 +107,15 @@ const Artist: React.FC = () => {
         }
 
         const data = await response.json();
+<<<<<<< HEAD
+<<<<<<< HEAD
+        setArtists(data);
+        */
+
+        // DATOS DE PRUEBA
+=======
+        setArtists(data.data || data);
+=======
         console.log(data)
         const formattedData = data.data.map((artist : any , index : number) => ({
                         id : artist.id ?? index,
@@ -117,6 +128,7 @@ const Artist: React.FC = () => {
                     }))
                     console.log(formattedData)
                     setArtistsRows(formattedData)
+>>>>>>> 5768647 (add components)
         // ============================================
         // FIN SECCIÓN: BACKEND ENDPOINT
         // ============================================
@@ -125,6 +137,7 @@ const Artist: React.FC = () => {
         //SECCIÓN: DATOS DEMO
         // ============================================
         /*
+>>>>>>> 8ea7c42 (update endpoint artist)
         const mockArtists: Artist[] = [
           {
             id: 1,
@@ -200,10 +213,13 @@ const Artist: React.FC = () => {
         }
 
         setArtists(filteredArtists);
+<<<<<<< HEAD
+=======
         */
         //============================================
         //FIN SECCIÓN: DATOS DEMO
         //============================================ 
+>>>>>>> 8ea7c42 (update endpoint artist)
 
       } catch (error) {
         console.error('Error al cargar artistas:', error);
@@ -216,6 +232,10 @@ const Artist: React.FC = () => {
   }, [user]);
 
   const handleDelete = async (id: number) => {
+<<<<<<< HEAD
+    console.log('Eliminar artista:', id);
+    setArtists(prev => prev.filter(artist => artist.id !== id));
+=======
     try {
       const response = await fetch(`http://localhost:3000/api/artists/${apprenticeToDelete}&${groupToDelete}`, {
         method: 'DELETE',
@@ -232,9 +252,16 @@ const Artist: React.FC = () => {
     } catch (error) {
       console.error('Error al eliminar artista:', error);
     }
+>>>>>>> 5768647 (add components)
   };
 
   const handleEditSave = async (updatedRow: Artist) => {
+<<<<<<< HEAD
+    console.log('Actualizar artista:', updatedRow);
+    setArtists(prev => 
+      prev.map(artist => artist.id === updatedRow.id ? updatedRow : artist)
+    );
+=======
     try {
       const response = await fetch(`http://localhost:3000/api/artists/${updatedRow.id}`, {
         method: 'PUT',
@@ -278,6 +305,7 @@ const Artist: React.FC = () => {
     } catch (error) {
       console.error('Error al crear artista:', error);
     }
+>>>>>>> 8ea7c42 (update endpoint artist)
   };
 
   if (!user || (user.role !== 'manager' && user.role !== 'director' && user.role !== 'admin')) {
@@ -310,7 +338,6 @@ const Artist: React.FC = () => {
           pagesize={10}
           onDelete={handleDelete}
           onEditSave={handleEditSave}
-          onCreateSave={handleCreateSave}
           showEditButton={true}
         />
       )}

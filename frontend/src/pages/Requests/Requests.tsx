@@ -25,6 +25,8 @@ const Requests: React.FC = () => {
   // Manejar aprobación de solicitud (Director)
   const handleApprove = async (id: number) => {
     try {
+      // Descomentar cuando el backend esté listo
+      /*
       const response = await fetch(`http://localhost:3000/api/requests/${id}/approve`, {
         method: 'PATCH',
         headers: {
@@ -36,22 +38,23 @@ const Requests: React.FC = () => {
       if (!response.ok) {
         throw new Error('Error al aprobar solicitud');
       }
+      */
 
       // Actualizar estado local
       setRequests(prev =>
         prev.map(req => req.id === id ? { ...req, status: 'approved' } : req)
       );
       console.log('Solicitud aprobada:', id);
-      alert('Solicitud aprobada exitosamente');
     } catch (error) {
       console.error('Error al aprobar solicitud:', error);
-      alert('Error al aprobar la solicitud');
     }
   };
 
   // Manejar rechazo de solicitud (Director)
   const handleReject = async (id: number) => {
     try {
+      // Descomentar cuando el backend esté listo
+      /*
       const response = await fetch(`http://localhost:3000/api/requests/${id}/reject`, {
         method: 'PATCH',
         headers: {
@@ -63,22 +66,23 @@ const Requests: React.FC = () => {
       if (!response.ok) {
         throw new Error('Error al rechazar solicitud');
       }
+      */
 
       // Actualizar estado local
       setRequests(prev =>
         prev.map(req => req.id === id ? { ...req, status: 'rejected' } : req)
       );
       console.log('Solicitud rechazada:', id);
-      alert('Solicitud rechazada');
     } catch (error) {
       console.error('Error al rechazar solicitud:', error);
-      alert('Error al rechazar la solicitud');
     }
   };
 
   // Crear grupo (Manager)
   const handleCreateGroup = async (requestId: number, groupName: string) => {
     try {
+      // Descomentar cuando el backend esté listo
+      /*
       const response = await fetch(`http://localhost:3000/api/groups`, {
         method: 'POST',
         headers: {
@@ -96,7 +100,8 @@ const Requests: React.FC = () => {
         throw new Error('Error al crear grupo');
       }
 
-      await response.json();
+      const newGroup = await response.json();
+      */
 
       // Actualizar estado local
       setRequests(prev =>
@@ -272,10 +277,19 @@ const Requests: React.FC = () => {
             return;
         }
 
+<<<<<<< HEAD
+        // Descomentar cuando el backend esté listo
+        /*
+=======
         // ============================================
         // SECCIÓN: BACKEND ENDPOINT
         // ============================================
+<<<<<<< HEAD
+
+>>>>>>> 8ea7c42 (update endpoint artist)
+=======
         /*
+>>>>>>> 5768647 (add components)
         const response = await fetch(`http://localhost:3000${endpoint}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -287,6 +301,12 @@ const Requests: React.FC = () => {
         }
 
         const data = await response.json();
+<<<<<<< HEAD
+        setRequests(data);
+        */
+
+        // DATOS DE PRUEBA 
+=======
         setRequests(data.data || data);
         */
         // ============================================
@@ -296,7 +316,12 @@ const Requests: React.FC = () => {
         // ============================================
         // SECCIÓN: DATOS DEMO
         //============================================
+<<<<<<< HEAD
+        /*
+>>>>>>> 8ea7c42 (update endpoint artist)
+=======
         
+>>>>>>> 5768647 (add components)
         const mockRequests: Request[] = [
           {
             id: 1,
@@ -333,10 +358,17 @@ const Requests: React.FC = () => {
         }
 
         setRequests(filteredRequests);
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+        */
+=======
         
+>>>>>>> 5768647 (add components)
         // ============================================
         // FIN SECCIÓN: DATOS DEMO
         // ============================================ 
+>>>>>>> 8ea7c42 (update endpoint artist)
 
       } catch (error) {
         console.error('Error al cargar solicitudes:', error);
@@ -349,25 +381,17 @@ const Requests: React.FC = () => {
   }, [user]);
 
   const handleDelete = async (id: number) => {
-    try {
-      const response = await fetch(`http://localhost:3000/api/requests/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al eliminar solicitud');
-      }
-
-      setRequests(prev => prev.filter(req => req.id !== id));
-    } catch (error) {
-      console.error('Error al eliminar solicitud:', error);
-    }
+    console.log('Eliminar solicitud:', id);
+    setRequests(prev => prev.filter(req => req.id !== id));
   };
 
   const handleEditSave = async (updatedRow: Request) => {
+<<<<<<< HEAD
+    console.log('Actualizar solicitud:', updatedRow);
+    setRequests(prev => 
+      prev.map(req => req.id === updatedRow.id ? updatedRow : req)
+    );
+=======
     try {
       const response = await fetch(`http://localhost:3000/api/requests/${updatedRow.id}`, {
         method: 'PUT',
@@ -411,6 +435,7 @@ const Requests: React.FC = () => {
     } catch (error) {
       console.error('Error al crear solicitud:', error);
     }
+>>>>>>> 8ea7c42 (update endpoint artist)
   };
 
   if (!user) {
@@ -433,6 +458,16 @@ const Requests: React.FC = () => {
           Cargando solicitudes...
         </div>
       ) : (
+<<<<<<< HEAD
+      <DataTable
+        columns={columns}
+        rows={requests}
+        pagesize={10}
+        onDelete={handleDelete}
+        onEditSave={handleEditSave}
+        showEditButton={user.role === 'manager' || user.role === 'director' || user.role === 'admin'}
+      />
+=======
         <DataTable
           columns={columns}
           rows={requests}
@@ -442,6 +477,7 @@ const Requests: React.FC = () => {
           onCreateSave={handleCreateSave}
           showEditButton={user.role === 'manager' || user.role === 'director' || user.role === 'admin'}
         />
+>>>>>>> 8ea7c42 (update endpoint artist)
       )}
     </PageLayout>
   );

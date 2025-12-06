@@ -77,12 +77,17 @@ const Evaluations: React.FC = () => {
         if (!user) return;
 
         // Obtener el apprenticeId del usuario actual
-        const apprenticeId = user.profileData?.apprenticeId || user.id;
+        // const apprenticeId = user.profileData?.apprenticeId || user.id;
 
+<<<<<<< HEAD
+        // Descomentar cuando el backend esté listo
+        /*
+=======
         // ============================================
         // SECCIÓN: BACKEND ENDPOINT
         // Descomenta esta sección para usar el backend real
         // ============================================
+>>>>>>> 8ea7c42 (update endpoint artist)
         const response = await fetch(`http://localhost:3000/api/evaluations?apprenticeId=${apprenticeId}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -94,6 +99,12 @@ const Evaluations: React.FC = () => {
         }
 
         const data = await response.json();
+<<<<<<< HEAD
+        setEvaluations(data);
+        */
+
+        // DATOS DE PRUEBA 
+=======
         setEvaluations(data.data || data);
         // ============================================
         // FIN SECCIÓN: BACKEND ENDPOINT
@@ -103,6 +114,7 @@ const Evaluations: React.FC = () => {
         /// SECCIÓN: DATOS DEMO
         //============================================
         /*
+>>>>>>> 8ea7c42 (update endpoint artist)
         const mockEvaluations: Evaluation[] = [
           {
             id: 1,
@@ -143,10 +155,13 @@ const Evaluations: React.FC = () => {
         ];
 
         setEvaluations(mockEvaluations);
+<<<<<<< HEAD
+=======
         */
         // ============================================
         //FIN SECCIÓN: DATOS DEMO
         // ============================================ 
+>>>>>>> 8ea7c42 (update endpoint artist)
 
       } catch (error) {
         console.error('Error al cargar evaluaciones:', error);
@@ -159,25 +174,17 @@ const Evaluations: React.FC = () => {
   }, [user]);
 
   const handleDelete = async (id: number) => {
-    try {
-      const response = await fetch(`http://localhost:3000/api/evaluations/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al eliminar evaluación');
-      }
-
-      setEvaluations(prev => prev.filter(evaluation => evaluation.id !== id));
-    } catch (error) {
-      console.error('Error al eliminar evaluación:', error);
-    }
+    console.log('Eliminar evaluación:', id);
+    setEvaluations(prev => prev.filter(evaluation => evaluation.id !== id));
   };
 
   const handleEditSave = async (updatedRow: Evaluation) => {
+<<<<<<< HEAD
+    console.log('Actualizar evaluación:', updatedRow);
+    setEvaluations(prev => 
+      prev.map(evaluation => evaluation.id === updatedRow.id ? updatedRow : evaluation)
+    );
+=======
     try {
       const response = await fetch(`http://localhost:3000/api/evaluations/${updatedRow.id}`, {
         method: 'PUT',
@@ -221,6 +228,7 @@ const Evaluations: React.FC = () => {
     } catch (error) {
       console.error('Error al crear evaluación:', error);
     }
+>>>>>>> 8ea7c42 (update endpoint artist)
   };
 
   if (!user) {

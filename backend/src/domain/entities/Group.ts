@@ -1,3 +1,10 @@
+<<<<<<< HEAD
+export class Group {
+	public readonly id: number;
+
+	constructor(attrs: { id: number }) {
+		this.id = attrs.id;
+=======
 import { GroupStatus } from "../enums/GroupStatus";
 import type { Activity } from "./Activity";
 import { Agency } from "./Agency";
@@ -41,9 +48,14 @@ export class Group {
 		this.memberCount = attrs.memberCount;
 		this.agency = attrs.agency;
 		this.concept = attrs.concept;
+<<<<<<< HEAD
+		//this.visualConcept = attrs.visualConcept;
+>>>>>>> 00268dc (Fix)
+=======
 		this.visualConcept = attrs.visualConcept;
 		this.members = attrs.members;
 		this.albums = attrs.albums;
 		this.activities=attrs.activities
+>>>>>>> 37c9a98 (Some Fixes)
 	}
 }

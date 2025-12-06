@@ -1,5 +1,11 @@
+import { PopularityList } from "../../domain";
+
 // src/infrastructure/di/TYPES.ts
 const Types = {
+<<<<<<< HEAD
+	// Database
+	PrismaClient: Symbol.for("PrismaClient"),
+=======
   // Database
   PrismaClient: Symbol.for('PrismaClient'),
   
@@ -26,38 +32,48 @@ const Types = {
   GetUsersUseCase: Symbol.for('GetUsersUseCase'),
   UpdateUserUseCase: Symbol.for('UpdateUserUseCase'),
   DeleteUserUseCase: Symbol.for('DeleteUserUseCase'),
+>>>>>>> 6f5c07e (Crud award implementation (#116))
 
-  CreateApprenticeUseCase: Symbol.for('CreateApprenticeUseCase'),
-  DeleteApprenticeUseCase: Symbol.for('DeleteApprenticeUseCase'),
-  GetApprenticeUseCase: Symbol.for('GetApprenticeUseCase'),
-  UpdateApprenticeUseCase: Symbol.for('UpdateApprenticeUseCase'),
-  ListApprenticeUseCase :Symbol.for('ListApprenticeUseCase'),
-  ListByAgencyUseCase :Symbol.for('ListByAgencyUseCase'),
-  GetApprenticeByNameUseCase :Symbol.for('GetApprenticeByNameUseCase'),
+	//  Interfaces
+	IUnitOfWork: Symbol.for("IUnitOfWork"),
+	IUserRepository: Symbol.for("IUserRepository"),
+	IApprenticeRepository: Symbol.for("IApprenticeRepository"),
+	IAgencyRepository: Symbol.for("IAgencyRepository"),
+	IArtistRepository: Symbol.for("IArtistRepository"),
+	IConceptRepository: Symbol.for("IConceptRepository"),
+	IActivityRepository: Symbol.for("IActivityRepository"),
+	IAlbumRepository: Symbol.for("IAlbumRepository"),
+	ISongRepository: Symbol.for("ISongRepository"),
 
-  CreateAgencyUseCase :Symbol.for('CreateAgencyUseCase'),
-  DeleteAgencyUseCase :Symbol.for('DeleteAgencyUseCase'),
-  FindAgenciesByAddressUseCase :Symbol.for(' FindAgenciesByAddressUseCase'),
-  FindAgenciesByFoundationUseCase :Symbol.for('FindAgenciesByFoundationUseCase'),
-  FindAgenciesByNameUseCase :Symbol.for('FindAgenciesByNameUseCase'),
-  GetAgencyUseCase :Symbol.for('GetAgencyUseCase'),
-  UpdateAgencyUseCase :Symbol.for('UpdateAgencyUseCase'),
-  ListAgenciesUseCase :Symbol.for('ListAgenciesUseCase'),
+	IPopularityListRepository: Symbol.for("IPopularityListRepository"),
 
-  
-  CreateArtistUseCase :Symbol.for('CreateArtistUseCase'),
-  DeleteArtistUseCase :Symbol.for('DeleteArtistUseCase'),
-  UpdateArtistUseCase :Symbol.for('UpdateArtistUseCase'),
-  FindArtistByIdUseCase :Symbol.for('FindArtistByIdUseCase'),
-  GetAllArtistsUseCase :Symbol.for('GetAllArtistsUseCase'),
-  FindArtistByAgencyUseCase :Symbol.for('FindArtistByAgencyUseCase'),
+	// Application Use Cases
+	CreateUserUseCase: Symbol.for("CreateUserUseCase"),
+	GetUserUseCase: Symbol.for("GetUserUseCase"),
+	GetUsersUseCase: Symbol.for("GetUsersUseCase"),
+	UpdateUserUseCase: Symbol.for("UpdateUserUseCase"),
+	DeleteUserUseCase: Symbol.for("DeleteUserUseCase"),
 
-  CreateConceptUseCase: Symbol.for('CreateConceptUseCase'),
-  DeleteConceptUseCase: Symbol.for('DeleteConceptUseCase'),
-  GetConceptUseCase: Symbol.for('GetConceptUseCase'),
-  UpdateConceptUseCase: Symbol.for('UpdateConceptUseCase'),
-  ListConceptUseCase :Symbol.for('ListConceptUseCase'),
+	CreateApprenticeUseCase: Symbol.for("CreateApprenticeUseCase"),
+	DeleteApprenticeUseCase: Symbol.for("DeleteApprenticeUseCase"),
+	GetApprenticeUseCase: Symbol.for("GetApprenticeUseCase"),
+	UpdateApprenticeUseCase: Symbol.for("UpdateApprenticeUseCase"),
+	ListApprenticeUseCase: Symbol.for("ListApprenticeUseCase"),
+	ListByAgencyUseCase: Symbol.for("ListByAgencyUseCase"),
+	GetApprenticeByNameUseCase: Symbol.for("GetApprenticeByNameUseCase"),
 
+<<<<<<< HEAD
+	CreateAgencyUseCase: Symbol.for("CreateAgencyUseCase"),
+	DeleteAgencyUseCase: Symbol.for("DeleteAgencyUseCase"),
+	FindAgenciesByAddressUseCase: Symbol.for(" FindAgenciesByAddressUseCase"),
+	FindAgenciesByFoundationUseCase: Symbol.for(
+		"FindAgenciesByFoundationUseCase"
+	),
+	FindAgenciesByNameUseCase: Symbol.for("FindAgenciesByNameUseCase"),
+	GetAgencyUseCase: Symbol.for("GetAgencyUseCase"),
+	UpdateAgencyUseCase: Symbol.for("UpdateAgencyUseCase"),
+	ListAgenciesUseCase: Symbol.for("ListAgenciesUseCase"),
+=======
   CreateVisualConceptUseCase: Symbol.for('CreateVisualConceptUseCase'),
   DeleteVisualConceptUseCase: Symbol.for('DeleteVisualConceptUseCase'),
   GetVisualConceptUseCase: Symbol.for('GetVisualConceptUseCase'),
@@ -73,24 +89,47 @@ const Types = {
    
   LoginUserUseCase: Symbol.for('LoginUserUseCase'),
   ValidateTokenUseCase: Symbol.for('ValidateTokenUseCase'),
+>>>>>>> 8d68224 (Crud visual concept implemetation (#118))
 
+	CreateArtistUseCase: Symbol.for("CreateArtistUseCase"),
+	DeleteArtistUseCase: Symbol.for("DeleteArtistUseCase"),
+	UpdateArtistUseCase: Symbol.for("UpdateArtistUseCase"),
+	FindArtistByIdUseCase: Symbol.for("FindArtistByIdUseCase"),
+	GetAllArtistsUseCase: Symbol.for("GetAllArtistsUseCase"),
+	FindArtistByAgencyUseCase: Symbol.for("FindArtistByAgencyUseCase"),
 
-CreateActivityUseCase: Symbol.for('CreateActivityUseCase'),
-UpdateActivityUseCase: Symbol.for('UpdateActivityUseCase'),
-DeleteActivityUseCase: Symbol.for('DeleteActivityUseCase'),
-FindActivityByIdUseCase: Symbol.for('FindActivityByIdUseCase'),
-GetAllActivitiesUseCase: Symbol.for('GetAllActivitiesUseCase'),
-FindActivitiesByArtist :Symbol.for('FindActivitiesByArtist'),
-AddArtistToActivityUseCase:Symbol.for('AddArtistToActivityUseCase'),
- 
+	CreateConceptUseCase: Symbol.for("CreateConceptUseCase"),
+	DeleteConceptUseCase: Symbol.for("DeleteConceptUseCase"),
+	GetConceptUseCase: Symbol.for("GetConceptUseCase"),
+	UpdateConceptUseCase: Symbol.for("UpdateConceptUseCase"),
+	ListConceptUseCase: Symbol.for("ListConceptUseCase"),
 
-CreateApplicationUseCase : Symbol.for('CreateApplicationUseCase'),
-GetApplicationUseCase : Symbol.for('GetApplicationUseCase'),
-DeleteApplicationUseCase : Symbol.for('DeleteApplicationUseCase'),
-UpdateApplicationUseCase : Symbol.for('UpdateApplicationUseCase'),
-ListApplicationUseCase : Symbol.for('ListApplicationUseCase'),
-FindByApprenticeUseCase : Symbol.for('FindByApprenticeUseCase'),
+	CreatePopularityListUseCase: Symbol.for("CreatePopularityListUseCase"),
+	GetPopularityListUseCase: Symbol.for("GetPopularityListUseCase"),
+	ListPopularityListsUseCase: Symbol.for("GetPopularityListsUseCase"),
+	UpdatePopularityListUseCase: Symbol.for("UpdatePopularityListUseCase"),
+	DeletePopularityListUseCase: Symbol.for("DeletePopularityListUseCase"),
+	AddSongToPopularityListUseCase: Symbol.for("AddSongToPopularityListUseCase"),
 
+<<<<<<< HEAD
+	LoginUserUseCase: Symbol.for("LoginUserUseCase"),
+	ValidateTokenUseCase: Symbol.for("ValidateTokenUseCase"),
+
+	CreateActivityUseCase: Symbol.for("CreateActivityUseCase"),
+	UpdateActivityUseCase: Symbol.for("UpdateActivityUseCase"),
+	DeleteActivityUseCase: Symbol.for("DeleteActivityUseCase"),
+	FindActivityByIdUseCase: Symbol.for("FindActivityByIdUseCase"),
+	GetAllActivitiesUseCase: Symbol.for("GetAllActivitiesUseCase"),
+	FindActivitiesByArtist: Symbol.for("FindActivitiesByArtist"),
+	AddArtistToActivityUseCase: Symbol.for("AddArtistToActivityUseCase"),
+
+	CreateAlbumUseCase: Symbol.for("CreateAlbumUseCase"),
+	DeleteAlbumUseCase: Symbol.for("DeleteAlbumUseCase"),
+	GetAlbumUseCase: Symbol.for("GetAlbumUseCase"),
+	UpdateAlbumUseCase: Symbol.for("UpdateAlbumUseCase"),
+	ListAlbumsUseCase: Symbol.for("ListAlbumsUseCase"),
+	FindAlbumByTitleUseCase: Symbol.for("FindAlbumByTitleUseCase"),
+=======
 //#region Award
 CreateAwardUseCase : Symbol.for('CreateAwardUseCase'),
 GetAwardUseCase : Symbol.for('GetAwardUseCase'),
@@ -143,11 +182,35 @@ DeleteContractUseCase : Symbol.for('DeleteContractUseCase'),
   ApplicationController : Symbol.for('ApplicationController'),
   VisualConceptController : Symbol.for('VisualConceptController'),
   AwardController : Symbol.for('AwardController'),
+<<<<<<< HEAD
+
+
+  GroupController :Symbol.for('GroupController')
+>>>>>>> 6f5c07e (Crud award implementation (#116))
+=======
   GroupController :Symbol.for('GroupController'),
   ContractController :Symbol.for('ContractController'),
   //#endregion
+>>>>>>> 37c9a98 (Some Fixes)
 
- 
+	CreateSongUseCase: Symbol.for("CreateSongUseCase"),
+	GetSongUseCase: Symbol.for("GetSongUseCase"),
+	UpdateSongUseCase: Symbol.for("UpdateSongUseCase"),
+	DeleteSongUseCase: Symbol.for("DeleteSongUseCase"),
+	ListSongsUseCase: Symbol.for("ListSongsUseCase"),
+	FindSongByTitleUseCase: Symbol.for("FindSongByTitleUseCase"),
+
+	// Presentation
+	UserController: Symbol.for("UserController"),
+	AuthController: Symbol.for("AuthController"),
+	ApprenticeController: Symbol.for("ApprenticeController"),
+	AgencyController: Symbol.for("AgencyController"),
+	ArtistController: Symbol.for("ArtistController"),
+	ConceptController: Symbol.for("ConceptController"),
+	ActivityController: Symbol.for("ActivityController"),
+	PopularityListController: Symbol.for("PopularityListController"),
+	AlbumController: Symbol.for("AlbumController"),
+	SongController: Symbol.for("SongController"),
 };
 
 export { Types };

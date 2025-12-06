@@ -100,6 +100,8 @@ const Activities: React.FC = () => {
       try {
         if (!user) return;
 
+        //Descomentar cuando el backend esté listo
+        /*
         let endpoint = '';
 
         // Switch case según el rol del usuario
@@ -140,11 +142,78 @@ const Activities: React.FC = () => {
         }
 
         const data = await response.json();
-        setActivities(data.data || data);
+        setActivities(data);
+        */
 
+<<<<<<< HEAD
+        // DATOS DE PRUEBA 
+        const mockActivities: Activity[] = [
+          {
+            id: 1,
+            artistName: user.role === 'artist' ? user.name || 'Lee Min-ho' : 'Lee Min-ho',
+            groupName: 'Phoenix',
+            title: 'Concierto Seoul Music Festival',
+            type: 'concert',
+            date: '2025-12-05',
+            time: '19:00',
+            location: 'Olympic Stadium, Seoul',
+            status: 'confirmed',
+            description: 'Presentación principal en el festival de música'
+          },
+          {
+            id: 2,
+            artistName: user.role === 'artist' ? user.name || 'Lee Min-ho' : 'Kim Ji-soo',
+            groupName: 'Starlight',
+            title: 'Ensayo General',
+            type: 'rehearsal',
+            date: '2025-12-02',
+            time: '14:00',
+            location: 'Estudio A - K-Pop Stars Agency',
+            status: 'confirmed',
+            description: 'Ensayo para próximo showcase'
+          },
+          {
+            id: 3,
+            artistName: user.role === 'artist' ? user.name || 'Lee Min-ho' : 'Lee Min-ho',
+            groupName: 'Phoenix',
+            title: 'Grabación Nuevo Single',
+            type: 'recording',
+            date: '2025-12-08',
+            time: '10:00',
+            location: 'Big Hit Studio',
+            status: 'pending',
+            description: 'Sesión de grabación para el comeback'
+          },
+          {
+            id: 4,
+            artistName: user.role === 'artist' ? user.name || 'Lee Min-ho' : 'Park Soo-young',
+            groupName: 'Dreamers',
+            title: 'Evento Promocional',
+            type: 'promotion',
+            date: '2025-12-10',
+            time: '16:00',
+            location: 'Centro Comercial COEX',
+            status: 'confirmed',
+            description: 'Firma de autógrafos y meet & greet'
+          },
+          {
+            id: 5,
+            artistName: user.role === 'artist' ? user.name || 'Lee Min-ho' : 'Kim Ji-soo',
+            groupName: 'Starlight',
+            title: 'Reunión con Management',
+            type: 'meeting',
+            date: '2025-12-03',
+            time: '11:00',
+            location: 'Oficina K-Pop Stars Agency',
+            status: 'pending',
+            description: 'Planificación de actividades Q1 2026'
+          }
+        ];
+=======
         // ============================================
         // FIN SECCIÓN: BACKEND ENDPOINT
         // ============================================
+>>>>>>> 8ea7c42 (update endpoint artist)
 
         //============================================
         //SECCIÓN: DATOS DEMO
@@ -213,6 +282,9 @@ const Activities: React.FC = () => {
        }
      ];
 
+<<<<<<< HEAD
+        setActivities(filteredActivities);
+=======
      // Filtrar según rol
      let filteredActivities = mockActivities;
      if (user.role === 'artist') {
@@ -228,6 +300,7 @@ const Activities: React.FC = () => {
         // ============================================
         // FIN SECCIÓN: DATOS DEMO
         // ============================================
+>>>>>>> 8ea7c42 (update endpoint artist)
 
       } catch (error) {
         console.error('Error al cargar actividades:', error);
@@ -240,25 +313,17 @@ const Activities: React.FC = () => {
   }, [user]);
 
   const handleDelete = async (id: number) => {
-    try {
-      const response = await fetch(`http://localhost:3000/api/activities/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al eliminar actividad');
-      }
-
-      setActivities(prev => prev.filter(activity => activity.id !== id));
-    } catch (error) {
-      console.error('Error al eliminar actividad:', error);
-    }
+    console.log('Eliminar actividad:', id);
+    setActivities(prev => prev.filter(activity => activity.id !== id));
   };
 
   const handleEditSave = async (updatedRow: Activity) => {
+<<<<<<< HEAD
+    console.log('Actualizar actividad:', updatedRow);
+    setActivities(prev => 
+      prev.map(activity => activity.id === updatedRow.id ? updatedRow : activity)
+    );
+=======
     try {
       const response = await fetch(`http://localhost:3000/api/activities/${updatedRow.id}`, {
         method: 'PUT',
@@ -302,6 +367,7 @@ const Activities: React.FC = () => {
     } catch (error) {
       console.error('Error al crear actividad:', error);
     }
+>>>>>>> 8ea7c42 (update endpoint artist)
   };
 
   // Manejar selección de fecha en el calendario
@@ -316,55 +382,49 @@ const Activities: React.FC = () => {
   const handleAcceptActivity = async () => {
     if (!selectedActivity) return;
 
-    try {
-      const response = await fetch(`http://localhost:3000/api/activities/${selectedActivity.id}/validate`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({ validated: true })
-      });
+    console.log('Aceptar actividad:', selectedActivity.id);
+    
+    // TODO: Llamada al backend
+    /*
+    await fetch(`http://localhost:3000/api/activities/${selectedActivity.id}/validate`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
+      body: JSON.stringify({ validated: true })
+    });
+    */
 
-      if (!response.ok) {
-        throw new Error('Error al aceptar actividad');
-      }
-
-      // Actualizar estado local
-      setActivities(prev =>
-        prev.map(a => a.id === selectedActivity.id ? { ...a, status: 'confirmed' } : a)
-      );
-      setSelectedActivity({ ...selectedActivity, status: 'confirmed' });
-    } catch (error) {
-      console.error('Error al aceptar actividad:', error);
-    }
+    // Actualizar estado local
+    setActivities(prev =>
+      prev.map(a => a.id === selectedActivity.id ? { ...a, status: 'confirmed' } : a)
+    );
+    setSelectedActivity({ ...selectedActivity, status: 'confirmed' });
   };
 
   const handleRejectActivity = async () => {
     if (!selectedActivity) return;
 
-    try {
-      const response = await fetch(`http://localhost:3000/api/activities/${selectedActivity.id}/validate`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({ validated: false })
-      });
+    console.log('Rechazar actividad:', selectedActivity.id);
+    
+    // TODO: Llamada al backend
+    /*
+    await fetch(`http://localhost:3000/api/activities/${selectedActivity.id}/validate`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
+      body: JSON.stringify({ validated: false })
+    });
+    */
 
-      if (!response.ok) {
-        throw new Error('Error al rechazar actividad');
-      }
-
-      // Actualizar estado local
-      setActivities(prev =>
-        prev.map(a => a.id === selectedActivity.id ? { ...a, status: 'cancelled' } : a)
-      );
-      setSelectedActivity({ ...selectedActivity, status: 'cancelled' });
-    } catch (error) {
-      console.error('Error al rechazar actividad:', error);
-    }
+    // Actualizar estado local
+    setActivities(prev =>
+      prev.map(a => a.id === selectedActivity.id ? { ...a, status: 'cancelled' } : a)
+    );
+    setSelectedActivity({ ...selectedActivity, status: 'cancelled' });
   };
 
   // Obtener color según tipo de actividad
@@ -636,7 +696,6 @@ const Activities: React.FC = () => {
                   pagesize={10}
                   onDelete={handleDelete}
                   onEditSave={handleEditSave}
-                  onCreateSave={handleCreateSave}
                   showEditButton={true}
                 />
               </div>
