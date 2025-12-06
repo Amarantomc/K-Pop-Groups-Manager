@@ -87,6 +87,10 @@ export class ContractResponseDto {
     return contracts.map(c => this.fromEntity(c));
   }
 
+  static toEntities(contracts: any): Contract[] {
+    return contracts.map((c:any) => this.toEntity(c,c.Artista? "Artist": "Group"));
+  }
+
   private static GroupInContractToEntity(group:any,agency:Agency):Group{
      return new Group({
       id:group.id,

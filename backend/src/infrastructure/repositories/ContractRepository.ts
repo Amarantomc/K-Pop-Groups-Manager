@@ -64,18 +64,120 @@ export class ContractRepository implements IContractRepository{
     return ContractResponseDto.toEntity(contract,data.type)
   }
 
-    findById(id: string): Promise<Contract | null> {
-        throw new Error("Method not implemented.");
+  async findById(idC: any): Promise<Contract | null> {
+        let {agencyId,apprenticeId,groupId,startDate,id}=idC
+        
+        
+        let contract
+        if(!apprenticeId){
+            id=Number(id) 
+          contract =await this.db.contratoGrupo.findUnique({
+            where:{id},
+            include: {
+              Agencia: true,
+              Grupo:true
+            }
+        })
+     } else {
+          contract=await this.db.contrato.findUnique({
+         where:{idAg_idAp_idGr_fechaInicio:{
+            idAg: Number (agencyId),
+            idAp: Number (apprenticeId),
+            idGr: Number (groupId),
+            fechaInicio: new Date(startDate)
+         }
+         },
+          include:{
+            Agencia:true,
+            Artista:true
+          }
+      })
+     }  
+      
+       return contract? ContractResponseDto.toEntity(contract,!apprenticeId? "Group":"Artist") :null
+
+  }
+  async  update(idC: any, data: Partial<Contract>): Promise<Contract> {
+        let {agencyId,apprenticeId,groupId,startDate,id}=idC
+        let contract
+        if(!apprenticeId){
+          id=Number(id) 
+          contract =await this.db.contratoGrupo.update({
+            where:{id},
+            data:{
+              fechaInicio:data.startDate,
+              fechaFinalizacion:data.completionDate,
+              estado:data.status,
+              condicionesIniciales:data.initialConditions,
+              distribucionIngresos:data.incomeDistribution
+            },
+            include: {
+              Agencia: true,
+              Grupo:true
+            }
+        })
+     } else {
+      contract=await this.db.contrato.update({
+         where:{idAg_idAp_idGr_fechaInicio:{
+              idAg: Number (agencyId),
+            idAp: Number (apprenticeId),
+            idGr: Number (groupId),
+            fechaInicio: new Date(startDate)
+         }
+         },
+         data:{
+              fechaInicio:data.startDate,
+              fechaFinalizacion:data.completionDate,
+              estado:data.status,
+              condicionesIniciales:data.initialConditions,
+              distribucionIngresos:data.incomeDistribution
+
+         },
+          include:{
+            Agencia:true,
+            Artista:true
+          }
+      })
+     } 
+       return ContractResponseDto.toEntity(contract,!apprenticeId? "Group":"Artist")
     }
-    update(id: string, data: any): Promise<Contract> {
-        throw new Error("Method not implemented.");
-    }
-    delete(id: string): Promise<void> {
-        throw new Error("Method not implemented.");
+    async delete(idC: any): Promise<void> {
+      let {agencyId,apprenticeId,groupId,startDate,id}=idC
+         
+        if(!apprenticeId){
+          id=Number(id) 
+          await this.db.contratoGrupo.delete({
+            where:{id},
+            })
+     } else {
+      await this.db.contrato.delete({
+         where:{idAg_idAp_idGr_fechaInicio:{
+             idAg: Number (agencyId),
+            idAp: Number (apprenticeId),
+            idGr: Number (groupId),
+            fechaInicio: new Date(startDate)
+         }
+         } 
+      })
+     } 
+       
     }
 
-        findAll(): Promise<Contract[]> {
-        throw new Error("Method not implemented.");
+    async  findAll(): Promise<Contract[]> {
+        const artistContracts = await this.db.contrato.findMany({
+            include: {
+                Agencia: true,
+                Artista: true
+            }
+        });
+        const groupContracts = await this.db.contratoGrupo.findMany({
+            include: {
+                Agencia: true,
+                Grupo: true
+            }
+        });
+        artistContracts.push(...groupContracts)
+        return ContractResponseDto.toEntities(artistContracts);
     }
 
 }
