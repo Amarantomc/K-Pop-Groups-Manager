@@ -28,7 +28,7 @@ export class FindArtistByAgencyUseCase {
             const artists = await this.artistRepository.findByAgency(agencyId);
 
             
-            return ArtistResponseDto.fromEntities(artists);
+            return artists.map(artist => ArtistResponseDto.fromEntityForManager(artist));
 
         } catch (error: any) {
             throw new Error(`Failed to find artists by agency: ${error.message}`);

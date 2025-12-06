@@ -1,3 +1,4 @@
+import type { Agency } from "../../../domain/entities/Agency";
 import { Group } from "../../../domain/entities/Group";
 import { AgencyResponseDTO } from "../agency/AgencyResponseDTO";
 import { ArtistResponseDto } from "../artist/ArtistResponseDto";
@@ -66,4 +67,21 @@ export class GroupResponseDTO {
 	static fromEntities(groups: any[]): GroupResponseDTO[] {
 		return groups.map((group) => this.fromEntity(group));
 	}
-}
+
+	 static toEntitySimple(group:any,agency:Agency):Group{
+		 
+		return new Group({
+		  id:group.id,
+		  name:group.nombreCompleto,
+		  debut:group.fechaDebut,
+		  memberCount:group.Nomiembros,
+		  status:group.estadoGrupo,
+		  agency:agency})
+	  }
+
+	  static toEntitiesSimple(groups:any[],agency:Agency):Group[]{
+	    
+		return groups.map(g=> this.toEntitySimple(g.grupo,agency))	
+	}
+	}
+
