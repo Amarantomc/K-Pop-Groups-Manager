@@ -13,6 +13,7 @@ import {esES} from "@mui/x-data-grid/locales"
 import Modal from '../modal/Modal';
 import ModalCreate from '../modal/ModalCreate';
 import type { Field } from '../../config/formSource';
+import ExportButton from '../exportButton/ExportButton';
 
 interface DataTableProps {
   columns : GridColDef[];
@@ -93,6 +94,8 @@ const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , c
         <>
         {showCreateButton &&
         (<div className='datatable-header'>
+            <ExportButton onExport={() => console.log("Exportando")}>
+            </ExportButton>
             <button className='add-button' onClick={handleCreateOpen}>
                 <svg
                     xmlns="http://www.w3.org/2000/svg"

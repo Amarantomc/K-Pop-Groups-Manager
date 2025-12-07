@@ -128,3 +128,176 @@
     gap: 3px;
     margin-top: 4px;
 }
+.activity-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.activity-dot-concert {
+  background: #ec4899;
+}
+
+.activity-dot-recording {
+  background: #a855f7;
+}
+
+.activity-dot-photoshoot {
+  background: #3b82f6;
+}
+
+.activity-dot-interview {
+  background: #10b981;
+}
+
+.calendar-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.activities-card {
+  background: white;
+  border-radius: 24px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(168, 85, 247, 0.1);
+  display: flex;
+  flex-direction: column;
+  max-height: 800px;
+}
+
+.activities-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #a855f7, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1.5rem;
+}
+
+.activities-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.activities-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.activities-list::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+
+.activities-list::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #ec4899, #a855f7);
+  border-radius: 10px;
+}
+
+.activity-item {
+  padding: 1rem;
+  border-radius: 16px;
+  display: flex;
+  gap: 1rem;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.activity-item-concert {
+  background: linear-gradient(135deg, #fce7f3, #fff);
+  border-color: #fbcfe8;
+}
+
+.activity-item-recording {
+  background: linear-gradient(135deg, #f3e8ff, #fff);
+  border-color: #e9d5ff;
+}
+
+.activity-item-photoshoot {
+  background: linear-gradient(135deg, #dbeafe, #fff);
+  border-color: #bfdbfe;
+}
+
+.activity-item-interview {
+  background: linear-gradient(135deg, #d1fae5, #fff);
+  border-color: #a7f3d0;
+}
+
+.activity-item:hover {
+  transform: translateX(5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.activity-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.activity-item-concert .activity-icon {
+  background: #ec4899;
+  color: white;
+}
+
+.activity-item-recording .activity-icon {
+  background: #a855f7;
+  color: white;
+}
+
+.activity-item-photoshoot .activity-icon {
+  background: #3b82f6;
+  color: white;
+}
+
+.activity-item-interview .activity-icon {
+  background: #10b981;
+  color: white;
+}
+
+.activity-details {
+  flex: 1;
+}
+
+.activity-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 0.25rem;
+}
+
+.activity-artist {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-bottom: 0.25rem;
+}
+
+.activity-datetime {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}

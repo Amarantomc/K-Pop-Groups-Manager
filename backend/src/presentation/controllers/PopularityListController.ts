@@ -9,7 +9,7 @@ import type { UpdatePopularityListUseCase } from "../../application/usesCase/pop
 import type { ListPopularityListUseCase } from "../../application/usesCase/popularityList/ListPopularityListUseCase";
  
 import type { AddSongToPopularityListUseCase } from "../../application/usesCase/popularityList/AddSongToPopularityListUseCase";
-import { CreatePopularityListDto } from "../../application/dtos/popularityList/CreatepopularityListDto";
+import { CreatePopularityListDto } from "../../application/dtos/popularityList/CreatePopularityListDto";
 
 
 
