@@ -39,35 +39,41 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    //const userData = localStorage.getItem('user');
+    const userData = localStorage.getItem('user');
     const rememberMe = localStorage.getItem('rememberMe');
     const expiration = localStorage.getItem('rememberMeExpiration');
 
-    // Verificar si la sesión Remember Me ha expirado
-    if (rememberMe === 'true' && expiration) {
-      const expirationDate = new Date(expiration);
-      const now = new Date();
+    // Si hay token y datos de usuario, restaurar la sesión
+    if (token && userData) {
+      // Verificar si hay Remember Me activo y si ha expirado
+      if (rememberMe === 'true' && expiration) {
+        const expirationDate = new Date(expiration);
+        const now = new Date();
+        
+        if (now > expirationDate) {
+          // Sesión Remember Me expirada, limpiar todo
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          localStorage.removeItem('rememberMe');
+          localStorage.removeItem('rememberMeExpiration');
+          setUser(null);
+          setIsLoading(false);
+          return;
+        }
+      }
       
-      if (now > expirationDate) {
-        // Sesión expirada, limpiar todo
+      // Sesión válida, restaurar usuario
+      try {
+        const parsedUser = JSON.parse(userData);
+        setUser(parsedUser);
+      } catch (error) {
+        // Error al parsear, limpiar sesión corrupta
+        console.error('Error parsing user data:', error);
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         localStorage.removeItem('rememberMe');
         localStorage.removeItem('rememberMeExpiration');
         setUser(null);
-        setIsLoading(false);
-        return;
-      }
-    } else if (!rememberMe || rememberMe !== 'true') {
-      // Si no hay remember me activo, la sesión expira al cerrar el navegador
-      // Solo mantener sesión si hay token Y remember me
-      if (!rememberMe && token) {
-        // Limpiar sesión antigua sin remember me
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        setUser(null);
-        setIsLoading(false);
-        return;
       }
     }
 

@@ -28,11 +28,11 @@ onConfirm,onCancel}) =>{
                 <React.Fragment>
                 <Dialog open={open} slots={{transition : Transition}} keepMounted onClose={onCancel}  aria-describedby="alert-dialog-slide-description"
                 fullWidth maxWidth='sm'>
-                    <DialogTitle sx={{fontWeight:600}}>{title}</DialogTitle>
+                    <DialogTitle sx={{fontWeight:600}}>{title || "Notificación"}</DialogTitle>
 
                     <DialogContent>
                         <DialogContentText id="alert-dialog-slide-description">
-                            {message}
+                            {message || "No se proporcionó un mensaje"}
                         </DialogContentText>
                     </DialogContent>
 

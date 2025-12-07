@@ -1,6 +1,6 @@
 import "./form.css"
-import React from "react";
-import type { Field } from "../../config/formSource";
+import React, { useEffect, useState } from "react";
+import type { Field, FieldOption } from "../../config/formSource";
 
 type FormProps = {
     fields?: Field[];
@@ -13,6 +13,70 @@ type FormProps = {
 };
 
 const Form: React.FC<FormProps> = ({ fields, entity, onSubmit, initialValues = {}, mode = 'add', submitLabel, onChange }) => {
+    // Estado para almacenar opciones dinámicas cargadas desde endpoints
+    const [dynamicOptions, setDynamicOptions] = useState<Record<string, FieldOption[]>>({});
+
+    // Efecto para cargar opciones dinámicas desde endpoints
+    useEffect(() => {
+        if (!fields) return;
+
+        const loadDynamicOptions = async () => {
+            const options: Record<string, FieldOption[]> = {};
+
+            for (const field of fields) {
+                if (field.type === 'select' && field.optionsEndpoint) {
+                    try {
+                        const token = localStorage.getItem('token');
+                        const headers: Record<string, string> = {};
+                        if (token) {
+                            headers['Authorization'] = `Bearer ${token}`;
+                        }
+
+                        const response = await fetch(`http://localhost:3000${field.optionsEndpoint}`, { headers });
+
+                        if (!response.ok) {
+                            console.error(`Error cargando opciones para ${field.name}:`, response.statusText);
+                            continue;
+                        }
+
+                        const data = await response.json();
+                        const items = Array.isArray(data) ? data : data.data || [];
+
+                        // Convertir items a FieldOption
+                        // Esperamos que cada item tenga 'id' y un campo identificador (name, ArtistName, etc.)
+                        const fieldOptions: FieldOption[] = items.map((item: any) => {
+                            const id = item.id || item.Id || item.ID;
+                            // Buscar el nombre: name, ArtistName, AgencyName, GroupName, etc.
+                            const label = 
+                                item.name || 
+                                item.ArtistName || 
+                                item.AgencyName || 
+                                item.GroupName || 
+                                item.AlbumName || 
+                                item.SongName ||
+                                item.AwardName ||
+                                item.Title ||
+                                item.fullName ||
+                                String(id);
+
+                            return {
+                                value: String(id),
+                                label: String(label)
+                            };
+                        });
+
+                        options[field.name] = fieldOptions;
+                    } catch (error) {
+                        console.error(`Error fetching options for ${field.name}:`, error);
+                    }
+                }
+            }
+
+            setDynamicOptions(options);
+        };
+
+        loadDynamicOptions();
+    }, [fields]);
     const validateValue = (f: Field, raw: any): { ok: boolean; msg?: string } => {
         // normalize value
         if (raw instanceof File) {
@@ -199,6 +263,9 @@ const Form: React.FC<FormProps> = ({ fields, entity, onSubmit, initialValues = {
                                 </div>
                             );
                         case 'select':
+                            // Combinar opciones estáticas con dinámicas
+                            const selectOptions = dynamicOptions[f.name] || f.options || [];
+                            
                             return (
                                 <div className="form-group" key={key}>
                                     <label htmlFor={key}>{f.label}</label>
@@ -212,7 +279,7 @@ const Form: React.FC<FormProps> = ({ fields, entity, onSubmit, initialValues = {
                                         }}
                                     >
                                         <option value="">-- Seleccionar --</option>
-                                        {f.options?.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+                                        {selectOptions.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
                                     </select>
                                 </div>
                             );

@@ -8,6 +8,15 @@ import PersonIcon from '@mui/icons-material/Person';
 import GroupsIcon from '@mui/icons-material/Groups';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import EventIcon from '@mui/icons-material/Event';
+import AlbumIcon from '@mui/icons-material/Album';
+import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import LightbulbIcon from '@mui/icons-material/Lightbulb';
+import PaletteIcon from '@mui/icons-material/Palette';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import DescriptionIcon from '@mui/icons-material/Description';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 import "./Dashboard.css"
 
 const Dashboard : React.FC = () =>{
@@ -18,6 +27,15 @@ const Dashboard : React.FC = () =>{
   const [groupsCount, setGroupsCount] = useState<number | null>(null);
   const [albumsCount, setAlbumsCount] = useState<number | null>(null);
   const [activitiesCount, setActivitiesCount] = useState<number | null>(null);
+  const [songsCount, setSongsCount] = useState<number | null>(null);
+  const [awardsCount, setAwardsCount] = useState<number | null>(null);
+  const [conceptsCount, setConceptsCount] = useState<number | null>(null);
+  const [visualConceptsCount, setVisualConceptsCount] = useState<number | null>(null);
+  const [popularityListsCount, setPopularityListsCount] = useState<number | null>(null);
+  const [contractsCount, setContractsCount] = useState<number | null>(null);
+  const [incomesCount, setIncomesCount] = useState<number | null>(null);
+  const [requestsCount, setRequestsCount] = useState<number | null>(null);
+  const [evaluationsCount, setEvaluationsCount] = useState<number | null>(null);
 
   useEffect(() => {
     const API_BASE = 'http://localhost:3000';
@@ -66,14 +84,23 @@ const Dashboard : React.FC = () =>{
     };
 
     (async () => {
-      const [a, p, u, ar, g, al, ac] = await Promise.all([
+      const [a, p, u, ar, g, al, ac, s, aw, c, vc, pl, co, i, r, e] = await Promise.all([
         fetchCount(`${API_BASE}/api/agency/`),
         fetchCount(`${API_BASE}/api/apprentice/`),
-        fetchCount(`${API_BASE}/api/user/`),
+        fetchCount(`${API_BASE}/api/user`),
         fetchCount(`${API_BASE}/api/artist/`),
-        fetchCount(`${API_BASE}/api/groups/`),
+        fetchCount(`${API_BASE}/api/group/`),
         fetchCount(`${API_BASE}/api/albums/`),
-        fetchCount(`${API_BASE}/api/activities/`),
+        fetchCount(`${API_BASE}/api/activity/`),
+        fetchCount(`${API_BASE}/api/songs/`),
+        fetchCount(`${API_BASE}/api/awards/`),
+        fetchCount(`${API_BASE}/api/concept/`),
+        fetchCount(`${API_BASE}/api/visual-concept/`),
+        fetchCount(`${API_BASE}/api/popularity-lists/`),
+        fetchCount(`${API_BASE}/api/contracts/`),
+        fetchCount(`${API_BASE}/api/income/`),
+        fetchCount(`${API_BASE}/api/requests/`),
+        fetchCount(`${API_BASE}/api/evaluations/`),
       ]);
       setAgenciesCount(a);
       setApprenticesCount(p);
@@ -82,6 +109,15 @@ const Dashboard : React.FC = () =>{
       setGroupsCount(g);
       setAlbumsCount(al);
       setActivitiesCount(ac);
+      setSongsCount(s);
+      setAwardsCount(aw);
+      setConceptsCount(c);
+      setVisualConceptsCount(vc);
+      setPopularityListsCount(pl);
+      setContractsCount(co);
+      setIncomesCount(i);
+      setRequestsCount(r);
+      setEvaluationsCount(e);
     })();
   }, []);
 
@@ -135,10 +171,9 @@ const Dashboard : React.FC = () =>{
         <StatCard
           title="Álbumes"
           value={renderValue(albumsCount)}
-          icon={<MusicNoteIcon />}
+          icon={<AlbumIcon />}
           color="#06b6d4"
           subtitle="Lanzamientos totales"
-          trend={albumsCount !== null && albumsCount > 20 ? { value: 5, direction: "up" } : undefined}
         />
         <StatCard
           title="Actividades"
@@ -146,6 +181,69 @@ const Dashboard : React.FC = () =>{
           icon={<EventIcon />}
           color="#14b8a6"
           subtitle="Eventos programados"
+        />
+        <StatCard
+          title="Canciones"
+          value={renderValue(songsCount)}
+          icon={<LibraryMusicIcon />}
+          color="#0ea5e9"
+          subtitle="Tracks en catálogo"
+        />
+        <StatCard
+          title="Premios"
+          value={renderValue(awardsCount)}
+          icon={<EmojiEventsIcon />}
+          color="#eab308"
+          subtitle="Galardones obtenidos"
+        />
+        <StatCard
+          title="Conceptos"
+          value={renderValue(conceptsCount)}
+          icon={<LightbulbIcon />}
+          color="#f97316"
+          subtitle="Ideas creativas"
+        />
+        <StatCard
+          title="Conceptos Visuales"
+          value={renderValue(visualConceptsCount)}
+          icon={<PaletteIcon />}
+          color="#d946ef"
+          subtitle="Diseños visuales"
+        />
+        <StatCard
+          title="Listas de Popularidad"
+          value={renderValue(popularityListsCount)}
+          icon={<TrendingUpIcon />}
+          color="#22c55e"
+          subtitle="Rankings activos"
+        />
+        <StatCard
+          title="Contratos"
+          value={renderValue(contractsCount)}
+          icon={<DescriptionIcon />}
+          color="#64748b"
+          subtitle="Acuerdos vigentes"
+        />
+        <StatCard
+          title="Ingresos"
+          value={renderValue(incomesCount)}
+          icon={<AttachMoneyIcon />}
+          color="#16a34a"
+          subtitle="Registros financieros"
+        />
+        <StatCard
+          title="Solicitudes"
+          value={renderValue(requestsCount)}
+          icon={<AssignmentIcon />}
+          color="#dc2626"
+          subtitle="Peticiones pendientes"
+        />
+        <StatCard
+          title="Evaluaciones"
+          value={renderValue(evaluationsCount)}
+          icon={<AssignmentIcon />}
+          color="#7c3aed"
+          subtitle="Valoraciones registradas"
         />
       </div>
     </PageLayout>

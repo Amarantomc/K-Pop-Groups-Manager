@@ -2,7 +2,12 @@ import React, { useEffect, useState } from 'react';
 import type { GridColDef } from '@mui/x-data-grid';
 import DataTable from '../../components/datatable/Datatable';
 import PageLayout from '../../components/pageLayout/PageLayout';
+import ModalCreate from '../../components/modal/ModalCreate';
+import Modal from '../../components/modal/Modal';
+import ConfirmDialog from '../../components/confirmDialog/ConfirmDialog';
 import { useAuth } from '../../contexts/auth/AuthContext';
+import { contractFields } from '../../config/formSource';
+import { contractConstraints } from '../../config/modalConstraints';
 
 interface Contract {
   id: number;
@@ -21,6 +26,13 @@ const Contracts: React.FC = () => {
   const { user } = useAuth();
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [contractToDelete, setContractToDelete] = useState<number | null>(null);
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [openAccept, setOpenAccept] = useState(false);
+  const [openError, setOpenError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   // Columnas base del DataTable
   const baseColumns: GridColDef[] = [
@@ -131,13 +143,13 @@ const Contracts: React.FC = () => {
 
         switch (user.role) {
           case 'manager':
-            endpoint = `/api/contracts?agencyId=${user.agencyId}`;
+            endpoint = `/api/contract?agencyId=${user.agencyId}`;
             break;
           case 'director':
-            endpoint = `/api/contracts?agencyId=${user.agencyId}`;
+            endpoint = `/api/contract?agencyId=${user.agencyId}`;
             break;
           case 'admin':
-            endpoint = '/api/contracts';
+            endpoint = '/api/contract';
             break;
           default:
             console.error('Rol no autorizado:', user.role);
@@ -254,9 +266,17 @@ const Contracts: React.FC = () => {
     fetchContracts();
   }, [user]);
 
-  const handleDelete = async (id: number) => {
+  const askDelete = (id: number) => {
+    setContractToDelete(id);
+    setOpenConfirm(true);
+  };
+
+  const handleDelete = async () => {
+    if (contractToDelete === null) return;
+
     try {
-      const response = await fetch(`http://localhost:3000/api/contracts/${id}`, {
+      // DELETE /api/contract - Sin autenticación, id en query param o body
+      const response = await fetch(`http://localhost:3000/api/contract?id=${contractToDelete}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -267,15 +287,22 @@ const Contracts: React.FC = () => {
         throw new Error('Error al eliminar contrato');
       }
 
-      setContracts(prev => prev.filter(contract => contract.id !== id));
+      setContracts(prev => prev.filter(contract => contract.id !== contractToDelete));
+      setOpenAccept(true);
     } catch (error) {
       console.error('Error al eliminar contrato:', error);
+      setErrorMessage(error instanceof Error ? error.message : 'Error al eliminar contrato');
+      setOpenError(true);
+    } finally {
+      setOpenConfirm(false);
+      setContractToDelete(null);
     }
   };
 
   const handleEditSave = async (updatedRow: Contract) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/contracts/${updatedRow.id}`, {
+      // PUT /api/contract - Sin autenticación, id en body
+      const response = await fetch(`http://localhost:3000/api/contract`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -292,20 +319,65 @@ const Contracts: React.FC = () => {
       setContracts(prev =>
         prev.map(contract => contract.id === updatedRow.id ? (data.data || data) : contract)
       );
+      setOpenAccept(true);
     } catch (error) {
       console.error('Error al actualizar contrato:', error);
+      setErrorMessage(error instanceof Error ? error.message : 'Error al actualizar contrato');
+      setOpenError(true);
     }
   };
 
-  const handleCreateSave = async (newRow: Omit<Contract, 'id'>) => {
+  const handleCreateSave = (data: any) => {
+    const API_BASE = 'http://localhost:3000';
+    const payload: Record<string, any> = {};
+    if (data instanceof FormData) {
+      data.forEach((v, k) => { payload[k] = v; });
+    } else Object.assign(payload, data);
+
+    (async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+
+        const url = `${API_BASE}/api/contract`;
+        const res = await fetch(url, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(payload),
+        });
+
+        if (!res.ok) {
+          let msg = 'Error al crear contrato';
+          try {
+            const txt = await res.text();
+            try { const j = JSON.parse(txt); msg = j?.message || j?.error || txt || msg; }
+            catch { msg = txt || msg; }
+          } catch (e) {}
+          console.error('Error al crear contrato:', msg);
+          return;
+        }
+
+        const result = await res.json().catch(() => null);
+        if (result?.data) {
+          setContracts(prev => [...prev, result.data]);
+        }
+        setOpenAccept(true);
+      } catch (err) {
+        console.error('Error creando contrato:', err);
+      }
+    })();
+  };
+
+  const handleFormSubmit = async (formData: Record<string, any>) => {
     try {
-      const response = await fetch('http://localhost:3000/api/contracts', {
+      const response = await fetch('http://localhost:3000/api/contract', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify(newRow)
+        body: JSON.stringify(formData)
       });
 
       if (!response.ok) {
@@ -314,8 +386,14 @@ const Contracts: React.FC = () => {
 
       const data = await response.json();
       setContracts(prev => [...prev, (data.data || data)]);
+      setShowCreateModal(false);
+      setOpenAccept(true);
     } catch (error) {
       console.error('Error al crear contrato:', error);
+      const errorMsg = error instanceof Error ? error.message : 'Error al crear contrato';
+      setErrorMessage(errorMsg);
+      setShowCreateModal(false);
+      setOpenError(true);
     }
   };
 
@@ -348,15 +426,56 @@ const Contracts: React.FC = () => {
           Cargando contratos...
         </div>
       ) : (
-        <DataTable
-          columns={columns}
-          rows={contracts}
-          pagesize={10}
-          onDelete={handleDelete}
-          onEditSave={handleEditSave}
-          onCreateSave={handleCreateSave}
-          showEditButton={true}
-        />
+        <>
+          <DataTable
+            columns={columns}
+            rows={contracts}
+            pagesize={10}
+            onDelete={askDelete}
+            onEditSave={handleEditSave}
+            onCreateSave={handleCreateSave}
+            showEditButton={true}
+            constraints={contractConstraints}
+            createEntity="contract"
+            userRole={user?.role}
+            // onCreateClick={() => setShowCreateModal(true)}
+          />
+          <ModalCreate
+            isOpen={showCreateModal}
+            title="Crear Contrato"
+            createFields={contractFields}
+            onSave={handleFormSubmit}
+            onClose={() => setShowCreateModal(false)}
+          />
+          <Modal
+            isOpen={showSuccessModal}
+            title="Contrato creado exitosamente"
+            onSave={() => setShowSuccessModal(false)}
+            onClose={() => setShowSuccessModal(false)}
+          />
+          <ConfirmDialog
+            message="¿Está seguro de que desea eliminar este contrato?"
+            open={openConfirm}
+            onConfirm={handleDelete}
+            onCancel={() => setOpenConfirm(false)}
+          />
+          <ConfirmDialog
+            title="¡Éxito!"
+            message="Operación realizada correctamente"
+            open={openAccept}
+            onConfirm={() => setOpenAccept(false)}
+            onCancel={() => setOpenAccept(false)}
+            showDeleteButton={false}
+          />
+          <ConfirmDialog
+            title="Error"
+            message={errorMessage}
+            open={openError}
+            onConfirm={() => setOpenError(false)}
+            onCancel={() => setOpenError(false)}
+            showDeleteButton={false}
+          />
+        </>
       )}
     </PageLayout>
   );

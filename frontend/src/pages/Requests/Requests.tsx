@@ -5,8 +5,10 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import DataTable from '../../components/datatable/Datatable';
+import ConfirmDialog from '../../components/confirmDialog/ConfirmDialog';
 import PageLayout from '../../components/pageLayout/PageLayout';
 import { useAuth } from '../../contexts/auth/AuthContext';
+import { requestConstraints } from '../../config/modalConstraints';
 
 interface Request {
   id: number;
@@ -21,6 +23,11 @@ const Requests: React.FC = () => {
   const { user } = useAuth();
   const [requests, setRequests] = useState<Request[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [requestToDelete, setRequestToDelete] = useState<number | null>(null);
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [openAccept, setOpenAccept] = useState(false);
+  const [openError, setOpenError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   // Manejar aprobación de solicitud (Director)
   const handleApprove = async (id: number) => {
@@ -41,11 +48,9 @@ const Requests: React.FC = () => {
       setRequests(prev =>
         prev.map(req => req.id === id ? { ...req, status: 'approved' } : req)
       );
-      console.log('Solicitud aprobada:', id);
-      alert('Solicitud aprobada exitosamente');
+      console.log('Solicitud aprobada exitosamente:', id);
     } catch (error) {
       console.error('Error al aprobar solicitud:', error);
-      alert('Error al aprobar la solicitud');
     }
   };
 
@@ -69,17 +74,15 @@ const Requests: React.FC = () => {
         prev.map(req => req.id === id ? { ...req, status: 'rejected' } : req)
       );
       console.log('Solicitud rechazada:', id);
-      alert('Solicitud rechazada');
     } catch (error) {
       console.error('Error al rechazar solicitud:', error);
-      alert('Error al rechazar la solicitud');
     }
   };
 
   // Crear grupo (Manager)
   const handleCreateGroup = async (requestId: number, groupName: string) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/groups`, {
+      const response = await fetch(`http://localhost:3000/api/group`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -103,11 +106,9 @@ const Requests: React.FC = () => {
         prev.map(req => req.id === requestId ? { ...req, status: 'completed' } : req)
       );
 
-      console.log('Grupo creado:', groupName, 'para solicitud:', requestId);
-      alert(`Grupo "${groupName}" creado exitosamente. Solicitud finalizada.`);
+      console.log('Grupo creado exitosamente:', groupName, 'para solicitud:', requestId);
     } catch (error) {
       console.error('Error al crear grupo:', error);
-      alert('Error al crear el grupo');
     }
   };
 
@@ -275,7 +276,7 @@ const Requests: React.FC = () => {
         // ============================================
         // SECCIÓN: BACKEND ENDPOINT
         // ============================================
-        /*
+        
         const response = await fetch(`http://localhost:3000${endpoint}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -288,7 +289,7 @@ const Requests: React.FC = () => {
 
         const data = await response.json();
         setRequests(data.data || data);
-        */
+        
         // ============================================
         // FIN SECCIÓN: BACKEND ENDPOINT
         // ============================================
@@ -296,7 +297,7 @@ const Requests: React.FC = () => {
         // ============================================
         // SECCIÓN: DATOS DEMO
         //============================================
-        
+        /*
         const mockRequests: Request[] = [
           {
             id: 1,
@@ -333,7 +334,7 @@ const Requests: React.FC = () => {
         }
 
         setRequests(filteredRequests);
-        
+        */
         // ============================================
         // FIN SECCIÓN: DATOS DEMO
         // ============================================ 
@@ -348,9 +349,16 @@ const Requests: React.FC = () => {
     fetchRequests();
   }, [user]);
 
-  const handleDelete = async (id: number) => {
+  const askDelete = (id: number) => {
+    setRequestToDelete(id);
+    setOpenConfirm(true);
+  };
+
+  const handleDelete = async () => {
+    if (requestToDelete === null) return;
+
     try {
-      const response = await fetch(`http://localhost:3000/api/requests/${id}`, {
+      const response = await fetch(`http://localhost:3000/api/requests/${requestToDelete}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -361,9 +369,15 @@ const Requests: React.FC = () => {
         throw new Error('Error al eliminar solicitud');
       }
 
-      setRequests(prev => prev.filter(req => req.id !== id));
+      setRequests(prev => prev.filter(req => req.id !== requestToDelete));
+      setOpenAccept(true);
     } catch (error) {
       console.error('Error al eliminar solicitud:', error);
+      setErrorMessage(error instanceof Error ? error.message : 'Error al eliminar solicitud');
+      setOpenError(true);
+    } finally {
+      setOpenConfirm(false);
+      setRequestToDelete(null);
     }
   };
 
@@ -386,8 +400,11 @@ const Requests: React.FC = () => {
       setRequests(prev =>
         prev.map(req => req.id === updatedRow.id ? (data.data || data) : req)
       );
+      setOpenAccept(true);
     } catch (error) {
       console.error('Error al actualizar solicitud:', error);
+      setErrorMessage(error instanceof Error ? error.message : 'Error al actualizar solicitud');
+      setOpenError(true);
     }
   };
 
@@ -437,12 +454,37 @@ const Requests: React.FC = () => {
           columns={columns}
           rows={requests}
           pagesize={10}
-          onDelete={handleDelete}
+          onDelete={askDelete}
           onEditSave={handleEditSave}
           onCreateSave={handleCreateSave}
           showEditButton={user.role === 'manager' || user.role === 'director' || user.role === 'admin'}
+          constraints={requestConstraints}
+          createEntity="request"
+          userRole={user?.role}
         />
       )}
+      <ConfirmDialog
+        message="¿Está seguro de que desea eliminar esta solicitud?"
+        open={openConfirm}
+        onConfirm={handleDelete}
+        onCancel={() => setOpenConfirm(false)}
+      />
+      <ConfirmDialog
+        title="¡Éxito!"
+        message="Operación realizada correctamente"
+        open={openAccept}
+        onConfirm={() => setOpenAccept(false)}
+        onCancel={() => setOpenAccept(false)}
+        showDeleteButton={false}
+      />
+      <ConfirmDialog
+        title="Error"
+        message={errorMessage}
+        open={openError}
+        onConfirm={() => setOpenError(false)}
+        onCancel={() => setOpenError(false)}
+        showDeleteButton={false}
+      />
     </PageLayout>
   );
 };

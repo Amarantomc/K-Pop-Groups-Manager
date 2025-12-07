@@ -40,12 +40,8 @@ const Login: React.FC = () => {
     setError('');
     // Validación básica: email y contraseña no vacíos y formato simple
     const basicEmailRegex = /\S+@\S+\.\S+/;
-    if (!basicEmailRegex.test(formData.email)) {
-      setError('Por favor ingresa un correo electrónico válido');
-      return;
-    }
-    if (!formData.password) {
-      setError('Por favor ingresa la contraseña');
+    if (!basicEmailRegex.test(formData.email) || !formData.password) {
+      setError('Revise sus credenciales,hay un error en el correo o contraseña');
       return;
     }
 
