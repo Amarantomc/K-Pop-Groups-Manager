@@ -2,7 +2,12 @@ import React, { useEffect, useState } from 'react';
 import type { GridColDef } from '@mui/x-data-grid';
 import DataTable from '../../components/datatable/Datatable';
 import PageLayout from '../../components/pageLayout/PageLayout';
+import ModalCreate from '../../components/modal/ModalCreate';
+import Modal from '../../components/modal/Modal';
+import ConfirmDialog from '../../components/confirmDialog/ConfirmDialog';
 import { useAuth } from '../../contexts/auth/AuthContext';
+import { incomeFields } from '../../config/formSource';
+import { incomeConstraints } from '../../config/modalConstraints';
 
 interface Income {
   id: number;
@@ -19,6 +24,13 @@ const Income: React.FC = () => {
   const { user } = useAuth();
   const [incomes, setIncomes] = useState<Income[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [incomeToDelete, setIncomeToDelete] = useState<number | null>(null);
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [openAccept, setOpenAccept] = useState(false);
+  const [openError, setOpenError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   // Columnas base del DataTable
   const baseColumns: GridColDef[] = [
@@ -212,9 +224,16 @@ const Income: React.FC = () => {
     fetchIncomes();
   }, [user]);
 
-  const handleDelete = async (id: number) => {
+  const askDelete = (id: number) => {
+    setIncomeToDelete(id);
+    setOpenConfirm(true);
+  };
+
+  const handleDelete = async () => {
+    if (incomeToDelete === null) return;
+
     try {
-      const response = await fetch(`http://localhost:3000/api/incomes/${id}`, {
+      const response = await fetch(`http://localhost:3000/api/incomes/${incomeToDelete}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -225,9 +244,15 @@ const Income: React.FC = () => {
         throw new Error('Error al eliminar ingreso');
       }
 
-      setIncomes(prev => prev.filter(income => income.id !== id));
+      setIncomes(prev => prev.filter(income => income.id !== incomeToDelete));
+      setOpenAccept(true);
     } catch (error) {
       console.error('Error al eliminar ingreso:', error);
+      setErrorMessage(error instanceof Error ? error.message : 'Error al eliminar ingreso');
+      setOpenError(true);
+    } finally {
+      setOpenConfirm(false);
+      setIncomeToDelete(null);
     }
   };
 
@@ -250,20 +275,65 @@ const Income: React.FC = () => {
       setIncomes(prev =>
         prev.map(income => income.id === updatedRow.id ? (data.data || data) : income)
       );
+      setOpenAccept(true);
     } catch (error) {
       console.error('Error al actualizar ingreso:', error);
+      setErrorMessage(error instanceof Error ? error.message : 'Error al actualizar ingreso');
+      setOpenError(true);
     }
   };
 
-  const handleCreateSave = async (newRow: Omit<Income, 'id'>) => {
+  const handleCreateSave = (data: any) => {
+    const API_BASE = 'http://localhost:3000';
+    const payload: Record<string, any> = {};
+    if (data instanceof FormData) {
+      data.forEach((v, k) => { payload[k] = v; });
+    } else Object.assign(payload, data);
+
+    (async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+
+        const url = `${API_BASE}/api/incomes`;
+        const res = await fetch(url, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(payload),
+        });
+
+        if (!res.ok) {
+          let msg = 'Error al crear ingreso';
+          try {
+            const txt = await res.text();
+            try { const j = JSON.parse(txt); msg = j?.message || j?.error || txt || msg; }
+            catch { msg = txt || msg; }
+          } catch (e) {}
+          console.error('Error al crear ingreso:', msg);
+          return;
+        }
+
+        const result = await res.json().catch(() => null);
+        if (result?.data) {
+          setIncomes(prev => [...prev, result.data]);
+        }
+        setOpenAccept(true);
+      } catch (err) {
+        console.error('Error creando ingreso:', err);
+      }
+    })();
+  };
+
+  const handleFormSubmit = async (formData: Record<string, any>) => {
     try {
-      const response = await fetch('http://localhost:3000/api/incomes', {
+      const response = await fetch('http://localhost:3000/api/income', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify(newRow)
+        body: JSON.stringify(formData)
       });
 
       if (!response.ok) {
@@ -272,8 +342,14 @@ const Income: React.FC = () => {
 
       const data = await response.json();
       setIncomes(prev => [...prev, (data.data || data)]);
+      setShowCreateModal(false);
+      setOpenAccept(true);
     } catch (error) {
       console.error('Error al crear ingreso:', error);
+      const errorMsg = error instanceof Error ? error.message : 'Error al crear ingreso';
+      setErrorMessage(errorMsg);
+      setShowCreateModal(false);
+      setOpenError(true);
     }
   };
 
@@ -297,15 +373,56 @@ const Income: React.FC = () => {
           Cargando ingresos...
         </div>
       ) : (
-        <DataTable
-          columns={columns}
-          rows={incomes}
-          pagesize={10}
-          onDelete={handleDelete}
-          onEditSave={handleEditSave}
-          onCreateSave={handleCreateSave}
-          showEditButton={user.role === 'manager' || user.role === 'director' || user.role === 'admin'}
-        />
+        <>
+          <DataTable
+            columns={columns}
+            rows={incomes}
+            pagesize={10}
+            onDelete={askDelete}
+            onEditSave={handleEditSave}
+            onCreateSave={handleCreateSave}
+            showEditButton={user.role === 'manager' || user.role === 'director' || user.role === 'admin'}
+            constraints={incomeConstraints}
+            createEntity="income"
+            userRole={user?.role}
+            // onCreateClick={() => setShowCreateModal(true)}
+          />
+          <ModalCreate
+            isOpen={showCreateModal}
+            title="Crear Ingreso"
+            createFields={incomeFields}
+            onSave={handleFormSubmit}
+            onClose={() => setShowCreateModal(false)}
+          />
+          <Modal
+            isOpen={showSuccessModal}
+            title="Ingreso creado exitosamente"
+            onSave={() => setShowSuccessModal(false)}
+            onClose={() => setShowSuccessModal(false)}
+          />
+          <ConfirmDialog
+            message="¿Está seguro de que desea eliminar este ingreso?"
+            open={openConfirm}
+            onConfirm={handleDelete}
+            onCancel={() => setOpenConfirm(false)}
+          />
+          <ConfirmDialog
+            title="¡Éxito!"
+            message="Operación realizada correctamente"
+            open={openAccept}
+            onConfirm={() => setOpenAccept(false)}
+            onCancel={() => setOpenAccept(false)}
+            showDeleteButton={false}
+          />
+          <ConfirmDialog
+            title="Error"
+            message={errorMessage}
+            open={openError}
+            onConfirm={() => setOpenError(false)}
+            onCancel={() => setOpenError(false)}
+            showDeleteButton={false}
+          />
+        </>
       )}
     </PageLayout>
   );

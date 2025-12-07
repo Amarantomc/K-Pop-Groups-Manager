@@ -414,8 +414,9 @@ const Profile: React.FC = () => {
                   {/* Meta principal: nombre, email y rol */}
                   <div className="profile-meta">
                     <h2>{displayName}</h2>
-                    <p className="meta-line"><strong>Email:</strong> {u?.email ?? '-'}</p>
+                    <p className="meta-line"><strong>Email:</strong> {user.email ?? '-'}</p>
                     <p className="meta-line"><strong>Rol:</strong> {displayRole}</p>
+                    {/*<p className="meta-line"><strong>Agencia:</strong> {user.agencyName ?? '-'}</p>*/}
                     <div className="profile-actions">
                       {
                       <button className="btn btn-primary" onClick={() => { setShowPasswordForm(true); setShowUserForm(false); }}>

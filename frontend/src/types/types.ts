@@ -55,6 +55,8 @@ export interface Artista {
   debutYear?: number | null;
   genero?: string | null;
   fotoUrl?: string | null;
+  ApprenticeId?: number | string;
+  GroupId?: number | string;
 }
 
 export interface Agencia {

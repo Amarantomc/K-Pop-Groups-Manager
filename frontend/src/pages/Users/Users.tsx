@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import Datatable from "../../components/datatable/Datatable";
-import Header from "../../components/header/Header";
-import Sidebar from "../../components/sidebar/Sidebar";
-import { agencyColumns, userColumns } from "../../config/datatableSource";
+import { userColumns } from "../../config/datatableSource";
 import { useAuth } from "../../contexts/auth/AuthContext";
 import PageLayout from "../../components/pageLayout/PageLayout";
 import ConfirmDialog from "../../components/confirmDialog/ConfirmDialog";
-import "./listUsers.css";
+import { userConstraints } from "../../config/modalConstraints";
+import { userFields } from "../../config/formSource";
+import "./users.css";
 
 const ListUsers: React.FC = () => {
     const { user } = useAuth();
@@ -16,6 +16,8 @@ const ListUsers: React.FC = () => {
     const[openAccept,setOpenAccept] = useState(false)
     const [openConfirm,setOpenConfirm] = useState(false)
     const [userToDelete,setUserToDelete] = useState<number | null>(null)
+    const [openError, setOpenError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const askDelete = (id : number) =>{
       setUserToDelete(id)
@@ -26,13 +28,21 @@ const ListUsers: React.FC = () => {
             () => {
                 const fetchUsers = async () => {
                     try{
+                        if (!user) {
+                            console.error('Usuario no autenticado');
+                            return;
+                        }
+
                         const token = localStorage.getItem('token')
+                        
+                        // Endpoint GET /api/user - Requiere rol Admin (pero autenticación está comentada en backend)
                         const response = await fetch('http://localhost:3000/api/user', {
-  headers: {
-    'Authorization': `Bearer ${token}`,
-    'Content-Type': 'application/json'
-  }
-});
+                          headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                          }
+                        });
+                        
                         if(!response.ok){
                             throw new Error("Error al obtener los usuarios")
                         }
@@ -50,7 +60,7 @@ const ListUsers: React.FC = () => {
                     }
                 }
                 fetchUsers()
-            },[]
+            },[user]
         )
 
             const handleDelete = async () => {
@@ -70,7 +80,7 @@ const ListUsers: React.FC = () => {
       if (result.success) {
         setUserRows((prev) => prev.filter((user) => user.id !== userToDelete));
       } else {
-        alert("Error al eliminar el usuario");
+        console.error("Error al eliminar el usuario");
       }
     } catch (error) {
       console.error("Error al eliminar:", error);
@@ -119,18 +129,21 @@ const ListUsers: React.FC = () => {
         try {
           const apprenticeRes = await fetch(`${API_BASE}/api/apprentice?name=${encodeURIComponent(username)}`, { headers });
           if (!apprenticeRes.ok) {
-            alert('No se encontró el aprendiz con ese nombre');
+            setErrorMessage('No se encontró el aprendiz con ese nombre');
+            setOpenError(true);
             return;
           }
           const apprenticeData = await apprenticeRes.json();
           if (!apprenticeData.data || apprenticeData.data.length === 0) {
-            alert('No se encontró el aprendiz con ese nombre');
+            setErrorMessage('No se encontró el aprendiz con ese nombre');
+            setOpenError(true);
             return;
           }
           payload.apprenticeId = apprenticeData.data[0].id;
         } catch (error) {
           console.error('Error al buscar aprendiz:', error);
-          alert('Error al buscar el aprendiz en el sistema');
+          setErrorMessage('Error al buscar el aprendiz en el sistema');
+          setOpenError(true);
           return;
         }
       }
@@ -138,7 +151,8 @@ const ListUsers: React.FC = () => {
       if (userRole === 'artista' || userRole === 'artist') {
         // Para artista: buscar ID de aprendiz y de grupo usando el username
         if (!username) {
-          alert('Debe proporcionar el nombre de usuario');
+          setErrorMessage('Debe proporcionar el nombre de usuario');
+          setOpenError(true);
           return;
         }
 
@@ -146,12 +160,14 @@ const ListUsers: React.FC = () => {
           // Buscar el aprendiz por nombre de usuario
           const apprenticeRes = await fetch(`${API_BASE}/api/apprentice?name=${encodeURIComponent(username)}`, { headers });
           if (!apprenticeRes.ok) {
-            alert('No se encontró el aprendiz con ese nombre');
+            setErrorMessage('No se encontró el aprendiz con ese nombre');
+            setOpenError(true);
             return;
           }
           const apprenticeData = await apprenticeRes.json();
           if (!apprenticeData.data || apprenticeData.data.length === 0) {
-            alert('No se encontró el aprendiz con ese nombre');
+            setErrorMessage('No se encontró el aprendiz con ese nombre');
+            setOpenError(true);
             return;
           }
           payload.apprenticeId = apprenticeData.data[0].id;
@@ -161,24 +177,28 @@ const ListUsers: React.FC = () => {
           if (groupName && groupName.trim()) {
             const groupRes = await fetch(`${API_BASE}/api/group?name=${encodeURIComponent(groupName.trim())}`, { headers });
             if (!groupRes.ok) {
-              alert('No se encontró el grupo con ese nombre');
+              setErrorMessage('No se encontró el grupo con ese nombre');
+              setOpenError(true);
               return;
             }
             const groupData = await groupRes.json();
             if (!groupData.data || groupData.data.length === 0) {
-              alert('No se encontró el grupo con ese nombre');
+              setErrorMessage('No se encontró el grupo con ese nombre');
+              setOpenError(true);
               return;
             }
             payload.groupId = groupData.data[0].id;
           }
         } catch (error) {
           console.error('Error al buscar aprendiz/grupo:', error);
-          alert('Error al buscar los datos en el sistema');
+          setErrorMessage('Error al buscar los datos en el sistema');
+          setOpenError(true);
           return;
         }
       }
 
-      const res = await fetch(`${API_BASE}/api/user/`, {
+      // POST /api/user - Crear usuario (sin autenticación requerida según documentación)
+      const res = await fetch(`${API_BASE}/api/user`, {
         method: 'POST',
         headers,
         body: JSON.stringify(payload),
@@ -231,13 +251,17 @@ const ListUsers: React.FC = () => {
           pagesize={10}
           onDelete={askDelete}
           onCreateSave={handleCreateSave}
+          constraints={userConstraints}
           createEntity="user"
           showEditButton={false}
           showCreateButton={false}
+          userRole={user?.role}
         />
         <ConfirmDialog message="¿Está seguro que desea eliminar este usuario?" open={openConfirm} onCancel={() => setOpenConfirm(false)} onConfirm={handleDelete}>
           </ConfirmDialog>
-        <ConfirmDialog message="Usuario creado correctamente" open={openAccept} onCancel={() => setOpenAccept(false)} onConfirm={() => setOpenAccept(false) } confirmText="Aceptar" showDeleteButton={false}>
+        <ConfirmDialog title="¡Éxito!" message="El usuario ha sido creado correctamente" open={openAccept} onCancel={() => setOpenAccept(false)} onConfirm={() => setOpenAccept(false) } confirmText="Aceptar" showDeleteButton={false}>
+          </ConfirmDialog>
+        <ConfirmDialog title="Error" message={errorMessage} open={openError} onCancel={() => setOpenError(false)} onConfirm={() => setOpenError(false)} confirmText="Aceptar" showDeleteButton={false}>
           </ConfirmDialog>
         </>
       )}

@@ -5,7 +5,9 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Calendar from '../../components/calendar/Calendar';
 import DataTable from '../../components/datatable/Datatable';
 import PageLayout from '../../components/pageLayout/PageLayout';
+import ConfirmDialog from '../../components/confirmDialog/ConfirmDialog';
 import { useAuth } from '../../contexts/auth/AuthContext';
+import { activityConstraints } from '../../config/modalConstraints';
 import './Activities.css';
 
 interface Activity {
@@ -26,6 +28,16 @@ const Activities: React.FC = () => {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
+  const [activityToDelete, setActivityToDelete] = useState<number | null>(null);
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [openAccept, setOpenAccept] = useState(false);
+  const [openError, setOpenError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const askDelete = (id: number) => {
+    setActivityToDelete(id);
+    setOpenConfirm(true);
+  };
 
   // Columnas del DataTable para Manager/Director
   const columns: GridColDef[] = [
@@ -239,9 +251,10 @@ const Activities: React.FC = () => {
     fetchActivities();
   }, [user]);
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async () => {
+    if (activityToDelete === null) return;
     try {
-      const response = await fetch(`http://localhost:3000/api/activities/${id}`, {
+      const response = await fetch(`http://localhost:3000/api/activities/${activityToDelete}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -252,9 +265,15 @@ const Activities: React.FC = () => {
         throw new Error('Error al eliminar actividad');
       }
 
-      setActivities(prev => prev.filter(activity => activity.id !== id));
+      setActivities(prev => prev.filter(activity => activity.id !== activityToDelete));
+      setOpenAccept(true);
     } catch (error) {
       console.error('Error al eliminar actividad:', error);
+      setErrorMessage(error instanceof Error ? error.message : 'Error al eliminar actividad');
+      setOpenError(true);
+    } finally {
+      setOpenConfirm(false);
+      setActivityToDelete(null);
     }
   };
 
@@ -277,14 +296,17 @@ const Activities: React.FC = () => {
       setActivities(prev =>
         prev.map(activity => activity.id === updatedRow.id ? (data.data || data) : activity)
       );
+      setOpenAccept(true);
     } catch (error) {
       console.error('Error al actualizar actividad:', error);
+      setErrorMessage(error instanceof Error ? error.message : 'Error al actualizar actividad');
+      setOpenError(true);
     }
   };
 
   const handleCreateSave = async (newRow: Omit<Activity, 'id'>) => {
     try {
-      const response = await fetch('http://localhost:3000/api/activities', {
+      const response = await fetch('http://localhost:3000/api/activity', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -299,8 +321,11 @@ const Activities: React.FC = () => {
 
       const data = await response.json();
       setActivities(prev => [...prev, (data.data || data)]);
+      setOpenAccept(true);
     } catch (error) {
       console.error('Error al crear actividad:', error);
+      setErrorMessage(error instanceof Error ? error.message : 'Error al crear actividad');
+      setOpenError(true);
     }
   };
 
@@ -634,14 +659,39 @@ const Activities: React.FC = () => {
                   columns={columns}
                   rows={activities}
                   pagesize={10}
-                  onDelete={handleDelete}
+                  onDelete={askDelete}
                   onEditSave={handleEditSave}
                   onCreateSave={handleCreateSave}
                   showEditButton={true}
+                  constraints={activityConstraints}
+                  createEntity="activity"
+                  userRole={user?.role}
                 />
               </div>
             </div>
           )}
+          <ConfirmDialog
+            message="¿Está seguro de que desea eliminar esta actividad?"
+            open={openConfirm}
+            onConfirm={handleDelete}
+            onCancel={() => setOpenConfirm(false)}
+          />
+          <ConfirmDialog
+            title="¡Éxito!"
+            message="Operación realizada correctamente"
+            open={openAccept}
+            onConfirm={() => setOpenAccept(false)}
+            onCancel={() => setOpenAccept(false)}
+            showDeleteButton={false}
+          />
+          <ConfirmDialog
+            title="Error"
+            message={errorMessage}
+            open={openError}
+            onConfirm={() => setOpenError(false)}
+            onCancel={() => setOpenError(false)}
+            showDeleteButton={false}
+          />
         </>
       )}
     </PageLayout>
