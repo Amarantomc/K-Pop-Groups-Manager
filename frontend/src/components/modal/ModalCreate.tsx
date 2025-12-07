@@ -14,9 +14,10 @@ interface ModalCreateProps {
   createEntity?: string
   createFields?: Field[]
   onSave?: (data: any) => void
+  onFieldChange?: (fieldName: string, value: any) => void
 }
 
-const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, createEntity, createFields, onSave }) => {
+const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, createEntity, createFields, onSave, onFieldChange }) => {
   const [formData, setFormData] = useState<any>({})
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
 
@@ -51,6 +52,11 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
     // Limpiar error cuando el usuario empieza a escribir
     if (errors[key]) {
       setErrors({ ...errors, [key]: "" })
+    }
+
+    // Notificar al componente padre sobre el cambio
+    if (onFieldChange) {
+      onFieldChange(key, value)
     }
   }
 

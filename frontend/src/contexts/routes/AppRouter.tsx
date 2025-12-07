@@ -5,7 +5,6 @@ import { useAuth } from '../auth/AuthContext';
 import Activities from '../../pages/Activities/Activities';
 import Albums from '../../pages/Albums/Albums';
 import Artist from '../../pages/Artist/Artist';
-import ArtistActive from '../../pages/Artist/ArtistActive';
 import Contracts from '../../pages/Contracts/Contracts';
 import Dashboard from '../../pages/Dashboard/Dashboard';
 import Evaluations from '../../pages/Evaluations/Evaluations';

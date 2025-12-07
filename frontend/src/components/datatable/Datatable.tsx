@@ -12,6 +12,7 @@ import type { FieldConstraint } from '../../config/modalConstraints';
 import {esES} from "@mui/x-data-grid/locales"
 import Modal from '../modal/Modal';
 import ModalCreate from '../modal/ModalCreate';
+import type { Field } from '../../config/formSource';
 
 interface DataTableProps {
   columns : GridColDef[];
@@ -24,12 +25,14 @@ interface DataTableProps {
   showEditButton? : boolean,
   constraints? : Record<string, FieldConstraint>;
   createEntity? : string;
+  createFields? : Field[];
+  onFieldChange? : (fieldName: string, value: any) => void;
   showCreateButton? : boolean;
   userRole?: string;
 }
 
 
-const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , checkboxSelection = false , onDelete, onEditSave, onCreateSave , showEditButton = true , constraints, createEntity,showCreateButton=true, userRole}) => {
+const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , checkboxSelection = false , onDelete, onEditSave, onCreateSave , showEditButton = true , constraints, createEntity, createFields, onFieldChange, showCreateButton=true, userRole}) => {
   const paginationModel = { page: 0, pageSize: pagesize };
 
    const [editModalOpen, setEditModalOpen] = useState(false);
@@ -125,6 +128,8 @@ const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , c
         onClose={handleCreateClose}
         title="Crear nuevo registro"
         createEntity={createEntity}
+        createFields={createFields}
+        onFieldChange={onFieldChange}
         onSave={handleCreateSave}
       />
 
