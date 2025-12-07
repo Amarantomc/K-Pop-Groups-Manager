@@ -26,6 +26,7 @@ export class ActivityRoutes {
     
     this.router.get('/:apprenticeId&:groupId',(req,res)=> this.activityController.findByArtist(req,res))
     this.router.get('/:id', (req, res) => this.activityController.findById(req, res));
+    this.router.get('/byGroup/:groupId', (req, res) => this.activityController.findByGroup(req, res));
     
     this.router.put('/:id', RoleMiddleware.onlyStaff(), (req, res) => this.activityController.updateActivity(req, res));
     

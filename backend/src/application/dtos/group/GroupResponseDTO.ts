@@ -42,11 +42,9 @@ export class GroupResponseDTO {
 	}
 
 	static toEntity(group: any): Group {
-		
+		console.log(group)
 		const agency=AgencyResponseDTO.toEntity(group.Agencia || group.Agencias?.[0] || null);
-		const concept=ConceptResponseDto.toEntity(group.concepto);
-		const visualConcept=VisualConceptResponseDto.toEntity(group.conceptoVisual);
-		const members =ArtistResponseDto.toEntities(group.HistorialArtistas)
+		 
 		return new Group({
 			id: group.id,
 			name: group.nombreCompleto || group.name,
@@ -54,10 +52,7 @@ export class GroupResponseDTO {
 			memberCount: group.Nomiembros || group.memberCount,
 			status: group.estadoGrupo || group.status,
 			agency: agency,
-			concept:concept,
-			visualConcept:visualConcept,
-			members:members,
-			//album activity
+			 
 
 				
 			
