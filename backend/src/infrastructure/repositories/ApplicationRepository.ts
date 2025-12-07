@@ -5,6 +5,7 @@ import type { IApplicationRepository } from "../../application/interfaces/reposi
 import { Application } from "../../domain";
 import { ApplicationResponseDto } from "../../application/dtos/application(solicitud)/ApplicationResponseDto";
 import type { CreateApplicationDto } from "../../application/dtos/application(solicitud)/CreateApplicationDto";
+import { error } from "console";
 
 
 @injectable()
@@ -19,24 +20,30 @@ export class ApplicationRepository implements IApplicationRepository
     return this.unitOfWork.getTransaction();
   }
 
-    findByAgency(agencyId: number): Promise<Application[] | null> {
-        throw new Error("Method not implemented.");
-    }
-    findByApprentice(apprenticeId: number): Promise<Application[] | null> {
-        throw new Error("Method not implemented.");
-    }
-    findByArtist(artistId: number): Promise<Application[] | null> {
-        throw new Error("Method not implemented.");
-    }
-
-    
    async create(data: CreateApplicationDto): Promise<Application> {
-         
+
+    //console.log(data);
+    const idAgency = (Number)(data.idAgency);
+    const idConcept = (Number)(data.idConcept);
+    const concept=await this.db.Concepto.findUnique({
+      where:{ id: idConcept}
+   });
+   console.log(concept);
+    const agency=await this.db.Agencia.findUnique({
+      where:{ id: idAgency}
+   });
+
+
+  if(!agency || !concept){
+    throw new Error("Agency or Concept not found");
+  }
+
          const application= await this.db.Solicitud.create({
             data:{
-                nombreCompleto:data.name,
-                descripcion:data.description,
-                fechaSolicitud:data.date
+                nombreGrupo:data.groupName,
+                idAgencia:data.idAgency,
+                roles:data.roles,
+                idConcepto: data.idConcept
             }
         })
 
@@ -44,7 +51,7 @@ export class ApplicationRepository implements IApplicationRepository
     }
     async findById(id: any): Promise<Application | null> {
          id=(Number)(id)
-        const application=await this.db.solicitud.findUnique({
+        const application=await this.db.Solicitud.findUnique({
            where:{id}
         })
         return application ? ApplicationResponseDto.toEntity(application) : null
@@ -54,9 +61,8 @@ export class ApplicationRepository implements IApplicationRepository
         const application = await this.db.Solicitud.update({
           where: { id: Number(id) },
           data: {
-            nombre:data.name,
-            descripcion:data.description,
-            fechaSolicitud:data.date,
+            nombreGrupo:data.groupName,
+            roles:data.roles,
           },
         });
       
@@ -71,7 +77,7 @@ export class ApplicationRepository implements IApplicationRepository
   }
 
     async findAll(): Promise<Application[]> {
-      const applications = await this.db.Aprendiz.findMany();
+      const applications = await this.db.Solicitud.findMany();
 
       return ApplicationResponseDto.toEntities(applications);
   }

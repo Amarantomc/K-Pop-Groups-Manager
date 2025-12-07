@@ -18,17 +18,23 @@ export class CreateApplicationUseCase{
     async execute(command:CreateApplicationDto):Promise<ApplicationResponseDto>{
         try
         {
+         
             await this.unitOfWork.beginTransaction();
             const application = await this.applicationRepository.create(command);
+            //console.log("zzz");
             await this.unitOfWork.commit();
             
             return new ApplicationResponseDto(
                 application.id,
-                application.description,
-                typeof application.date === "string" ? new Date(application.date) : application.date,
+                application.groupName,
+                application.date,
+                application.idConcept,
+                application.roles,
+                application.idAgency
             );
         }
         catch(error){
+            //console.log(error);
             await this.unitOfWork.rollback();
             throw error;
         }

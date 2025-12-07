@@ -16,6 +16,6 @@ export class GetApplicationUseCase{
                 throw new Error('Application not found');
             }
 
-            return new ApplicationResponseDto(application.id, application.description, new Date(application.date));
+            return new ApplicationResponseDto(application.id, application.groupName,application.date,application.idConcept,application.roles,application.idAgency);
     }
 }

@@ -1,20 +1,25 @@
-import type { Apprentice } from "../../../domain";
-import type { Agency } from "../../../domain/entities/Agency";
-
+// CreateApplicationDto corregido
 export class CreateApplicationDto {
-	constructor(
-		public readonly name: string,
-		public readonly description:string,
-		public readonly date: Date,
-		//public readonly agencys:Agency[],
-		//public readonly apprentices: Apprentice[]
-	) {}
+    constructor(
+        public readonly groupName: string,
+        public readonly idAgency: number,
+        public readonly roles: string[],
+        public readonly idConcept: number,
+    ) {}
 
-	static create(body: any, apprentices: number[]|null): CreateApplicationDto {
-		if (!body.name || !body.name || !body.date || apprentices) {
-			throw new Error("Missing required fields");
-		}
-		return new CreateApplicationDto(body.name, body.description, body.date)
-			//,body.agencys,body.apprentices);
-	}
+    static create(body: any): CreateApplicationDto {
+        if (!body.groupName || !body.idAgency || !body.idConcept || !body.roles) {
+            throw new Error("Missing required fields");
+        }
+        // Validar que roles sea un array
+        if (!Array.isArray(body.roles)) {
+            throw new Error("Roles must be an array");
+        }
+        return new CreateApplicationDto(
+            body.groupName, 
+            body.idAgency, 
+            body.roles,
+            body.idConcept
+        );
+    }
 }
