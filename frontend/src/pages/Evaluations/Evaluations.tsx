@@ -2,7 +2,12 @@ import React, { useEffect, useState } from 'react';
 import type { GridColDef } from '@mui/x-data-grid';
 import DataTable from '../../components/datatable/Datatable';
 import PageLayout from '../../components/pageLayout/PageLayout';
+import ModalCreate from '../../components/modal/ModalCreate';
+import Modal from '../../components/modal/Modal';
+import ConfirmDialog from '../../components/confirmDialog/ConfirmDialog';
 import { useAuth } from '../../contexts/auth/AuthContext';
+import { evaluationFields } from '../../config/formSource';
+import { evaluationConstraints } from '../../config/modalConstraints';
 
 interface Evaluation {
   id: number;
@@ -18,6 +23,13 @@ const Evaluations: React.FC = () => {
   const { user } = useAuth();
   const [evaluations, setEvaluations] = useState<Evaluation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [evaluationToDelete, setEvaluationToDelete] = useState<number | null>(null);
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [openAccept, setOpenAccept] = useState(false);
+  const [openError, setOpenError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   // Columnas del DataTable
   const columns: GridColDef[] = [
@@ -158,9 +170,16 @@ const Evaluations: React.FC = () => {
     fetchEvaluations();
   }, [user]);
 
-  const handleDelete = async (id: number) => {
+  const askDelete = (id: number) => {
+    setEvaluationToDelete(id);
+    setOpenConfirm(true);
+  };
+
+  const handleDelete = async () => {
+    if (evaluationToDelete === null) return;
+
     try {
-      const response = await fetch(`http://localhost:3000/api/evaluations/${id}`, {
+      const response = await fetch(`http://localhost:3000/api/evaluations/${evaluationToDelete}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -171,9 +190,15 @@ const Evaluations: React.FC = () => {
         throw new Error('Error al eliminar evaluación');
       }
 
-      setEvaluations(prev => prev.filter(evaluation => evaluation.id !== id));
+      setEvaluations(prev => prev.filter(evaluation => evaluation.id !== evaluationToDelete));
+      setOpenAccept(true);
     } catch (error) {
       console.error('Error al eliminar evaluación:', error);
+      setErrorMessage(error instanceof Error ? error.message : 'Error al eliminar evaluación');
+      setOpenError(true);
+    } finally {
+      setOpenConfirm(false);
+      setEvaluationToDelete(null);
     }
   };
 
@@ -196,8 +221,11 @@ const Evaluations: React.FC = () => {
       setEvaluations(prev =>
         prev.map(evaluation => evaluation.id === updatedRow.id ? (data.data || data) : evaluation)
       );
+      setOpenAccept(true);
     } catch (error) {
       console.error('Error al actualizar evaluación:', error);
+      setErrorMessage(error instanceof Error ? error.message : 'Error al actualizar evaluación');
+      setOpenError(true);
     }
   };
 
@@ -223,6 +251,34 @@ const Evaluations: React.FC = () => {
     }
   };
 
+  const handleFormSubmit = async (formData: Record<string, any>) => {
+    try {
+      const response = await fetch('http://localhost:3000/api/evaluations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al crear evaluación');
+      }
+
+      const data = await response.json();
+      setEvaluations(prev => [...prev, (data.data || data)]);
+      setShowCreateModal(false);
+      setOpenAccept(true);
+    } catch (error) {
+      console.error('Error al crear evaluación:', error);
+      const errorMsg = error instanceof Error ? error.message : 'Error al crear evaluación';
+      setErrorMessage(errorMsg);
+      setShowCreateModal(false);
+      setOpenError(true);
+    }
+  };
+
   if (!user) {
     return <div>Cargando...</div>;
   }
@@ -237,14 +293,68 @@ const Evaluations: React.FC = () => {
           Cargando evaluaciones...
         </div>
       ) : (
-        <DataTable
-          columns={columns}
-          rows={evaluations}
-          pagesize={10}
-          onDelete={handleDelete}
-          onEditSave={handleEditSave}
-          showEditButton={false}
-        />
+        <>
+          <button
+            onClick={() => setShowCreateModal(true)}
+            style={{
+              marginBottom: '20px',
+              padding: '10px 20px',
+              backgroundColor: '#4CAF50',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer'
+            }}
+          >
+            + Añadir Evaluación
+          </button>
+          <DataTable
+            columns={columns}
+            rows={evaluations}
+            pagesize={10}
+            onDelete={askDelete}
+            onEditSave={handleEditSave}
+            showEditButton={false}
+            constraints={evaluationConstraints}
+            createEntity="evaluation"
+            userRole={user?.role}
+          />
+          <ModalCreate
+            isOpen={showCreateModal}
+            title="Crear Evaluación"
+            createFields={evaluationFields}
+            onSave={handleFormSubmit}
+            onClose={() => setShowCreateModal(false)}
+          />
+          <Modal
+            isOpen={showSuccessModal}
+            title="Evaluación creada exitosamente"
+            onSave={() => setShowSuccessModal(false)}
+            onClose={() => setShowSuccessModal(false)}
+          />
+          <ConfirmDialog
+            message="¿Está seguro de que desea eliminar esta evaluación?"
+            open={openConfirm}
+            onConfirm={handleDelete}
+            onCancel={() => setOpenConfirm(false)}
+          />
+          <ConfirmDialog
+            title="¡Éxito!"
+            message="Operación realizada correctamente"
+            open={openAccept}
+            onConfirm={() => setOpenAccept(false)}
+            onCancel={() => setOpenAccept(false)}
+            showDeleteButton={false}
+          />
+          <ConfirmDialog
+            title="Error"
+            message={errorMessage}
+            open={openError}
+            onConfirm={() => setOpenError(false)}
+            onCancel={() => setOpenError(false)}
+            showDeleteButton={false}
+          />
+        </>
       )}
     </PageLayout>
   );

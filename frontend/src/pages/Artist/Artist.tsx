@@ -3,8 +3,11 @@ import React, { useEffect, useState } from 'react';
 import type { GridColDef } from '@mui/x-data-grid';
 import DataTable from '../../components/datatable/Datatable';
 import PageLayout from '../../components/pageLayout/PageLayout';
+import ConfirmDialog from '../../components/confirmDialog/ConfirmDialog';
 import { useAuth } from '../../contexts/auth/AuthContext';
 import { artistColumns } from '../../config/datatableSource';
+import { artistConstraints } from '../../config/modalConstraints';
+import type { Artista } from '../../types/types';
 
 
 
@@ -14,9 +17,14 @@ const Artist: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [apprenticeToDelete, setApprenticeToDelete] = useState<number | null>(null);
   const [groupToDelete, setGroupToDelete] = useState<number | null>(null);
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [openAccept, setOpenAccept] = useState(false);
+  const [openError, setOpenError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const askDelete = (id : number) => {
-    setApprenticeToDelete(id)
+    setApprenticeToDelete(id);
+    setOpenConfirm(true);
   }
   // Columnas del DataTable
   const baseColumns: GridColDef[] = [
@@ -92,7 +100,6 @@ const Artist: React.FC = () => {
 
         // ============================================
         // SECCIÓN: BACKEND ENDPOINT
-        // Descomenta esta sección para usar el backend real
         // ============================================
         const response = await fetch(`http://localhost:3000${endpoint}`, {
           headers: {
@@ -215,9 +222,11 @@ const Artist: React.FC = () => {
     fetchArtists();
   }, [user]);
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async () => {
+    if (apprenticeToDelete === null) return;
     try {
-      const response = await fetch(`http://localhost:3000/api/artists/${apprenticeToDelete}&${groupToDelete}`, {
+      // DELETE /api/artist/:apprenticeId&:groupId - Requiere rol Staff
+      const response = await fetch(`http://localhost:3000/api/artist/${apprenticeToDelete}&${groupToDelete}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -228,15 +237,27 @@ const Artist: React.FC = () => {
         throw new Error('Error al eliminar artista');
       }
 
-      setArtistsRows(prev => prev.filter(artist => artist.id !== id));
+      setArtistsRows(prev => prev.filter(artist => artist.id !== apprenticeToDelete));
+      setOpenAccept(true);
     } catch (error) {
       console.error('Error al eliminar artista:', error);
+      setErrorMessage(error instanceof Error ? error.message : 'Error al eliminar artista');
+      setOpenError(true);
+    } finally {
+      setOpenConfirm(false);
+      setApprenticeToDelete(null);
+      setGroupToDelete(null);
     }
   };
 
-  const handleEditSave = async (updatedRow: Artist) => {
+  const handleEditSave = async (updatedRow: Artista) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/artists/${updatedRow.id}`, {
+      // PUT /api/artist/:apprenticeId&:groupId - Requiere rol Staff
+      // Necesitamos los IDs compuestos del artista
+      const apprenticeId = updatedRow.ApprenticeId || updatedRow.id;
+      const groupId = updatedRow.GroupId || 0;
+      
+      const response = await fetch(`http://localhost:3000/api/artist/${apprenticeId}&${groupId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -253,14 +274,18 @@ const Artist: React.FC = () => {
       setArtistsRows(prev =>
         prev.map(artist => artist.id === updatedRow.id ? (data.data || data) : artist)
       );
+      setOpenAccept(true);
     } catch (error) {
       console.error('Error al actualizar artista:', error);
+      setErrorMessage(error instanceof Error ? error.message : 'Error al actualizar artista');
+      setOpenError(true);
     }
   };
 
-  const handleCreateSave = async (newRow: Omit<Artist, 'id'>) => {
+  const handleCreateSave = async (newRow: Omit<Artista, 'id'>) => {
     try {
-      const response = await fetch('http://localhost:3000/api/artists', {
+      // POST /api/artist - Requiere rol Staff
+      const response = await fetch('http://localhost:3000/api/artist', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -304,15 +329,43 @@ const Artist: React.FC = () => {
           Cargando artistas...
         </div>
       ) : (
-        <DataTable
-          columns={artistColumns}
-          rows={artistsRows}
-          pagesize={10}
-          onDelete={handleDelete}
-          onEditSave={handleEditSave}
-          onCreateSave={handleCreateSave}
-          showEditButton={true}
-        />
+        <>
+          <DataTable
+            columns={artistColumns}
+            rows={artistsRows}
+            pagesize={10}
+            onDelete={askDelete}
+            onEditSave={handleEditSave}
+            onCreateSave={handleCreateSave}
+            showEditButton={true}
+            showCreateButton={false}
+            userRole={user?.role}
+            //constraints={artistConstraints}
+            //createEntity="artist"
+          />
+          <ConfirmDialog
+            message="¿Está seguro de que desea eliminar este artista?"
+            open={openConfirm}
+            onConfirm={handleDelete}
+            onCancel={() => setOpenConfirm(false)}
+          />
+          <ConfirmDialog
+            title="¡Éxito!"
+            message="Operación realizada correctamente"
+            open={openAccept}
+            onConfirm={() => setOpenAccept(false)}
+            onCancel={() => setOpenAccept(false)}
+            showDeleteButton={false}
+          />
+          <ConfirmDialog
+            title="Error"
+            message={errorMessage}
+            open={openError}
+            onConfirm={() => setOpenError(false)}
+            onCancel={() => setOpenError(false)}
+            showDeleteButton={false}
+          />
+        </>
       )}
     </PageLayout>
   );

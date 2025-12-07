@@ -2,7 +2,12 @@ import React, { useEffect, useState } from 'react';
 import type { GridColDef } from '@mui/x-data-grid';
 import DataTable from '../../components/datatable/Datatable';
 import PageLayout from '../../components/pageLayout/PageLayout';
+import ModalCreate from '../../components/modal/ModalCreate';
+import Modal from '../../components/modal/Modal';
 import { useAuth } from '../../contexts/auth/AuthContext';
+import { groupFields } from '../../config/formSource';
+import { groupConstraints } from '../../config/modalConstraints';
+import ConfirmDialog from '../../components/confirmDialog/ConfirmDialog';
 
 interface Group {
   id: number;
@@ -19,6 +24,18 @@ const Groups: React.FC = () => {
   const { user } = useAuth();
   const [groups, setGroups] = useState<Group[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [groupToDelete, setGroupToDelete] = useState<number | null>(null);
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [openAccept, setOpenAccept] = useState(false);
+  const [openError, setOpenError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const askDelete = (id: number) => {
+    setGroupToDelete(id);
+    setOpenConfirm(true);
+  };
 
   // Columnas base del DataTable
   const baseColumns: GridColDef[] = [
@@ -106,11 +123,8 @@ const Groups: React.FC = () => {
         // SECCIÓN: BACKEND ENDPOINT
         // Descomenta esta sección para usar el backend real
         // ============================================
-        const response = await fetch(`http://localhost:3000${endpoint}`, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        });
+        // GET /api/group - No requiere autenticación según documentación
+        const response = await fetch(`http://localhost:3000${endpoint}`);
 
         if (!response.ok) {
           throw new Error('Error al obtener grupos');
@@ -203,32 +217,36 @@ const Groups: React.FC = () => {
     fetchGroups();
   }, [user]);
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async () => {
+    if (groupToDelete === null) return;
     try {
-      const response = await fetch(`http://localhost:3000/api/groups/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+      const response = await fetch(`http://localhost:3000/api/group/delete/${groupToDelete}`, {
+        method: 'DELETE'
       });
 
       if (!response.ok) {
         throw new Error('Error al eliminar grupo');
       }
 
-      setGroups(prev => prev.filter(group => group.id !== id));
+      setGroups(prev => prev.filter(group => group.id !== groupToDelete));
+      setOpenAccept(true);
     } catch (error) {
       console.error('Error al eliminar grupo:', error);
+      setErrorMessage(error instanceof Error ? error.message : 'Error al eliminar grupo');
+      setOpenError(true);
+    } finally {
+      setOpenConfirm(false);
+      setGroupToDelete(null);
     }
   };
 
   const handleEditSave = async (updatedRow: Group) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/groups/${updatedRow.id}`, {
+      // PUT /api/group/update/:id - Sin autenticación
+      const response = await fetch(`http://localhost:3000/api/group/update/${updatedRow.id}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(updatedRow)
       });
@@ -241,20 +259,67 @@ const Groups: React.FC = () => {
       setGroups(prev =>
         prev.map(group => group.id === updatedRow.id ? (data.data || data) : group)
       );
+      setOpenAccept(true);
     } catch (error) {
       console.error('Error al actualizar grupo:', error);
+      setErrorMessage(error instanceof Error ? error.message : 'Error al actualizar grupo');
+      setOpenError(true);
     }
   };
 
-  const handleCreateSave = async (newRow: Omit<Group, 'id'>) => {
+  const handleCreateSave = (data: any) => {
+    const API_BASE = 'http://localhost:3000';
+    const payload: Record<string, any> = {};
+    if (data instanceof FormData) {
+      data.forEach((v, k) => { payload[k] = v; });
+    } else Object.assign(payload, data);
+
+    (async () => {
+      try {
+        // POST /api/group - Sin autenticación
+        const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+
+        const url = `${API_BASE}/api/group`;
+        const res = await fetch(url, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(payload),
+        });
+
+        if (!res.ok) {
+          let msg = 'Error al crear grupo';
+          try {
+            const txt = await res.text();
+            try { const j = JSON.parse(txt); msg = j?.message || j?.error || txt || msg; }
+            catch { msg = txt || msg; }
+          } catch (e) {}
+          setErrorMessage(msg);
+          setOpenError(true);
+          return;
+        }
+
+        const result = await res.json().catch(() => null);
+        if (result?.data) {
+          setGroups(prev => [...prev, result.data]);
+        }
+        setOpenAccept(true);
+      } catch (err) {
+        const errorMsg = err instanceof Error ? err.message : 'Error de red al crear grupo';
+        setErrorMessage(errorMsg);
+        setOpenError(true);
+      }
+    })();
+  };
+
+  const handleFormSubmit = async (formData: Record<string, any>) => {
     try {
-      const response = await fetch('http://localhost:3000/api/groups', {
+      const response = await fetch('http://localhost:3000/api/group', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify(newRow)
+        body: JSON.stringify(formData)
       });
 
       if (!response.ok) {
@@ -263,8 +328,14 @@ const Groups: React.FC = () => {
 
       const data = await response.json();
       setGroups(prev => [...prev, (data.data || data)]);
+      setShowCreateModal(false);
+      setOpenAccept(true);
     } catch (error) {
       console.error('Error al crear grupo:', error);
+      const errorMsg = error instanceof Error ? error.message : 'Error al crear grupo';
+      setErrorMessage(errorMsg);
+      setShowCreateModal(false);
+      setOpenError(true);
     }
   };
 
@@ -297,15 +368,58 @@ const Groups: React.FC = () => {
           Cargando grupos...
         </div>
       ) : (
-        <DataTable
-          columns={columns}
-          rows={groups}
-          pagesize={10}
-          onDelete={handleDelete}
-          onEditSave={handleEditSave}
-          onCreateSave={handleCreateSave}
-          showEditButton={true}
-        />
+        <>
+          <DataTable
+            columns={columns}
+            rows={groups}
+            pagesize={10}
+            onDelete={askDelete}
+            onEditSave={handleEditSave}
+            onCreateSave={handleCreateSave}
+            showEditButton={true}
+            constraints={groupConstraints}
+            createEntity="group"
+            userRole={user?.role}
+            // onCreateClick={() => setShowCreateModal(true)}
+          />
+          <ConfirmDialog 
+            message="¿Está seguro que desea eliminar este grupo?" 
+            open={openConfirm} 
+            onCancel={() => setOpenConfirm(false)} 
+            onConfirm={handleDelete}
+          />
+          <ConfirmDialog 
+            title="¡Éxito!"
+            message="El grupo ha sido creado correctamente" 
+            open={openAccept} 
+            onCancel={() => setOpenAccept(false)} 
+            onConfirm={() => setOpenAccept(false)} 
+            confirmText="Aceptar" 
+            showDeleteButton={false}
+          />
+          <ConfirmDialog 
+            title="Error"
+            message={errorMessage} 
+            open={openError} 
+            onCancel={() => setOpenError(false)} 
+            onConfirm={() => setOpenError(false)} 
+            confirmText="Aceptar" 
+            showDeleteButton={false}
+          />
+          <ModalCreate
+            isOpen={showCreateModal}
+            title="Crear Grupo"
+            createFields={groupFields}
+            onSave={handleFormSubmit}
+            onClose={() => setShowCreateModal(false)}
+          />
+          <Modal
+            isOpen={showSuccessModal}
+            title="Grupo creado exitosamente"
+            onSave={() => setShowSuccessModal(false)}
+            onClose={() => setShowSuccessModal(false)}
+          />
+        </>
       )}
     </PageLayout>
   );

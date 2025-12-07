@@ -24,11 +24,12 @@ interface DataTableProps {
   showEditButton? : boolean,
   constraints? : Record<string, FieldConstraint>;
   createEntity? : string;
-  showCreateButton? : boolean
+  showCreateButton? : boolean;
+  userRole?: string;
 }
 
 
-const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , checkboxSelection = false , onDelete, onEditSave, onCreateSave , showEditButton = true , constraints, createEntity,showCreateButton=true}) => {
+const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , checkboxSelection = false , onDelete, onEditSave, onCreateSave , showEditButton = true , constraints, createEntity,showCreateButton=true, userRole}) => {
   const paginationModel = { page: 0, pageSize: pagesize };
 
    const [editModalOpen, setEditModalOpen] = useState(false);
@@ -108,7 +109,7 @@ const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , c
         <div className="datatable">
         <DataGrid
             rows={rows || []}
-            columns={columns.concat(actionColumn)}
+            columns={userRole === 'admin' ? columns.concat(actionColumn) : columns}
             initialState={{ pagination: { paginationModel } }}
             pageSizeOptions={[5, 10]}
             checkboxSelection = {checkboxSelection}

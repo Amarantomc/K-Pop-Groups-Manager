@@ -6,10 +6,15 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import BusinessIcon from '@mui/icons-material/Business';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import LogoutIcon from '@mui/icons-material/Logout';
+import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import PaletteIcon from '@mui/icons-material/Palette';
 import PeopleIcon from '@mui/icons-material/People';
 import SchoolIcon from '@mui/icons-material/School';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import WorkIcon from '@mui/icons-material/Work';
 
 export interface MenuItem {
@@ -40,6 +45,12 @@ export const MenuByRole: Record<string, MenuSection[]> = {
             ]
         },
         {
+            title: "CONSULTAS",
+            items: [
+                { label: "Consultas Especializadas", icon: <AssessmentIcon />, path: "/admin/queries" }
+            ]
+        },
+        {
             title: "AGENCIA",
             items: [
                 { label: "Mostrar Agencias", icon: <BusinessIcon />, path: "/admin/agency" }
@@ -54,50 +65,80 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "ARTISTA",
             items: [
-            { label: "Gestión de Artistas", icon: <PeopleIcon />, path: "/admin/artists" }
+                { label: "Gestión de Artistas", icon: <PeopleIcon />, path: "/admin/artists" }
             ]
         },
         {
             title: "GRUPO ",
             items: [
-            { label: "Mostrar Grupos", icon: <PeopleIcon />, path: "/admin/groups" }
+                { label: "Mostrar Grupos", icon: <PeopleIcon />, path: "/admin/groups" }
+            ]
+        },
+        {
+            title: "CONCEPTO",
+            items: [
+                { label: "Mostrar Conceptos", icon: <LightbulbIcon />, path: "/admin/concept" }
+            ]
+        },
+        {
+            title: "CONCEPTO VISUAL",
+            items: [
+                { label: "Mostrar Conceptos Visuales", icon: <PaletteIcon />, path: "/admin/concept-visual" }
+            ]
+        },
+        {
+            title: "LISTAS DE POPULARIDAD",
+            items: [
+                { label: "Mostrar Listas de Popularidad", icon: <TrendingUpIcon />, path: "/admin/popularity-lists" }
+            ]
+        },
+        {
+            title: "PREMIO",
+            items: [
+                { label: "Mostrar Premios", icon: <EmojiEventsIcon />, path: "/admin/award" }
+            ]
+        },
+        {
+            title: "CANCIÓN",
+            items: [
+                { label: "Mostrar Canciones", icon: <MusicNoteIcon />, path: "/admin/songs" }
             ]
         },
         {
             title: "ALBUM",
             items: [
-            { label: "Mostrar Álbumes", icon: <AlbumIcon />, path: "/admin/albums" }
+                { label: "Mostrar Álbumes", icon: <AlbumIcon />, path: "/admin/albums" }
             ]
         },
         {
             title: "ACTIVIDAD",
             items: [
-            { label: "Mostrar Actividades", icon: <CalendarTodayIcon />, path: "/admin/activities" }
+                { label: "Mostrar Actividades", icon: <CalendarTodayIcon />, path: "/admin/activities" }
             ]
         },
         {
             title: "CONTRATO",
             items: [
-            { label: "Mostrar Contratos", icon: <WorkIcon />, path: "/admin/contracts" }
+                { label: "Mostrar Contratos", icon: <WorkIcon />, path: "/admin/contracts" }
             ]
         },
         {
             title: "INGRESOS",
             items: [
-            { label: "Ingresos del Sistema", icon: <AttachMoneyIcon />, path: "/admin/income" }
+                { label: "Ingresos del Sistema", icon: <AttachMoneyIcon />, path: "/admin/income" }
             ]
         },
         {
             title: "SOLICITUD",
             items: [
-            { label: "Solicitudes", icon: <NotificationsIcon />, path: "/admin/request" }
+                { label: "Solicitudes", icon: <NotificationsIcon />, path: "/admin/request" }
             ]
         },
         {
             title: "CUENTA",
             items: [
                 { label: "Perfil", icon: <AccountCircleIcon />, path: "/admin/profile" },
-                { label: "Usuarios Registrados", icon: <PeopleIcon />, path: "/admin/listUsers" },
+                { label: "Usuarios Registrados", icon: <PeopleIcon />, path: "/admin/users" },
                 { label: "Cerrar Sesión", icon: <LogoutIcon />, path: "/login", onclick: () => { } }
             ]
         }
@@ -107,6 +148,12 @@ export const MenuByRole: Record<string, MenuSection[]> = {
             title: "INICIO",
             items: [
                 { label: "Inicio", icon: <DashboardIcon />, path: "/director/dashboard" }
+            ]
+        },
+        {
+            title: "CONSULTAS",
+            items: [
+                { label: "Consultas Especializadas", icon: <AssessmentIcon />, path: "/director/queries" }
             ]
         },
         {
@@ -127,16 +174,46 @@ export const MenuByRole: Record<string, MenuSection[]> = {
                 { label: "Mostrar Grupos", icon: <PeopleIcon />, path: "/director/group" }
             ]
         },
+         {
+            title: "CONCEPTO",
+            items: [
+                { label: "Mostrar Conceptos", icon: <LightbulbIcon />, path: "/director/concept" }
+            ]
+        },
+        {
+            title: "CONCEPTO VISUAL",
+            items: [
+                { label: "Mostrar Conceptos Visuales", icon: <PaletteIcon />, path: "/director/concept-visual" }
+            ]
+        },
+        {
+            title: "LISTAS DE POPULARIDAD",
+            items: [
+                { label: "Mostrar Listas de Popularidad", icon: <TrendingUpIcon />, path: "/director/popularity-lists" }
+            ]
+        },
+        {
+            title: "PREMIO",
+            items: [
+                { label: "Mostrar Premios", icon: <EmojiEventsIcon />, path: "/director/award" }
+            ]
+        },
+        {
+            title: "CANCIÓN",
+            items: [
+                { label: "Mostrar Canciones", icon: <MusicNoteIcon />, path: "/director/songs" }
+            ]
+        },
         {
             title: "ALBUM",
             items: [
-                { label: "Mostrar Álbumes", icon: <AlbumIcon />, path: "/director/Albums" }
+                { label: "Mostrar Álbumes", icon: <AlbumIcon />, path: "/director/albums" }
             ]
         },
         {
             title: "ACTIVIDAD",
             items: [
-                { label: "Gestión de Actividades", icon: <CalendarTodayIcon />, path: "/director/activities"}
+                { label: "Gestión de Actividades", icon: <CalendarTodayIcon />, path: "/director/activities" }
             ]
         },
         {
@@ -161,7 +238,7 @@ export const MenuByRole: Record<string, MenuSection[]> = {
             title: "CUENTA",
             items: [
                 { label: "Perfil", icon: <AccountCircleIcon />, path: "/director/profile" },
-               // { label: "Usuarios Registrados", icon: <PeopleIcon />, path: "/director/listUsers" },
+                // { label: "Usuarios Registrados", icon: <PeopleIcon />, path: "/director/listUsers" },
                 { label: "Cerrar Sesión", icon: <LogoutIcon />, path: "/login" }
             ]
         }
@@ -174,6 +251,12 @@ export const MenuByRole: Record<string, MenuSection[]> = {
                 { label: "Inicio", icon: <DashboardIcon />, path: "/manager/dashboard" }
             ]
         },
+         {
+            title: "CONSULTAS",
+            items: [
+                { label: "Consultas Especializadas", icon: <AssessmentIcon />, path: "/manager/queries" }
+            ]
+        },
         {
             title: "APRENDIZ",
             items: [
@@ -183,7 +266,8 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title: "ARTISTA",
             items: [
-                { label: "Gestión de Artistas", icon: <PeopleIcon />, path: "/manager/artists" }
+                { label: "Gestión de Artistas", icon: <PeopleIcon />, path: "/manager/artists" },
+                //{label: "Artistas activos", icon:<PeopleIcon/>, path:"/manager/artists-active"}
             ]
         },
         {
@@ -192,16 +276,46 @@ export const MenuByRole: Record<string, MenuSection[]> = {
                 { label: "Mostrar Grupos", icon: <PeopleIcon />, path: "/manager/group" }
             ]
         },
+         {
+            title: "CONCEPTO",
+            items: [
+                { label: "Mostrar Conceptos", icon: <LightbulbIcon />, path: "/manager/concept" }
+            ]
+        },
+        {
+            title: "CONCEPTO VISUAL",
+            items: [
+                { label: "Mostrar Conceptos Visuales", icon: <PaletteIcon />, path: "/manager/concept-visual" }
+            ]
+        },
+        {
+            title: "LISTAS DE POPULARIDAD",
+            items: [
+                { label: "Mostrar Listas de Popularidad", icon: <TrendingUpIcon />, path: "/manager/popularity-lists" }
+            ]
+        },
+        {
+            title: "PREMIO",
+            items: [
+                { label: "Mostrar Premios", icon: <EmojiEventsIcon />, path: "/manager/award" }
+            ]
+        },
+        {
+            title: "CANCIÓN",
+            items: [
+                { label: "Mostrar Canciones", icon: <MusicNoteIcon />, path: "/manager/songs" }
+            ]
+        },
         {
             title: "ALBUM",
             items: [
-                { label: "Mostrar Álbumes", icon: <AlbumIcon />, path: "/manager/Albums" }
+                { label: "Mostrar Álbumes", icon: <AlbumIcon />, path: "/manager/albums" }
             ]
         },
         {
             title: "ACTIVIDAD",
             items: [
-                { label: "Gestión de Actividades", icon: <CalendarTodayIcon />, path: "/manager/activities"}
+                { label: "Gestión de Actividades", icon: <CalendarTodayIcon />, path: "/manager/activities" }
             ]
         },
         {
@@ -226,7 +340,7 @@ export const MenuByRole: Record<string, MenuSection[]> = {
             title: "CUENTA",
             items: [
                 { label: "Perfil", icon: <AccountCircleIcon />, path: "/manager/profile" },
-               // { label: "Usuarios Registrados", icon: <PeopleIcon />, path: "/manager/listUsers" },
+                // { label: "Usuarios Registrados", icon: <PeopleIcon />, path: "/manager/listUsers" },
                 { label: "Cerrar Sesión", icon: <LogoutIcon />, path: "/login" }
             ]
         }
@@ -249,6 +363,30 @@ export const MenuByRole: Record<string, MenuSection[]> = {
             title: "INGRESOS",
             items: [
                 { label: "Mis Ingresos", icon: <AttachMoneyIcon />, path: "/artist/income" }
+            ]
+        },
+        {
+            title: "LISTAS DE POPULARIDAD",
+            items: [
+                { label: "Mostrar Listas de Popularidad", icon: <TrendingUpIcon />, path: "/artist/popularity-lists" }
+            ]
+        },
+        {
+            title: "PREMIO",
+            items: [
+                { label: "Mostrar Premios", icon: <EmojiEventsIcon />, path: "/artist/award" }
+            ]
+        },
+        {
+            title: "ÁLBUM",
+            items: [ 
+                { label: "Mostrar Álbumes", icon: <AlbumIcon />, path: "/artist/albums" }
+            ]
+        },
+        {
+            title: "CANCIÓN",
+            items: [
+                { label: "Mostrar Canciones", icon: <MusicNoteIcon />, path: "/artist/songs" }
             ]
         },
         {

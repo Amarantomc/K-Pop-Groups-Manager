@@ -77,7 +77,9 @@ const Modal : React.FC<ModalProps> = ({ isOpen, onClose, title, data, constraint
     e.preventDefault()
 
     if (validateForm()) {
-        onSave(formData)
+        if (onSave) {
+            onSave(formData)
+        }
     }
 }
 

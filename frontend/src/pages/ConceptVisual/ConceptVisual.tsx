@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react';
 import type { GridColDef } from '@mui/x-data-grid';
 import DataTable from '../../components/datatable/Datatable';
@@ -5,90 +6,78 @@ import PageLayout from '../../components/pageLayout/PageLayout';
 import ModalCreate from '../../components/modal/ModalCreate';
 import Modal from '../../components/modal/Modal';
 import { useAuth } from '../../contexts/auth/AuthContext';
-import { albumFields } from '../../config/formSource';
-import { albumConstraints } from '../../config/modalConstraints';
+import { visualConceptFields } from '../../config/formSource';
+import { visualConceptConstraints } from '../../config/modalConstraints';
 import ConfirmDialog from '../../components/confirmDialog/ConfirmDialog';
 
-interface Album {
-  id: number;
-  title: string;
-  artistName: string;
-  groupName?: string;
-  releaseDate: string;
-  genre: string;
-  totalTracks: number;
-  status: 'released' | 'upcoming' | 'recording' | 'cancelled';
-  agencyName?: string;
-}
-
-const Albums: React.FC = () => {
+const ConceptVisual: React.FC = () => {
   const { user } = useAuth();
-  const [albums, setAlbums] = useState<Album[]>([]);
+  const [conceptVisualRows, setConceptVisualRows] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [albumToDelete, setAlbumToDelete] = useState<number | null>(null);
+  const [conceptVisualToDelete, setConceptVisualToDelete] = useState<number | null>(null);
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openAccept, setOpenAccept] = useState(false);
   const [openError, setOpenError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   const askDelete = (id: number) => {
-    setAlbumToDelete(id);
+    setConceptVisualToDelete(id);
     setOpenConfirm(true);
   };
 
-  // Columnas base del DataTable
+  // Columnas del DataTable
   const baseColumns: GridColDef[] = [
     { field: 'title', headerName: 'Título', width: 200 },
-    { field: 'artistName', headerName: 'Artista', width: 180 },
-    { field: 'groupName', headerName: 'Grupo', width: 150 },
+    { field: 'conceptName', headerName: 'Concepto', width: 150 },
+    { field: 'theme', headerName: 'Tema', width: 150 },
+    { field: 'colorPalette', headerName: 'Paleta de Colores', width: 180 },
+    { field: 'mood', headerName: 'Estado de Ánimo', width: 150 },
     {
-      field: 'releaseDate',
-      headerName: 'Fecha de Lanzamiento',
-      width: 160,
+      field: 'createdAt',
+      headerName: 'Fecha de Creación',
+      width: 150,
       valueFormatter: (params) => {
         return new Date(params).toLocaleDateString('es-ES');
       }
     },
-    { field: 'genre', headerName: 'Género', width: 130 },
-    { field: 'totalTracks', headerName: 'Canciones', width: 100 },
     {
       field: 'status',
       headerName: 'Estado',
-      width: 130,
+      width: 120,
       renderCell: (params) => {
         const statusColors: Record<string, string> = {
-          'released': '#10b981',
-          'upcoming': '#3b82f6',
-          'recording': '#f59e0b',
-          'cancelled': '#ef4444'
-        };
-        const statusLabels: Record<string, string> = {
-          'released': 'Lanzado',
-          'upcoming': 'Próximo',
-          'recording': 'Grabando',
-          'cancelled': 'Cancelado'
+          'draft': '#f59e0b',
+          'approved': '#10b981',
+          'in_review': '#3b82f6',
+          'rejected': '#ef4444'
         };
         return (
           <span style={{
             color: statusColors[params.value] || '#6b7280',
             fontWeight: 600
           }}>
-            {statusLabels[params.value] || params.value}
+            {params.value === 'draft' ? 'Borrador' :
+              params.value === 'approved' ? 'Aprobado' :
+                params.value === 'in_review' ? 'En Revisión' :
+                  params.value === 'rejected' ? 'Rechazado' : params.value}
           </span>
         );
       }
     }
   ];
 
-  // Agregar columna de agencia solo para admin
-  const columns = user?.role === 'admin'
-    ? [...baseColumns, { field: 'agencyName', headerName: 'Agencia', width: 150 }]
+  // Agregar columnas adicionales para admin
+  const columns: GridColDef[] = user?.role === 'admin'
+    ? [
+      ...baseColumns,
+      { field: 'agencyName', headerName: 'Agencia', width: 150 }
+    ]
     : baseColumns;
 
   useEffect(() => {
-    const fetchAlbums = async () => {
+    const fetchConceptVisuals = async () => {
       setIsLoading(true);
       try {
         if (!user) return;
@@ -97,13 +86,11 @@ const Albums: React.FC = () => {
 
         switch (user.role) {
           case 'manager':
-            endpoint = `/api/albums?agencyId=${user.agencyId}`;
-            break;
           case 'director':
-            endpoint = `/api/albums?agencyId=${user.agencyId}`;
+            endpoint = `/api/concept-visual?agencyId=${user.agencyId}`;
             break;
           case 'admin':
-            endpoint = '/api/albums';
+            endpoint = '/api/concept-visual';
             break;
           default:
             console.error('Rol no autorizado:', user.role);
@@ -120,104 +107,42 @@ const Albums: React.FC = () => {
         });
 
         if (!response.ok) {
-          throw new Error('Error al obtener álbumes');
+          throw new Error('Error al obtener conceptos visuales');
         }
 
         const data = await response.json();
-        setAlbums(data.data || data);
+        console.log(data);
+        const formattedData = data.data.map((conceptVisual: any, index: number) => ({
+          id: conceptVisual.id ?? index,
+          title: conceptVisual.title,
+          conceptName: conceptVisual.conceptName,
+          theme: conceptVisual.theme,
+          colorPalette: conceptVisual.colorPalette,
+          mood: conceptVisual.mood,
+          status: conceptVisual.status,
+          createdAt: conceptVisual.createdAt,
+          agencyName: conceptVisual.agencyName
+        }));
+        console.log(formattedData);
+        setConceptVisualRows(formattedData);
         // ============================================
         // FIN SECCIÓN: BACKEND ENDPOINT
         // ============================================
 
-        // ============================================
-        //SECCIÓN: DATOS DEMO
-        //============================================
-        /*
-     const mockAlbums: Album[] = [
-       {
-         id: 1,
-         title: 'Rising Phoenix',
-         artistName: 'Lee Min-ho',
-         groupName: 'Phoenix',
-         releaseDate: '2025-10-15',
-         genre: 'K-Pop',
-         totalTracks: 12,
-         status: 'released',
-         agencyName: 'K-Pop Stars Agency'
-       },
-       {
-         id: 2,
-         title: 'Starlight Dreams',
-         artistName: 'Kim Ji-soo',
-         groupName: 'Starlight',
-         releaseDate: '2025-11-20',
-         genre: 'K-Pop',
-         totalTracks: 10,
-         status: 'released',
-         agencyName: 'K-Pop Stars Agency'
-       },
-       {
-         id: 3,
-         title: 'Dreamscape',
-         artistName: 'Park Soo-young',
-         groupName: 'Dreamers',
-         releaseDate: '2025-12-25',
-         genre: 'Pop',
-         totalTracks: 8,
-         status: 'upcoming',
-         agencyName: 'K-Pop Stars Agency'
-       },
-       {
-         id: 4,
-         title: 'Thunder Strikes',
-         artistName: 'Choi Min-jun',
-         groupName: 'Thunder Squad',
-         releaseDate: '2025-09-10',
-         genre: 'Hip-Hop',
-         totalTracks: 15,
-         status: 'released',
-         agencyName: 'Global Entertainment'
-       },
-       {
-         id: 5,
-         title: 'New Beginnings',
-         artistName: 'Lee Min-ho',
-         groupName: 'Phoenix',
-         releaseDate: '2026-02-14',
-         genre: 'K-Pop',
-         totalTracks: 14,
-         status: 'recording',
-         agencyName: 'K-Pop Stars Agency'
-       }
-     ];
-
-     // Filtrar según rol para la demo
-     let filteredAlbums = mockAlbums;
-     if (user.role === 'manager' || user.role === 'director') {
-       // Filtrar por agencia (en demo mostramos los de K-Pop Stars Agency)
-       filteredAlbums = mockAlbums.filter(album => album.agencyName === 'K-Pop Stars Agency');
-     }
-
-     setAlbums(filteredAlbums);
-     */
-        //============================================
-        //FIN SECCIÓN: DATOS DEMO
-        //============================================ 
-
       } catch (error) {
-        console.error('Error al cargar álbumes:', error);
+        console.error('Error al cargar conceptos visuales:', error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchAlbums();
+    fetchConceptVisuals();
   }, [user]);
 
   const handleDelete = async () => {
-    if (albumToDelete === null) return;
+    if (conceptVisualToDelete === null) return;
     try {
-      const response = await fetch(`http://localhost:3000/api/albums/${albumToDelete}`, {
+      const response = await fetch(`http://localhost:3000/api/visual-concept/${conceptVisualToDelete}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -225,24 +150,25 @@ const Albums: React.FC = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Error al eliminar álbum');
+        throw new Error('Error al eliminar concepto visual');
       }
 
-      setAlbums(prev => prev.filter(album => album.id !== albumToDelete));
+      setConceptVisualRows(prev => prev.filter(conceptVisual => conceptVisual.id !== conceptVisualToDelete));
       setOpenAccept(true);
     } catch (error) {
-      console.error('Error al eliminar álbum:', error);
-      setErrorMessage(error instanceof Error ? error.message : 'Error al eliminar álbum');
+      console.error('Error al eliminar concepto visual:', error);
+      setErrorMessage(error instanceof Error ? error.message : 'Error al eliminar concepto visual');
       setOpenError(true);
     } finally {
       setOpenConfirm(false);
-      setAlbumToDelete(null);
+      setConceptVisualToDelete(null);
     }
   };
 
-  const handleEditSave = async (updatedRow: Album) => {
+  const handleEditSave = async (updatedRow: any) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/albums/${updatedRow.id}`, {
+      // PUT /api/visual-concept/:id - Sin autenticación
+      const response = await fetch(`http://localhost:3000/api/visual-concept/${updatedRow.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -252,17 +178,17 @@ const Albums: React.FC = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Error al actualizar álbum');
+        throw new Error('Error al actualizar concepto visual');
       }
 
       const data = await response.json();
-      setAlbums(prev =>
-        prev.map(album => album.id === updatedRow.id ? (data.data || data) : album)
+      setConceptVisualRows(prev =>
+        prev.map(conceptVisual => conceptVisual.id === updatedRow.id ? (data.data || data) : conceptVisual)
       );
       setOpenAccept(true);
     } catch (error) {
-      console.error('Error al actualizar álbum:', error);
-      setErrorMessage(error instanceof Error ? error.message : 'Error al actualizar álbum');
+      console.error('Error al actualizar concepto visual:', error);
+      setErrorMessage(error instanceof Error ? error.message : 'Error al actualizar concepto visual');
       setOpenError(true);
     }
   };
@@ -280,7 +206,7 @@ const Albums: React.FC = () => {
         const headers: Record<string, string> = { 'Content-Type': 'application/json' };
         if (token) headers['Authorization'] = `Bearer ${token}`;
 
-        const url = `${API_BASE}/api/albums`;
+        const url = `${API_BASE}/api/concept-visual`;
         const res = await fetch(url, {
           method: 'POST',
           headers,
@@ -288,7 +214,7 @@ const Albums: React.FC = () => {
         });
 
         if (!res.ok) {
-          let msg = 'Error al crear álbum';
+          let msg = 'Error al crear concepto visual';
           try {
             const txt = await res.text();
             try { const j = JSON.parse(txt); msg = j?.message || j?.error || txt || msg; }
@@ -301,11 +227,11 @@ const Albums: React.FC = () => {
 
         const result = await res.json().catch(() => null);
         if (result?.data) {
-          setAlbums(prev => [...prev, result.data]);
+          setConceptVisualRows(prev => [...prev, result.data]);
         }
         setOpenAccept(true);
       } catch (err) {
-        const errorMsg = err instanceof Error ? err.message : 'Error de red al crear álbum';
+        const errorMsg = err instanceof Error ? err.message : 'Error de red al crear concepto visual';
         setErrorMessage(errorMsg);
         setOpenError(true);
       }
@@ -314,7 +240,8 @@ const Albums: React.FC = () => {
 
   const handleFormSubmit = async (formData: Record<string, any>) => {
     try {
-      const response = await fetch('http://localhost:3000/api/albums', {
+      // POST /api/visual-concept - Sin autenticación
+      const response = await fetch('http://localhost:3000/api/visual-concept', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -324,29 +251,25 @@ const Albums: React.FC = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Error al crear álbum');
+        throw new Error('Error al crear concepto visual');
       }
 
       const data = await response.json();
-      setAlbums(prev => [...prev, (data.data || data)]);
+      setConceptVisualRows(prev => [...prev, (data.data || data)]);
       setShowCreateModal(false);
       setOpenAccept(true);
     } catch (error) {
-      console.error('Error al crear álbum:', error);
-      const errorMsg = error instanceof Error ? error.message : 'Error al crear álbum';
+      console.error('Error al crear concepto visual:', error);
+      const errorMsg = error instanceof Error ? error.message : 'Error al crear concepto visual';
       setErrorMessage(errorMsg);
       setShowCreateModal(false);
       setOpenError(true);
     }
   };
 
-  if (!user) {
-    return <div>Cargando...</div>;
-  }
-
-  if (user.role !== 'manager' && user.role !== 'director' && user.role !== 'admin') {
+  if (!user || (user.role !== 'manager' && user.role !== 'director' && user.role !== 'admin')) {
     return (
-      <PageLayout title="Álbumes" description="No tienes permisos para ver esta página">
+      <PageLayout title="Conceptos Visuales" description="No tienes permisos para ver esta página">
         <div style={{ textAlign: 'center', padding: '40px' }}>
           <p>No tienes acceso a esta sección.</p>
         </div>
@@ -356,42 +279,41 @@ const Albums: React.FC = () => {
 
   return (
     <PageLayout
-      title="Gestión de Álbumes"
+      title="Conceptos Visuales"
       description={
-        user.role === 'manager' ? 'Administra todos los álbumes de los artistas de tu agencia' :
-          user.role === 'director' ? 'Supervisa todos los álbumes de la agencia' :
-            user.role === 'admin' ? 'Vista global de todos los álbumes del sistema' :
-              'Gestión de álbumes'
+        user.role === 'admin' ? 'Vista global de todos los conceptos visuales del sistema' :
+          user.role === 'director' ? 'Todos los conceptos visuales de tu agencia' :
+            'Gestiona los conceptos visuales de tu agencia'
       }
     >
       {isLoading ? (
         <div style={{ textAlign: 'center', padding: '20px' }}>
-          Cargando álbumes...
+          Cargando conceptos visuales...
         </div>
       ) : (
         <>
           <DataTable
             columns={columns}
-            rows={albums}
+            rows={conceptVisualRows}
             pagesize={10}
             onDelete={askDelete}
             onEditSave={handleEditSave}
             onCreateSave={handleCreateSave}
             showEditButton={true}
-            constraints={albumConstraints}
-            createEntity="album"
+            constraints={visualConceptConstraints}
+            createEntity="visualConcept"
             userRole={user?.role}
             // onCreateClick={() => setShowCreateModal(true)}
           />
           <ConfirmDialog 
-            message="¿Está seguro que desea eliminar este álbum?" 
+            message="¿Está seguro que desea eliminar este concepto visual?" 
             open={openConfirm} 
             onCancel={() => setOpenConfirm(false)} 
             onConfirm={handleDelete}
           />
           <ConfirmDialog 
             title="¡Éxito!"
-            message="El álbum ha sido creado correctamente" 
+            message="El concepto visual ha sido creado correctamente" 
             open={openAccept} 
             onCancel={() => setOpenAccept(false)} 
             onConfirm={() => setOpenAccept(false)} 
@@ -409,14 +331,14 @@ const Albums: React.FC = () => {
           />
           <ModalCreate
             isOpen={showCreateModal}
-            title="Crear Álbum"
-            createFields={albumFields}
+            title="Crear Concepto Visual"
+            createFields={visualConceptFields}
             onSave={handleFormSubmit}
             onClose={() => setShowCreateModal(false)}
           />
           <Modal
             isOpen={showSuccessModal}
-            title="Álbum creado exitosamente"
+            title="Concepto Visual creado exitosamente"
             onSave={() => setShowSuccessModal(false)}
             onClose={() => setShowSuccessModal(false)}
           />
@@ -426,4 +348,4 @@ const Albums: React.FC = () => {
   );
 };
 
-export default Albums;
+export default ConceptVisual;

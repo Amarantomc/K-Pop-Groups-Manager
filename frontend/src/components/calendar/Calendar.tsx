@@ -9,6 +9,7 @@ interface EventItem{
     subtitle? : string,
     color? : string,
     time? : string,
+    type? : string,
     // extra?:any
 }
 

@@ -206,7 +206,7 @@ export const PieChart: React.FC<PieChartProps> = ({
             {data.map((_entry, index) => (
               <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
             ))}
-          </Pie>
+          </Pie> 
           <Tooltip 
             contentStyle={{
               backgroundColor: '#ffffff',
