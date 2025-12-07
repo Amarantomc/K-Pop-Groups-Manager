@@ -5,6 +5,8 @@ export default class Application {
     readonly roles: string[];
     readonly idConcept: number;
     readonly groupName: string;
+    readonly apprentices: number[];
+    readonly artists:[number,number][];
 
     constructor(attrs: {
         id: number;
@@ -13,6 +15,8 @@ export default class Application {
         roles: string[];
         idConcept: number;
         groupName:string;
+        apprentices:number[];
+        artists:[number,number][];
     }) {
         this.id = attrs.id;
         this.date = attrs.date;
@@ -20,5 +24,7 @@ export default class Application {
         this.roles = attrs.roles;
         this.idConcept = attrs.idConcept;
         this.groupName = attrs.groupName;
+        this.apprentices = attrs.apprentices;
+        this.artists = attrs.artists;
     }
 }
