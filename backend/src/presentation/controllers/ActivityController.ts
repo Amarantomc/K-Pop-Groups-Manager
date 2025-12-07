@@ -13,6 +13,7 @@ import { UpdateActivityDto } from "../../application/dtos/activity/UpdateActivit
 import type { FindActivitiesByArtist } from "../../application/usesCase/activity/FindActivitiesByArtist";
 import type { AddArtistToActivityUseCase } from "../../application/usesCase/activity/AddArtistToActivityUseCase";
 import { ArtistOnActivityDto } from "../../application/dtos/activity/ArtistOnActivityDto";
+import type { FindActivitiesByGroupUseCase } from "../../application/usesCase/activity/FindActivitiesByGroupUseCase";
 
 @injectable()
 export class ActivityController {
@@ -23,7 +24,8 @@ export class ActivityController {
     @inject(Types.FindActivityByIdUseCase) private findActivityByIdUseCase: FindActivityByIdUseCase,
     @inject(Types.GetAllActivitiesUseCase) private getAllActivitiesUseCase: GetAllActivitiesUseCase,
     @inject(Types.FindActivitiesByArtist) private findActivitiesByArtist: FindActivitiesByArtist,
-    @inject(Types.AddArtistToActivityUseCase) private addArtistToActivity: AddArtistToActivityUseCase
+    @inject(Types.AddArtistToActivityUseCase) private addArtistToActivity: AddArtistToActivityUseCase,
+    @inject(Types.FindActivitiesByGroupUseCase) private findActivitiesByGroup:FindActivitiesByGroupUseCase
 
   ) {}
 
@@ -140,6 +142,25 @@ export class ActivityController {
       res.json({
         success: true,
         data: "Artist Linked to Activity"
+      });
+    } catch (error: any) {
+      res.status(404).json({
+        success: false,
+        error: error.message
+      });
+    }
+  }
+
+  async findByGroup(req: Request, res: Response) {
+    try {
+      
+      const { groupId } = req.params;
+     
+      const activities = await this.findActivitiesByGroup.execute(groupId!)
+      
+      res.json({
+        success: true,
+        data: activities
       });
     } catch (error: any) {
       res.status(404).json({

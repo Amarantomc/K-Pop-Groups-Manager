@@ -41,10 +41,10 @@ export class ActivityResponseDto {
     let artista : Artist []=[]
     //let ingreso =null
     if(activity.Artista){
-      artista= activity.Artista.map((a: { idAp: any; idGr: any; nombreArtistico: any; fsechaDebut: any; estadoArtista: ArtistStatus; }) => new Artist({ApprenticeId:a.idAp,
+      artista= activity.Artista.map((a: { idAp: any; idGr: any; nombreArtistico: any; fechaDebut: any; estadoArtista: ArtistStatus; }) => new Artist({ApprenticeId:a.idAp,
         GroupId:a.idGr,
         ArtistName:a.nombreArtistico,
-        DebutDate:a.fsechaDebut,
+        DebutDate:a.fechaDebut,
         Status:a.estadoArtista as ArtistStatus}))
     }
 

@@ -83,6 +83,8 @@ FindActivityByIdUseCase: Symbol.for('FindActivityByIdUseCase'),
 GetAllActivitiesUseCase: Symbol.for('GetAllActivitiesUseCase'),
 FindActivitiesByArtist :Symbol.for('FindActivitiesByArtist'),
 AddArtistToActivityUseCase:Symbol.for('AddArtistToActivityUseCase'),
+FindActivitiesByGroupUseCase:Symbol.for('FindActivitiesByGroupUseCase'),
+ 
 //#endregion 
 
 

@@ -5,6 +5,8 @@ import type { IBaseRepository } from "./IBaseRepository";
 
 export interface IGroupRepository
 	extends IBaseRepository<Group, CreateGroupDTO, any> {
+	
+	
 	findByName(name: string): Promise<Group | null>;
 	findByDebut(debut: Date): Promise<Group | null>;
 	findByStatus(status: GroupStatus): Promise<Group[]>;

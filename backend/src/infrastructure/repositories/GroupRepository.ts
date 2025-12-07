@@ -58,7 +58,7 @@ export class GroupRepository implements IGroupRepository {
 				Actividades: { select: { idAct: true } },
 			},
 		});
-		console.log(group)
+		
 		return !group
 			? null
 			: GroupResponseDTO.toEntity(group);

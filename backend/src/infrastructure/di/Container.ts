@@ -127,6 +127,7 @@ import { DeleteContractUseCase } from "../../application/usesCase/contract/Delet
 import { UpdateContractUseCase } from "../../application/usesCase/contract/UpdateContractUseCase";
 import { GetAllContractUseCase } from "../../application/usesCase/contract/GetAllContractUseCase";
 import { FindContractByIdUseCase } from "../../application/usesCase/contract/FindContractByIdUseCase";
+import { FindActivitiesByGroupUseCase } from "../../application/usesCase/activity/FindActivitiesByGroupUseCase";
 import { ApplicationController } from "../../presentation/controllers/ApplicationController";
 import type { IApplicationRepository } from "../../application/interfaces/repositories/IApplicationRepository";
 import { ApplicationRepository } from "../repositories/ApplicationRepository";
@@ -523,6 +524,10 @@ container.bind<FindActivitiesByArtist>(Types.FindActivitiesByArtist)
 
   container.bind<AddArtistToActivityUseCase>(Types.AddArtistToActivityUseCase)
   .to(AddArtistToActivityUseCase)
+  .inTransientScope();
+
+   container.bind<FindActivitiesByGroupUseCase>(Types.FindActivitiesByGroupUseCase)
+  .to(FindActivitiesByGroupUseCase)
   .inTransientScope();
 
   //#endregion

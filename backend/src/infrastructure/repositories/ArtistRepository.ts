@@ -176,16 +176,7 @@ private get db() {
       endDate: h.fechaFinalizacion,
     }));
   }
-  async addActivity(apprenticeId: number, groupId: number, activityId: number, accepted: boolean): Promise<void> {
-        await this.db.artistaEnActividad.create({
-      data: {
-        idAp: apprenticeId,
-        idGr: groupId,
-        idAct: activityId,
-        aceptado: accepted,
-      },
-    });
-  }
+ 
   async getActivities(apprenticeId: number, groupId: number): Promise<Array<{ activityId: number; accepted: boolean; }>> {
         const activities = await this.db.artistaEnActividad.findMany({
       where: {

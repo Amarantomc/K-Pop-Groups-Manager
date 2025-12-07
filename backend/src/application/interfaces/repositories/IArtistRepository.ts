@@ -17,7 +17,7 @@ export interface IArtistRepository extends IBaseRepository<Artist,CreateArtistDt
   endGroupMembership(apprenticeId: number,groupId: number,debutGroupId: number,startDate: Date,endDate: Date): Promise<void>;
   getGroupHistory(apprenticeId: number,groupId: number): Promise<Array<{groupId: number;role: string;startDate: Date;endDate?: Date;}>>;
 
-  addActivity(apprenticeId: number,groupId: number,activityId: number,accepted: boolean ): Promise<void>;
+   
   getActivities(apprenticeId: number,groupId: number): Promise<Array<{activityId: number;accepted: boolean;}>>;
   addContract(apprenticeId: number,groupId: number,agencyId: number,startDate: Date,endDate?: Date,status?: string,initialConditions?: string,incomeDistribution?: string): Promise<void>;
   getContracts(apprenticeId: number,groupId: number): Promise<Array<{agencyId: number;startDate: Date;endDate?: Date;status: string;}>>;

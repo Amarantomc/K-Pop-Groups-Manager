@@ -15,6 +15,7 @@ export class ActivityRepository implements IActivityRepository {
 
   constructor( @inject(Types.PrismaClient) private prisma:any,
                 @inject(Types.IUnitOfWork) private unitOfWork:IUnitOfWork) {}
+ 
 
 
    
@@ -131,5 +132,19 @@ async getAll(): Promise<Activity[]> {
             aceptado:command.accepted
           }
         })
+  }
+
+   async findByGroup(groupId: number): Promise<Activity[]|null> {
+       const activities=await this.db.PersonasEnActividad.findMany({
+         where:{
+          idGrupos:groupId
+         },
+         include:{
+          actividad:true
+         }
+       })
+       
+       
+       return activities ? ActivityResponseDto.toEntities(activities.map((a:any)=>a.actividad)):null
   }
 }

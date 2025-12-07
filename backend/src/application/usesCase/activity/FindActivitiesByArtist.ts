@@ -21,7 +21,10 @@ export class FindActivitiesByArtist{
         }
     
     const activities= await this.activityRepository.findByArtist(id.apprenticeId,id.groupId)
-return ActivityResponseDto.fromEntities(activities)
+    if(!activities){
+        throw new Error("No activities found for the given artist" )
+    }
+    return ActivityResponseDto.fromEntities(activities)
        } catch (error) {
          throw error;
        }
