@@ -123,6 +123,10 @@ import { ContractRepository } from "../repositories/ContractRepository";
 import { ContractController } from "../../presentation/controllers/ContractController";
 import type { IVisualConceptRepository } from "../../application/interfaces/repositories/IVisualConcept";
 import { CreateContractUseCase } from "../../application/usesCase/contract/CreateContractUseCase";
+import { DeleteContractUseCase } from "../../application/usesCase/contract/DeleteContractUseCase";
+import { UpdateContractUseCase } from "../../application/usesCase/contract/UpdateContractUseCase";
+import { GetAllContractUseCase } from "../../application/usesCase/contract/GetAllContractUseCase";
+import { FindContractByIdUseCase } from "../../application/usesCase/contract/FindContractByIdUseCase";
 import { ApplicationController } from "../../presentation/controllers/ApplicationController";
 import type { IApplicationRepository } from "../../application/interfaces/repositories/IApplicationRepository";
 import { ApplicationRepository } from "../repositories/ApplicationRepository";
@@ -575,6 +579,22 @@ container.bind<CreateVisualConceptUseCase>(Types.CreateVisualConceptUseCase)
   //#region Contract
     container.bind<CreateContractUseCase>(Types.CreateContractUseCase)
   .to(CreateContractUseCase)
+  .inTransientScope();
+
+  container.bind<DeleteContractUseCase>(Types.DeleteContractUseCase)
+  .to(DeleteContractUseCase)
+  .inTransientScope();
+
+  container.bind<UpdateContractUseCase>(Types.UpdateContractUseCase)
+  .to(UpdateContractUseCase)
+  .inTransientScope();
+
+  container.bind<GetAllContractUseCase>(Types.GetAllContractsUseCase)
+  .to(GetAllContractUseCase)
+  .inTransientScope();
+
+  container.bind<FindContractByIdUseCase>(Types.FindContractByIdUseCase)
+  .to(FindContractByIdUseCase)
   .inTransientScope();
   //#endregion
 

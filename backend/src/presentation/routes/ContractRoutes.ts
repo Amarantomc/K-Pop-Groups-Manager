@@ -18,10 +18,10 @@ export class ContractRoutes{
   private setupRoutes(): void {
      //Añadir Roles
     this.router.post('/', (req, res) => this.contractController.createContract(req, res))
-    //this.router.get('/:id', (req, res) => this.conceptController.getConcept(req,res))
-    //this.router.put('/:id', (req, res) => this.conceptController.updateConcept(req, res))
-    //this.router.delete('/:id',(req, res) => this.conceptController.deleteConcept(req, res))
-    //this.router.get('/',(req, res) => this.conceptController.listConcept(req, res))
+    this.router.get('/', (req, res) => this.contractController.getAll(req,res))
+    this.router.put('/', (req, res) => this.contractController.update(req, res))
+    this.router.delete('/',(req, res) => this.contractController.delete(req, res))
+    this.router.get('/find',(req, res) => this.contractController.findById(req, res))
   }
 
   public getRouter(): Router {

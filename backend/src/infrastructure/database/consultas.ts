@@ -6,11 +6,15 @@ const prisma = new PrismaClient()
 async function consultas() {
  
     
-const resultadoSQL = await prisma.$queryRaw`
-    SELECT * from "Cancion"
+// const resultadoSQL = await prisma.$queryRaw`
+//     SELECT * from "Cancion"
        
-  `
-  console.table(resultadoSQL)
+//   `
+//   console.table(resultadoSQL)
+
+
+   
+      
 }
 
 consultas()
