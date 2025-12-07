@@ -7,7 +7,6 @@ import type { DeleteApplicationUseCase } from "../../application/usesCase/applic
 import type { ListApplicationUseCase } from "../../application/usesCase/application(solicitud)/ListApplicationUseCase";
 import { CreateApplicationDto } from "../../application/dtos/application(solicitud)/CreateApplicationDto";
 import type { UpdateApplicationUseCase } from "../../application/usesCase/application(solicitud)/UpdateApplicationUseCase";
-import type { FindByApprenticeUseCase } from "../../application/usesCase/application(solicitud)/FindByApprenticeUseCase";
 
 
 @injectable()
@@ -16,35 +15,30 @@ export class ApplicationController{
                 @inject(Types.GetApplicationUseCase) private getApplicationUseCase:GetApplicationUseCase,
                 @inject(Types.DeleteApplicationUseCase) private deleteApplicationUseCase:DeleteApplicationUseCase,
                 @inject(Types.UpdateApplicationUseCase) private updateApplicationUseCase:UpdateApplicationUseCase,
-                @inject(Types.ListApplicationUseCase) private listApplicationUseCase: ListApplicationUseCase,
-                @inject(Types.FindByApprenticeUseCase) private FindByApprenticeUseCase: FindByApprenticeUseCase){}
+                @inject(Types.ListApplicationUseCase) private listApplicationUseCase: ListApplicationUseCase,){}
 
-async createApplication(req: Request, res: Response) 
-      {
-    try {
-      
-      const {apprenticesId} =req.params
-      
-      const applicationDto = CreateApplicationDto.create(req.body, Array.isArray(apprenticesId) ? apprenticesId.map(Number) : null);
-      const application = await this.createApplicationUseCase.execute(applicationDto);
-
-      
-
-      res.status(201).json({
-        success: true,
-        data: application
-      });
-
-   }
-   catch (error: any) {
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-
-
-}
+    async createApplication(req: Request, res: Response) 
+          {
+        try {
+              
+          const applicationDto=CreateApplicationDto.create(req.body)
+          //console.log(applicationDto);
+          const application = await this.createApplicationUseCase.execute(applicationDto);
+    
+          
+    
+          res.status(201).json({
+            success: true,
+            data: application
+          });
+    
+        } catch (error: any) {
+          res.status(400).json({
+            success: false,
+            error: error.message
+          });
+        }
+          }
 
 async getApplication(req: Request, res: Response) 
 {

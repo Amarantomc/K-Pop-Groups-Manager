@@ -3,6 +3,7 @@ import { Types } from "../../../infrastructure/di/Types";
 import type { IApplicationRepository } from "../../interfaces/repositories/IApplicationRepository";
 import type { CreateApplicationDto } from "../../dtos/application(solicitud)/CreateApplicationDto";
 import { ApplicationResponseDto } from "../../dtos/application(solicitud)/ApplicationResponseDto";
+import type { UpdateApplicationDto } from "../../dtos/application(solicitud)/UpdateApplicationDto";
 
 @injectable()
 export class UpdateApplicationUseCase {
@@ -23,10 +24,11 @@ export class UpdateApplicationUseCase {
 
     return new ApplicationResponseDto(
       updatedApplication.id,
-      updatedApplication.description,
-      typeof updatedApplication.date === "string" ? new Date(updatedApplication.date) : updatedApplication.date,
-      //updatedApplication.apprentices,
-      //updatedApplication.artists
+      updatedApplication.groupName,
+      updatedApplication.date,
+      updatedApplication.idConcept,
+      updatedApplication.roles,
+      updatedApplication.idAgency
     );
   }
 }

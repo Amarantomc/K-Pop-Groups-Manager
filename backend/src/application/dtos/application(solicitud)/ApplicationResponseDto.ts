@@ -1,29 +1,34 @@
-import type { Prisma } from "@prisma/client";
 import { Application } from "../../../domain";
-import type { Artist } from "../../../domain/entities/Artist";
 
 export class ApplicationResponseDto{
     constructor(
         public readonly id:number,
-        public readonly description:string,
-        public readonly date:Date,
+        public readonly groupName:string,
+        public readonly date:Date | string,
+        public readonly idConcept:number,
+        public readonly roles: string[],
+        public readonly idAgency: number
     ){}
 
-    static fromEntity(apprendice: any): ApplicationResponseDto {
-        return new ApplicationResponseDto(
-            apprendice.id,
-            apprendice.descripcion,
-            apprendice.fechaSolicitud,
-        );
-      }
+    static fromEntity(application: any): ApplicationResponseDto {
+      return new ApplicationResponseDto(
+          application.id,
+          application.nombreGrupo,
+          application.fechaSolicitud,  // date
+          application.idConcepto,      // idConcept
+          application.roles,           // roles
+          application.idAgencia,       // idAgency
+      );
+  }
 
       static toEntity(application: any): Application {
         return new Application({
           id: application.id,
-          description: application.descripcion,
+          groupName: application.nombreGrupo,
+          roles: application.roles,
+          idConcept: application.idConcepto,
+          idAgency: application.idAgencia,
           date: application.fechaSolicitud,
-          apprentices: application.SolicitudGrupoAprendiz,
-          artists: application.SolicitudGrupoArtista
         });
       }
 

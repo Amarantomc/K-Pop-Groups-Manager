@@ -9,6 +9,7 @@ const Types = {
   IUnitOfWork: Symbol.for('IUnitOfWork'),
   IUserRepository: Symbol.for('IUserRepository'),
   IApprenticeRepository : Symbol.for('IApprenticeRepository'),
+  IApplicationRepository : Symbol.for('IApplicationRepository'),
   IAgencyRepository : Symbol.for('IAgencyRepository'),
   IArtistRepository : Symbol.for('IArtistRepository'),
   IConceptRepository: Symbol.for('IConceptRepository'),
@@ -20,7 +21,7 @@ const Types = {
   IContractRepository:Symbol.for('IContractRepository'),
   //#endregion
   
-  // Application Use Cases
+  // Use Cases
   CreateUserUseCase: Symbol.for('CreateUserUseCase'),
   GetUserUseCase: Symbol.for('GetUserUseCase'),
   GetUsersUseCase: Symbol.for('GetUsersUseCase'),
@@ -74,7 +75,7 @@ const Types = {
   LoginUserUseCase: Symbol.for('LoginUserUseCase'),
   ValidateTokenUseCase: Symbol.for('ValidateTokenUseCase'),
 
-
+//#region Activity
 CreateActivityUseCase: Symbol.for('CreateActivityUseCase'),
 UpdateActivityUseCase: Symbol.for('UpdateActivityUseCase'),
 DeleteActivityUseCase: Symbol.for('DeleteActivityUseCase'),
@@ -84,13 +85,31 @@ FindActivitiesByArtist :Symbol.for('FindActivitiesByArtist'),
 AddArtistToActivityUseCase:Symbol.for('AddArtistToActivityUseCase'),
 FindActivitiesByGroupUseCase:Symbol.for('FindActivitiesByGroupUseCase'),
  
+//#endregion 
 
+
+
+
+
+
+
+
+
+//#region Application
 CreateApplicationUseCase : Symbol.for('CreateApplicationUseCase'),
 GetApplicationUseCase : Symbol.for('GetApplicationUseCase'),
 DeleteApplicationUseCase : Symbol.for('DeleteApplicationUseCase'),
 UpdateApplicationUseCase : Symbol.for('UpdateApplicationUseCase'),
 ListApplicationUseCase : Symbol.for('ListApplicationUseCase'),
-FindByApprenticeUseCase : Symbol.for('FindByApprenticeUseCase'),
+//#endregion
+
+
+
+
+
+
+
+
 
 //#region Award
 CreateAwardUseCase : Symbol.for('CreateAwardUseCase'),
@@ -99,6 +118,12 @@ DeleteAwardUseCase : Symbol.for('DeleteAwardUseCase'),
 UpdateAwardUseCase : Symbol.for('UpdateAwardUseCase'),
 ListAwardUseCase : Symbol.for('ListAwardUseCase'),
 //#endregion
+
+
+
+
+
+
 
 
 //#region Group 
@@ -121,6 +146,13 @@ FindGroupsByConceptUseCase : Symbol.for('FindGroupsByConceptUseCase'),
 FindGroupsByVisualConceptUseCase : Symbol.for('FindGroupsByVisualConceptUseCase'),
 //#endregion
 
+
+
+
+
+
+
+
 //#region Contract
 CreateContractUseCase : Symbol.for('CreateContractUseCase'),
 FindContractByIdUseCase : Symbol.for('FindContractByIdUseCase'),
@@ -131,6 +163,11 @@ DeleteContractUseCase : Symbol.for('DeleteContractUseCase'),
 
   
  
+
+
+
+
+
   //#region Controllers 
   // Presentation
    UserController: Symbol.for('UserController'),

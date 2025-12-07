@@ -37,6 +37,7 @@ import  { GetUsersUseCase } from '../../application/usesCase/user/GerUsersUseCas
 import  { GetApprenticeUseCase } from '../../application/usesCase/apprentice/GetApprenticeUseCase';
 import type { IApprenticeRepository } from '../../application/interfaces/repositories/IApprenticeRepository';
 import { ApprenticeRepository } from '../repositories/ApprenticeRepository';
+
 import  { UpdateApprenticeUseCase } from '../../application/usesCase/apprentice/UpdateApprentice';
 import { DeleteApprenticeUseCase } from '../../application/usesCase/apprentice/DeleteApprentice';
 import  { CreateApprenticeUseCase } from '../../application/usesCase/apprentice/CreateApprentice';
@@ -94,13 +95,13 @@ import { PopularityListRepository } from '../repositories/PopularityListReposito
 import { PopularityListController } from '../../presentation/controllers/PopularityListController';
 import { ListPopularityListUseCase } from '../../application/usesCase/popularityList/ListPopularityListUseCase';
 
-import type { CreateApplicationUseCase } from "../../application/usesCase/application(solicitud)/CreateApplicatonUseCase";
-import type { GetApplicationUseCase } from "../../application/usesCase/application(solicitud)/GetApplicationUseCase";
-import type { DeleteApplicationUseCase } from "../../application/usesCase/application(solicitud)/DeleteApplicationUseCase";
-import type { ListApplicationUseCase } from "../../application/usesCase/application(solicitud)/ListApplicationUseCase";
-import { CreateApplicationDto } from "../../application/dtos/application(solicitud)/CreateApplicationDto";
-import type { UpdateApplicationUseCase } from "../../application/usesCase/application(solicitud)/UpdateApplicationUseCase";
-import type { FindByApprenticeUseCase } from "../../application/usesCase/application(solicitud)/FindByApprenticeUseCase";
+import { CreateApplicationUseCase } from "../../application/usesCase/application(solicitud)/CreateApplicatonUseCase";
+import { GetApplicationUseCase } from "../../application/usesCase/application(solicitud)/GetApplicationUseCase";
+import { DeleteApplicationUseCase } from "../../application/usesCase/application(solicitud)/DeleteApplicationUseCase";
+import { ListApplicationUseCase } from "../../application/usesCase/application(solicitud)/ListApplicationUseCase";
+//import { CreateApplicationDto } from "../../application/dtos/application(solicitud)/CreateApplicationDto";
+import { UpdateApplicationUseCase } from "../../application/usesCase/application(solicitud)/UpdateApplicationUseCase";
+
 import { VisualConceptRepository } from '../repositories/VisualConceptRepository';
 import { CreateVisualConceptUseCase } from '../../application/usesCase/visualConcept/CreateVisualConceptUseCase';
 import { DeleteVisualConceptUseCase } from '../../application/usesCase/visualConcept/DeleteVisualConceptUseCase';
@@ -127,6 +128,9 @@ import { UpdateContractUseCase } from "../../application/usesCase/contract/Updat
 import { GetAllContractUseCase } from "../../application/usesCase/contract/GetAllContractUseCase";
 import { FindContractByIdUseCase } from "../../application/usesCase/contract/FindContractByIdUseCase";
 import { FindActivitiesByGroupUseCase } from "../../application/usesCase/activity/FindActivitiesByGroupUseCase";
+import { ApplicationController } from "../../presentation/controllers/ApplicationController";
+import type { IApplicationRepository } from "../../application/interfaces/repositories/IApplicationRepository";
+import { ApplicationRepository } from "../repositories/ApplicationRepository";
  
 
  
@@ -159,6 +163,11 @@ container
 	.to(ApprenticeRepository)
 	.inSingletonScope();
 
+  container
+	.bind<IApplicationRepository>(Types.IApplicationRepository)
+	.to(ApplicationRepository)
+	.inSingletonScope();
+
 container
 	.bind<IAgencyRepository>(Types.IAgencyRepository)
 	.to(AgencyRepository)
@@ -183,6 +192,7 @@ container
 
   container.bind<IActivityRepository>(Types.IActivityRepository)
   .to(ActivityRepository)
+
   container.bind<IPopularityListRepository>(Types.IPopularityListRepository)
   .to(PopularityListRepository)
   .inSingletonScope();
@@ -453,6 +463,30 @@ container.bind<UpdatePopularityListUseCase>(Types.UpdatePopularityListUseCase)
   .inTransientScope();
 
   //#endregion
+
+
+//#region Application
+
+  container.bind<GetApplicationUseCase>(Types.GetApplicationUseCase)
+  .to(GetApplicationUseCase)
+  .inTransientScope();
+
+  container.bind<UpdateApplicationUseCase>(Types.UpdateApplicationUseCase)
+  .to(UpdateApplicationUseCase)
+  .inTransientScope();
+
+  container.bind<DeleteApplicationUseCase>(Types.DeleteApplicationUseCase)
+  .to(DeleteApplicationUseCase)
+  .inTransientScope();
+
+   container.bind<CreateApplicationUseCase>(Types.CreateApplicationUseCase)
+  .to(CreateApplicationUseCase)
+  .inTransientScope();
+
+  container.bind<ListApplicationUseCase>(Types.ListApplicationUseCase)
+  .to(ListApplicationUseCase)
+  .inTransientScope();
+  //#endregion
 // // Use Cases - Auth
 
 //#region Auth
@@ -587,6 +621,10 @@ container.bind<AuthController>(Types.AuthController)
 
 container.bind<ApprenticeController>(Types.ApprenticeController)
   .to(ApprenticeController)
+  .inTransientScope();
+
+  container.bind<ApplicationController>(Types.ApplicationController)
+  .to(ApplicationController)
   .inTransientScope();
 
 container.bind<AgencyController>(Types.AgencyController)

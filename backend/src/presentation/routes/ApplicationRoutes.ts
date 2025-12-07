@@ -18,11 +18,10 @@ export class ApplicationRoutes{
 
   private setupRoutes(): void {
      
-    this.router.use(AuthMiddleware.authenticate())
-    this.router.post('/:id',RoleMiddleware.onlyStaff(), (req, res) => this.applicationController.createApplication(req, res))
+    this.router.post('/', (req, res) => this.applicationController.createApplication(req, res))
     this.router.get('/:id', (req, res) => this.applicationController.getApplication(req,res))
-    this.router.put('/:id',RoleMiddleware.onlyStaff(),(req, res) => this.applicationController.updateApplication(req, res))
-    this.router.delete('/:id',RoleMiddleware.onlyStaff(),(req, res) => this.applicationController.deleteApplication(req, res))
+    this.router.put('/:id', (req, res) => this.applicationController.updateApplication(req, res))
+    this.router.delete('/:id',(req, res) => this.applicationController.deleteApplication(req, res))
     this.router.get('/',(req, res) => this.applicationController.listApplication(req, res))
     
   }
