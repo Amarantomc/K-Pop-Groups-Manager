@@ -3,13 +3,13 @@ import Sidebar from '../sidebar/Sidebar';
 import Header from '../header/Header';
 import { useAuth } from '../../contexts/auth/AuthContext';
 import './PageLayout.css';
-
 interface PageLayoutProps {
   title: string;
   description: string;
   children: React.ReactNode;
   className?: string;
 }
+
 
 const PageLayout: React.FC<PageLayoutProps> = ({ 
   title, 
