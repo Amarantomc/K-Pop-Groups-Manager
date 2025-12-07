@@ -24,6 +24,7 @@ import Concept from '../../pages/Concept/Concept';
 import ConceptVisual from '../../pages/ConceptVisual/ConceptVisual';
 import PopularityLists from '../../pages/PopularityLists/PopularityLists';
 import Songs from '../../pages/Songs/Songs';
+import Queries from '../../pages/Queries/Queries';
 
 const AppRouter: React.FC = () => {
   const { user, isLoading } = useAuth();
@@ -153,6 +154,11 @@ const AppRouter: React.FC = () => {
           <Users />
         </ProtectedRoute>
       } />
+      <Route path="/admin/queries" element={
+        <ProtectedRoute allowedRoles={['admin']}>
+          <Queries />
+        </ProtectedRoute>
+      } />
 
       {/* RUTAS SOLO PARA DIRECTOR */}
       <Route path="/director/dashboard" element={
@@ -228,6 +234,11 @@ const AppRouter: React.FC = () => {
       <Route path="/director/profile" element={
         <ProtectedRoute allowedRoles={['director']}>
           <Profile />
+        </ProtectedRoute>
+      } />
+      <Route path="/director/queries" element={
+        <ProtectedRoute allowedRoles={['director']}>
+          <Queries />
         </ProtectedRoute>
       } />
 
@@ -310,6 +321,11 @@ const AppRouter: React.FC = () => {
       <Route path="/manager/profile" element={
         <ProtectedRoute allowedRoles={['manager']}>
           <Profile />
+        </ProtectedRoute>
+      } />
+      <Route path="/manager/queries" element={
+        <ProtectedRoute allowedRoles={['manager']}>
+          <Queries />
         </ProtectedRoute>
       } />
 

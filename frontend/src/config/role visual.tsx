@@ -45,6 +45,12 @@ export const MenuByRole: Record<string, MenuSection[]> = {
             ]
         },
         {
+            title: "CONSULTAS",
+            items: [
+                { label: "Consultas Especializadas", icon: <AssessmentIcon />, path: "/admin/queries" }
+            ]
+        },
+        {
             title: "AGENCIA",
             items: [
                 { label: "Mostrar Agencias", icon: <BusinessIcon />, path: "/admin/agency" }
@@ -145,6 +151,12 @@ export const MenuByRole: Record<string, MenuSection[]> = {
             ]
         },
         {
+            title: "CONSULTAS",
+            items: [
+                { label: "Consultas Especializadas", icon: <AssessmentIcon />, path: "/director/queries" }
+            ]
+        },
+        {
             title: "APRENDIZ",
             items: [
                 { label: "Mostrar Aprendices", icon: <SchoolIcon />, path: "/director/apprentice" }
@@ -237,6 +249,12 @@ export const MenuByRole: Record<string, MenuSection[]> = {
             title: "INICIO",
             items: [
                 { label: "Inicio", icon: <DashboardIcon />, path: "/manager/dashboard" }
+            ]
+        },
+         {
+            title: "CONSULTAS",
+            items: [
+                { label: "Consultas Especializadas", icon: <AssessmentIcon />, path: "/manager/queries" }
             ]
         },
         {

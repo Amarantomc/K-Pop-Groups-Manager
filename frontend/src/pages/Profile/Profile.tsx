@@ -4,6 +4,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Form from "../../components/form/Form";
 import Header from '../../components/header/Header';
 import Sidebar from '../../components/sidebar/Sidebar';
+import ConfirmDialog from '../../components/confirmDialog/ConfirmDialog';
 import formFieldsByEntity, { managerDirectorFields, ROLE_MAPPING } from "../../config/formSource";
 import type { Field } from "../../config/formSource";
 import { useAuth } from '../../contexts/auth/AuthContext';
@@ -13,6 +14,12 @@ const Profile: React.FC = () => {
   const { user } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
   const [selectedRole, setSelectedRole] = useState<string>('');
+  
+  // Estados para ConfirmDialog
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [openError, setOpenError] = useState(false);
+  const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState('');
   
   // Campos dinámicos basados en el rol seleccionado
   const userFormFields = useMemo<Field[]>(() => {
@@ -42,11 +49,10 @@ const Profile: React.FC = () => {
 
   const handleDeleteProfile = async () => {
     if (!user) {
-      alert('No hay usuario autenticado');
+      setDialogMessage('No hay usuario autenticado');
+      setOpenError(true);
       return;
     }
-    const ok = window.confirm('¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.');
-    if (!ok) return;
 
     const API_BASE = 'http://localhost:3000';
     try {
@@ -59,25 +65,27 @@ const Profile: React.FC = () => {
         const raw = await res.text().catch(() => '');
         let msg = 'Error al eliminar cuenta';
         try { const j = JSON.parse(raw); msg = j?.message || j?.error || raw || msg; } catch(e) { msg = raw || msg; }
-        alert(msg);
+        setDialogMessage(msg);
+        setOpenError(true);
         return;
       }
 
       // limpiar almacenamiento y redirigir al login
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      alert('Cuenta eliminada correctamente');
       window.location.href = '/login';
     } catch (err) {
       console.error('Error al eliminar cuenta:', err);
-      alert(err instanceof Error ? err.message : 'Error de red');
+      setDialogMessage(err instanceof Error ? err.message : 'Error de red');
+      setOpenError(true);
     }
   };
 
   const handleSubmit = (data: FormData | Record<string, any>) => {
     // Verificar que solo el admin pueda crear usuarios
     if (user?.role !== 'admin') {
-      alert('No tienes permisos para crear usuarios. Solo el administrador puede realizar esta acción.');
+      setDialogMessage('No tienes permisos para crear usuarios. Solo el administrador puede realizar esta acción.');
+      setOpenError(true);
       return;
     }
 
@@ -130,14 +138,16 @@ const Profile: React.FC = () => {
         // Validar rol (con mayúscula inicial como espera el backend)
         const validRoles = ['Admin', 'Manager', 'Director', 'Apprentice', 'Artist'];
         if (!validRoles.includes(userRole)) {
-          alert(`Rol inválido: ${userRole}. Debe ser uno de: ${validRoles.join(', ')}`);
+          setDialogMessage(`Rol inválido: ${userRole}. Debe ser uno de: ${validRoles.join(', ')}`);
+          setOpenError(true);
           return;
         }
 
   // Obtener token de autenticación
         const token = localStorage.getItem('token');
         if (!token) {
-          alert('Debe iniciar sesión para crear usuarios');
+          setDialogMessage('Debe iniciar sesión para crear usuarios');
+          setOpenError(true);
           return;
         }
         
@@ -278,13 +288,15 @@ const Profile: React.FC = () => {
         if (userRole === 'Manager' || userRole === 'Director') {
           console.log('Procesando Manager/Director...');
           if (!payload.agencyName) {
-            alert('Debe proporcionar el nombre de la agencia');
+            setDialogMessage('Debe proporcionar el nombre de la agencia');
+            setOpenError(true);
             return;
           }
           console.log('Buscando agencia:', payload.agencyName);
           const agencyId = await getAgencyIdByName(payload.agencyName);
           if (!agencyId) {
-            alert(`No se encontró la agencia con nombre: ${payload.agencyName}`);
+            setDialogMessage(`No se encontró la agencia con nombre: ${payload.agencyName}`);
+            setOpenError(true);
             return;
           }
           console.log('Agencia encontrada con ID:', agencyId);
@@ -293,14 +305,16 @@ const Profile: React.FC = () => {
         } else if (userRole === 'Apprentice') {
           console.log('Procesando Apprentice...');
           if (!payload.name) {
-            alert('Debe proporcionar el nombre de usuario');
+            setDialogMessage('Debe proporcionar el nombre de usuario');
+            setOpenError(true);
             return;
           }
           
           console.log('Buscando aprendiz por nombre de usuario:', payload.name);
           const apprenticeId = await getApprenticeIdByName(payload.name);
           if (!apprenticeId) {
-            alert(`No se encontró el aprendiz con nombre: ${payload.name}`);
+            setDialogMessage(`No se encontró el aprendiz con nombre: ${payload.name}`);
+            setOpenError(true);
             return;
           }
           console.log('Aprendiz encontrado con ID:', apprenticeId);
@@ -310,7 +324,8 @@ const Profile: React.FC = () => {
         } else if (userRole === 'Artist') {
           console.log('Procesando Artist...');
           if (!payload.name) {
-            alert('Debe proporcionar el nombre de usuario');
+            setDialogMessage('Debe proporcionar el nombre de usuario');
+            setOpenError(true);
             return;
           }
           
@@ -318,7 +333,8 @@ const Profile: React.FC = () => {
           console.log('Paso 1: Buscando aprendiz por nombre:', payload.name);
           const apprenticeId = await getApprenticeIdByName(payload.name);
           if (!apprenticeId) {
-            alert(`No se encontró el aprendiz con nombre: ${payload.name}`);
+            setDialogMessage(`No se encontró el aprendiz con nombre: ${payload.name}`);
+            setOpenError(true);
             return;
           }
           console.log('Aprendiz encontrado con ID:', apprenticeId);
@@ -328,7 +344,8 @@ const Profile: React.FC = () => {
           const groupId = await getArtistGroupByApprenticeId(apprenticeId);
           
           if (!groupId) {
-            alert(`El aprendiz "${payload.name}" no está registrado como artista o no tiene grupo asignado`);
+            setDialogMessage(`El aprendiz "${payload.name}" no está registrado como artista o no tiene grupo asignado`);
+            setOpenError(true);
             return;
           }
           console.log('Artista encontrado con IdGr:', groupId);
@@ -359,22 +376,26 @@ const Profile: React.FC = () => {
         if (!res.ok) {
           // El backend retorna { success: false, error: "mensaje" }
           const msg = responseData?.error || responseData?.message || `Error al crear usuario (${res.status})`;
-          alert(msg);
+          setDialogMessage(msg);
+          setOpenError(true);
           console.error('Error del servidor:', responseData);
           return;
         }
 
         // El backend retorna { success: true, data: {...} }
         if (responseData?.success) {
-          alert('Usuario creado correctamente');
+          setDialogMessage('Usuario creado correctamente');
+          setOpenSuccess(true);
           setShowUserForm(false);
         } else {
-          alert('Usuario creado pero respuesta inesperada');
+          setDialogMessage('Usuario creado pero respuesta inesperada');
+          setOpenError(true);
           console.warn('Respuesta inesperada:', responseData);
         }
       } catch (err) {
         console.error('Error creando usuario:', err);
-        alert(err instanceof Error ? err.message : 'Error de red');
+        setDialogMessage(err instanceof Error ? err.message : 'Error de red');
+        setOpenError(true);
       }
     })();
   };
@@ -416,7 +437,13 @@ const Profile: React.FC = () => {
                     <h2>{displayName}</h2>
                     <p className="meta-line"><strong>Email:</strong> {user.email ?? '-'}</p>
                     <p className="meta-line"><strong>Rol:</strong> {displayRole}</p>
-                    {/*<p className="meta-line"><strong>Agencia:</strong> {user.agencyName ?? '-'}</p>*/}
+                    
+                    {/* Campos dinámicos según el rol */}
+                    {(user.role === 'manager' || user.role === 'director') && user.agencyId && (
+                      <p className="meta-line"><strong>ID Agencia:</strong> {user.agencyId}</p>
+                    )}
+
+                    
                     <div className="profile-actions">
                       {
                       <button className="btn btn-primary" onClick={() => { setShowPasswordForm(true); setShowUserForm(false); }}>
@@ -429,7 +456,7 @@ const Profile: React.FC = () => {
                   {/* ID en la esquina superior derecha del header (alineado a la derecha dentro del flex) */}
                   <div className="profile-id-top">{user.id ?? '-'}</div>
                 </div>
-              <button className="delete-profile-btn" onClick={handleDeleteProfile}>
+              <button className="delete-profile-btn" onClick={() => setOpenConfirmDelete(true)}>
                 Eliminar perfil
               </button>
               </div>
@@ -440,14 +467,14 @@ const Profile: React.FC = () => {
             )}
           </div>
 
-          {/* Contenedor con los dos botones solicitados debajo del header/tarjeta */}
+          {/*{/* Contenedor con los dos botones solicitados debajo del header/tarjeta }
           {user?.role === 'admin' && (
             <div className="profile-button-row" style={{ marginTop: 18 }}>
               <button className="primary-btn" onClick={() => { setShowUserForm(!showUserForm); setShowPasswordForm(false); }}>
                 Añadir usuario
               </button>
             </div>
-          )}
+          )*/}
 
           {showUserForm && user?.role === 'admin' && (
             <div className="Profile-form">
@@ -493,23 +520,28 @@ const Profile: React.FC = () => {
                       onClick={async () => {
                         // Validaciones cliente
                         if (!pfCurrent.trim()) {
-                          alert('Debe ingresar la contraseña actual');
+                          setDialogMessage('Debe ingresar la contraseña actual');
+                          setOpenError(true);
                           return;
                         }
                         if (!pfNew.trim()) {
-                          alert('Debe ingresar la nueva contraseña');
+                          setDialogMessage('Debe ingresar la nueva contraseña');
+                          setOpenError(true);
                           return;
                         }
                         if (pfNew.length < 6) {
-                          alert('La nueva contraseña debe tener al menos 6 caracteres');
+                          setDialogMessage('La nueva contraseña debe tener al menos 6 caracteres');
+                          setOpenError(true);
                           return;
                         }
                         if (pfNew !== pfConfirm) {
-                          alert('La nueva contraseña y la confirmación no coinciden');
+                          setDialogMessage('La nueva contraseña y la confirmación no coinciden');
+                          setOpenError(true);
                           return;
                         }
                         if (!user) {
-                          alert('No hay usuario autenticado');
+                          setDialogMessage('No hay usuario autenticado');
+                          setOpenError(true);
                           return;
                         }
 
@@ -517,7 +549,8 @@ const Profile: React.FC = () => {
                         try {
                           const token = localStorage.getItem('token');
                           if (!token) {
-                            alert('Debe iniciar sesión para cambiar la contraseña');
+                            setDialogMessage('Debe iniciar sesión para cambiar la contraseña');
+                            setOpenError(true);
                             return;
                           }
 
@@ -555,7 +588,8 @@ const Profile: React.FC = () => {
                             } catch(e) {
                               msg = raw || msg;
                             }
-                            alert(msg);
+                            setDialogMessage(msg);
+                            setOpenError(true);
                             console.error('Error del servidor:', raw);
                             return;
                           }
@@ -568,7 +602,8 @@ const Profile: React.FC = () => {
                             localStorage.setItem('user', JSON.stringify(responseData.data));
                           }
 
-                          alert('Contraseña cambiada correctamente');
+                          setDialogMessage('Contraseña cambiada correctamente');
+                          setOpenSuccess(true);
                           setPfCurrent('');
                           setPfNew('');
                           setPfConfirm('');
@@ -579,7 +614,8 @@ const Profile: React.FC = () => {
 
                         } catch (err) {
                           console.error('Error cambiando contraseña:', err);
-                          alert(err instanceof Error ? err.message : 'Error de red');
+                          setDialogMessage(err instanceof Error ? err.message : 'Error de red');
+                          setOpenError(true);
                         }
                       }}
                     >
@@ -592,6 +628,33 @@ const Profile: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* ConfirmDialogs */}
+      <ConfirmDialog 
+        message="¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer."
+        open={openConfirmDelete}
+        onCancel={() => setOpenConfirmDelete(false)}
+        onConfirm={handleDeleteProfile}
+        title="Confirmar eliminación"
+      />
+      <ConfirmDialog 
+        title="¡Éxito!"
+        message={dialogMessage}
+        open={openSuccess}
+        onCancel={() => setOpenSuccess(false)}
+        onConfirm={() => setOpenSuccess(false)}
+        confirmText="Aceptar"
+        showDeleteButton={false}
+      />
+      <ConfirmDialog 
+        title="Error"
+        message={dialogMessage}
+        open={openError}
+        onCancel={() => setOpenError(false)}
+        onConfirm={() => setOpenError(false)}
+        confirmText="Aceptar"
+        showDeleteButton={false}
+      />
     </div>
   );
 };
