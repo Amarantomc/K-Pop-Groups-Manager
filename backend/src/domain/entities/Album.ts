@@ -11,7 +11,7 @@ export default class Album {
     readonly producer: string;
     readonly noSongs: number;
     readonly noCopiesSold: number;
-    readonly songs: Array<Song>;
+    readonly songs?: Array<Song> | undefined;
     readonly artists: Array<Artist>;
     readonly awards: Array<Award>;
 
@@ -24,7 +24,7 @@ export default class Album {
         producer: string;
         noSongs: number;
         noCopiesSold: number;
-        songs: Array<Song>;
+        songs?: Array<Song> | undefined;
         artists?: Array<Artist>;
         awards?: Array<Award>;
     }) {

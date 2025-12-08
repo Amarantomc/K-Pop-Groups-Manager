@@ -1,11 +1,5 @@
-import { AlbumController } from '../../presentation/controllers/AlbumController';
-import type { IAlbumRepository } from '../../application/interfaces/repositories/IAlbumRepository';
 
-// ...después de const container = new Container();
-const container = new Container();
-container.bind(Types.AlbumController)
-  .to(AlbumController)
-  .inSingletonScope();
+ 
  
 
 import type { IGroupRepository } from "../../application/interfaces/repositories/IGroupRepository";
@@ -157,7 +151,7 @@ import { UpdateIncomeUseCase } from "../../application/usesCase/income/UpdateInc
 import { IncomeController } from "../../presentation/controllers/IncomeController";
 import { CreateGroupToApplicationUseCase } from "../../application/usesCase/application(solicitud)/CreateGroupToApplicationUseCase";
  
-
+const container=new Container()
  
  
 
@@ -176,25 +170,8 @@ container
 
   //#region Repositories
   // Repositories
-container
-  .bind<IAlbumRepository>(Types.IAlbumRepository)
-  .to(require('../repositories/AlbumRepository').AlbumRepository)
-  .inSingletonScope();
-container.bind(Types.CreateAlbumUseCase)
-  .to(require('../../application/usesCase/album/CreateAlbumUseCase').CreateAlbumUseCase)
-  .inTransientScope();
-container.bind(Types.GetAlbumUseCase)
-  .to(require('../../application/usesCase/album/GetAlbumUseCase').GetAlbumUseCase)
-  .inTransientScope();
-container.bind(Types.ListAlbumUseCase)
-  .to(require('../../application/usesCase/album/ListAlbumUseCase').ListAlbumUseCase)
-  .inTransientScope();
-container.bind(Types.UpdateAlbumUseCase)
-  .to(require('../../application/usesCase/album/UpdateAlbumUseCase').UpdateAlbumUseCase)
-  .inTransientScope();
-container.bind(Types.DeleteAlbumUseCase)
-  .to(require('../../application/usesCase/album/DeleteAlbumUseCase').DeleteAlbumUseCase)
-  .inTransientScope();
+ 
+ 
 container
 	.bind<IUserRepository>(Types.IUserRepository)
 	.to(UserRepository)

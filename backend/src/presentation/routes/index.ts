@@ -18,7 +18,7 @@ import { ContractRoutes } from "./ContractRoutes";
 import { ApplicationRoutes } from "./ApplicationRoutes";
 import { SongRoutes } from "./SongRoutes";
 import { IncomeRoutes } from "./IncomeRoutes";
-import { AlbumRoutes } from "./albumRoutes";
+ 
  
 
 
@@ -38,7 +38,7 @@ const contractRoutes=new ContractRoutes();
 const applicationRoutes=new ApplicationRoutes();
 const songRoutes=new SongRoutes();
 const incomeRoutes = new IncomeRoutes();
-const albumRoutes = new AlbumRoutes();
+ 
 
 
 rootRouter.use("/auth", authRoutes.getRouter());
@@ -56,7 +56,7 @@ rootRouter.use('/contract',contractRoutes.getRouter())
 rootRouter.use('/application',applicationRoutes.getRouter())
 rootRouter.use('/song',songRoutes.getRouter())
 rootRouter.use('/income',incomeRoutes.getRouter())
-rootRouter.use('/album', albumRoutes.getRouter());
+ 
 
 
 export default rootRouter;
