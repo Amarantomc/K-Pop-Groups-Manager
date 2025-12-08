@@ -1,5 +1,12 @@
 // src/infrastructure/di/TYPES.ts
 const Types = {
+  AlbumController: Symbol.for('AlbumController'),
+    IAlbumRepository: Symbol.for('IAlbumRepository'),
+    CreateAlbumUseCase: Symbol.for('CreateAlbumUseCase'),
+    GetAlbumUseCase: Symbol.for('GetAlbumUseCase'),
+    ListAlbumUseCase: Symbol.for('ListAlbumUseCase'),
+    UpdateAlbumUseCase: Symbol.for('UpdateAlbumUseCase'),
+    DeleteAlbumUseCase: Symbol.for('DeleteAlbumUseCase'),
   // Database
   PrismaClient: Symbol.for('PrismaClient'),
   

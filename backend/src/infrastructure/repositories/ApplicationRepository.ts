@@ -12,6 +12,7 @@ import { GroupResponseDTO } from "../../application/dtos/group/GroupResponseDTO"
 import type { CreateGroupDTO } from "../../application/dtos/group/CreateGroupDTO";
 
 
+
 @injectable()
 export class ApplicationRepository implements IApplicationRepository
 {   
@@ -85,11 +86,18 @@ export class ApplicationRepository implements IApplicationRepository
     async findById(id: any): Promise<Application | null> {
          id=(Number)(id)
         const application=await this.db.Solicitud.findUnique({
-           where:{id}
+           where:{id},
+           include:{
+            AprendizMiembro:true,
+            ArtistaMiembro:true
+           }
         })
-        //console.log(application);
+        const apprentices = await this.db.Solicitud.findMany()
+        console.log(apprentices);
         return application ? ApplicationResponseDto.toEntity(application) : null
     }
+
+    
 
     async update(id: string, data: Partial<UpdateApplicationDto>): Promise<Application> {
         const application = await this.db.Solicitud.update({
