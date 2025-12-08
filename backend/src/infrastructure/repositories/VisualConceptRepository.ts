@@ -81,7 +81,10 @@ export class VisualConceptRepository implements IVisualConceptRepository
 
     async findAll(): Promise<VisualConcept[]> {
       const visualConcepts = await this.db.ConceptoVisual.findMany();
-
-      return visualConcepts
+      // Mapear los resultados a VisualConceptResponseDto para asegurar que picture se incluya
+      return visualConcepts.map(vc => ({
+        id: vc.id,
+        picture: vc.imagen
+      }));
   }
 }

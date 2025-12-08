@@ -20,11 +20,11 @@ export class UserRoutes {
   private setupRoutes(): void {
     //this.router.use(AuthMiddleware.authenticate())
     this.router.post('/',  (req, res) => this.userController.createUser(req, res))
-    this.router.get('/',RoleMiddleware.onlyAdmin(),(req,res)=>this.userController.getUsers(req,res))
-    this.router.get('/:id',RoleMiddleware.onlyAdmin(),(req,res)=>this.userController.getUser(req,res))
+    this.router.get('/',(req,res)=>this.userController.getUsers(req,res))
+    this.router.get('/:id',(req,res)=>this.userController.getUser(req,res))
     //Cambiar por check de token.user.id==id
     this.router.put('/:id',RoleMiddleware.updatePropertiesId(),(req, res) => this.userController.updateUser(req, res))
-    this.router.delete('/:id',RoleMiddleware.onlyAdmin(), (req, res) => this.userController.deleteUser(req, res))
+    this.router.delete('/:id', (req, res) => this.userController.deleteUser(req, res))
     
 
    

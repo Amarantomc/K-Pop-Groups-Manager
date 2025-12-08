@@ -3,7 +3,9 @@ export class UpdateApplicationDto {
     constructor(
         public readonly groupName?: string,
         public readonly roles?: string[],
-        public readonly status?: string,
+        public readonly apprentices?: Number[],
+        public readonly artists?: [number,number][],
+        public readonly estado?: string,
     ) {}
 
     static create(body: any): UpdateApplicationDto {
@@ -13,9 +15,6 @@ export class UpdateApplicationDto {
         if(!body.roles ){
             throw new Error("Missing required fields");
         }
-        if(!body.status || body.status === "Pendiente" || body.status === "Aprobado" || body.status === "Rechazado" || body.statud === "Terminado"){
-            throw new Error("invalid Status");
-        }
-        return new UpdateApplicationDto(body.groupName,body.roles,body.status)
+        return new UpdateApplicationDto(body.groupName,body.roles,body.apprentices,body.artists,body.estado)
     }
 }

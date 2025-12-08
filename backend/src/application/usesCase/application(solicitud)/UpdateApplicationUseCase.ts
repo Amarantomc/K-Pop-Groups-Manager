@@ -1,6 +1,7 @@
 import { inject, injectable } from "inversify";
 import { Types } from "../../../infrastructure/di/Types";
 import type { IApplicationRepository } from "../../interfaces/repositories/IApplicationRepository";
+import type { CreateApplicationDto } from "../../dtos/application(solicitud)/CreateApplicationDto";
 import { ApplicationResponseDto } from "../../dtos/application(solicitud)/ApplicationResponseDto";
 import type { UpdateApplicationDto } from "../../dtos/application(solicitud)/UpdateApplicationDto";
 
@@ -10,7 +11,7 @@ export class UpdateApplicationUseCase {
 
   async execute(
     applicationId: string,
-    data: Partial<UpdateApplicationDto>
+    data: Partial<CreateApplicationDto>
   ): Promise<ApplicationResponseDto> {
 
     const application = await this.applicationRepository.findById(applicationId);
@@ -27,10 +28,7 @@ export class UpdateApplicationUseCase {
       updatedApplication.date,
       updatedApplication.idConcept,
       updatedApplication.roles,
-      updatedApplication.idAgency,
-      updatedApplication.apprentices,
-      updatedApplication.artists,
-      updatedApplication.status,
+      updatedApplication.idAgency
     );
   }
 }
