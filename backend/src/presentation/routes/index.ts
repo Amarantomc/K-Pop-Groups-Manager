@@ -13,6 +13,7 @@ import { AwardRoutes } from "./AwardRoutes";
 import { PopularityListRoutes } from "./PopularityListRoutes";
 import { ContractRoutes } from "./ContractRoutes";
 import { ApplicationRoutes } from "./ApplicationRoutes";
+import { SongRoutes } from "./SongRoutes";
  
 
 
@@ -30,6 +31,7 @@ const awardRoutes = new AwardRoutes();
 const popularityListRoutes=new PopularityListRoutes()
 const contractRoutes=new ContractRoutes()
 const applicationRoutes=new ApplicationRoutes()
+const songRoutes=new SongRoutes()
  
 
 rootRouter.use("/auth", authRoutes.getRouter());
@@ -45,6 +47,7 @@ rootRouter.use("/award", awardRoutes.getRouter());
 rootRouter.use('/populist',popularityListRoutes.getRouter())
 rootRouter.use('/contract',contractRoutes.getRouter())
 rootRouter.use('/application',applicationRoutes.getRouter())
+rootRouter.use('/song',songRoutes.getRouter())
 
 
 export default rootRouter;

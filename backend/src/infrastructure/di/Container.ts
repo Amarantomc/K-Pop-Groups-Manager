@@ -131,6 +131,10 @@ import { FindActivitiesByGroupUseCase } from "../../application/usesCase/activit
 import { ApplicationController } from "../../presentation/controllers/ApplicationController";
 import type { IApplicationRepository } from "../../application/interfaces/repositories/IApplicationRepository";
 import { ApplicationRepository } from "../repositories/ApplicationRepository";
+import { SongController } from "../../presentation/controllers/SongController";
+import { CreateSongUseCase } from "../../application/usesCase/song/CreateSongUseCase";
+import { DeleteSongUseCase } from "../../application/usesCase/song/DeleteSongUseCase";
+import { FindSongByIdUseCase } from "../../application/usesCase/song/FindSongByIdUseCase";
  
 
  
@@ -603,6 +607,22 @@ container.bind<CreateVisualConceptUseCase>(Types.CreateVisualConceptUseCase)
   .inTransientScope();
   //#endregion
 
+
+  //#region Song UseCase
+  container.bind<CreateSongUseCase>(Types.CreateSongUseCase)
+  .to(CreateSongUseCase)
+  .inTransientScope();
+
+   container.bind<DeleteSongUseCase>(Types.DeleteSongUseCase)
+  .to(DeleteSongUseCase)
+  .inTransientScope();
+
+  container.bind<FindSongByIdUseCase>(Types.FindSongByIdUseCase)
+  .to(FindSongByIdUseCase)
+  .inTransientScope();
+
+  //#endregion
+
 // Controllers
 //#region Controllers
 
@@ -657,6 +677,10 @@ container.bind<AgencyController>(Types.AgencyController)
   container.bind<ContractController>(Types.ContractController)
   .to(ContractController)
   .inTransientScope();
+
+  container.bind<SongController>(Types.SongController)
+  .to(SongController)
+  .inTransientScope()
   
   //#endregion
 
