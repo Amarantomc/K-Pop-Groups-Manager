@@ -152,6 +152,7 @@ const Activities: React.FC = () => {
         }
 
         const data = await response.json();
+        console.log(data.data)
         setActivities(data.data || data);
 
         // ============================================
