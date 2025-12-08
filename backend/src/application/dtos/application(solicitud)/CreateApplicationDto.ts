@@ -7,10 +7,11 @@ export class CreateApplicationDto {
         public readonly idConcept: number,
         public readonly apprentices: Array<number>,
         public readonly artists:Array<[number, number]>,
+        public readonly estado: string,
     ) {}
 
     static create(body: any): CreateApplicationDto {
-        if (!body.groupName || !body.idAgency || !body.idConcept || !body.roles) {
+        if (!body.groupName || !body.idAgency || !body.idConcept || !body.roles || !body.estado) {
             throw new Error("Missing required fields");
         }
         // Validar que roles sea un array
@@ -23,7 +24,8 @@ export class CreateApplicationDto {
             body.roles,
             body.idConcept,
             body.apprentices,
-            body.artists
+            body.artists,
+            body.estado
         );
     }
 }

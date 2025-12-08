@@ -202,6 +202,7 @@ model Solicitud{
   ArtistaMiembro Artista []
   SolicitudGrupoAprendiz AprendizSolicitaGrupo[]
   SolicitudGrupoArtista ArtistaSolicitaGrupo[]
+    estado String
 }
 model ListaPopularidad{
   id Int @id @default(autoincrement())

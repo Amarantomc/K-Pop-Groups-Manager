@@ -39,6 +39,7 @@ export class ApplicationRepository implements IApplicationRepository
         idAgencia: idAgency,
         idConcepto: idConcept,
         roles: data.roles,
+        estado: data.estado,
         AprendizMiembro: data.apprentices ? { connect: data.apprentices.map(id => ({ id })) } : undefined,
         ArtistaMiembro: data.artists ? 
            { connect: data.artists.map(([idAp, idGr]) => ({

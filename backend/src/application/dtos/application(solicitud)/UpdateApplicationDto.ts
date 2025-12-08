@@ -5,6 +5,7 @@ export class UpdateApplicationDto {
         public readonly roles?: string[],
         public readonly apprentices?: Number[],
         public readonly artists?: [number,number][],
+        public readonly estado?: string,
     ) {}
 
     static create(body: any): UpdateApplicationDto {
@@ -14,6 +15,6 @@ export class UpdateApplicationDto {
         if(!body.roles ){
             throw new Error("Missing required fields");
         }
-        return new UpdateApplicationDto(body.groupName,body.roles,body.apprentices,body.artists)
+        return new UpdateApplicationDto(body.groupName,body.roles,body.apprentices,body.artists,body.estado)
     }
 }
