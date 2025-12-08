@@ -7,6 +7,7 @@ import Modal from '../../components/modal/Modal';
 import { useAuth } from '../../contexts/auth/AuthContext';
 import { groupFields } from '../../config/formSource';
 import { groupConstraints } from '../../config/modalConstraints';
+import { groupColumns } from '../../config/datatableSource';
 import ConfirmDialog from '../../components/confirmDialog/ConfirmDialog';
 
 interface Group {
@@ -131,7 +132,17 @@ const Groups: React.FC = () => {
         }
 
         const data = await response.json();
-        setGroups(data.data || data);
+        console.log(data)
+        const formattedData = data.data.map((group : any , index : number) => ({
+                        id : group.id ?? index,
+                        name : group.name,
+                        debutDate : group.debut,
+                        members : group.memberCount,
+                        status : group.status,
+                        
+                        IdAgency : group.IdAgency,
+                    }))
+        setGroups(formattedData);
         // ============================================
         // FIN SECCIÓN: BACKEND ENDPOINT
         // ============================================
@@ -370,7 +381,7 @@ const Groups: React.FC = () => {
       ) : (
         <>
           <DataTable
-            columns={columns}
+            columns={groupColumns}
             rows={groups}
             pagesize={10}
             onDelete={askDelete}

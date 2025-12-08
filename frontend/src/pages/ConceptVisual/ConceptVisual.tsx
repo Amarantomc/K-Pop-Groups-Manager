@@ -87,10 +87,10 @@ const ConceptVisual: React.FC = () => {
         switch (user.role) {
           case 'manager':
           case 'director':
-            endpoint = `/api/concept-visual?agencyId=${user.agencyId}`;
+            endpoint = `/api/visual-concept?agencyId=${user.agencyId}`;
             break;
           case 'admin':
-            endpoint = '/api/concept-visual';
+            endpoint = '/api/visual-concept';
             break;
           default:
             console.error('Rol no autorizado:', user.role);

@@ -23,8 +23,10 @@ export const userColumns: GridColDef[] = [
 ]
 
 export const artistColumns: GridColDef[] = [
-    { field: 'name', headerName: 'Nombre Artístico', width: 200 },
+    { field: 'ArtistName', headerName: 'Nombre Artístico', width: 200 },
     { field: 'realName', headerName: 'Nombre Real', width: 200 },
+    {field: 'DebutDate',headerName: 'Fecha Debut',width: 150},
+    {field: 'Status',headerName: 'Estado',width:120},
     { field: 'dateOfBirth', headerName: 'Fecha de Nacimiento', width: 150 },
 ]
 
@@ -50,12 +52,14 @@ export const songColumns: GridColDef[] = [
     { field: 'producer', headerName: 'Productor', width: 150 },
     { field: 'releaseDate', headerName: 'Fecha Lanzamiento', width: 150 },
     { field: 'genre', headerName: 'Género', width: 120 },
+    {field:'albums',headerName:'Albums',width:200}
 ]
 
 // Premio
 export const prizeColumns: GridColDef[] = [
     { field: 'title', headerName: 'Título Premio', width: 250 },
     { field: 'academy', headerName: 'Nombre Academia', width: 200 },
+    {field:'albums',headerName:'Albums',width:200}
 ]
 
 // Lista de Popularidad
