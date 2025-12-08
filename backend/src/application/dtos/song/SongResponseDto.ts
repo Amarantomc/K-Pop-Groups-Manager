@@ -5,7 +5,7 @@ export class SongResponseDto {
   constructor(
     public readonly id: number,
     public readonly title: string,
-    public readonly genre: string,
+    public readonly gender: string,
     public readonly producer: string,
     public readonly releaseDate: string,
     public readonly albums?: Array<{

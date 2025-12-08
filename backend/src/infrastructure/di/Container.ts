@@ -135,6 +135,10 @@ import { SongController } from "../../presentation/controllers/SongController";
 import { CreateSongUseCase } from "../../application/usesCase/song/CreateSongUseCase";
 import { DeleteSongUseCase } from "../../application/usesCase/song/DeleteSongUseCase";
 import { FindSongByIdUseCase } from "../../application/usesCase/song/FindSongByIdUseCase";
+import type { ISongRepository } from "../../application/interfaces/repositories/ISongRepository";
+import { SongRepository } from "../repositories/SongRepository";
+import { UpdateSongUseCase } from "../../application/usesCase/song/UpdateSongUseCase";
+import { GetAllSongsUseCase } from "../../application/usesCase/song/GetAllSongsUseCase";
  
 
  
@@ -207,6 +211,10 @@ container
 
    container.bind<IVisualConceptRepository>(Types.IVisualConceptRepository)
   .to(VisualConceptRepository)
+  .inSingletonScope();
+
+  container.bind<ISongRepository>(Types.ISongRepository)
+  .to(SongRepository)
   .inSingletonScope();
 
   //#endregion
@@ -619,6 +627,14 @@ container.bind<CreateVisualConceptUseCase>(Types.CreateVisualConceptUseCase)
 
   container.bind<FindSongByIdUseCase>(Types.FindSongByIdUseCase)
   .to(FindSongByIdUseCase)
+  .inTransientScope();
+
+  container.bind<UpdateSongUseCase>(Types.UpdateSongUseCase)
+  .to(UpdateSongUseCase)
+  .inTransientScope();
+
+  container.bind<GetAllSongsUseCase>(Types.GetAllSongsUseCase)
+  .to(GetAllSongsUseCase)
   .inTransientScope();
 
   //#endregion

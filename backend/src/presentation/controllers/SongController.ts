@@ -5,6 +5,8 @@ import type { CreateSongUseCase } from "../../application/usesCase/song/CreateSo
 import type { FindSongByIdUseCase } from "../../application/usesCase/song/FindSongByIdUseCase";
 import type { DeleteSongUseCase } from "../../application/usesCase/song/DeleteSongUseCase";
 import { CreateSongDto } from "../../application/dtos/song/CreateSongDto";
+import type { UpdateSongUseCase } from "../../application/usesCase/song/UpdateSongUseCase";
+import type { GetAllSongsUseCase } from "../../application/usesCase/song/GetAllSongsUseCase";
  
  
 
@@ -14,6 +16,8 @@ export class SongController {
     @inject(Types.CreateSongUseCase) private createUseCase: CreateSongUseCase,
     @inject(Types.FindSongByIdUseCase) private findByIdUseCase: FindSongByIdUseCase,
     @inject(Types.DeleteSongUseCase) private deleteUseCase: DeleteSongUseCase,
+    @inject(Types.UpdateSongUseCase) private updateUseCase: UpdateSongUseCase,
+    @inject(Types.GetAllSongsUseCase) private getAllUseCase: GetAllSongsUseCase
   
   ) {}
 
@@ -37,25 +41,25 @@ export class SongController {
     }
   }
 
-//   async getAll(req: Request, res: Response) {
-//     try {
-//       const songs = await this.getAllUseCase.execute();
-//       res.json({ success: true, data: songs });
-//     } catch (e: any) {
-//       res.status(500).json({ success: false, error: e.message });
-//     }
-//   }
+  async getAll(req: Request, res: Response) {
+    try {
+      const songs = await this.getAllUseCase.execute();
+      res.json({ success: true, data: songs });
+    } catch (e: any) {
+      res.status(500).json({ success: false, error: e.message });
+    }
+  }
 
-//   async updateSong(req: Request, res: Response) {
-//     try {
-//       const { id } = req.params;
-//       const dto = UpdateSongDto.Create(req.body);
-//       const updated = await this.updateUseCase.execute(Number(id), dto);
-//       res.json({ success: true, data: updated });
-//     } catch (e: any) {
-//       res.status(400).json({ success: false, error: e.message });
-//     }
-//   }
+  async updateSong(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      
+      const updated = await this.updateUseCase.execute(id!, req.body);
+      res.json({ success: true, data: updated });
+    } catch (e: any) {
+      res.status(400).json({ success: false, error: e.message });
+    }
+  }
 
   async deleteSong(req: Request, res: Response) {
     try {

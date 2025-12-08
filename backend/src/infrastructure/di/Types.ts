@@ -166,6 +166,8 @@ DeleteContractUseCase : Symbol.for('DeleteContractUseCase'),
 CreateSongUseCase : Symbol.for('CreateSongUseCase'),
 FindSongByIdUseCase : Symbol.for('FindSongByIdUseCase'),
 DeleteSongUseCase : Symbol.for('DeleteSongUseCase'),
+UpdateSongUseCase : Symbol.for('UpdateSongUseCase'),
+GetAllSongsUseCase : Symbol.for('GetAllSongsUseCase'),
 //#endregion
 
 
