@@ -97,25 +97,17 @@ const Income: React.FC = () => {
 
         switch (user.role) {
           case 'artist':
-            // Ingresos del artista específico
-            endpoint = `/api/incomes?artistId=${user.profileData?.artistId || user.id}`;
+            endpoint = `/api/income?artistId=${user.profileData?.artistId || user.id}`;
             break;
-
           case 'manager':
-            // Todos los ingresos de todos los artistas de la agencia del manager
-            endpoint = `/api/incomes?agencyId=${user.agencyId}`;
+            endpoint = `/api/income?agencyId=${user.agencyId}`;
             break;
-
           case 'director':
-            // Todos los ingresos de todos los artistas de la agencia del director
-            endpoint = `/api/incomes?agencyId=${user.agencyId}`;
+            endpoint = `/api/income?agencyId=${user.agencyId}`;
             break;
-
           case 'admin':
-            // Implementar más adelante - todos los ingresos del sistema
-            endpoint = '/api/incomes';
+            endpoint = '/api/income';
             break;
-
           default:
             console.error('Rol no reconocido:', user.role);
             return;
@@ -123,8 +115,6 @@ const Income: React.FC = () => {
 
         // ============================================
         // SECCIÓN: BACKEND ENDPOINT
-        // Descomenta esta sección para usar el backend real
-        // ============================================
         const response = await fetch(`http://localhost:3000${endpoint}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -136,7 +126,12 @@ const Income: React.FC = () => {
         }
 
         const data = await response.json();
-        setIncomes(data.data || data);
+        // Normalizar para que cada ingreso tenga 'id'
+        const normalized = (data.data || data).map((income: any) => ({
+          ...income,
+          id: income.idIncome ?? income.id
+        }));
+        setIncomes(normalized);
         // ============================================
         // FIN SECCIÓN: BACKEND ENDPOINT
         // ============================================
@@ -233,7 +228,7 @@ const Income: React.FC = () => {
     if (incomeToDelete === null) return;
 
     try {
-      const response = await fetch(`http://localhost:3000/api/incomes/${incomeToDelete}`, {
+      const response = await fetch(`http://localhost:3000/api/income/${incomeToDelete}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -258,7 +253,7 @@ const Income: React.FC = () => {
 
   const handleEditSave = async (updatedRow: Income) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/incomes/${updatedRow.id}`, {
+      const response = await fetch(`http://localhost:3000/api/income/${updatedRow.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -272,8 +267,12 @@ const Income: React.FC = () => {
       }
 
       const data = await response.json();
+      const updated = data.data || data;
       setIncomes(prev =>
-        prev.map(income => income.id === updatedRow.id ? (data.data || data) : income)
+        prev.map(income => income.id === updatedRow.id ? {
+          ...updated,
+          id: updated.idIncome ?? updated.id
+        } : income)
       );
       setOpenAccept(true);
     } catch (error) {
@@ -296,7 +295,7 @@ const Income: React.FC = () => {
         const headers: Record<string, string> = { 'Content-Type': 'application/json' };
         if (token) headers['Authorization'] = `Bearer ${token}`;
 
-        const url = `${API_BASE}/api/incomes`;
+        const url = `${API_BASE}/api/income`;
         const res = await fetch(url, {
           method: 'POST',
           headers,
@@ -316,7 +315,11 @@ const Income: React.FC = () => {
 
         const result = await res.json().catch(() => null);
         if (result?.data) {
-          setIncomes(prev => [...prev, result.data]);
+          const normalized = {
+            ...result.data,
+            id: result.data.idIncome ?? result.data.id
+          };
+          setIncomes(prev => [...prev, normalized]);
         }
         setOpenAccept(true);
       } catch (err) {
@@ -341,7 +344,12 @@ const Income: React.FC = () => {
       }
 
       const data = await response.json();
-      setIncomes(prev => [...prev, (data.data || data)]);
+      const newIncome = data.data || data;
+      const normalized = {
+        ...newIncome,
+        id: newIncome.idIncome ?? newIncome.id
+      };
+      setIncomes(prev => [...prev, normalized]);
       setShowCreateModal(false);
       setOpenAccept(true);
     } catch (error) {
