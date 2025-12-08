@@ -10,6 +10,8 @@ import { CreateGroupUseCase } from '../../application/usesCase/group/CreateGroup
 import type { Group } from "../../domain/entities/Group";
 import { GroupResponseDTO } from "../../application/dtos/group/GroupResponseDTO";
 import type { CreateGroupDTO } from "../../application/dtos/group/CreateGroupDTO";
+import { Solicitud } from '../../generated/prisma/index';
+
 
 
 @injectable()
@@ -85,11 +87,18 @@ export class ApplicationRepository implements IApplicationRepository
     async findById(id: any): Promise<Application | null> {
          id=(Number)(id)
         const application=await this.db.Solicitud.findUnique({
-           where:{id}
+           where:{id},
+           include:{
+            AprendizMiembro:true,
+            ArtistaMiembro:true
+           }
         })
-        //console.log(application);
+        const apprentices = await this.db.Solicitud.findMany()
+        console.log(apprentices);
         return application ? ApplicationResponseDto.toEntity(application) : null
     }
+
+    
 
     async update(id: string, data: Partial<UpdateApplicationDto>): Promise<Application> {
         const application = await this.db.Solicitud.update({
