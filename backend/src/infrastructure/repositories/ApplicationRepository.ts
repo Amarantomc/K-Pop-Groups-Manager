@@ -5,7 +5,6 @@ import type { IApplicationRepository } from "../../application/interfaces/reposi
 import { Application } from "../../domain";
 import { ApplicationResponseDto } from "../../application/dtos/application(solicitud)/ApplicationResponseDto";
 import type { CreateApplicationDto } from "../../application/dtos/application(solicitud)/CreateApplicationDto";
-import { error } from "console";
 
 
 @injectable()
@@ -20,35 +19,45 @@ export class ApplicationRepository implements IApplicationRepository
     return this.unitOfWork.getTransaction();
   }
 
-   async create(data: CreateApplicationDto): Promise<Application> {
+  async create(data: CreateApplicationDto): Promise<Application> {
 
-    //console.log(data);
-    const idAgency = (Number)(data.idAgency);
-    const idConcept = (Number)(data.idConcept);
-    const concept=await this.db.Concepto.findUnique({
-      where:{ id: idConcept}
-   });
-   console.log(concept);
-    const agency=await this.db.Agencia.findUnique({
-      where:{ id: idAgency}
-   });
-
-
-  if(!agency || !concept){
-    throw new Error("Agency or Concept not found");
-  }
-
-         const application= await this.db.Solicitud.create({
-            data:{
-                nombreGrupo:data.groupName,
-                idAgencia:data.idAgency,
-                roles:data.roles,
-                idConcepto: data.idConcept
-            }
-        })
-
-        return ApplicationResponseDto.toEntity(application)
+    const idAgency = Number(data.idAgency);
+    const idConcept = Number(data.idConcept);
+  
+    // Validaciones
+    const concept = await this.db.Concepto.findUnique({ where: { id: idConcept } });
+    const agency = await this.db.Agencia.findUnique({ where: { id: idAgency } });
+  
+    if (!agency || !concept) {
+      throw new Error("Agency or Concept not found");
     }
+  
+    // Crear solicitud + conectar aprendices y artistas 
+    const application = await this.db.Solicitud.create({
+      data: {
+        nombreGrupo: data.groupName,
+        idAgencia: idAgency,
+        idConcepto: idConcept,
+        roles: data.roles,
+        AprendizMiembro: data.apprentices ? { connect: data.apprentices.map(id => ({ id })) } : undefined,
+        ArtistaMiembro: data.artists ? 
+           { connect: data.artists.map(([idAp, idGr]) => ({
+                idAp_idGr: {
+                  idAp,
+                  idGr
+                }
+              }))
+            }
+          : undefined
+      },
+      include: {
+        AprendizMiembro: true,
+        ArtistaMiembro: true
+      }
+    });
+  
+    return ApplicationResponseDto.toEntity(application);
+  }
     async findById(id: any): Promise<Application | null> {
          id=(Number)(id)
         const application=await this.db.Solicitud.findUnique({

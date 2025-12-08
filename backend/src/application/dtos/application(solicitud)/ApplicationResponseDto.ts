@@ -7,7 +7,9 @@ export class ApplicationResponseDto{
         public readonly date:Date | string,
         public readonly idConcept:number,
         public readonly roles: string[],
-        public readonly idAgency: number
+        public readonly idAgency: number,
+        public readonly apprentices: number[],
+        public readonly artis:[number,number][],
     ){}
 
     static fromEntity(application: any): ApplicationResponseDto {
@@ -18,6 +20,8 @@ export class ApplicationResponseDto{
           application.idConcepto,      // idConcept
           application.roles,           // roles
           application.idAgencia,       // idAgency
+          application.apprentices,
+          application.artists
       );
   }
 
@@ -29,6 +33,8 @@ export class ApplicationResponseDto{
           idConcept: application.idConcepto,
           idAgency: application.idAgencia,
           date: application.fechaSolicitud,
+          apprentices: application.apprentices,
+          artists:application.artists
         });
       }
 
