@@ -1,25 +1,19 @@
-export class UpdateAlbumDTO {
-	constructor(
-		public readonly title: string | undefined,
-		public readonly releaseDate: Date | undefined,
-		public readonly producer: string | undefined,
-		public readonly noCopiesSold: number | undefined
-	) {}
+export class UpdateAlbumDto {
+    constructor(
+        public readonly title?: string,
+        public readonly releaseDate?: Date | string,
+        public readonly producer?: string,
+        public readonly noSongs?: number,
+        public readonly noCopiesSold?: number
+    ) {}
 
-	static Create(body: any): UpdateAlbumDTO {
-		if (
-			body.songs &&
-			(!Array.isArray(body.songs) ||
-				body.songs.length == 0 ||
-				body.songs.every((song: any) => typeof song !== "number"))
-		)
-			throw new Error("Album's song list must be a nonempty number array");
-
-		return new UpdateAlbumDTO(
-			body.title || undefined,
-			body.releaseDate || undefined,
-			body.producer || undefined,
-			body.noCopiesSold || undefined
-		);
-	}
+    static create(body: any): UpdateAlbumDto {
+        return new UpdateAlbumDto(
+            body.title,
+            body.releaseDate,
+            body.producer,
+            body.noSongs,
+            body.noCopiesSold
+        );
+    }
 }
