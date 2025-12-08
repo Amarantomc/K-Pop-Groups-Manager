@@ -119,6 +119,7 @@ const Award: React.FC = () => {
           id: award.id ?? index,
           title: award.awardTitle,
           academy: award.academyName,
+          albums : award.albums
         }));
         console.log(formattedData);
         setAwardRows(formattedData);

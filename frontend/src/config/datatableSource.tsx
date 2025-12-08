@@ -1,4 +1,5 @@
 import type { GridColDef } from "@mui/x-data-grid";
+import { Select, MenuItem, Typography } from '@mui/material';
 
 export const agencyColumns: GridColDef[] = [
     { field: 'name', headerName: 'Nombre', width: 150 },
@@ -52,14 +53,68 @@ export const songColumns: GridColDef[] = [
     { field: 'producer', headerName: 'Productor', width: 150 },
     { field: 'releaseDate', headerName: 'Fecha Lanzamiento', width: 150 },
     { field: 'genre', headerName: 'Género', width: 120 },
-    {field:'albums',headerName:'Albums',width:200}
+    {   field:'albums',
+        headerName:'Álbumes',
+        width:200,
+        renderCell: (params) => {
+        const albums = params.value || [];
+          if (albums.length === 0) {
+        return (
+          <Typography variant="body2" color="text.secondary" sx={{ width: '100%', py: 1 }}>
+            Sin álbumes
+          </Typography>
+        );
+      }
+        return (
+            <Select
+            value=""
+            displayEmpty
+            sx={{ width: '100%', height: 40 }}
+            renderValue={() => `${albums.length} álbum${albums.length !== 1 ? 'es' : ''}`}
+            >
+            {albums.map((album: any) => (
+                <MenuItem key={album.id} value={album.id}>
+                {album.title}
+                </MenuItem>
+            ))}
+        </Select>
+        );
+    },
+    }
 ]
 
 // Premio
 export const prizeColumns: GridColDef[] = [
     { field: 'title', headerName: 'Título Premio', width: 250 },
     { field: 'academy', headerName: 'Nombre Academia', width: 200 },
-    {field:'albums',headerName:'Albums',width:200}
+    {   field:'albums',
+        headerName:'Álbumes',
+        width:200,
+        renderCell: (params) => {
+        const albums = params.value || [];
+          if (albums.length === 0) {
+        return (
+          <Typography variant="body2" color="text.secondary" sx={{ width: '100%', py: 1 }}>
+            Sin álbumes
+          </Typography>
+        );
+      }
+        return (
+            <Select
+            value=""
+            displayEmpty
+            sx={{ width: '100%', height: 40 }}
+            renderValue={() => `${albums.length} álbum${albums.length !== 1 ? 'es' : ''}`}
+            >
+            {albums.map((album: any) => (
+                <MenuItem key={album.id} value={album.id}>
+                {album.title}
+                </MenuItem>
+            ))}
+        </Select>
+        );
+    },
+    }
 ]
 
 // Lista de Popularidad

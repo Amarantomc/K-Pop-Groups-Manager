@@ -86,7 +86,7 @@ const Songs: React.FC = () => {
           producer : song.producer,
           genre: song.gender,
           releaseDate: song.releaseDate,
-          // albums : song.albums
+          albums : song.albums
         }));
         console.log(formattedData);
         setSongRows(formattedData);
