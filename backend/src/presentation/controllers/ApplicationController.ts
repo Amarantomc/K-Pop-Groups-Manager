@@ -7,7 +7,7 @@ import type { DeleteApplicationUseCase } from "../../application/usesCase/applic
 import type { ListApplicationUseCase } from "../../application/usesCase/application(solicitud)/ListApplicationUseCase";
 import { CreateApplicationDto } from "../../application/dtos/application(solicitud)/CreateApplicationDto";
 import type { UpdateApplicationUseCase } from "../../application/usesCase/application(solicitud)/UpdateApplicationUseCase";
-import type { CreateGroupToApplicationUseCase } from "../../application/usesCase/application(solicitud)/createGroupToApplicationUseCase";
+import type { CreateGroupToApplicationUseCase } from "../../application/usesCase/application(solicitud)/CreateGroupToApplicationUseCase";
 import type { CreateGroupUseCase } from "../../application/usesCase/group/CreateGroupUseCase";
 
 

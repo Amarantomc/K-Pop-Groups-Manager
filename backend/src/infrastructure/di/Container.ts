@@ -147,7 +147,7 @@ import { GetIncomeUseCase } from "../../application/usesCase/income/GetIncomeUse
 import { ListIncomeUseCase } from "../../application/usesCase/income/ListIncomeUseCase";
 import { UpdateIncomeUseCase } from "../../application/usesCase/income/UpdateIncomeUseCase";
 import { IncomeController } from "../../presentation/controllers/IncomeController";
-import { CreateGroupToApplicationUseCase } from "../../application/usesCase/application(solicitud)/createGroupToApplicationUseCase";
+import { CreateGroupToApplicationUseCase } from "../../application/usesCase/application(solicitud)/CreateGroupToApplicationUseCase";
  
 
  
