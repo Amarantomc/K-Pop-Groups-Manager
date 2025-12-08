@@ -9,6 +9,7 @@ import { useAuth } from '../../contexts/auth/AuthContext';
 import { songFields } from '../../config/formSource';
 import { songConstraints } from '../../config/modalConstraints';
 import ConfirmDialog from '../../components/confirmDialog/ConfirmDialog';
+import { songColumns } from '../../config/datatableSource';
 
 const Songs: React.FC = () => {
   const { user } = useAuth();
@@ -67,7 +68,7 @@ const Songs: React.FC = () => {
         // ============================================
         // SECCIÓN: BACKEND ENDPOINT
         // ============================================
-        const response = await fetch('http://localhost:3000/api/songs', {
+        const response = await fetch('http://localhost:3000/api/song', {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
@@ -82,13 +83,10 @@ const Songs: React.FC = () => {
         const formattedData = data.data.map((song: any, index: number) => ({
           id: song.id ?? index,
           title: song.title,
-          albumTitle: song.albumTitle,
-          artistName: song.artistName,
-          groupName: song.groupName,
-          duration: song.duration,
-          genre: song.genre,
+          producer : song.producer,
+          genre: song.gender,
           releaseDate: song.releaseDate,
-          agencyName: song.agencyName
+          // albums : song.albums
         }));
         console.log(formattedData);
         setSongRows(formattedData);
@@ -260,7 +258,7 @@ const Songs: React.FC = () => {
       ) : (
         <>
           <DataTable
-            columns={columns}
+            columns={songColumns}
             rows={songRows}
             pagesize={10}
             onDelete={askDelete}

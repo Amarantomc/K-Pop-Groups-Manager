@@ -8,6 +8,7 @@ import Modal from '../../components/modal/Modal';
 import { useAuth } from '../../contexts/auth/AuthContext';
 import { awardFields } from '../../config/formSource';
 import { awardConstraints } from '../../config/modalConstraints';
+import { prizeColumns } from '../../config/datatableSource';
 import ConfirmDialog from '../../components/confirmDialog/ConfirmDialog';
 
 const Award: React.FC = () => {
@@ -116,14 +117,8 @@ const Award: React.FC = () => {
         console.log(data);
         const formattedData = data.data.map((award: any, index: number) => ({
           id: award.id ?? index,
-          awardName: award.awardName,
-          category: award.category,
-          recipientName: award.recipientName,
-          recipientType: award.recipientType,
-          awardDate: award.awardDate,
-          event: award.event,
-          importance: award.importance,
-          agencyName: award.agencyName
+          title: award.awardTitle,
+          academy: award.academyName,
         }));
         console.log(formattedData);
         setAwardRows(formattedData);
@@ -295,7 +290,7 @@ const Award: React.FC = () => {
       ) : (
         <>
           <DataTable
-            columns={columns}
+            columns={prizeColumns}
             rows={awardRows}
             pagesize={10}
             onDelete={askDelete}

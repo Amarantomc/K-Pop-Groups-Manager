@@ -9,6 +9,7 @@ import ConfirmDialog from '../../components/confirmDialog/ConfirmDialog';
 import { useAuth } from '../../contexts/auth/AuthContext';
 import { popularityListFields } from '../../config/formSource';
 import { popularityListConstraints } from '../../config/modalConstraints';
+import { popularityListColumns } from '../../config/datatableSource';
 
 const PopularityLists: React.FC = () => {
   const { user } = useAuth();
@@ -83,10 +84,10 @@ const PopularityLists: React.FC = () => {
         switch (user.role) {
           case 'manager':
           case 'director':
-            endpoint = `/api/popularity-lists?agencyId=${user.agencyId}`;
+            endpoint = `/api/populist?agencyId=${user.agencyId}`;
             break;
           case 'admin':
-            endpoint = '/api/popularity-lists';
+            endpoint = '/api/populist';
             break;
           default:
             console.error('Rol no autorizado:', user.role);
@@ -110,15 +111,8 @@ const PopularityLists: React.FC = () => {
         console.log(data);
         const formattedData = data.data.map((popularityList: any, index: number) => ({
           id: popularityList.id ?? index,
-          listName: popularityList.listName,
-          artistName: popularityList.artistName,
-          groupName: popularityList.groupName,
-          position: popularityList.position,
-          votes: popularityList.votes,
-          platform: popularityList.platform,
-          trend: popularityList.trend,
-          updatedAt: popularityList.updatedAt,
-          agencyName: popularityList.agencyName
+          name: popularityList.name,
+          scope : popularityList.listType
         }));
         console.log(formattedData);
         setPopularityListsRows(formattedData);
@@ -291,7 +285,7 @@ const PopularityLists: React.FC = () => {
       ) : (
         <>
           <DataTable
-            columns={columns}
+            columns={popularityListColumns}
             rows={popularityListsRows}
             pagesize={10}
             onDelete={askDelete}

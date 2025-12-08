@@ -55,11 +55,11 @@ const ListUsers: React.FC = () => {
                 // Endpoint GET /api/user - Requiere rol Admin
                 const response = await fetch('http://localhost:3000/api/user', {
                     headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
                     }
                 });
-                
+                console.log(response)
                 if (!response.ok) {
                     throw new Error("Error al obtener los usuarios");
                 }
