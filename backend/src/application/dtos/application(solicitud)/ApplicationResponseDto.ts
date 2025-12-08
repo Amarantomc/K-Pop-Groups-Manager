@@ -8,13 +8,12 @@ export class ApplicationResponseDto{
       public readonly idConcept:number,
       public readonly roles: string[],
       public readonly idAgency: number,
-      public readonly apprentices?: number[],
-      public readonly artists?:[number,number][],
-      public readonly status?: string,
+      public readonly apprentices: number[],
+      public readonly artis:[number,number][],
+      public readonly estado: string,
     ){}
 
     static fromEntity(application: any): ApplicationResponseDto {
-      //console.log(application);
       return new ApplicationResponseDto(
         application.id,
         application.nombreGrupo,
@@ -24,7 +23,7 @@ export class ApplicationResponseDto{
         application.idAgencia,       // idAgency
         application.apprentices,
         application.artists,
-        application.estatus
+        application.estado
       );
     }
 
@@ -38,12 +37,11 @@ export class ApplicationResponseDto{
           date: application.fechaSolicitud,
           apprentices: application.apprentices,
           artists:application.artists,
-          status: application.estado
+          estado: application.estado
         });
       }
 
       static fromEntities(applications: any[]): ApplicationResponseDto[] {
-        //console.log(applications);
         return applications.map(application => this.fromEntity(application));
       }
 

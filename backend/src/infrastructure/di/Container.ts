@@ -1,3 +1,11 @@
+import { AlbumController } from '../../presentation/controllers/AlbumController';
+import type { IAlbumRepository } from '../../application/interfaces/repositories/IAlbumRepository';
+
+// ...después de const container = new Container();
+const container = new Container();
+container.bind(Types.AlbumController)
+  .to(AlbumController)
+  .inSingletonScope();
  
 
 import type { IGroupRepository } from "../../application/interfaces/repositories/IGroupRepository";
@@ -147,15 +155,12 @@ import { GetIncomeUseCase } from "../../application/usesCase/income/GetIncomeUse
 import { ListIncomeUseCase } from "../../application/usesCase/income/ListIncomeUseCase";
 import { UpdateIncomeUseCase } from "../../application/usesCase/income/UpdateIncomeUseCase";
 import { IncomeController } from "../../presentation/controllers/IncomeController";
-import { CreateGroupToApplicationUseCase } from "../../application/usesCase/application(solicitud)/createGroupToApplicationUseCase";
  
 
  
  
 
 // Use Cases
-
-const container = new Container();
 
 // Database
 container
@@ -170,6 +175,25 @@ container
 
   //#region Repositories
   // Repositories
+container
+  .bind<IAlbumRepository>(Types.IAlbumRepository)
+  .to(require('../repositories/AlbumRepository').AlbumRepository)
+  .inSingletonScope();
+container.bind(Types.CreateAlbumUseCase)
+  .to(require('../../application/usesCase/album/CreateAlbumUseCase').CreateAlbumUseCase)
+  .inTransientScope();
+container.bind(Types.GetAlbumUseCase)
+  .to(require('../../application/usesCase/album/GetAlbumUseCase').GetAlbumUseCase)
+  .inTransientScope();
+container.bind(Types.ListAlbumUseCase)
+  .to(require('../../application/usesCase/album/ListAlbumUseCase').ListAlbumUseCase)
+  .inTransientScope();
+container.bind(Types.UpdateAlbumUseCase)
+  .to(require('../../application/usesCase/album/UpdateAlbumUseCase').UpdateAlbumUseCase)
+  .inTransientScope();
+container.bind(Types.DeleteAlbumUseCase)
+  .to(require('../../application/usesCase/album/DeleteAlbumUseCase').DeleteAlbumUseCase)
+  .inTransientScope();
 container
 	.bind<IUserRepository>(Types.IUserRepository)
 	.to(UserRepository)
@@ -540,11 +564,6 @@ container.bind<UpdatePopularityListUseCase>(Types.UpdatePopularityListUseCase)
   container.bind<ListApplicationUseCase>(Types.ListApplicationUseCase)
   .to(ListApplicationUseCase)
   .inTransientScope();
-
-  container.bind<CreateGroupToApplicationUseCase>(Types.CreateGroupToApplicationUseCase)
-  .to(CreateGroupToApplicationUseCase)
-  .inTransientScope();
-
   //#endregion
 // // Use Cases - Auth
 
