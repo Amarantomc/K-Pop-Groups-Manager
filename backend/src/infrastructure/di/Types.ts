@@ -111,6 +111,7 @@ GetApplicationUseCase : Symbol.for('GetApplicationUseCase'),
 DeleteApplicationUseCase : Symbol.for('DeleteApplicationUseCase'),
 UpdateApplicationUseCase : Symbol.for('UpdateApplicationUseCase'),
 ListApplicationUseCase : Symbol.for('ListApplicationUseCase'),
+CreateGroupToApplicationUseCase : Symbol.for('CreateGroupToApplicationUseCase'),
 //#endregion
 
 //#region Income

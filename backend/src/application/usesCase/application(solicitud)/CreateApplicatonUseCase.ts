@@ -32,7 +32,8 @@ export class CreateApplicationUseCase{
                 application.roles,
                 application.idAgency,
                 application.apprentices,
-                application.artists
+                application.artists,
+                application.status
             );
         }
         catch(error){

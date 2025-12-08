@@ -7,6 +7,8 @@ import type { DeleteApplicationUseCase } from "../../application/usesCase/applic
 import type { ListApplicationUseCase } from "../../application/usesCase/application(solicitud)/ListApplicationUseCase";
 import { CreateApplicationDto } from "../../application/dtos/application(solicitud)/CreateApplicationDto";
 import type { UpdateApplicationUseCase } from "../../application/usesCase/application(solicitud)/UpdateApplicationUseCase";
+import type { CreateGroupUseCase } from "../../application/usesCase/group/CreateGroupUseCase";
+import type { CreateGroupToApplicationUseCase } from "../../application/usesCase/application(solicitud)/CreateGroupToApplicationUseCase";
 
 
 @injectable()
@@ -15,7 +17,9 @@ export class ApplicationController{
                 @inject(Types.GetApplicationUseCase) private getApplicationUseCase:GetApplicationUseCase,
                 @inject(Types.DeleteApplicationUseCase) private deleteApplicationUseCase:DeleteApplicationUseCase,
                 @inject(Types.UpdateApplicationUseCase) private updateApplicationUseCase:UpdateApplicationUseCase,
-                @inject(Types.ListApplicationUseCase) private listApplicationUseCase: ListApplicationUseCase,){}
+                @inject(Types.ListApplicationUseCase) private listApplicationUseCase: ListApplicationUseCase,
+                @inject(Types.CreateGroupToApplicationUseCase) private createGroupToApplicationUseCase: CreateGroupToApplicationUseCase,
+              ){}
 
     async createApplication(req: Request, res: Response) 
           {
@@ -39,6 +43,7 @@ export class ApplicationController{
           });
         }
           }
+
 
 async getApplication(req: Request, res: Response) 
 {
@@ -120,4 +125,33 @@ async deleteApplication(req: Request, res: Response) {
     }
 }
 
+
+
+
+async createGroupToApplication(req: Request, res: Response) {
+  try {
+    const { id } = req.params;
+
+    const group = await this.createGroupToApplicationUseCase.execute(id!);
+
+    return res.json({
+      success: true,
+      data: group
+    });
+
+  } catch (error: any) {
+    console.log(error);
+    return res.status(400).json({
+      success: false,
+      error: error.message
+    });
+  }
 }
+
+}
+
+
+
+
+
+

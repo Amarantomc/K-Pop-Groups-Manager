@@ -155,6 +155,7 @@ import { GetIncomeUseCase } from "../../application/usesCase/income/GetIncomeUse
 import { ListIncomeUseCase } from "../../application/usesCase/income/ListIncomeUseCase";
 import { UpdateIncomeUseCase } from "../../application/usesCase/income/UpdateIncomeUseCase";
 import { IncomeController } from "../../presentation/controllers/IncomeController";
+import { CreateGroupToApplicationUseCase } from "../../application/usesCase/application(solicitud)/CreateGroupToApplicationUseCase";
  
 
  
@@ -564,6 +565,11 @@ container.bind<UpdatePopularityListUseCase>(Types.UpdatePopularityListUseCase)
   container.bind<ListApplicationUseCase>(Types.ListApplicationUseCase)
   .to(ListApplicationUseCase)
   .inTransientScope();
+
+  container.bind<CreateGroupToApplicationUseCase>(Types.CreateGroupToApplicationUseCase)
+  .to(CreateGroupToApplicationUseCase)
+  .inTransientScope();
+
   //#endregion
 // // Use Cases - Auth
 
