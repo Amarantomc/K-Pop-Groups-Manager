@@ -11,7 +11,7 @@ export class ConceptResponseDto{
     static fromEntity(concept: any): ConceptResponseDto {
         return new ConceptResponseDto(
             concept.id,
-            concept.nombre,
+            concept.name,
             concept.description
         );
       }
@@ -21,7 +21,6 @@ export class ConceptResponseDto{
         return new Concept(
             {
                 id: concept.id,
-                
                 description: concept.descripcion,
                 name: concept.nombre,
             }
