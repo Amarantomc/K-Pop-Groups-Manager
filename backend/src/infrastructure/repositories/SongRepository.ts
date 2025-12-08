@@ -69,7 +69,19 @@ export class SongRepository implements ISongRepository{
           titulo: data.title,
           genero: data.gender,
           productor: data.producer,
+        },
+        include: {
+        Albums: {
+          include: {
+            grupo: true
+          }
+        },
+        ListaDePopularidad: {
+          include: {
+            listaPopularidad: true
+          }
         }
+      }
        })
        return SongResponseDto.toEntity(song);
     }
@@ -81,8 +93,17 @@ export class SongRepository implements ISongRepository{
 
     async findAll(): Promise<Song[]> {
      const songs= await this.db.cancion.findMany({
-      include:{
-        Albums:true
+      include: {
+        Albums: {
+          include: {
+            grupo: true
+          }
+        },
+        ListaDePopularidad: {
+          include: {
+            listaPopularidad: true
+          }
+        }
       }
      })
      return SongResponseDto.toEntities(songs)
