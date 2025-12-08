@@ -206,6 +206,8 @@ export default function Calendar({
                     }`}
                     onClick={() => dayEvents.length > 0 && onDateClick && onDateClick(dateStr)}
                     style={{ cursor: dayEvents.length > 0 ? 'pointer' : 'default' }}
+                     //onClick={() => onDateClick && onDateClick(dateStr)}
+                    //style={{ cursor: 'pointer' }}
                 >
                         <span className="calendar-day-number">{day}</span>
 
@@ -288,7 +290,7 @@ export default function Calendar({
                         <div className="activities-list">
                             {upcomingActivities.map((activity) => (
                             <div key={activity.id} className={`activity-item activity-item-${activity.type}`}>
-                                    <div className="activity-icon">{getActivityIcon(activity.type)}</div>
+                                    <div className="activity-icon">{getActivityIcon(activity.type ?? "")}</div>
                                 <div className="activity-details">
                                     <h4 className="activity-name">{activity.title}</h4>
                                     <p className="activity-artist">{activity.artist}</p>

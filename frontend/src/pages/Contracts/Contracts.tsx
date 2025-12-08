@@ -73,16 +73,19 @@ const Contracts: React.FC = () => {
       headerName: 'Valor',
       width: 140,
       renderCell: (params) => {
-        const value = params.value as number;
-        return (
-          <span style={{
-            color: '#10b981',
-            fontWeight: 700,
-            fontSize: '15px'
-          }}>
-            ${value.toLocaleString('es-ES')}
-          </span>
-        );
+        const value = params.value;
+        if (typeof value === 'number') {
+          return (
+            <span style={{
+              color: '#10b981',
+              fontWeight: 700,
+              fontSize: '15px'
+            }}>
+              ${value.toLocaleString('es-ES')}
+            </span>
+          );
+        }
+        return <span style={{ color: '#6b7280', fontWeight: 400 }}>—</span>;
       }
     },
     {
@@ -171,7 +174,13 @@ const Contracts: React.FC = () => {
         }
 
         const data = await response.json();
-        setContracts(data.data || data);
+        // Mapeo para asegurar que cada contrato tenga un id único en la raíz
+        const contractsArray = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
+        const formattedContracts = contractsArray.map((contract, index) => ({
+          id: contract.id ?? index,
+          ...contract
+        }));
+        setContracts(formattedContracts);
         // ============================================
         // FIN SECCIÓN: BACKEND ENDPOINT
         // ============================================
