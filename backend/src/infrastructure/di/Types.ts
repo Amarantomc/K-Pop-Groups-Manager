@@ -20,6 +20,8 @@ const Types = {
   IGroupRepository : Symbol.for('IGroupRepository'),
   IContractRepository:Symbol.for('IContractRepository'),
   ISongRepository: Symbol.for('ISongRepository'),
+  IIncomeRepository: Symbol.for('IIncomeRepository'),
+
   //#endregion
   
   // Use Cases
@@ -104,9 +106,13 @@ UpdateApplicationUseCase : Symbol.for('UpdateApplicationUseCase'),
 ListApplicationUseCase : Symbol.for('ListApplicationUseCase'),
 //#endregion
 
-
-
-
+//#region Income
+CreateIncomeUseCase : Symbol.for('CreateIncomeUseCase'),
+GetIncomeUseCase : Symbol.for('GetIncomeUseCase'),
+DeleteIncomeUseCase : Symbol.for('DeleteIncomeUseCase'),
+UpdateIncomeUseCase : Symbol.for('UpdateIncomeUseCase'),
+ListIncomeUseCase : Symbol.for('ListIncomeUseCase'),
+//#endregion
 
 
 
@@ -188,6 +194,8 @@ GetAllSongsUseCase : Symbol.for('GetAllSongsUseCase'),
   GroupController :Symbol.for('GroupController'),
   ContractController :Symbol.for('ContractController'),
   SongController :Symbol.for('SongController'),
+  IncomeController :Symbol.for('IncomeController'),
+
   //#endregion
 
  

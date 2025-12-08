@@ -1,5 +1,4 @@
 import { Router } from "express";
-
 import { AuthRoutes } from "./AuthRoutes";
 import { UserRoutes } from "./userRoutes";
 import { ApprenticeRoutes } from "./ApprenticeRoutes";
@@ -14,6 +13,7 @@ import { PopularityListRoutes } from "./PopularityListRoutes";
 import { ContractRoutes } from "./ContractRoutes";
 import { ApplicationRoutes } from "./ApplicationRoutes";
 import { SongRoutes } from "./SongRoutes";
+import { IncomeRoutes } from "./IncomeRoutes";
  
 
 
@@ -26,13 +26,14 @@ const apprenticeRoute=new ApprenticeRoutes()
 const artistRoutes=new ArtistRoutes()
 const conceptRoutes=new ConceptRoutes()
 const activityRoutes = new ActivityRoutes();
-const visualConceptRoutes=new VisualConceptRoutes()
+const visualConceptRoutes=new VisualConceptRoutes();
 const awardRoutes = new AwardRoutes();
-const popularityListRoutes=new PopularityListRoutes()
-const contractRoutes=new ContractRoutes()
-const applicationRoutes=new ApplicationRoutes()
-const songRoutes=new SongRoutes()
- 
+const popularityListRoutes=new PopularityListRoutes();
+const contractRoutes=new ContractRoutes();
+const applicationRoutes=new ApplicationRoutes();
+const songRoutes=new SongRoutes();
+const incomeRoutes = new IncomeRoutes();
+
 
 rootRouter.use("/auth", authRoutes.getRouter());
 rootRouter.use("/user", userRoutes.getRouter());
@@ -48,6 +49,7 @@ rootRouter.use('/populist',popularityListRoutes.getRouter())
 rootRouter.use('/contract',contractRoutes.getRouter())
 rootRouter.use('/application',applicationRoutes.getRouter())
 rootRouter.use('/song',songRoutes.getRouter())
+rootRouter.use('/income',incomeRoutes.getRouter())
 
 
 export default rootRouter;
