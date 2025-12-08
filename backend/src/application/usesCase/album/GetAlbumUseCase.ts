@@ -11,4 +11,19 @@ export class GetAlbumUseCase {
         const album = await this.albumRepository.findById(id);
         return album ? AlbumResponseDto.fromEntity(album) : null;
     }
+import { AlbumResponseDTO } from "../../dtos/album/AlbumResponseDTO";
+
+@injectable()
+export class GetAlbumUseCase {
+	constructor(
+		@inject(Types.IAlbumRepository) private albumRepository: IAlbumRepository
+	) {}
+
+	async execute(id: string): Promise<AlbumResponseDTO> {
+		const album = await this.albumRepository.findById(id);
+
+		if (!album) throw new Error("Album not found");
+
+		return AlbumResponseDTO.fromEntity(album);
+	}
 }
