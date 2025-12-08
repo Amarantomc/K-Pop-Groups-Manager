@@ -10,7 +10,7 @@ export type Field = {
     id: string;
     name: string;
     label: string;
-    type: 'text' | 'email' | 'password' | 'number' | 'date' | 'time' | 'select' | 'textarea' | 'checkbox' | 'file' | 'hidden' | 'group';
+    type: 'text' | 'email' | 'password' | 'number' | 'date' | 'time' | 'select' | 'textarea' | 'checkbox' | 'file' | 'hidden' | 'group' | 'daterange';
     placeholder?: string;
     required?: boolean;
     options?: FieldOption[];
@@ -176,7 +176,7 @@ export const visualConceptFields: Field[] = [
 
 // Actividad
 export const activityFields: Field[] = [
-    { id: 'date', name: 'date', label: 'Fecha Actividad', type: 'date' },
+    { id: 'date', name: 'date', label: 'Fecha', type: 'date', required: true },
     { id: 'place', name: 'place', label: 'Lugar', type: 'text' },
     { id: 'type', name: 'type', label: 'Tipo Actividad', type: 'select', options: enumToOptions(ACTIVITY_TYPES) },
     { id: 'responsible', name: 'responsible', label: 'Responsable Actividad', type: 'text' },
@@ -208,13 +208,25 @@ export const requestFields: Field[] = [
 
 // Contrato
 export const contractFields: Field[] = [
-    { id: 'agencyName', name: 'agencyName', label: 'Nombre de Agencia', type: 'text' },
-    { id: 'participantName', name: 'participantName', label: 'Nombre de Artista o Grupo', type: 'text' },
-    { id: 'startDate', name: 'startDate', label: 'Fecha Inicio', type: 'date' },
-    { id: 'endDate', name: 'endDate', label: 'Fecha Finalización', type: 'date' },
-    { id: 'initialTerms', name: 'initialTerms', label: 'Condiciones Iniciales', type: 'textarea' },
-    { id: 'revenueSplit', name: 'revenueSplit', label: 'Distribución de Ingresos', type: 'text' },
-    { id: 'status', name: 'status', label: 'Estado Contrato', type: 'select', options: enumToOptions(CONTRACT_STATUS) },
+    { id: 'artistName', name: 'artistName', label: 'Artista', type: 'text', required: true, placeholder: 'Nombre del artista' },
+    { id: 'groupName', name: 'groupName', label: 'Grupo', type: 'text', placeholder: 'Nombre del grupo (opcional)' },
+    { id: 'contractType', name: 'contractType', label: 'Tipo de Contrato', type: 'select', required: true, options: [
+        { value: 'exclusive', label: 'Exclusivo' },
+        { value: 'non_exclusive', label: 'No Exclusivo' },
+        { value: 'production', label: 'Producción' },
+        { value: 'distribution', label: 'Distribución' },
+    ] },
+    { id: 'startDate', name: 'startDate', label: 'Fecha Inicio', type: 'date', required: true },
+    { id: 'endDate', name: 'endDate', label: 'Fecha Finalización', type: 'date', required: true },
+    { id: 'value', name: 'value', label: 'Valor', type: 'number', required: true, placeholder: 'Monto del contrato' },
+    { id: 'status', name: 'status', label: 'Estado', type: 'select', required: true, options: [
+        { value: 'active', label: 'Activo' },
+        { value: 'expired', label: 'Expirado' },
+        { value: 'terminated', label: 'Terminado' },
+        { value: 'pending', label: 'Pendiente' },
+    ] },
+    { id: 'agencyName', name: 'agencyName', label: 'Agencia', type: 'text', required: true, placeholder: 'Nombre de la agencia' },
+    { id: 'terms', name: 'terms', label: 'Términos', type: 'textarea', placeholder: 'Condiciones del contrato' },
 ];
 
 // Evaluación

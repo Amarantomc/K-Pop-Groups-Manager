@@ -32,7 +32,7 @@ const Requests: React.FC = () => {
   // Manejar aprobación de solicitud (Director)
   const handleApprove = async (id: number) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/requests/${id}/approve`, {
+      const response = await fetch(`http://localhost:3000/api/application/${id}/approve`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -57,7 +57,7 @@ const Requests: React.FC = () => {
   // Manejar rechazo de solicitud (Director)
   const handleReject = async (id: number) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/requests/${id}/reject`, {
+      const response = await fetch(`http://localhost:3000/api/application/${id}/reject`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -245,27 +245,27 @@ const Requests: React.FC = () => {
         switch (user.role) {
           case 'apprentice':
             // Solicitudes del aprendiz específico en su agencia
-            endpoint = `/api/requests?apprenticeId=${user.id}&agencyId=${user.agencyId}`;
+            endpoint = `/api/application?apprenticeId=${user.id}&agencyId=${user.agencyId}`;
             break;
 
           case 'artist':
             // Solicitudes del artista específico en su agencia
-            endpoint = `/api/requests?artistId=${user.id}&agencyId=${user.agencyId}`;
+            endpoint = `/api/application?artistId=${user.id}&agencyId=${user.agencyId}`;
             break;
 
           case 'manager':
             // Todas las solicitudes de la agencia del manager
-            endpoint = `/api/requests?agencyId=${user.agencyId}`;
+            endpoint = `/api/application?agencyId=${user.agencyId}`;
             break;
 
           case 'director':
             // Todas las solicitudes de la agencia del director
-            endpoint = `/api/requests?agencyId=${user.agencyId}`;
+            endpoint = `/api/application?agencyId=${user.agencyId}`;
             break;
 
           case 'admin':
             // TODO: Implementar más adelante - todas las solicitudes del sistema
-            endpoint = '/api/requests';
+            endpoint = '/api/application';
             break;
 
           default:
