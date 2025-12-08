@@ -19,6 +19,7 @@ const Types = {
   IPopularityListRepository: Symbol.for('IPopularityListRepository'),
   IGroupRepository : Symbol.for('IGroupRepository'),
   IContractRepository:Symbol.for('IContractRepository'),
+  ISongRepository: Symbol.for('ISongRepository'),
   //#endregion
   
   // Use Cases
@@ -161,10 +162,11 @@ UpdateContractUseCase : Symbol.for('UpdateContractUseCase'),
 DeleteContractUseCase : Symbol.for('DeleteContractUseCase'),
 //#endregion
 
-  
- 
-
-
+//#region Song
+CreateSongUseCase : Symbol.for('CreateSongUseCase'),
+FindSongByIdUseCase : Symbol.for('FindSongByIdUseCase'),
+DeleteSongUseCase : Symbol.for('DeleteSongUseCase'),
+//#endregion
 
 
 
@@ -183,6 +185,7 @@ DeleteContractUseCase : Symbol.for('DeleteContractUseCase'),
   AwardController : Symbol.for('AwardController'),
   GroupController :Symbol.for('GroupController'),
   ContractController :Symbol.for('ContractController'),
+  SongController :Symbol.for('SongController'),
   //#endregion
 
  
