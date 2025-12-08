@@ -9,6 +9,7 @@ async function main() {
 
   // 0. CREAR USUARIO ADMINISTRADOR
   console.log('👤 Creando usuario administrador...')
+  await prisma.user.deleteMany({ where: { email: "admin@gmail.com" } });
   const hashedPassword = await bcrypt.hash('admin123', 10)
   const adminUser = await prisma.user.create({
     data: {
@@ -967,7 +968,8 @@ async function main() {
       idConcepto: conceptoFuturista.id,
       roles: ["Líder", "Vocalista principal", "Rapero", "Bailarín principal", "Visual"],
       idAgencia: smEntertainment.id,
-      fechaSolicitud: new Date("2024-01-15")
+      fechaSolicitud: new Date("2024-01-15"),
+      estado: "Pendiente"
     }
   })
   const solicitud2 = await prisma.solicitud.create({
@@ -976,7 +978,8 @@ async function main() {
       idConcepto: conceptoCute.id,
       roles: ["Líder", "Vocalista", "Rapera", "Bailarina", "Maknae"],
       idAgencia: jypEntertainment.id,
-      fechaSolicitud: new Date("2024-02-20")
+      fechaSolicitud: new Date("2024-02-20"),
+      estado: "Pendiente"
     }
   })
   const solicitud3 = await prisma.solicitud.create({
@@ -985,7 +988,8 @@ async function main() {
       idConcepto: conceptoUrbano.id,
       roles: ["Líder", "Rapero principal", "Vocalista", "Productor", "Bailarín"],
       idAgencia: hibeEntertainment.id,
-      fechaSolicitud: new Date("2024-03-10")
+      fechaSolicitud: new Date("2024-03-10"),
+      estado: "Pendiente"
     }
   })
   console.log('✅ 3 Solicitudes de grupo creadas')
