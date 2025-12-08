@@ -7,17 +7,18 @@ export class CreateApplicationDto {
         public readonly idConcept: number,
         public readonly apprentices: Array<number>,
         public readonly artists:Array<[number, number]>,
-        public readonly estado: string,
+        public readonly status: string,
     ) {}
 
     static create(body: any): CreateApplicationDto {
-        if (!body.groupName || !body.idAgency || !body.idConcept || !body.roles || !body.estado) {
+        if (!body.groupName || !body.idAgency || !body.idConcept || !body.roles) {
             throw new Error("Missing required fields");
         }
         // Validar que roles sea un array
         if (!Array.isArray(body.roles)) {
             throw new Error("Roles must be an array");
         }
+        
         return new CreateApplicationDto(
             body.groupName, 
             body.idAgency, 
@@ -25,7 +26,7 @@ export class CreateApplicationDto {
             body.idConcept,
             body.apprentices,
             body.artists,
-            body.estado
+            !body.status ? "Pendiente" :body.this.status
         );
     }
 }
