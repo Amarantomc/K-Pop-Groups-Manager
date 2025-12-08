@@ -139,6 +139,14 @@ import type { ISongRepository } from "../../application/interfaces/repositories/
 import { SongRepository } from "../repositories/SongRepository";
 import { UpdateSongUseCase } from "../../application/usesCase/song/UpdateSongUseCase";
 import { GetAllSongsUseCase } from "../../application/usesCase/song/GetAllSongsUseCase";
+import type { IIncomeRepository } from "../../application/interfaces/repositories/IIncomeRepository";
+import { IncomeRepository } from "../repositories/IncomeRepository";
+import { CreateIncomeUseCase } from "../../application/usesCase/income/CreateIncomeUseCase";
+import { DeleteIncomeUseCase } from "../../application/usesCase/income/DeleteIncomeUseCase";
+import { GetIncomeUseCase } from "../../application/usesCase/income/GetIncomeUseCase";
+import { ListIncomeUseCase } from "../../application/usesCase/income/ListIncomeUseCase";
+import { UpdateIncomeUseCase } from "../../application/usesCase/income/UpdateIncomeUseCase";
+import { IncomeController } from "../../presentation/controllers/IncomeController";
  
 
  
@@ -174,6 +182,11 @@ container
   container
 	.bind<IApplicationRepository>(Types.IApplicationRepository)
 	.to(ApplicationRepository)
+	.inSingletonScope();
+
+  container
+	.bind<IIncomeRepository>(Types.IIncomeRepository)
+	.to(IncomeRepository)
 	.inSingletonScope();
 
 container
@@ -448,6 +461,34 @@ container.bind<UpdateUserUseCase>(Types.UpdateUserUseCase)
 
   //#endregion
 
+
+//#region Income
+
+container.bind<CreateIncomeUseCase>(Types.CreateIncomeUseCase)
+.to(CreateIncomeUseCase)
+.inTransientScope();
+
+container.bind<DeleteIncomeUseCase>(Types.DeleteIncomeUseCase)
+.to(DeleteIncomeUseCase)
+.inTransientScope();
+
+container.bind<GetIncomeUseCase>(Types.GetIncomeUseCase)
+.to(GetIncomeUseCase)
+.inTransientScope();
+
+container.bind<ListIncomeUseCase>(Types.ListIncomeUseCase)
+.to(ListIncomeUseCase)
+.inTransientScope();
+
+  container.bind<UpdateIncomeUseCase>(Types.UpdateIncomeUseCase)
+.to(UpdateIncomeUseCase)
+.inTransientScope();
+
+//#endregion
+
+
+
+
   //#region Popularity
 
   container.bind<CreatePopularityListUseCase>(Types.CreatePopularityListUseCase)
@@ -639,8 +680,40 @@ container.bind<CreateVisualConceptUseCase>(Types.CreateVisualConceptUseCase)
 
   //#endregion
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Controllers
 //#region Controllers
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 container
 	.bind<GroupController>(Types.GroupController)
@@ -657,6 +730,10 @@ container.bind<AuthController>(Types.AuthController)
 
 container.bind<ApprenticeController>(Types.ApprenticeController)
   .to(ApprenticeController)
+  .inTransientScope();
+
+  container.bind<IncomeController>(Types.IncomeController)
+  .to(IncomeController)
   .inTransientScope();
 
   container.bind<ApplicationController>(Types.ApplicationController)

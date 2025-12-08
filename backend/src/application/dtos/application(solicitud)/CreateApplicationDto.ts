@@ -23,7 +23,7 @@ export class CreateApplicationDto {
             body.roles,
             body.idConcept,
             body.apprentices,
-            body.artist
+            body.artists
         );
     }
 }
