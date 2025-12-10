@@ -150,6 +150,14 @@ import { ListIncomeUseCase } from "../../application/usesCase/income/ListIncomeU
 import { UpdateIncomeUseCase } from "../../application/usesCase/income/UpdateIncomeUseCase";
 import { IncomeController } from "../../presentation/controllers/IncomeController";
 import { CreateGroupToApplicationUseCase } from "../../application/usesCase/application(solicitud)/CreateGroupToApplicationUseCase";
+import type { IAlbumRepository } from "../../application/interfaces/repositories/IAlbumRepository";
+import { AlbumRepository } from "../repositories/AlbumRepository";
+import { ListAlbumUseCase } from "../../application/usesCase/album/ListAlbumUseCase";
+import { CreateAlbumUseCase } from "../../application/usesCase/album/CreateAlbumUseCase";
+import { DeleteAlbumUseCase } from "../../application/usesCase/album/DeleteAlbumUseCase";
+import { UpdateAlbumUseCase } from "../../application/usesCase/album/UpdateAlbumUseCase";
+import { GetAlbumUseCase } from "../../application/usesCase/album/GetAlbumUseCase";
+import { AlbumController } from "../../presentation/controllers/AlbumController";
  
 const container=new Container()
  
@@ -191,6 +199,13 @@ container
 	.bind<IIncomeRepository>(Types.IIncomeRepository)
 	.to(IncomeRepository)
 	.inSingletonScope();
+
+
+  container
+	.bind<IAlbumRepository>(Types.IAlbumRepository)
+	.to(AlbumRepository)
+	.inSingletonScope();
+
 
 container
 	.bind<IAgencyRepository>(Types.IAgencyRepository)
@@ -548,7 +563,34 @@ container.bind<UpdatePopularityListUseCase>(Types.UpdatePopularityListUseCase)
   .inTransientScope();
 
   //#endregion
-// // Use Cases - Auth
+
+
+
+//#region Album
+
+  container.bind<GetAlbumUseCase>(Types.GetAlbumUseCase)
+  .to(GetAlbumUseCase)
+  .inTransientScope();
+
+  container.bind<UpdateAlbumUseCase>(Types.UpdateAlbumUseCase)
+  .to(UpdateAlbumUseCase)
+  .inTransientScope();
+
+  container.bind<DeleteAlbumUseCase>(Types.DeleteAlbumUseCase)
+  .to(DeleteAlbumUseCase)
+  .inTransientScope();
+
+   container.bind<CreateAlbumUseCase>(Types.CreateAlbumUseCase)
+  .to(CreateAlbumUseCase)
+  .inTransientScope();
+
+  container.bind<ListAlbumUseCase>(Types.ListAlbumUseCase)
+  .to(ListAlbumUseCase)
+  .inTransientScope();
+
+//#endregion
+
+  // // Use Cases - Auth
 
 //#region Auth
 container
@@ -746,6 +788,10 @@ container.bind<ApprenticeController>(Types.ApprenticeController)
 
   container.bind<ApplicationController>(Types.ApplicationController)
   .to(ApplicationController)
+  .inTransientScope();
+
+  container.bind<AlbumController>(Types.AlbumController)
+  .to(AlbumController)
   .inTransientScope();
 
 container.bind<AgencyController>(Types.AgencyController)

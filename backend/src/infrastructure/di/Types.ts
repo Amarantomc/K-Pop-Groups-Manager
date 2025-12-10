@@ -1,6 +1,6 @@
 // src/infrastructure/di/TYPES.ts
 const Types = {
-  AlbumController: Symbol.for('AlbumController'),
+    AlbumController: Symbol.for('AlbumController'),
     IAlbumRepository: Symbol.for('IAlbumRepository'),
     CreateAlbumUseCase: Symbol.for('CreateAlbumUseCase'),
     GetAlbumUseCase: Symbol.for('GetAlbumUseCase'),
@@ -28,7 +28,6 @@ const Types = {
   IContractRepository:Symbol.for('IContractRepository'),
   ISongRepository: Symbol.for('ISongRepository'),
   IIncomeRepository: Symbol.for('IIncomeRepository'),
-
   //#endregion
   
   // Use Cases
@@ -184,7 +183,8 @@ UpdateSongUseCase : Symbol.for('UpdateSongUseCase'),
 GetAllSongsUseCase : Symbol.for('GetAllSongsUseCase'),
 //#endregion
 
-
+//#region Album
+//#endregion
 
   //#region Controllers 
   // Presentation

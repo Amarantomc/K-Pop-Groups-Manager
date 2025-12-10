@@ -2,7 +2,7 @@
 import { inject, injectable } from "inversify";
 import { Types } from "../di/Types";
 import type { IPopularityListRepository } from "../../application/interfaces/repositories/IPopularityListRepository";
-import type { CreatePopularityListDto } from "../../application/dtos/popularityList/CreatepopularityListDto";
+import type { CreatePopularityListDto } from "../../application/dtos/popularityList/CreatePopularityListDto";
 import { PopularityList, Song } from "../../domain";
 import type { UnitOfWork } from "../PrismaUnitOfWork";
 import { PopularityListResponseDto } from "../../application/dtos/popularityList/PopularityListResponseDto";
@@ -110,7 +110,7 @@ export class PopularityListRepository implements IPopularityListRepository{
                 where: { id: Number(id) },
               });
             } catch (error) {
-              throw new Error(`Error deleting concept with id ${id}: ${error}`);
+              throw new Error(`Error deleting popularity list with id ${id}: ${error}`);
             }
           }
     

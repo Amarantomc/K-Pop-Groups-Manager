@@ -1,5 +1,5 @@
 import type { PopularityList, Song } from "../../../domain";
-import type { CreatePopularityListDto } from "../../dtos/popularityList/CreatepopularityListDto";
+import type { CreatePopularityListDto } from "../../dtos/popularityList/CreatePopularityListDto";
 import type { IBaseRepository } from "./IBaseRepository";
 
 export interface IPopularityListRepository extends IBaseRepository<PopularityList,CreatePopularityListDto,any> {

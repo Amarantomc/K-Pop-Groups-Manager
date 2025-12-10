@@ -3,9 +3,8 @@ import { Types } from "../../../infrastructure/di/Types";
 
 import type { IApplicationRepository } from "../../interfaces/repositories/IApplicationRepository";
 import type { IGroupRepository } from "../../interfaces/repositories/IGroupRepository";
-import type { GroupResponseDTO } from "../../dtos/group/GroupResponseDTO";
-import { CreateGroupDTO } from "../../dtos/group/CreateGroupDTO";
-import type { Group } from "../../../domain/entities/Group";
+import { GroupResponseDTO } from "../group/GroupResponseDTO";
+import { CreateGroupDTO } from "../group/CreateGroupDTO";
 
 
 @injectable()
@@ -13,15 +12,15 @@ export class CreateGroupToApplicationUseCase {
 
   constructor(
     @inject(Types.IApplicationRepository) private applicationRepository: IApplicationRepository,
+    @inject(Types.IGroupRepository) private groupRepository: IGroupRepository
   ) {}
 
-  async execute(applicationId: string): Promise<Group> {
+  async execute(applicationId: string): Promise<GroupResponseDTO> {
 
     // 1️⃣ Obtener la solicitud
     const app = await this.applicationRepository.findById(applicationId);
     if (!app) throw new Error("Application not found");
 
-    
     // 2️⃣ Convertir artists → solo IDs
     const artistIds = app.artists.map(([idArtist]) => Number(idArtist));
 
@@ -46,10 +45,23 @@ export class CreateGroupToApplicationUseCase {
       []
     );
 
-    const createdGroup = await this.applicationRepository.createGroup(dto,app.id);
+    // 5️⃣ Crear el grupo en la base de datos
+    const createdGroup = await this.groupRepository.create(dto);
 
-    return createdGroup
-    
-        
-}
+    // 6️⃣ Devolver la respuesta DTO
+    return new GroupResponseDTO(
+      createdGroup.id,
+      createdGroup.name,
+      createdGroup.debut,
+      createdGroup.status,
+      createdGroup.memberCount,
+      createdGroup.IdAgency,
+      createdGroup.IdConcept,
+      createdGroup.IdVisualConcept,
+      createdGroup.members,
+      createdGroup.roles,
+      createdGroup.albums,
+      createdGroup.activities
+    );
+  }
 }
