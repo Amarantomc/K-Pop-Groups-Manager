@@ -25,7 +25,7 @@ export class AlbumResponseDto {
       album.titulo,
       album.fechaLanzamiento,
       album.productor,
-      album.NoCanciones,
+      album.Canciones.length,
       album.NoCopiasVendidas,
 
       // Canciones → Solo IDs
@@ -61,7 +61,7 @@ export class AlbumResponseDto {
       title: raw.titulo,
       releaseDate: raw.fechaLanzamiento,
       producer: raw.productor,
-      noSongs: raw.NoCanciones,
+      noSongs: raw.Canciones.length,
       noCopiesSold: raw.NoCopiasVendidas,
 
       songs: raw.Canciones ?? [],

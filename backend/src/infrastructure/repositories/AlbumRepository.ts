@@ -20,23 +20,72 @@ export class AlbumRepository implements IAlbumRepository
     return this.unitOfWork.getTransaction();
   }
     
-   async create(data: CreateAlbumDto): Promise<Album> {
-         
-        
-        const album= await this.db.Album.create({
-            data:{
-                idGrupo: data.idGroup,
-                NoCopiasVendidas:data.noCopiesSold,
-                productor:data.producer,
-                titulo: data.title,
-                fechaLanzamiento:data.releaseDate,
-                NoCanciones:data.noSongs
-            }
-        })
-        
-        
-        return AlbumResponseDto.toEntity(album)
-    }
+  async create(data: CreateAlbumDto): Promise<Album> {
+
+    // 1. Traer los artistas del grupo automáticamente
+    const groupArtists = await this.db.Artista.findMany({
+      where: { idGr: data.idGroup },
+      select: { idAp: true }
+    });
+  
+    // 2. Convertirlos al formato [[idAp, idGroup]]
+    const autoArtists = groupArtists.map((a: { idAp: number; }) => [a.idAp, data.idGroup] as [number, number]);
+  
+    // 3. Unir artistas que vengan del body + los del grupo
+    const finalArtists = [
+      ...(data.artists ?? []),
+      ...autoArtists
+    ];
+  
+    // 4. Crear álbum con TODAS las relaciones
+    const album = await this.db.Album.create({
+      data: {
+        idGrupo: data.idGroup,
+        productor: data.producer,
+        titulo: data.title,
+        fechaLanzamiento: new Date(data.releaseDate),
+        NoCanciones: data.songs.length,
+        NoCopiasVendidas: data.noCopiesSold,
+  
+        // Canciones M-M
+        Canciones: {
+          connect: data.songs.map(id => ({ id }))
+        },
+  
+        // Premios M-M con tabla intermedia AlbúmPremiado
+        Premios: {
+          create: data.awards?.map(idPremio => ({
+            idPremio,
+            año: new Date().getFullYear()
+          })) ?? []
+        },
+  
+        // Lista de artistas involucrados → incluye los auto-detectados
+        LanzamientoArtista: {
+          create: finalArtists.map(([idAp, idGr]) => ({
+            idAp,
+            idGr
+          }))
+        },
+  
+        // Registro de lanzamiento del grupo
+        LanzamientoGrupo: {
+          create: [{
+            idGr: data.idGroup
+          }]
+        }
+      },
+  
+      include: {
+        Canciones: true,
+        Premios: true,
+        LanzamientoArtista: true,
+        LanzamientoGrupo: true
+      }
+    });
+  
+    return AlbumResponseDto.toEntity(album);
+  }
 
     async findById(id: any): Promise<Album| null> {
          id=(Number)(id)
@@ -50,16 +99,6 @@ export class AlbumRepository implements IAlbumRepository
         })
         return album ? AlbumResponseDto.toEntity(album) : null
     }
-
-    async update(id: string, data: Partial<UpdateAlbumDto>): Promise<Album> {
-        const album = await this.db.Album.update({
-          where: { id: Number(id) },
-          data: {
-          },
-        });
-      
-        return AlbumResponseDto.toEntity(album);
-      }
 
       async delete(id: string): Promise<void> {
         const numericId = Number(id);
@@ -90,34 +129,277 @@ export class AlbumRepository implements IAlbumRepository
         }
       }
 
-    //   async delete(id: string): Promise<void> {
-    //     const numericId = Number(id);
+
+      // async update(id: string, data: Partial<UpdateAlbumDto>): Promise<Album> {
+      //   const albumId = Number(id);
       
-    //     try {
-    //       // 1. Borrar premios del álbum
-    //       await this.db.Premios.delete({
-    //         where: { idAlb: numericId }
-    //       });
+      //   const current = await this.db.Album.findUnique({
+      //     where: { id: albumId }
+      //   });
       
-    //       // 2. Borrar lanzamientos grupo
-    //       await this.db.GrupoLanzaAlbum.delete({
-    //         where: { idAlb: numericId }
-    //       });
+      //   if (!current) throw new Error("Album not found");
       
-    //       // 3. Borrar lanzamientos artista
-    //       await this.db.ArtistaLanzaAlbum.delete({
-    //         where: { idAlb: numericId }
-    //       });
+      //   // ============================================================
+      //   // 1. BORRAR TODAS LAS RELACIONES DEL ÁLBUM
+      //   // ============================================================
       
-    //       // 4. Finalmente borrar el álbum
-    //       await this.db.Album.delete({
-    //         where: { id: numericId }
-    //       });
+      //   // Canciones
+      //   await this.db.cancionEnAlbum.deleteMany({
+      //     where: { idAlb: albumId }
+      //   });
       
-    //     } catch (error) {
-    //       throw new Error(`Error deleting album with id ${id}: ${error}`);
+      //   // Artistas
+      //   await this.db.artistaLanzaAlbum.deleteMany({
+      //     where: { idAlb: albumId }
+      //   });
+      
+      //   // Premios
+      //   await this.db.albumPremiado.deleteMany({
+      //     where: { idAlb: albumId }
+      //   });
+      
+      //   // ============================================================
+      //   // 2. ARTISTAS AUTOMÁTICOS
+      //   // ============================================================
+      
+      //   let autoArtists: Array<{ idAp: number; idGr: number }> = [];
+      
+      //   if (data.idGroup) {
+      //     const groupArtists = await this.db.Artista.findMany({
+      //       where: { idGr: data.idGroup },
+      //       select: { idAp: true }
+      //     });
+      
+      //     autoArtists = groupArtists.map((a: { idAp: any; }) => ({
+      //       idAp: a.idAp,
+      //       idGr: data.idGroup!
+      //     }));
+      //   }
+      
+      //   // ============================================================
+      //   // 3. COMBINAR ARTISTAS
+      //   // ============================================================
+      
+      //   const manualArtists = data.artists?.map(([idAp, idGr]) => ({ idAp, idGr })) ?? [];
+      
+      //   const finalArtists = [...manualArtists, ...autoArtists];
+      
+      //   // ============================================================
+      //   // 4. REALIZAR UPDATE + REINSERTAR RELACIONES
+      //   // ============================================================
+      
+      //   const updated = await this.db.Album.update({
+      //     where: { id: albumId },
+      //     data: {
+      //       idGrupo: data.idGroup ?? current.idGrupo,
+      //       titulo: data.title ?? current.titulo,
+      //       productor: data.producer ?? current.productor,
+      //       fechaLanzamiento: data.releaseDate
+      //         ? new Date(data.releaseDate)
+      //         : current.fechaLanzamiento,
+      //       NoCopiasVendidas: data.noCopiesSold ?? current.NoCopiasVendidas,
+      
+      //       // Canciones (solo conectar nuevas)
+      //       Canciones: {
+      //         connect: data.songs?.map(id => ({ id })) ?? []
+      //       },
+      
+      //       // Premios
+      //       Premios: {
+      //         create: data.awards?.map(idPremio => ({
+      //           idPremio,
+      //           año: new Date().getFullYear()
+      //         })) ?? []
+      //       },
+      
+      //       // Artistas: auto + manual
+      //       LanzamientoArtista: {
+      //         create: finalArtists
+      //       }
+      //     },
+      //     include: {
+      //       Canciones: true,
+      //       Premios: true,
+      //       LanzamientoArtista: true,
+      //       LanzamientoGrupo: true
+      //     }
+      //   });
+      
+      //   return AlbumResponseDto.toEntity(updated);
+      // }
+
+    // async update(id: string, data: Partial<UpdateAlbumDto>): Promise<Album> {
+    //   const albumId = Number(id);
+    
+    //   // 1. Traer el álbum actual
+    //   const current = await this.db.Album.findUnique({
+    //     where: { id: albumId },
+    //     include: {
+    //       LanzamientoArtista: true,
+    //       Premios: true,
+    //       Canciones: true
     //     }
+    //   });
+    
+    //   if (!current) {
+    //     throw new Error("Album not found");
     //   }
+    
+    //   // 2. Obtener artistas automáticos si viene idGroup
+    //   let autoArtists: Array<{ idAp: number; idGr: number }> = [];
+    
+    //   if (data.idGroup) {
+    //     const groupArtists = await this.db.Artista.findMany({
+    //       where: { idGr: data.idGroup },
+    //       select: { idAp: true }
+    //     });
+    
+    //     autoArtists = groupArtists.map((a: { idAp: any; }) => ({
+    //       idAp: a.idAp,
+    //       idGr: data.idGroup!
+    //     }));
+    //   }
+    
+    //   // 3. Combinar artistas enviados + automáticos
+    //   const finalArtists = [
+    //     ...(data.artists?.map(([idAp, idGr]) => ({ idAp, idGr })) ?? []),
+    //     ...autoArtists
+    //   ];
+    
+    //   // 4. Ejecutar update completo
+    //   const updated = await this.db.Album.update({
+    //     where: { id: albumId },
+    //     data: {
+    //       idGrupo: data.idGroup ?? current.idGrupo,
+    //       titulo: data.title ?? current.titulo,
+    //       productor: data.producer ?? current.productor,
+    //       fechaLanzamiento: data.releaseDate
+    //         ? new Date(data.releaseDate)
+    //         : current.fechaLanzamiento,
+    //       NoCopiasVendidas: data.noCopiesSold ?? current.NoCopiasVendidas,
+    
+    //       // Actualizar canciones
+    //       Canciones: data.songs
+    //         ? {
+    //             set: [], // limpiamos
+    //             connect: data.songs.map(id => ({ id }))
+    //           }
+    //         : undefined,
+    
+    //       // Actualizar premios
+    //       Premios: data.awards
+    //         ? {
+    //             deleteMany: {}, // borramos premios anteriores
+    //             create: data.awards.map(idPremio => ({
+    //               idPremio,
+    //               año: new Date().getFullYear()
+    //             }))
+    //           }
+    //         : undefined,
+    
+    //       // Actualizar artistas como en CREATE
+    //       LanzamientoArtista:
+    //         finalArtists.length > 0
+    //           ? {
+    //               deleteMany: {}, // borramos los anteriores
+    //               create: finalArtists
+    //             }
+    //           : undefined
+    //     },
+    //     include: {
+    //       Canciones: true,
+    //       Premios: true,
+    //       LanzamientoArtista: true,
+    //       LanzamientoGrupo: true
+    //     }
+    //   });
+    
+    //   return AlbumResponseDto.toEntity(updated);
+    // }
+    async update(id: string, data: Partial<UpdateAlbumDto>): Promise<Album> {
+      const albumId = Number(id);
+    
+      const current = await this.db.album.findUnique({
+        where: { id: albumId },
+        include: {
+          LanzamientoArtista: true,
+          Premios: true,
+          Canciones: true
+        }
+      });
+    
+      if (!current) throw new Error("Album not found");
+    
+      // Obtener artistas del grupo
+      let autoArtists: Array<{ idAp: number; idGr: number }> = [];
+    
+      if (data.idGroup) {
+        const groupArtists = await this.db.artista.findMany({
+          where: { idGr: data.idGroup },
+          select: { idAp: true }
+        });
+    
+        autoArtists = groupArtists.map((a: { idAp: any; }) => ({
+          idAp: a.idAp,
+          idGr: data.idGroup!
+        }));
+      }
+    
+      const finalArtists = [
+        ...(data.artists?.map(([idAp, idGr]) => ({ idAp, idGr })) ?? []),
+        ...autoArtists
+      ];
+    
+      const updated = await this.db.album.update({
+        where: { id: albumId },
+        data: {
+          idGrupo: data.idGroup ?? current.idGrupo,
+          titulo: data.title ?? current.titulo,
+          productor: data.producer ?? current.productor,
+          fechaLanzamiento: data.releaseDate
+            ? new Date(data.releaseDate)
+            : current.fechaLanzamiento,
+          NoCopiasVendidas: data.noCopiesSold ?? current.NoCopiasVendidas,
+    
+          // RELACIÓN M:N IMPLÍCITA (SOLO set)
+          Canciones: data.songs
+            ? {
+                set: data.songs.map(id => ({ id }))
+              }
+            : undefined,
+    
+          // PREMIOS (pivot explícito)
+          Premios: data.awards
+            ? {
+                deleteMany: {},
+                create: data.awards.map(idPremio => ({
+                  idPremio,
+                  año: new Date().getFullYear()
+                }))
+              }
+            : undefined,
+    
+          // ARTISTAS (pivot explícito)
+          LanzamientoArtista:
+            finalArtists.length > 0
+              ? {
+                  deleteMany: {},
+                  create: finalArtists.map(a => ({
+                    idAp: a.idAp,
+                    idGr: a.idGr
+                  }))
+                }
+              : undefined
+        },
+        include: {
+          Canciones: true,
+          Premios: true,
+          LanzamientoArtista: true
+        }
+      });
+    
+      return AlbumResponseDto.toEntity(updated);
+    }
 
       async findAll(): Promise<Album[]> {
         const albums = await this.db.Album.findMany({

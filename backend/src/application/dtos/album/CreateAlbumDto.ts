@@ -1,10 +1,10 @@
 export class CreateAlbumDto {
     constructor(
-        public readonly idGroup: number,
+        public readonly idGroup: number | null,
         public readonly title: string,
         public readonly releaseDate: Date | string,
         public readonly producer: string,
-        public readonly noSongs: number,
+        //public readonly noSongs: number,
         public readonly noCopiesSold: number,
         public readonly songs: Array<number>,
         public readonly artists: Array<[number, number]>,
@@ -13,7 +13,7 @@ export class CreateAlbumDto {
 
     static create(body: any): CreateAlbumDto {
 
-        if (!body.idGroup || !body.title || !body.releaseDate || !body.producer || !body.noSongs || !body.noCopiesSold) {
+        if (!body.title || !body.releaseDate || !body.producer /*|| !body.noSongs*/ || !body.noCopiesSold) {
             throw new Error("Missing required fields");
         }
 
@@ -30,11 +30,11 @@ export class CreateAlbumDto {
         }
 
         return new CreateAlbumDto(
-            body.idGroup,
+            body.idGroup ?? null,
             body.title,
             body.releaseDate,
             body.producer,
-            body.noSongs,
+            //body.noSongs,
             body.noCopiesSold,
             body.songs,
             body.artists,
