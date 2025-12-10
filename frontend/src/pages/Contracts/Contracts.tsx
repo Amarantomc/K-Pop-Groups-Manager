@@ -36,105 +36,32 @@ const Contracts: React.FC = () => {
 
   // Columnas base del DataTable
   const baseColumns: GridColDef[] = [
-    { field: 'artistName', headerName: 'Artista', width: 180 },
-    { field: 'groupName', headerName: 'Grupo', width: 150 },
+    { field: 'type', headerName: 'Tipo de Contrato', width: 150 },
     {
-      field: 'contractType',
-      headerName: 'Tipo de Contrato',
-      width: 160,
+      field: 'entityName',
+      headerName: 'Artista/Grupo',
+      width: 220,
       renderCell: (params) => {
-        const typeLabels: Record<string, string> = {
-          'exclusive': 'Exclusivo',
-          'non_exclusive': 'No Exclusivo',
-          'production': 'Producción',
-          'distribution': 'Distribución'
-        };
-        return typeLabels[params.value] || params.value;
-      }
-    },
-    {
-      field: 'startDate',
-      headerName: 'Fecha Inicio',
-      width: 130,
-      valueFormatter: (params) => {
-        return new Date(params).toLocaleDateString('es-ES');
-      }
-    },
-    {
-      field: 'endDate',
-      headerName: 'Fecha Fin',
-      width: 130,
-      valueFormatter: (params) => {
-        return new Date(params).toLocaleDateString('es-ES');
-      }
-    },
-    {
-      field: 'value',
-      headerName: 'Valor',
-      width: 140,
-      renderCell: (params) => {
-        const value = params.value;
-        if (typeof value === 'number') {
-          return (
-            <span style={{
-              color: '#10b981',
-              fontWeight: 700,
-              fontSize: '15px'
-            }}>
-              ${value.toLocaleString('es-ES')}
-            </span>
-          );
-        }
-        return <span style={{ color: '#6b7280', fontWeight: 400 }}>—</span>;
-      }
-    },
-    {
-      field: 'status',
-      headerName: 'Estado',
-      width: 130,
-      renderCell: (params) => {
-        const statusColors: Record<string, string> = {
-          'active': '#10b981',
-          'expired': '#6b7280',
-          'terminated': '#ef4444',
-          'pending': '#f59e0b'
-        };
-        const statusLabels: Record<string, string> = {
-          'active': 'Activo',
-          'expired': 'Expirado',
-          'terminated': 'Terminado',
-          'pending': 'Pendiente'
-        };
+        // params.row.type puede ser 'Artist' o 'Group'
+        const tipo = params.row.type === 'Artist' ? 'Artista' : params.row.type === 'Group' ? 'Grupo' : 'Desconocido';
+        const color = params.row.type === 'Artist' ? '#2563eb' : params.row.type === 'Group' ? '#10b981' : '#6b7280';
         return (
-          <span style={{
-            color: statusColors[params.value] || '#6b7280',
-            fontWeight: 600
-          }}>
-            {statusLabels[params.value] || params.value}
+          <span>
+            <span style={{ color, fontWeight: 600 }}>{params.value}</span>
+            <span style={{color: '#6b7280', fontSize: '13px', fontWeight: 500, marginLeft: 8}}>[{tipo}]</span>
           </span>
         );
       }
     },
-    {
-      field: 'terms',
-      headerName: 'Términos',
-      width: 200,
-      renderCell: (params) => (
-        <div style={{
-          whiteSpace: 'normal',
-          lineHeight: '1.4',
-          padding: '8px 0'
-        }}>
-          {params.value || '-'}
-        </div>
-      )
-    }
+    { field: 'agencyName', headerName: 'Agencia', width: 180 },
+    { field: 'startDate', headerName: 'Fecha Inicio', width: 150, valueFormatter: (params) => new Date(params).toLocaleDateString('es-ES') },
+    { field: 'status', headerName: 'Estado', width: 120 },
+    { field: 'initialConditions', headerName: 'Términos Iniciales', width: 220 },
+    { field: 'incomeDistribution', headerName: 'Distribución de Ingresos', width: 180 }
   ];
 
   // Agregar columna de agencia solo para admin
-  const columns = user?.role === 'admin'
-    ? [...baseColumns, { field: 'agencyName', headerName: 'Agencia', width: 150 }]
-    : baseColumns;
+  const columns = baseColumns;
 
   useEffect(() => {
     const fetchContracts = async () => {
@@ -174,96 +101,21 @@ const Contracts: React.FC = () => {
         }
 
         const data = await response.json();
-        // Mapeo para asegurar que cada contrato tenga un id único en la raíz
         const contractsArray = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
-        const formattedContracts = contractsArray.map((contract, index) => ({
-          id: contract.id ?? index,
-          ...contract
+        const formattedContracts = contractsArray.map((contract: any, index: number) => ({
+          id: index,
+          type: contract.type,
+          entityName: contract.type === 'Artist' ? contract.artist?.ArtistName : contract.group?.name,
+          agencyName: contract.agency?.name,
+          startDate: contract.startDate,
+          status: contract.status,
+          initialConditions: contract.initialConditions,
+          incomeDistribution: contract.incomeDistribution
         }));
         setContracts(formattedContracts);
         // ============================================
         // FIN SECCIÓN: BACKEND ENDPOINT
         // ============================================
-
-        // ============================================
-        //SECCIÓN: DATOS DEMO
-        //============================================
-        /*
-     const mockContracts: Contract[] = [
-       {
-         id: 1,
-         artistName: 'Lee Min-ho',
-         groupName: 'Phoenix',
-         contractType: 'exclusive',
-         startDate: '2023-01-15',
-         endDate: '2028-01-14',
-         value: 500000,
-         status: 'active',
-         agencyName: 'K-Pop Stars Agency',
-         terms: 'Contrato exclusivo de 5 años con opción de renovación'
-       },
-       {
-         id: 2,
-         artistName: 'Kim Ji-soo',
-         groupName: 'Starlight',
-         contractType: 'exclusive',
-         startDate: '2022-06-01',
-         endDate: '2027-05-31',
-         value: 450000,
-         status: 'active',
-         agencyName: 'K-Pop Stars Agency',
-         terms: 'Contrato exclusivo con cláusulas de distribución internacional'
-       },
-       {
-         id: 3,
-         artistName: 'Park Soo-young',
-         groupName: 'Dreamers',
-         contractType: 'production',
-         startDate: '2024-03-01',
-         endDate: '2026-02-28',
-         value: 200000,
-         status: 'active',
-         agencyName: 'K-Pop Stars Agency',
-         terms: 'Contrato de producción para 2 álbumes'
-       },
-       {
-         id: 4,
-         artistName: 'Choi Min-jun',
-         groupName: 'Thunder Squad',
-         contractType: 'non_exclusive',
-         startDate: '2023-09-01',
-         endDate: '2025-08-31',
-         value: 150000,
-         status: 'pending',
-         agencyName: 'Global Entertainment',
-         terms: 'Contrato no exclusivo con derechos de distribución compartidos'
-       },
-       {
-         id: 5,
-         artistName: 'Jung Ha-neul',
-         groupName: undefined,
-         contractType: 'distribution',
-         startDate: '2021-02-01',
-         endDate: '2024-01-31',
-         value: 100000,
-         status: 'expired',
-         agencyName: 'Global Entertainment',
-         terms: 'Contrato de distribución para mercados asiáticos'
-       }
-     ];
-
-     // Filtrar según rol para la demo
-     let filteredContracts = mockContracts;
-     if (user.role === 'manager' || user.role === 'director') {
-       // Filtrar por agencia (en demo mostramos los de K-Pop Stars Agency)
-       filteredContracts = mockContracts.filter(contract => contract.agencyName === 'K-Pop Stars Agency');
-     }
-
-     setContracts(filteredContracts);
-     */
-        //============================================
-        //FIN SECCIÓN: DATOS DEMO
-        //============================================ 
 
       } catch (error) {
         console.error('Error al cargar contratos:', error);

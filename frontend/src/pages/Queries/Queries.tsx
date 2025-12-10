@@ -57,96 +57,79 @@ const Queries: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState('');
 
   // Estados para Query 1: Actividades por grupo
-  const [groupId, setGroupId] = useState<string>('');
   const [activities, setActivities] = useState<Activity[]>([]);
+  const [groups, setGroups] = useState<any[]>([]);
+  const [selectedGroupId, setSelectedGroupId] = useState('');
 
   // Estados para Query 2: Información de artista
-  const [artistId, setArtistId] = useState<string>('');
-  const [artistInfo, setArtistInfo] = useState<Artist | null>(null);
+  const [artistInfo, setArtistInfo] = useState<Artist[]>([]);
+  const [agencies, setAgencies] = useState<any[]>([]);
+  const [selectedAgencyId, setSelectedAgencyId] = useState('');
 
+  // Fetch dinámico de grupos y agencias al montar
+  useEffect(() => {
+    const fetchGroups = async () => {
+      try {
+        const res = await fetch('http://localhost:3000/api/group');
+        const data = await res.json();
+        setGroups(data.data || []);
+      } catch {}
+    };
+    const fetchAgencies = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+        const res = await fetch('http://localhost:3000/api/agency', { headers });
+        const data = await res.json();
+        setAgencies(data.data || []);
+      } catch {}
+    };
+    fetchGroups();
+    fetchAgencies();
+  }, []);
+
+  // Consulta actividades por grupo usando el ID seleccionado
   const fetchActivitiesByGroup = async () => {
-    if (!groupId.trim()) {
-      setErrorMessage('Debe ingresar un ID de grupo');
+    if (!selectedGroupId) {
+      setErrorMessage('Debe seleccionar un grupo');
       setOpenError(true);
       return;
     }
-
     setIsLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json'
-      };
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
-
-      const response = await fetch(`http://localhost:3000/api/activity/byGroup/${groupId}`, {
-        headers
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
-        const errorMsg = errorData?.error || errorData?.message || 'Error al obtener las actividades';
-        setErrorMessage(errorMsg);
-        setOpenError(true);
-        return;
-      }
-
+      const response = await fetch(`http://localhost:3000/api/activity/byGroup/${selectedGroupId}`, { headers });
       const data = await response.json();
-      console.log('Actividades obtenidas:', data);
-      
-      if (data.success && data.data) {
-        setActivities(data.data);
-      } else {
-        setActivities([]);
-      }
+      setActivities(data.data || []);
     } catch (error) {
-      console.error('Error al obtener actividades:', error);
-      setErrorMessage(error instanceof Error ? error.message : 'Error de red');
-      setOpenError(true);
+      setErrorMessage('Error al consultar actividades'); setOpenError(true);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const fetchArtistInfo = async () => {
-    if (!artistId.trim()) {
-      setErrorMessage('Debe ingresar un ID de artista');
+  // Consulta artistas por agencia usando el ID seleccionado
+  const fetchArtistsByAgency = async () => {
+    if (!selectedAgencyId) {
+      setErrorMessage('Debe seleccionar una agencia');
       setOpenError(true);
       return;
     }
-
     setIsLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json'
-      };
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
-
-      const response = await fetch(`http://localhost:3000/api/artist/${artistId}`, {
-        headers
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
-        const errorMsg = errorData?.error || errorData?.message || 'Error al obtener información del artista';
-        setErrorMessage(errorMsg);
-        setOpenError(true);
-        return;
-      }
-
+      const response = await fetch(`http://localhost:3000/api/artist/${selectedAgencyId}`, { headers });
+      console.log(selectedAgencyId)
       const data = await response.json();
-      console.log('Artista obtenido:', data);
-      
-      if (data.success && data.data) {
-        setArtistInfo(data.data);
-      } else {
-        setArtistInfo(null);
-      }
+      console.log(data)
+      setArtistInfo(Array.isArray(data.data) ? data.data : []);
     } catch (error) {
-      console.error('Error al obtener artista:', error);
-      setErrorMessage(error instanceof Error ? error.message : 'Error de red');
-      setOpenError(true);
+      setErrorMessage('Error al consultar artistas'); setOpenError(true);
     } finally {
       setIsLoading(false);
     }
@@ -156,14 +139,13 @@ const Queries: React.FC = () => {
     setSelectedQuery(queryNumber);
     // Limpiar resultados anteriores
     setActivities([]);
-    setArtistInfo(null);
-    setGroupId('');
-    setArtistId('');
+    setArtistInfo([]); // Limpiar artistas mostrados al cambiar consulta
     setConflictResults([]);
     setDebutContractResults([]);
     setIncomeResults([]);
     setAgencyChangeResults([]);
     setSoloistResults([]);
+    setSelectedAgencyId(''); // Limpiar agencia seleccionada
   };
 
   return (
@@ -172,28 +154,13 @@ const Queries: React.FC = () => {
       description="Consultas especializadas del sistema"
     >
       <div className="queries-container">
-        {/* Selector de consulta */}
+        {/* Selector de consulta: solo consultas 1 y 2 */}
         <div className="query-selector">
-          <button className={`query-btn ${selectedQuery === 1 ? 'active' : ''}`} onClick={() => handleQueryChange(1)}>
+          <button className={`query-btn ${selectedQuery === 1 ? 'active' : ''}`} style={{ width: '320px' }} onClick={() => handleQueryChange(1)}>
             1. Artistas activos por agencia
           </button>
-          <button className={`query-btn ${selectedQuery === 2 ? 'active' : ''}`} onClick={() => handleQueryChange(2)}>
-            2. Calendario de actividades por grupo
-          </button>
-          <button className={`query-btn ${selectedQuery === 3 ? 'active' : ''}`} onClick={() => handleQueryChange(3)}>
-            3. Conflictos de agenda
-          </button>
-          <button className={`query-btn ${selectedQuery === 4 ? 'active' : ''}`} onClick={() => handleQueryChange(4)}>
-            4. Artistas con debut y contrato activo
-          </button>
-          <button className={`query-btn ${selectedQuery === 5 ? 'active' : ''}`} onClick={() => handleQueryChange(5)}>
-            5. Ingresos por artista
-          </button>
-          <button className={`query-btn ${selectedQuery === 6 ? 'active' : ''}`} onClick={() => handleQueryChange(6)}>
-            6. Cambios de agencia y grupos
-          </button>
-          <button className={`query-btn ${selectedQuery === 7 ? 'active' : ''}`} onClick={() => handleQueryChange(7)}>
-            7. Solistas de grupos disueltos con álbum exitoso
+          <button className={`query-btn ${selectedQuery === 2 ? 'active' : ''}`} style={{ width: '320px' }} onClick={() => handleQueryChange(2)}>
+            2. Actividades por grupo
           </button>
         </div>
         {/* Contenido de Query 3: Conflictos de agenda */}
@@ -488,43 +455,51 @@ const Queries: React.FC = () => {
         {selectedQuery === 1 && (
           <div className="query-content">
             <h3>Artistas activos por agencia</h3>
-            <p className="query-description">
-              Permite a los emphmanagers de cada agencia obtener un listado de todos los artistas activos asociados a su agencia, mostrando el nombre artístico, grupo al que pertenecen y estado actual.
-            </p>
+            <p className="query-description">Consulta los artistas activos de una agencia específica.</p>
             <div className="query-form">
-              <button className="btn-primary" onClick={async () => {
-                setIsLoading(true);
-                try {
-                  const token = localStorage.getItem('token');
-                  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-                  if (token) headers['Authorization'] = `Bearer ${token}`;
-                  const response = await fetch('http://localhost:3000/api/artist/active-by-agency', { headers });
-                  const data = await response.json();
-                  setActivities(data.data || []);
-                } catch (error) { setErrorMessage('Error al consultar artistas activos'); setOpenError(true); }
-                finally { setIsLoading(false); }
-              }} disabled={isLoading}>
-                {isLoading ? 'Consultando...' : 'Consultar'}
-              </button>
+              {user?.role === 'manager' && (
+                <>
+                  <label>Agencia:</label>
+                  <select value={selectedAgencyId} onChange={e => {
+                    console.log(e.target);
+                    setSelectedAgencyId(e.target.value);
+                    setArtistInfo([]);
+                  }}>
+                    <option value="">Selecciona una agencia</option>
+                    {agencies.map((a: any) => (
+                      <option key={a.id} value={a.id}>{a.name}</option>
+                    ))}
+                  </select>
+                  <button className="btn-primary" disabled={isLoading} onClick={async () => {
+                    fetchArtistsByAgency();
+                  }}>
+                    Consultar
+                  </button>
+                </>
+              )}
             </div>
-            {activities.length > 0 && (
+            {artistInfo.length > 0 && (
               <div className="query-results">
-                <h4>Artistas activos de la agencia</h4>
+                <h4>Artistas activos de la agencia seleccionada</h4>
                 <div className="results-table">
                   <table>
                     <thead>
                       <tr>
-                        <th>Nombre Artístico</th>
+                        <th>ID</th>
+                        <th>Nombre</th>
                         <th>Grupo</th>
-                        <th>Estado</th>
+                        <th>Debut</th>
+                        <th>Status</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {activities.map((artist: any, i: number) => (
-                        <tr key={i}>
-                          <td>{artist.ArtistName || artist.artistName}</td>
-                          <td>{artist.groupName}</td>
-                          <td>{artist.Status || artist.status}</td>
+                      {artistInfo.filter((artist: any) => artist.Status === 'Activo').map((artist: any) => (
+                        <tr key={artist.ApprenticeId || artist.id}>
+                          <td>{artist.ApprenticeId || artist.id}</td>
+                          <td>{artist.ArtistName}</td>
+                          <td>{artist.groupHistory?.map((g: { id: number; name: string; debut: string; status: string; memberCount: number; IdAgency: number }) => g.name).join(', ')}</td>
+                          <td>{artist.DebutDate}</td>
+                          <td>{artist.Status}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -532,8 +507,8 @@ const Queries: React.FC = () => {
                 </div>
               </div>
             )}
-            {activities.length === 0 && !isLoading && (
-              <div className="no-results">No se encontraron artistas activos para la agencia.</div>
+            {artistInfo.filter((artist: any) => artist.Status === 'Activo').length === 0 && !isLoading && selectedAgencyId && (
+              <div className="no-results">No se encontraron artistas activos para la agencia seleccionada</div>
             )}
           </div>
         )}
@@ -547,10 +522,11 @@ const Queries: React.FC = () => {
             </p>
             <div className="query-form">
               <label htmlFor="groupId">Seleccione el grupo:</label>
-              <select id="groupId" value={groupId} onChange={e => setGroupId(e.target.value)}>
+              <select id="groupId" value={selectedGroupId} onChange={e => setSelectedGroupId(e.target.value)}>
                 <option value="">-- Seleccione un grupo --</option>
-                {/* Aquí deberías mapear los grupos desde la base de datos */}
-                {/* Ejemplo: <option value="1">Phoenix</option> */}
+                {groups.map((g: any) => (
+                  <option key={g.id} value={g.id}>{g.name}</option>
+                ))}
               </select>
               <button className="btn-primary" onClick={fetchActivitiesByGroup} disabled={isLoading}>
                 {isLoading ? 'Consultando...' : 'Consultar'}
@@ -587,7 +563,7 @@ const Queries: React.FC = () => {
                 </div>
               </div>
             )}
-            {activities.length === 0 && !isLoading && groupId && (
+            {activities.length === 0 && !isLoading && selectedGroupId && (
               <div className="no-results">No se encontraron actividades para el grupo seleccionado</div>
             )}
           </div>

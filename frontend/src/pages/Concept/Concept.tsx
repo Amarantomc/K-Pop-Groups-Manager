@@ -34,12 +34,12 @@ const Concept: React.FC = () => {
   ];
 
   // Agregar columnas adicionales para admin
-  const columns: GridColDef[] = user?.role === 'admin'
+  /*const columns: GridColDef[] = user?.role === 'admin'
     ? [
       ...baseColumns,
       { field: 'agencyName', headerName: 'Agencia', width: 150 }
     ]
-    : baseColumns;
+    : baseColumns;*/
 
   useEffect(() => {
     const fetchConcepts = async () => {
@@ -256,7 +256,7 @@ const Concept: React.FC = () => {
       ) : (
         <>
           <DataTable
-            columns={columns}
+            columns={baseColumns}
             rows={conceptRows}
             pagesize={10}
             onDelete={askDelete}

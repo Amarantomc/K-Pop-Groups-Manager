@@ -29,51 +29,27 @@ const ConceptVisual: React.FC = () => {
 
   // Columnas del DataTable
   const baseColumns: GridColDef[] = [
-    { field: 'title', headerName: 'Título', width: 200 },
-    { field: 'conceptName', headerName: 'Concepto', width: 150 },
-    { field: 'theme', headerName: 'Tema', width: 150 },
-    { field: 'colorPalette', headerName: 'Paleta de Colores', width: 180 },
-    { field: 'mood', headerName: 'Estado de Ánimo', width: 150 },
     {
-      field: 'createdAt',
-      headerName: 'Fecha de Creación',
-      width: 150,
-      valueFormatter: (params) => {
-        return new Date(params).toLocaleDateString('es-ES');
-      }
+      field: 'picture',
+      headerName: 'Imagen',
+      width: 120,
+      renderCell: (params) => (
+        params.value ? <img src={`/images/${params.value}`} alt="concepto visual" style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: 8 }} /> : <span style={{ color: '#6b7280' }}>Sin imagen</span>
+      )
     },
     {
-      field: 'status',
-      headerName: 'Estado',
-      width: 120,
-      renderCell: (params) => {
-        const statusColors: Record<string, string> = {
-          'draft': '#f59e0b',
-          'approved': '#10b981',
-          'in_review': '#3b82f6',
-          'rejected': '#ef4444'
-        };
-        return (
-          <span style={{
-            color: statusColors[params.value] || '#6b7280',
-            fontWeight: 600
-          }}>
-            {params.value === 'draft' ? 'Borrador' :
-              params.value === 'approved' ? 'Aprobado' :
-                params.value === 'in_review' ? 'En Revisión' :
-                  params.value === 'rejected' ? 'Rechazado' : params.value}
-          </span>
-        );
-      }
+      field: 'groupName',
+      headerName: 'Grupo Asociado',
+      width: 200,
+      renderCell: (params) => (
+        params.value ? <span style={{ fontWeight: 600 }}>{params.value}</span> : <span style={{ color: '#6b7280' }}>Sin grupo</span>
+      )
     }
   ];
 
   // Agregar columnas adicionales para admin
   const columns: GridColDef[] = user?.role === 'admin'
-    ? [
-      ...baseColumns,
-      { field: 'agencyName', headerName: 'Agencia', width: 150 }
-    ]
+    ? baseColumns
     : baseColumns;
 
   useEffect(() => {
@@ -82,8 +58,8 @@ const ConceptVisual: React.FC = () => {
       try {
         if (!user) return;
 
+        // Obtener conceptos visuales
         let endpoint = '';
-
         switch (user.role) {
           case 'manager':
           case 'director':
@@ -96,46 +72,36 @@ const ConceptVisual: React.FC = () => {
             console.error('Rol no autorizado:', user.role);
             return;
         }
-
-        // ============================================
-        // SECCIÓN: BACKEND ENDPOINT
-        // ============================================
         const response = await fetch(`http://localhost:3000${endpoint}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         });
-
         if (!response.ok) {
           throw new Error('Error al obtener conceptos visuales');
         }
-
         const data = await response.json();
-        console.log(data);
-        const formattedData = data.data.map((conceptVisual: any, index: number) => ({
-          id: conceptVisual.id ?? index,
-          title: conceptVisual.title,
-          conceptName: conceptVisual.conceptName,
-          theme: conceptVisual.theme,
-          colorPalette: conceptVisual.colorPalette,
-          mood: conceptVisual.mood,
-          status: conceptVisual.status,
-          createdAt: conceptVisual.createdAt,
-          agencyName: conceptVisual.agencyName
-        }));
-        console.log(formattedData);
+        // Obtener grupos
+        const groupRes = await fetch('http://localhost:3000/api/group');
+        const groupData = await groupRes.json();
+        const groups = groupData.data || [];
+        // Mapear grupo por idConceptVisual (asumiendo que cada grupo tiene un campo idConceptVisual)
+        const formattedData = data.data.map((conceptVisual: any, index: number) => {
+          // Asociar grupo por posición (index)
+          const grupo = groups[index];
+          return {
+            id: conceptVisual.id ?? index,
+            picture: conceptVisual.picture,
+            groupName: grupo ? grupo.name : null
+          };
+        });
         setConceptVisualRows(formattedData);
-        // ============================================
-        // FIN SECCIÓN: BACKEND ENDPOINT
-        // ============================================
-
       } catch (error) {
         console.error('Error al cargar conceptos visuales:', error);
       } finally {
         setIsLoading(false);
       }
     };
-
     fetchConceptVisuals();
   }, [user]);
 

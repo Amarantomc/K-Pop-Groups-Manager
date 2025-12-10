@@ -84,13 +84,13 @@ const Dashboard : React.FC = () =>{
     };
 
     (async () => {
-      const [a, p, u, ar, g, al, ac, s, aw, c, vc, pl, co, i, r, e] = await Promise.all([
+      const [a, p, u, ar, g, al, ac, s, aw, c, vc, pl, co, i, r,e] = await Promise.all([
         fetchCount(`${API_BASE}/api/agency/`),
         fetchCount(`${API_BASE}/api/apprentice/`),
         fetchCount(`${API_BASE}/api/user`),
         fetchCount(`${API_BASE}/api/artist/`),
         fetchCount(`${API_BASE}/api/group/`),
-        fetchCount(`${API_BASE}/api/albums/`),
+        fetchCount(`${API_BASE}/api/album`),
         fetchCount(`${API_BASE}/api/activity`),
         fetchCount(`${API_BASE}/api/song`),
         fetchCount(`${API_BASE}/api/award`),
@@ -238,6 +238,7 @@ const Dashboard : React.FC = () =>{
           color="#dc2626"
           subtitle="Peticiones pendientes"
         />
+        {/*
         <StatCard
           title="Evaluaciones"
           value={renderValue(evaluationsCount)}
@@ -245,6 +246,7 @@ const Dashboard : React.FC = () =>{
           color="#7c3aed"
           subtitle="Valoraciones registradas"
         />
+        */}
       </div>
     </PageLayout>
   )
