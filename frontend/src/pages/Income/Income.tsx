@@ -34,57 +34,33 @@ const Income: React.FC = () => {
 
   // Columnas base del DataTable
   const baseColumns: GridColDef[] = [
-    { field: 'artistName', headerName: 'Artista', width: 180 },
-    { field: 'groupName', headerName: 'Grupo', width: 150 },
+    { field: 'eventType', headerName: 'Actividad', width: 200 },
+    { field: 'description', headerName: 'Descripción', width: 250 },
     {
       field: 'amount',
       headerName: 'Monto',
       width: 140,
-      renderCell: (params) => {
-        const amount = params.value as number;
-        return (
-          <span style={{
-            color: '#10b981',
-            fontWeight: 700,
-            fontSize: '15px'
-          }}>
-            ${amount.toLocaleString('es-ES')}
-          </span>
-        );
-      }
-    },
-    {
-      field: 'source',
-      headerName: 'Fuente',
-      width: 150
-    },
-    {
-      field: 'description',
-      headerName: 'Descripción',
-      width: 250,
       renderCell: (params) => (
-        <div style={{
-          whiteSpace: 'normal',
-          lineHeight: '1.4',
-          padding: '8px 0'
+        <span style={{
+          color: '#10b981',
+          fontWeight: 700,
+          fontSize: '15px'
         }}>
-          {params.value}
-        </div>
+          ${Number(params.value).toLocaleString('es-ES')}
+        </span>
       )
     },
     {
-      field: 'incomeDate',
+      field: 'date',
       headerName: 'Fecha',
       width: 130,
-      valueFormatter: (params) => {
-        return new Date(params).toLocaleDateString('es-ES');
-      }
+      valueFormatter: (params) => new Date(params).toLocaleDateString('es-ES')
     }
   ];
 
   // Agregar columna de agencia solo para admin
   const columns = user?.role === 'admin'
-    ? [...baseColumns, { field: 'agencyName', headerName: 'Agencia', width: 150 }]
+    ? [...baseColumns, { field: 'responsible', headerName: 'Agencia', width: 150 }]
     : baseColumns;
 
   useEffect(() => {
@@ -94,7 +70,6 @@ const Income: React.FC = () => {
         if (!user) return;
 
         let endpoint = '';
-
         switch (user.role) {
           case 'artist':
             endpoint = `/api/income?artistId=${user.profileData?.artistId || user.id}`;
@@ -120,94 +95,37 @@ const Income: React.FC = () => {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         });
-
         if (!response.ok) {
           throw new Error('Error al obtener ingresos');
         }
-
         const data = await response.json();
-        // Normalizar para que cada ingreso tenga 'id'
-        const normalized = (data.data || data).map((income: any) => ({
-          ...income,
-          id: income.idIncome ?? income.id
-        }));
+        const ingresos = (data.data || data);
+
+        // Consulta actividades
+        const activitiesRes = await fetch('http://localhost:3000/api/activity', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        if (!activitiesRes.ok) {
+          throw new Error('Error al obtener actividades');
+        }
+        const activitiesData = await activitiesRes.json();
+        const actividades = activitiesData.data || activitiesData;
+        const normalized = ingresos.map((income: any) => {
+          const actividad = actividades.find((act: any) => act.id === income.idActivity);
+          return {
+            ...income,
+            id: income.idIncome ?? income.id,
+            eventType: actividad?.eventType || 'Tipo desconocido',
+            responsible: actividad?.responsible || 'No asignado'
+          };
+        });
         setIncomes(normalized);
         // ============================================
         // FIN SECCIÓN: BACKEND ENDPOINT
         // ============================================
-
-        //============================================
-        // SECCIÓN: DATOS DEMO
-        //============================================
-        /*
-        const mockIncomes: Income[] = [
-          {
-            id: 1,
-            artistName: user.role === 'artist' ? user.name || 'Lee Min-ho' : 'Lee Min-ho',
-            groupName: 'Phoenix',
-            amount: 15000,
-            source: 'Concierto',
-            description: 'Presentación en Seoul Music Festival',
-            incomeDate: '2025-11-28T19:00:00',
-            agencyName: 'K-Pop Stars Agency'
-          },
-          {
-            id: 2,
-            artistName: user.role === 'artist' ? user.name || 'Lee Min-ho' : 'Kim Ji-soo',
-            groupName: 'Starlight',
-            amount: 8500,
-            source: 'Streaming',
-            description: 'Regalías de plataformas digitales - Noviembre',
-            incomeDate: '2025-11-25T10:00:00',
-            agencyName: 'K-Pop Stars Agency'
-          },
-          {
-            id: 3,
-            artistName: user.role === 'artist' ? user.name || 'Lee Min-ho' : 'Lee Min-ho',
-            groupName: 'Phoenix',
-            amount: 12000,
-            source: 'Publicidad',
-            description: 'Campaña publicitaria Samsung Galaxy',
-            incomeDate: '2025-11-20T14:30:00',
-            agencyName: 'K-Pop Stars Agency'
-          },
-          {
-            id: 4,
-            artistName: user.role === 'artist' ? user.name || 'Lee Min-ho' : 'Park Soo-young',
-            groupName: 'Dreamers',
-            amount: 5000,
-            source: 'Venta de Merchandise',
-            description: 'Ventas de productos oficiales - Mes de Noviembre',
-            incomeDate: '2025-11-18T09:00:00',
-            agencyName: 'Global Entertainment'
-          },
-          {
-            id: 5,
-            artistName: user.role === 'artist' ? user.name || 'Lee Min-ho' : 'Kim Ji-soo',
-            groupName: 'Starlight',
-            amount: 20000,
-            source: 'Concierto',
-            description: 'Tour Internacional - Tokio',
-            incomeDate: '2025-11-15T20:00:00',
-            agencyName: 'K-Pop Stars Agency'
-          }
-        ];
-
-        // Filtrar según rol para la demo
-        let filteredIncomes = mockIncomes;
-        if (user.role === 'artist') {
-          // Solo ingresos del artista actual
-          filteredIncomes = mockIncomes.filter(income => income.id <= 3);
-        } else if (user.role === 'manager' || user.role === 'director') {
-          // Filtrar por agencia (en demo mostramos los de K-Pop Stars Agency)
-          filteredIncomes = mockIncomes.filter(income => income.agencyName === 'K-Pop Stars Agency');
-        }
-
-        setIncomes(filteredIncomes);
-        */
-        // ============================================
-        // FIN SECCIÓN: DATOS DEMO
-        // ============================================ */
 
       } catch (error) {
         console.error('Error al cargar ingresos:', error);
@@ -215,7 +133,6 @@ const Income: React.FC = () => {
         setIsLoading(false);
       }
     };
-
     fetchIncomes();
   }, [user]);
 

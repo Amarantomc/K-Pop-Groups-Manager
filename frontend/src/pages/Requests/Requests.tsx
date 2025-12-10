@@ -358,7 +358,7 @@ const Requests: React.FC = () => {
     if (requestToDelete === null) return;
 
     try {
-      const response = await fetch(`http://localhost:3000/api/requests/${requestToDelete}`, {
+      const response = await fetch(`http://localhost:3000/api//${requestToDelete}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -383,7 +383,7 @@ const Requests: React.FC = () => {
 
   const handleEditSave = async (updatedRow: Request) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/requests/${updatedRow.id}`, {
+      const response = await fetch(`http://localhost:3000/api//${updatedRow.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -410,7 +410,7 @@ const Requests: React.FC = () => {
 
   const handleCreateSave = async (newRow: Omit<Request, 'id'>) => {
     try {
-      const response = await fetch('http://localhost:3000/api/requests', {
+      const response = await fetch('http://localhost:3000/api/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

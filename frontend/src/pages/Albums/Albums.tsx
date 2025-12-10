@@ -97,13 +97,13 @@ const Albums: React.FC = () => {
 
         switch (user.role) {
           case 'manager':
-            endpoint = `/api/albums?agencyId=${user.agencyId}`;
+            endpoint = `/api/album?agencyId=${user.agencyId}`;
             break;
           case 'director':
-            endpoint = `/api/albums?agencyId=${user.agencyId}`;
+            endpoint = `/api/album?agencyId=${user.agencyId}`;
             break;
           case 'admin':
-            endpoint = '/api/albums';
+            endpoint = '/api/album';
             break;
           default:
             console.error('Rol no autorizado:', user.role);
@@ -217,7 +217,7 @@ const Albums: React.FC = () => {
   const handleDelete = async () => {
     if (albumToDelete === null) return;
     try {
-      const response = await fetch(`http://localhost:3000/api/albums/${albumToDelete}`, {
+      const response = await fetch(`http://localhost:3000/api/album/${albumToDelete}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -242,7 +242,7 @@ const Albums: React.FC = () => {
 
   const handleEditSave = async (updatedRow: Album) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/albums/${updatedRow.id}`, {
+      const response = await fetch(`http://localhost:3000/api/album/${updatedRow.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -280,7 +280,7 @@ const Albums: React.FC = () => {
         const headers: Record<string, string> = { 'Content-Type': 'application/json' };
         if (token) headers['Authorization'] = `Bearer ${token}`;
 
-        const url = `${API_BASE}/api/albums`;
+        const url = `${API_BASE}/api/album`;
         const res = await fetch(url, {
           method: 'POST',
           headers,
@@ -314,7 +314,7 @@ const Albums: React.FC = () => {
 
   const handleFormSubmit = async (formData: Record<string, any>) => {
     try {
-      const response = await fetch('http://localhost:3000/api/albums', {
+      const response = await fetch('http://localhost:3000/api/album', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

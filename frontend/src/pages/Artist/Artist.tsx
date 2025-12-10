@@ -33,7 +33,7 @@ const Artist: React.FC = () => {
     { field: 'email', headerName: 'Email', width: 200 },
     { field: 'phone', headerName: 'Teléfono', width: 130 },
     {
-      field: 'birthDate',
+      field: 'dateOfBirth',
       headerName: 'Fecha Nacimiento',
       width: 130,
       valueFormatter: (params) => {
@@ -84,7 +84,6 @@ const Artist: React.FC = () => {
         if (!user) return;
 
         let endpoint = '';
-
         switch (user.role) {
           case 'manager':
           case 'director':
@@ -98,127 +97,51 @@ const Artist: React.FC = () => {
             return;
         }
 
-        // ============================================
-        // SECCIÓN: BACKEND ENDPOINT
-        // ============================================
+        // Obtener artistas
         const response = await fetch(`http://localhost:3000${endpoint}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         });
-
         if (!response.ok) {
           throw new Error('Error al obtener artistas');
         }
-
         const data = await response.json();
-        console.log(data)
-        const formattedData = data.data.map((artist : any , index : number) => ({
-                        id : artist.id ?? index,
-                        ArtistName : artist.ArtistName,
-                        DebutDate : artist.DebutDate,
-                        Status : artist.Status,
 
-                        ApprenticeId : artist.ApprenticeId,
-                        GroupId : artist.GroupId
-                    }))
-                    console.log(formattedData)
-                    setArtistsRows(formattedData)
-        // ============================================
-        // FIN SECCIÓN: BACKEND ENDPOINT
-        // ============================================
-
-        ///============================================
-        //SECCIÓN: DATOS DEMO
-        // ============================================
-        /*
-        const mockArtists: Artist[] = [
-          {
-            id: 1,
-            name: 'Lee Min-ho',
-            stageName: 'Phoenix',
-            email: 'phoenix@kpopstars.com',
-            phone: '+82-10-1234-5678',
-            birthDate: '1998-03-15',
-            nationality: 'Corea del Sur',
-            genre: 'K-Pop',
-            status: 'active',
-            agencyName: 'K-Pop Stars Agency',
-            groupName: 'Phoenix'
-          },
-          {
-            id: 2,
-            name: 'Kim Ji-soo',
-            stageName: 'Starlight',
-            email: 'starlight@kpopstars.com',
-            phone: '+82-10-2345-6789',
-            birthDate: '2000-07-22',
-            nationality: 'Corea del Sur',
-            genre: 'K-Pop',
-            status: 'on_tour',
-            agencyName: 'K-Pop Stars Agency',
-            groupName: 'Starlight'
-          },
-          {
-            id: 3,
-            name: 'Park Soo-young',
-            stageName: 'Luna',
-            email: 'luna@dreamers.com',
-            phone: '+82-10-3456-7890',
-            birthDate: '1999-11-08',
-            nationality: 'Corea del Sur',
-            genre: 'Pop',
-            status: 'active',
-            agencyName: 'K-Pop Stars Agency',
-            groupName: 'Dreamers'
-          },
-          {
-            id: 4,
-            name: 'Choi Min-jun',
-            stageName: 'Thunder',
-            email: 'thunder@kpopstars.com',
-            phone: '+82-10-4567-8901',
-            birthDate: '1997-05-30',
-            nationality: 'Corea del Sur',
-            genre: 'Hip-Hop',
-            status: 'training',
-            agencyName: 'K-Pop Stars Agency',
-            groupName: undefined
-          },
-          {
-            id: 5,
-            name: 'Jung Ha-neul',
-            stageName: 'Sky',
-            email: 'sky@global.com',
-            phone: '+82-10-5678-9012',
-            birthDate: '2001-02-14',
-            nationality: 'Corea del Sur',
-            genre: 'R&B',
-            status: 'inactive',
-            agencyName: 'Global Entertainment',
-            groupName: undefined
+        // Obtener aprendices
+        const apprenticeRes = await fetch('http://localhost:3000/api/apprentice', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
           }
-        ];
-
-        // Filtrar según rol
-        let filteredArtists = mockArtists;
-        if (user.role === 'manager' || user.role === 'director') {
-          filteredArtists = mockArtists.filter(a => a.agencyName === 'K-Pop Stars Agency');
+        });
+        if (!apprenticeRes.ok) {
+          throw new Error('Error al obtener aprendices');
         }
-
-        setArtists(filteredArtists);
-        */
-        //============================================
-        //FIN SECCIÓN: DATOS DEMO
-        //============================================ 
-
+        const apprenticeData = await apprenticeRes.json();
+        // Diccionario id -> aprendiz completo
+        const apprenticeMap: Record<string | number, { name: string, dateOfBirth: string }> = {};
+        apprenticeData.data.forEach((appr: any) => {
+          apprenticeMap[appr.id] = { name: appr.name, dateOfBirth: appr.dateOfBirth };
+        });
+        // Mapear artistas con nombre real y fecha de nacimiento
+        const formattedData = data.data.map((artist: any, index: number) => ({
+          id: artist.id ?? index,
+          ArtistName: artist.ArtistName,
+          DebutDate: artist.DebutDate,
+          Status: artist.Status,
+          ApprenticeId: artist.ApprenticeId,
+          GroupId: artist.GroupId,
+          realName: apprenticeMap[artist.ApprenticeId]?.name || '',
+          dateOfBirth: apprenticeMap[artist.ApprenticeId]?.dateOfBirth || ''
+        }));
+        setArtistsRows(formattedData);
       } catch (error) {
         console.error('Error al cargar artistas:', error);
       } finally {
         setIsLoading(false);
       }
     };
-
     fetchArtists();
   }, [user]);
 

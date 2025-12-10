@@ -41,69 +41,17 @@ const Activities: React.FC = () => {
 
   // Columnas del DataTable para Manager/Director
   const columns: GridColDef[] = [
-    { field: 'artistName', headerName: 'Artista', width: 150 },
-    { field: 'groupName', headerName: 'Grupo', width: 130 },
-    { field: 'title', headerName: 'Título', width: 180 },
-    {
-      field: 'type',
-      headerName: 'Tipo',
-      width: 120,
-      renderCell: (params) => {
-        const typeColors: Record<string, string> = {
-          'concert': '#8b5cf6',
-          'rehearsal': '#3b82f6',
-          'recording': '#ef4444',
-          'promotion': '#f59e0b',
-          'meeting': '#10b981'
-        };
-        return (
-          <span style={{
-            color: typeColors[params.value] || '#6b7280',
-            fontWeight: 600
-          }}>
-            {params.value === 'concert' ? 'Concierto' :
-              params.value === 'rehearsal' ? 'Ensayo' :
-                params.value === 'recording' ? 'Grabación' :
-                  params.value === 'promotion' ? 'Promoción' :
-                    params.value === 'meeting' ? 'Reunión' : params.value}
-          </span>
-        );
-      }
-    },
+    { field: 'id', headerName: 'ID', width: 80 },
+    { field: 'responsible', headerName: 'Responsable', width: 180 },
+    { field: 'activityType', headerName: 'Tipo de Actividad', width: 150 },
     {
       field: 'date',
       headerName: 'Fecha',
       width: 120,
-      valueFormatter: (params) => {
-        return new Date(params).toLocaleDateString('es-ES');
-      }
+      valueFormatter: (params) => new Date(params).toLocaleDateString('es-ES')
     },
-    { field: 'time', headerName: 'Hora', width: 100 },
-    { field: 'location', headerName: 'Ubicación', width: 150 },
-    {
-      field: 'status',
-      headerName: 'Estado',
-      width: 120,
-      renderCell: (params) => {
-        const statusColors: Record<string, string> = {
-          'pending': '#f59e0b',
-          'confirmed': '#10b981',
-          'cancelled': '#ef4444',
-          'completed': '#6366f1'
-        };
-        return (
-          <span style={{
-            color: statusColors[params.value] || '#6b7280',
-            fontWeight: 600
-          }}>
-            {params.value === 'pending' ? 'Pendiente' :
-              params.value === 'confirmed' ? 'Confirmada' :
-                params.value === 'cancelled' ? 'Cancelada' :
-                  params.value === 'completed' ? 'Completada' : params.value}
-          </span>
-        );
-      }
-    }
+    { field: 'place', headerName: 'Lugar', width: 180 },
+    { field: 'eventType', headerName: 'Tipo de Evento', width: 180 }
   ];
 
   useEffect(() => {
@@ -153,95 +101,19 @@ const Activities: React.FC = () => {
 
         const data = await response.json();
         console.log(data.data)
-        setActivities(data.data || data);
+        const formattedData = data.data.map((activity : any , index : number) => ({
+                        id : activity.id?? index,
+                        type : activity.activityType,
+                        location : activity.address,
+                        founded : activity.foundation
+                    }))
+        setActivities(formattedData);
 
         // ============================================
         // FIN SECCIÓN: BACKEND ENDPOINT
         // ============================================
 
-        //============================================
-        //SECCIÓN: DATOS DEMO
-        //============================================
-        /*
-     const mockActivities: Activity[] = [
-       {
-         id: 1,
-         artistName: user.role === 'artist' ? user.name || 'Lee Min-ho' : 'Lee Min-ho',
-         groupName: 'Phoenix',
-         title: 'Concierto Seoul Music Festival',
-         type: 'concert',
-         date: '2025-12-05',
-         time: '19:00',
-         location: 'Olympic Stadium, Seoul',
-         status: 'confirmed',
-         description: 'Presentación principal en el festival de música'
-       },
-       {
-         id: 2,
-         artistName: user.role === 'artist' ? user.name || 'Lee Min-ho' : 'Kim Ji-soo',
-         groupName: 'Starlight',
-         title: 'Ensayo General',
-         type: 'rehearsal',
-         date: '2025-12-02',
-         time: '14:00',
-         location: 'Estudio A - K-Pop Stars Agency',
-         status: 'confirmed',
-         description: 'Ensayo para próximo showcase'
-       },
-       {
-         id: 3,
-         artistName: user.role === 'artist' ? user.name || 'Lee Min-ho' : 'Lee Min-ho',
-         groupName: 'Phoenix',
-         title: 'Grabación Nuevo Single',
-         type: 'recording',
-         date: '2025-12-08',
-         time: '10:00',
-         location: 'Big Hit Studio',
-         status: 'pending',
-         description: 'Sesión de grabación para el comeback'
-       },
-       {
-         id: 4,
-         artistName: user.role === 'artist' ? user.name || 'Lee Min-ho' : 'Park Soo-young',
-         groupName: 'Dreamers',
-         title: 'Evento Promocional',
-         type: 'promotion',
-         date: '2025-12-10',
-         time: '16:00',
-         location: 'Centro Comercial COEX',
-         status: 'confirmed',
-         description: 'Firma de autógrafos y meet & greet'
-       },
-       {
-         id: 5,
-         artistName: user.role === 'artist' ? user.name || 'Lee Min-ho' : 'Kim Ji-soo',
-         groupName: 'Starlight',
-         title: 'Reunión con Management',
-         type: 'meeting',
-         date: '2025-12-03',
-         time: '11:00',
-         location: 'Oficina K-Pop Stars Agency',
-         status: 'pending',
-         description: 'Planificación de actividades Q1 2026'
-       }
-     ];
-
-     // Filtrar según rol
-     let filteredActivities = mockActivities;
-     if (user.role === 'artist') {
-       filteredActivities = mockActivities.filter(a => a.id <= 3);
-     } else if (user.role === 'manager' || user.role === 'director') {
-       filteredActivities = mockActivities.filter(a => 
-         ['Lee Min-ho', 'Kim Ji-soo'].includes(a.artistName)
-       );
-     }
-
-     setActivities(filteredActivities);
-     */
-        // ============================================
-        // FIN SECCIÓN: DATOS DEMO
-        // ============================================
-
+ 
       } catch (error) {
         console.error('Error al cargar actividades:', error);
       } finally {
@@ -448,10 +320,11 @@ const Activities: React.FC = () => {
     id: activity.id,
     date: activity.date,
     title: activity.title,
+    artist: activity.artistName, // <-- Añadido para cumplir con EventItem
     subtitle: `${activity.time} - ${activity.artistName}`,
     color: activity.type,
     time: activity.time,
-    type: activity.type
+    //type: activity.activityType
   }));
 
   return (
@@ -476,7 +349,7 @@ const Activities: React.FC = () => {
               {/* Calendario a la izquierda */}
               <div className="calendar-section">
                 <Calendar
-                  events={calendarEvents}
+                  activities={calendarEvents}
                   onDateClick={handleDateClick}
                 />
               </div>
@@ -576,7 +449,7 @@ const Activities: React.FC = () => {
                 {/* Calendario a la izquierda */}
                 <div className="calendar-section">
                   <Calendar
-                    events={calendarEvents}
+                    activities={calendarEvents}
                     onDateClick={handleDateClick}
                   />
                 </div>
@@ -655,8 +528,8 @@ const Activities: React.FC = () => {
 
               {/* Lista de actividades debajo */}
               <div className="datatable-section">
-                <h3>Lista de Actividades</h3>
-                <DataTable
+                { /* <h3>Lista de Actividades</h3>
+              <DataTable
                   columns={columns}
                   rows={activities}
                   pagesize={10}
@@ -667,7 +540,7 @@ const Activities: React.FC = () => {
                   constraints={activityConstraints}
                   createEntity="activity"
                   userRole={user?.role}
-                />
+                />*/}
               </div>
             </div>
           )}

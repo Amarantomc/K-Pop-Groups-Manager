@@ -250,14 +250,39 @@ export const ROLE_MAPPING: Record<string, string> = {
 
 // Campos adicionales para manager/director
 export const managerDirectorFields: Field[] = [
-    { id: 'agencyName', name: 'agencyName', label: 'Nombre de Agencia', type: 'text', placeholder: 'Nombre de la agencia', required: true }
+    {
+        id: 'agencyId',
+        name: 'agencyId',
+        label: 'Agencia',
+        type: 'select',
+        required: true,
+        optionsEndpoint: '/api/agency/?fields=name'
+    }
 ];
 
 // Campos adicionales para aprendiz (usa el nombre de usuario del campo base)
-export const apprenticeUserFields: Field[] = [];
+export const apprenticeUserFields: Field[] = [
+    {
+        id: 'username',
+        name: 'name',
+        label: 'Nombre de usuario',
+        type: 'select',
+        required: true,
+        optionsEndpoint: '/api/apprentice/?fields=name'
+    }
+];
 
 // Campos adicionales para artista (usa el nombre de usuario del campo base)
-export const artistUserFields: Field[] = [];
+export const artistUserFields: Field[] = [
+    {
+        id: 'username',
+        name: 'name',
+        label: 'Nombre de usuario',
+        type: 'select',
+        required: true,
+        optionsEndpoint: '/api/artist/?fields=fullName'
+    }
+];
 
 // Utilidad: obtener campos por entidad
 export const formFieldsByEntity: Record<string, Field[]> = {
