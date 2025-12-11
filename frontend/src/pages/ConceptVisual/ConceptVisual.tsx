@@ -28,29 +28,47 @@ const ConceptVisual: React.FC = () => {
   };
 
   // Columnas del DataTable
-  const baseColumns: GridColDef[] = [
+  const columns: GridColDef[] = [
     {
       field: 'picture',
       headerName: 'Imagen',
-      width: 120,
+      width: 260,
       renderCell: (params) => (
-        params.value ? <img src={`/images/${params.value}`} alt="concepto visual" style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: 8 }} /> : <span style={{ color: '#6b7280' }}>Sin imagen</span>
-      )
-    },
-    {
-      field: 'groupName',
-      headerName: 'Grupo Asociado',
-      width: 200,
-      renderCell: (params) => (
-        params.value ? <span style={{ fontWeight: 600 }}>{params.value}</span> : <span style={{ color: '#6b7280' }}>Sin grupo</span>
+        <div style={{
+          width: '100%',
+          minHeight: '240px',
+          maxHeight: '240px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: 16,
+          background: '#fff',
+          borderRadius: 16,
+          boxShadow: '0 4px 16px #0001',
+          border: '1px solid #ececec',
+        }}>
+          {params.value ? (
+            <img
+              src={params.value.startsWith('http') ? params.value : `/visual-concepts/${params.value}`}
+              alt="concepto visual"
+              style={{
+                width: '200px',
+                height: '200px',
+                objectFit: 'cover',
+                borderRadius: 12,
+                boxShadow: '0 2px 8px #0002',
+                background: '#fafafa',
+                border: '1.5px solid #e0e0e0',
+                display: 'block',
+              }}
+            />
+          ) : (
+            <span style={{ color: '#6b7280' }}>Sin imagen</span>
+          )}
+        </div>
       )
     }
   ];
-
-  // Agregar columnas adicionales para admin
-  const columns: GridColDef[] = user?.role === 'admin'
-    ? baseColumns
-    : baseColumns;
 
   useEffect(() => {
     const fetchConceptVisuals = async () => {
@@ -133,14 +151,21 @@ const ConceptVisual: React.FC = () => {
 
   const handleEditSave = async (updatedRow: any) => {
     try {
-      // PUT /api/visual-concept/:id - Sin autenticación
+      const token = localStorage.getItem('token');
+      const formData = new FormData();
+      // Solo esperamos un campo: image (puede venir como File o FileList)
+      if (updatedRow.image instanceof File) {
+        formData.append('image', updatedRow.image);
+      } else if (updatedRow.image && updatedRow.image[0] instanceof File) {
+        formData.append('image', updatedRow.image[0]);
+      }
+
       const response = await fetch(`http://localhost:3000/api/visual-concept/${updatedRow.id}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': token ? `Bearer ${token}` : ''
         },
-        body: JSON.stringify(updatedRow)
+        body: formData
       });
 
       if (!response.ok) {
@@ -158,6 +183,58 @@ const ConceptVisual: React.FC = () => {
       setOpenError(true);
     }
   };
+
+  const handleCreateSave = async (data: any) => {
+    const API_BASE = 'http://localhost:3000';
+    try {
+      const token = localStorage.getItem('token');
+      const formData = new FormData();
+      // Solo esperamos un campo: image (puede venir como File o FileList)
+      if (data.image instanceof File) {
+        formData.append('image', data.image);
+      } else if (data.image && data.image[0] instanceof File) {
+        formData.append('image', data.image[0]);
+      } else {
+        setErrorMessage('Debes seleccionar una imagen');
+        setOpenError(true);
+        return;
+      }
+
+      const res = await fetch(`${API_BASE}/api/visual-concept`, {
+        method: 'POST',
+        headers: {
+          'Authorization': token ? `Bearer ${token}` : ''
+        },
+        body: formData,
+      });
+
+      if (!res.ok) {
+        let msg = 'Error al crear concepto visual';
+        try {
+          const txt = await res.text();
+          try { const j = JSON.parse(txt); msg = j?.message || j?.error || txt || msg; }
+          catch { msg = txt || msg; }
+        } catch (e) {}
+        setErrorMessage(msg);
+        setOpenError(true);
+        return;
+      }
+
+      const result = await res.json().catch(() => null);
+      if (result?.data) {
+        setConceptVisualRows(prev => [...prev, result.data]);
+      }
+      setOpenAccept(true);
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : 'Error de red al crear concepto visual';
+      setErrorMessage(errorMsg);
+      setOpenError(true);
+    }
+  };
+
+
+
+  {/*
 
   const handleCreateSave = (data: any) => {
     const API_BASE = 'http://localhost:3000';
@@ -203,6 +280,7 @@ const ConceptVisual: React.FC = () => {
       }
     })();
   };
+*/}
 
   const handleFormSubmit = async (formData: Record<string, any>) => {
     try {
@@ -258,41 +336,43 @@ const ConceptVisual: React.FC = () => {
         </div>
       ) : (
         <>
-          <DataTable
-            columns={columns}
-            rows={conceptVisualRows}
-            pagesize={10}
-            onDelete={askDelete}
-            onEditSave={handleEditSave}
-            onCreateSave={handleCreateSave}
-            showEditButton={true}
-            constraints={visualConceptConstraints}
-            createEntity="visualConcept"
-            userRole={user?.role}
-            // onCreateClick={() => setShowCreateModal(true)}
-          />
-          <ConfirmDialog 
-            message="¿Está seguro que desea eliminar este concepto visual?" 
-            open={openConfirm} 
-            onCancel={() => setOpenConfirm(false)} 
+          <div style={{ height: 'auto', width: '100%' }}>
+            <DataTable
+              columns={columns}
+              rows={conceptVisualRows}
+              pagesize={10}
+              onDelete={askDelete}
+              onEditSave={handleEditSave}
+              onCreateSave={handleCreateSave}
+              showEditButton={true}
+              constraints={visualConceptConstraints}
+              createEntity="visualConcept"
+              userRole={user?.role}
+              rowHeight={1000}
+            />
+          </div>
+          <ConfirmDialog
+            message="¿Está seguro que desea eliminar este concepto visual?"
+            open={openConfirm}
+            onCancel={() => setOpenConfirm(false)}
             onConfirm={handleDelete}
           />
-          <ConfirmDialog 
+          <ConfirmDialog
             title="¡Éxito!"
-            message="El concepto visual ha sido creado correctamente" 
-            open={openAccept} 
-            onCancel={() => setOpenAccept(false)} 
-            onConfirm={() => setOpenAccept(false)} 
-            confirmText="Aceptar" 
+            message="El concepto visual ha sido creado correctamente"
+            open={openAccept}
+            onCancel={() => setOpenAccept(false)}
+            onConfirm={() => setOpenAccept(false)}
+            confirmText="Aceptar"
             showDeleteButton={false}
           />
-          <ConfirmDialog 
+          <ConfirmDialog
             title="Error"
-            message={errorMessage} 
-            open={openError} 
-            onCancel={() => setOpenError(false)} 
-            onConfirm={() => setOpenError(false)} 
-            confirmText="Aceptar" 
+            message={errorMessage}
+            open={openError}
+            onCancel={() => setOpenError(false)}
+            onConfirm={() => setOpenError(false)}
+            confirmText="Aceptar"
             showDeleteButton={false}
           />
           <ModalCreate
