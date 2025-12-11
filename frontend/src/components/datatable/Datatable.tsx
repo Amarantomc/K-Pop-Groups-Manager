@@ -30,10 +30,11 @@ interface DataTableProps {
   onFieldChange? : (fieldName: string, value: any) => void;
   showCreateButton? : boolean;
   userRole?: string;
+  rowHeight?: number; // Nuevo: alto de fila
 }
 
 
-const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , checkboxSelection = false , onDelete, onEditSave, onCreateSave , showEditButton = true , constraints, createEntity, createFields, onFieldChange, showCreateButton=true, userRole}) => {
+const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , checkboxSelection = false , onDelete, onEditSave, onCreateSave , showEditButton = true , constraints, createEntity, createFields, onFieldChange, showCreateButton=true, userRole, rowHeight = 52}) => {
   const paginationModel = { page: 0, pageSize: pagesize };
 
    const [editModalOpen, setEditModalOpen] = useState(false);
@@ -114,14 +115,14 @@ const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , c
         </div>)}
         <div className="datatable">
         <DataGrid
-            rows={rows || []}
-            columns={userRole === 'admin' ? columns.concat(actionColumn) : columns}
-            initialState={{ pagination: { paginationModel } }}
-            pageSizeOptions={[5, 10]}
-            checkboxSelection = {checkboxSelection}
-            disableRowSelectionOnClick
-            sx={{ border: 0 }}
-            localeText={esES.components.MuiDataGrid.defaultProps.localeText}
+          rows={rows || []}
+          columns={userRole === 'admin' ? columns.concat(actionColumn) : columns}
+          initialState={{ pagination: { paginationModel } }}
+          pageSizeOptions={[5, 10]}
+          checkboxSelection = {checkboxSelection}
+          disableRowSelectionOnClick
+          sx={{ border: 0, '& .MuiDataGrid-row': { minHeight: rowHeight, maxHeight: rowHeight } }}
+          localeText={esES.components.MuiDataGrid.defaultProps.localeText}
         />
         </div>
 

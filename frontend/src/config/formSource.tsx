@@ -171,7 +171,7 @@ export const conceptFields: Field[] = [
 // Concepto Visual
 export const visualConceptFields: Field[] = [
     { id: 'image', name: 'image', label: 'Imagen', type: 'file' },
-    { id: 'description', name: 'description', label: 'Descripción', type: 'textarea' },
+    //{ id: 'description', name: 'description', label: 'Descripción', type: 'textarea' },
 ];
 
 // Actividad
