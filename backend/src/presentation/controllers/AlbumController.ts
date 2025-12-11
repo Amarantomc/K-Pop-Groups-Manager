@@ -106,12 +106,12 @@ async deleteAlbum(req: Request, res: Response) {
   async listAlbum(req: Request, res: Response) {
     try {
       
-      const album = await this.listAlbumUseCase.execute()
+      const albums = await this.listAlbumUseCase.execute()
       
 
       res.json({
         success: true,
-        data: album
+        data: albums
       });
 
     } catch (error: any) {

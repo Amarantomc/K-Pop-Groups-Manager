@@ -218,28 +218,41 @@ export class AlbumRepository implements IAlbumRepository
       return AlbumResponseDto.toEntity(updated);
     }
 
-      async findAll(): Promise<Album[]> {
-        const albums = await this.db.Album.findMany({
-          include: {
-            Canciones: {
-              select: { id: true }
-            },
-            LanzamientoArtista: {
-              select: { idAp: true, idGr: true }
-            },
-            Premios: {
-              select: { idPremio: true, año: true }
-            },
-            LanzamientoGrupo: {
-              select: {
-                idGr: true,
-                idAlb: true,
-                grupo: true
-              }
-            }
-          }
-        });
-      
-        return AlbumResponseDto.toEntities(albums);
-      }
+    async findAll(): Promise<Album[]> {
+      const albums = await this.db.Album.findMany({
+        include: {
+          Canciones: true,
+          Premios: true,
+          LanzamientoGrupo: true,
+          LanzamientoArtista: true   // ← ESTE ES EL NOMBRE REAL
+        }
+      });
+    
+      return AlbumResponseDto.fromEntities(albums);
+    }
+      // async findAll(): Promise<Album[]> {
+      //   const albums = await this.db.Album.findMany({
+      //     include: {
+      //       Canciones: {
+      //         select: { id: true }
+      //       },
+      //       LanzamientoArtista: {
+      //         select: { idAp: true, idGr: true }
+      //       },
+      //       Premios: {  
+      //         select: { idPremio: true, año: true }
+      //       },
+      //       LanzamientoGrupo: {
+      //         select: {
+      //           idGr: true,
+      //         }
+      //       }
+      //     }
+      //   });
+
+      // //console.log(albums);
+
+      // return AlbumResponseDto.toEntities(albums);
+
+      // }
 }

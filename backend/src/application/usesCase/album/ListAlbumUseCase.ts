@@ -9,6 +9,7 @@ export class ListAlbumUseCase {
 
 	async execute(): Promise<AlbumResponseDto[]> {
 		const list = await this.albumRepository.findAll();
+		console.log(list);
 		return AlbumResponseDto.fromEntities(list)
 	}
 }

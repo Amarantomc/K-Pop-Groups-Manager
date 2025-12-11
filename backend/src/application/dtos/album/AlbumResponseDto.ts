@@ -25,7 +25,8 @@ export class AlbumResponseDto {
       album.titulo,
       album.fechaLanzamiento,
       album.productor,
-      album.Canciones.length,
+      //album.Canciones.length,
+      album.NoCanciones,
       album.NoCopiasVendidas,
 
       // Canciones → Solo IDs
@@ -49,7 +50,7 @@ export class AlbumResponseDto {
 
       // Grupos (IDs)
       album.LanzamientoGrupo?.map(
-        (g: { idGrupo: number }) => g.idGrupo
+        (g: { idGr: number }) => g.idGr
       ) ?? []
     );
   }
@@ -61,13 +62,18 @@ export class AlbumResponseDto {
       title: raw.titulo,
       releaseDate: raw.fechaLanzamiento,
       producer: raw.productor,
-      noSongs: raw.Canciones.length,
+      noSongs: raw.NoCanciones,
       noCopiesSold: raw.NoCopiasVendidas,
 
-      songs: raw.Canciones ?? [],
-      artists: raw.LanzamientoArtista ?? [],
-      awards: raw.Premios ?? [],
-      groups: raw.LanzamientoGrupo ?? [],
+      songs: raw.Canciones?.map((c: { id: number }) => c.id),
+      artists: raw.LanzamientoArtista?.map(
+        (a: { idAp: number; idGr: number }) => ({
+          idAp: a.idAp,
+          idGr: a.idGr,
+        })
+      ) ,
+      awards: raw.Premios?.map((p: { idPremio: number}) => p.idPremio),
+      groups: raw.LanzamientoGrupo?.map((g: { idGr: number }) => g.idGr) ?? [],
     });
   }
 
