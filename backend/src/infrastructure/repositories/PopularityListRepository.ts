@@ -17,11 +17,29 @@ export class PopularityListRepository implements IPopularityListRepository{
         return this.unitOfWork.getTransaction();
       }
       
-      async findAll(): Promise<PopularityList[]> {
-        const  popularityLists  = await this.db.ListaPopularidad.findMany();
+      // async findAll(): Promise<PopularityList[]> {
+      //   const  popularityLists  = await this.db.ListaPopularidad.findMany();
 
+      //   return PopularityListResponseDto.toEntities(popularityLists);
+      // }
+
+      async findAll(): Promise<PopularityList[]> {
+        const popularityLists = await this.db.ListaPopularidad.findMany({
+            include: {
+                Canciones: {
+                    include: {
+                        cancion: true, // traer toda la info de la canción
+                    },
+                },
+            },
+        });
+    
+        if (!popularityLists || popularityLists.length === 0) {
+            throw new Error("Popularity lists not found");
+        }
         return PopularityListResponseDto.toEntities(popularityLists);
-      }
+    }
+    
 
       async findSongByName(songName: string, popularityListId: number): Promise<Song> {
         const list = await this.db.listaPopularidad.findUnique({
@@ -83,13 +101,26 @@ export class PopularityListRepository implements IPopularityListRepository{
             return PopularityListResponseDto.toEntity(popularityList)
         }
 
-    async findById(id: any): Promise<PopularityList | null> {
-             id=(Number)(id)
-            const popularityList=await this.db.ListaPopularidad.findUnique({
-               where:{id}
-            })
-            return popularityList ? PopularityListResponseDto.toEntity(popularityList) : null
-        }
+        async findById(id: any): Promise<PopularityList | null> {
+          id = Number(id);
+      
+          const popularityList = await this.db.ListaPopularidad.findUnique({
+              where: { id },
+              include: {
+                  Canciones: {
+                      include: {
+                          cancion: true,
+                      },
+                  },
+              },
+          });
+      
+          if (!popularityList){
+            throw new Error("Popularity List not found");
+          }
+      
+          return PopularityListResponseDto.toEntity(popularityList);
+      }
 
     async update(id: string, data: Partial<CreatePopularityListDto>): Promise<PopularityList> {
             const popularityList = await this.db.ListaPopularidad.update({
