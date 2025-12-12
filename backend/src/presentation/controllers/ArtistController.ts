@@ -24,7 +24,7 @@ export class ArtistController {
     async createArtist(req:Request,res:Response){
         try {
             const artistDto=CreateArtistDto.Create(req.body)
-             
+              
             const artist=await this.createArtistUseCase.execute(artistDto)
             res.status(201).json({
         success: true,
@@ -41,7 +41,8 @@ export class ArtistController {
     }
 
     async findById(req:Request,res:Response)
-    {
+    {   
+        
         try {
             const {apprenticeId,groupId}=req.params
             const artist= await this.findArtistByIdUseCase.execute({apprenticeId: Number(apprenticeId), groupId: Number(groupId)})
@@ -102,6 +103,7 @@ export class ArtistController {
 
     async getAll(req:Request,res:Response){
           try {
+             
              const artists= await this.getAllArtistsUseCase.execute()
         
         res.json({

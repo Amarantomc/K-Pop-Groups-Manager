@@ -11,6 +11,8 @@ async function consultas() {
        
 //   `
 //   console.table(resultadoSQL)
+
+ 
  
  
       
