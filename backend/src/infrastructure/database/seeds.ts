@@ -74,25 +74,25 @@ async function main() {
   // 3. CREAR CONCEPTOS VISUALES
   console.log('🖼️ Creando conceptos visuales...')
   const visualFuturista = await prisma.conceptoVisual.create({
-    data: { imagen: "futurista-neon-lights.jpg" }
+    data: { imagen: "visual-concepts/1765435157607.jpeg" }
   })
   const visualUrbano = await prisma.conceptoVisual.create({
-    data: { imagen: "urbano-street-graffiti.jpg" }
+    data: { imagen: "visual-concepts/knotifyaudio_knotificar.webp" }
   })
   const visualElegante = await prisma.conceptoVisual.create({
-    data: { imagen: "elegante-black-white.jpg" }
+    data: { imagen: "visual-concepts/Letter_K_violet.png" }
   })
   const visualCute = await prisma.conceptoVisual.create({
-    data: { imagen: "cute-pastel-colors.jpg" }
+    data: { imagen: "visual-concepts/quaver.png" }
   })
   const visualDark = await prisma.conceptoVisual.create({
-    data: { imagen: "dark-gothic-aesthetic.jpg" }
+    data: { imagen: "visual-concepts/vinyl.png" }
   })
   const visualRetro = await prisma.conceptoVisual.create({
-    data: { imagen: "retro-vintage-80s.jpg" }
+    data: { imagen: "visual-concepts/default.png" }
   })
   const visualFantasia = await prisma.conceptoVisual.create({
-    data: { imagen: "fantasia-magical-world.jpg" }
+    data: { imagen: "visual-concepts/default.png" }
   })
   console.log('✅ 7 Conceptos visuales creados')
 
@@ -848,117 +848,84 @@ async function main() {
 
   // 20. CREAR ACTIVIDADES
   console.log('🎭 Creando actividades...')
-  const concierto1 = await prisma.actividad.create({
-    data: {
-      responsable: "SM Entertainment",
-      lugar: "Olympic Stadium, Seúl",
-      fecha: new Date("2023-03-15"),
-      tipoActividad: "Concierto",
-      tipoEvento: "Tour Mundial"
-    }
-  })
-  const concierto2 = await prisma.actividad.create({
-    data: {
-      responsable: "YG Entertainment",
-      lugar: "Coachella, California",
-      fecha: new Date("2023-04-20"),
-      tipoActividad: "Festival",
-      tipoEvento: "Festival Internacional"
-    }
-  })
-  const fanmeeting1 = await prisma.actividad.create({
-    data: {
-      responsable: "JYP Entertainment",
-      lugar: "KSPO Dome, Seúl",
-      fecha: new Date("2023-05-10"),
-      tipoActividad: "Fan Meeting",
-      tipoEvento: "Encuentro con Fans"
-    }
-  })
-  const showcase1 = await prisma.actividad.create({
-    data: {
-      responsable: "HYBE Corporation",
-      lugar: "Madison Square Garden, Nueva York",
-      fecha: new Date("2023-06-25"),
-      tipoActividad: "Concierto",
-      tipoEvento: "Tour Mundial"
-    }
-  })
-  const grabacion1 = await prisma.actividad.create({
-    data: {
-      responsable: "SM Entertainment",
-      lugar: "SM Studios, Seúl",
-      fecha: new Date("2023-07-05"),
-      tipoActividad: "Grabación",
-      tipoEvento: "Sesión de Estudio"
-    }
-  })
-  console.log('✅ 5 Actividades creadas')
+  // Fechas recientes y próximas (diciembre 2025 y enero 2026)
+  const fechas: string[] = [
+    "2025-12-12", "2025-12-12", "2025-12-12", "2025-12-13", "2025-12-13", "2025-12-14",
+    "2025-12-15", "2025-12-15", "2025-12-15", "2025-12-16", "2025-12-17", "2025-12-18",
+    "2025-12-18", "2025-12-19", "2025-12-20", "2026-01-05", "2026-01-05", "2026-01-06"
+  ];
+  const actividadesData: { responsable: string, lugar: string, tipoActividad: string, tipoEvento: string }[] = [
+    { responsable: "SM Entertainment", lugar: "Olympic Stadium, Seúl", tipoActividad: "Concierto", tipoEvento: "Tour Mundial" },
+    { responsable: "YG Entertainment", lugar: "Coex Artium, Seúl", tipoActividad: "Fan Meeting", tipoEvento: "Encuentro con Fans" },
+    { responsable: "JYP Entertainment", lugar: "KSPO Dome, Seúl", tipoActividad: "Showcase", tipoEvento: "Presentación Especial" },
+    { responsable: "HYBE Corporation", lugar: "Madison Square Garden, NY", tipoActividad: "Concierto", tipoEvento: "Tour Mundial" },
+    { responsable: "Starship Entertainment", lugar: "Gocheok Sky Dome, Seúl", tipoActividad: "Festival", tipoEvento: "Festival K-Pop" },
+    { responsable: "Cube Entertainment", lugar: "Busan Asiad Stadium", tipoActividad: "Concierto", tipoEvento: "Evento Especial" },
+    { responsable: "Pledis Entertainment", lugar: "Jamsil Arena, Seúl", tipoActividad: "Fan Meeting", tipoEvento: "Encuentro con Fans" },
+    { responsable: "SM Entertainment", lugar: "SM Studios, Seúl", tipoActividad: "Grabación", tipoEvento: "Sesión de Estudio" },
+    { responsable: "YG Entertainment", lugar: "Coachella, California", tipoActividad: "Festival", tipoEvento: "Festival Internacional" },
+    { responsable: "JYP Entertainment", lugar: "Incheon Munhak Stadium", tipoActividad: "Concierto", tipoEvento: "Tour Nacional" },
+    { responsable: "HYBE Corporation", lugar: "Tokyo Dome, Japón", tipoActividad: "Concierto", tipoEvento: "Tour Asiático" },
+    { responsable: "Starship Entertainment", lugar: "Olympic Hall, Seúl", tipoActividad: "Showcase", tipoEvento: "Presentación Especial" },
+    { responsable: "Cube Entertainment", lugar: "SMTOWN Theatre, Seúl", tipoActividad: "Fan Meeting", tipoEvento: "Encuentro con Fans" },
+    { responsable: "Pledis Entertainment", lugar: "Jamsil Arena, Seúl", tipoActividad: "Concierto", tipoEvento: "Tour Nacional" },
+    { responsable: "SM Entertainment", lugar: "SM Studios, Seúl", tipoActividad: "Grabación", tipoEvento: "Sesión de Estudio" },
+    { responsable: "YG Entertainment", lugar: "Coex Artium, Seúl", tipoActividad: "Fan Meeting", tipoEvento: "Encuentro con Fans" },
+    { responsable: "JYP Entertainment", lugar: "KSPO Dome, Seúl", tipoActividad: "Showcase", tipoEvento: "Presentación Especial" },
+    { responsable: "HYBE Corporation", lugar: "Madison Square Garden, NY", tipoActividad: "Concierto", tipoEvento: "Tour Mundial" }
+  ];
+  const actividades: any[] = [];
+  for (let i = 0; i < fechas.length; i++) {
+    const fecha = fechas[i] ?? "2025-12-12";
+    const data = actividadesData[i % actividadesData.length] || { responsable: "Desconocido", lugar: "Lugar desconocido", tipoActividad: "Otro", tipoEvento: "Otro" };
+    actividades.push(await prisma.actividad.create({
+      data: {
+        responsable: data.responsable || "Desconocido",
+        lugar: data.lugar || "Lugar desconocido",
+        fecha: new Date(fecha),
+        tipoActividad: data.tipoActividad || "Otro",
+        tipoEvento: data.tipoEvento || "Otro"
+      }
+    }));
+  }
+  console.log(`✅ ${actividades.length} Actividades creadas`)
 
   // 21. INGRESOS DE ACTIVIDADES
   console.log('💰 Creando registros de ingresos...')
-  await prisma.ingreso.createMany({
-    data: [
-      {
-        idAct: concierto1.id,
-        monto: 2500000.00,
-        fecha: new Date("2023-03-15"),
-        descripcion: "Venta de entradas para concierto en Olympic Stadium"
-      },
-      {
-        idAct: concierto1.id,
-        monto: 500000.00,
-        fecha: new Date("2023-03-15"),
-        descripcion: "Merchandising del concierto"
-      },
-      {
-        idAct: concierto2.id,
-        monto: 3000000.00,
-        fecha: new Date("2023-04-20"),
-        descripcion: "Pago por presentación en Coachella"
-      },
-      {
-        idAct: fanmeeting1.id,
-        monto: 800000.00,
-        fecha: new Date("2023-05-10"),
-        descripcion: "Venta de entradas para fan meeting"
-      },
-      {
-        idAct: showcase1.id,
-        monto: 4500000.00,
-        fecha: new Date("2023-06-25"),
-        descripcion: "Concierto en Madison Square Garden"
-      },
-      {
-        idAct: showcase1.id,
-        monto: 1200000.00,
-        fecha: new Date("2023-06-25"),
-        descripcion: "Ventas de merchandising exclusivo"
-      },
-      {
-        idAct: grabacion1.id,
-        monto: 350000.00,
-        fecha: new Date("2023-07-05"),
-        descripcion: "Producción de nuevo álbum"
-      }
-    ]
-  })
-  console.log('✅ 7 Registros de ingresos creados')
+  const ingresosData = actividades.map((act, idx) => [
+    {
+      idAct: act.id,
+      monto: 1000000 + (idx * 100000),
+      fecha: act.fecha,
+      descripcion: `Ingreso principal para actividad ${idx + 1}`
+    },
+    {
+      idAct: act.id,
+      monto: 200000 + (idx * 50000),
+      fecha: act.fecha,
+      descripcion: `Ingreso secundario para actividad ${idx + 1}`
+    }
+  ]).flat();
+  await prisma.ingreso.createMany({ data: ingresosData });
+  console.log(`✅ ${ingresosData.length} Registros de ingresos creados`)
 
   // 22. PERSONAS EN ACTIVIDADES
   console.log('👤 Asignando participantes a actividades...')
-  await prisma.personasEnActividad.createMany({
-    data: [
-      { idAp: artista1.idAp, idGr: artista1.idGr, idAct: concierto1.id, idGrupos: nct127.id, aceptado: true },
-      { idAp: artista6.idAp, idGr: artista6.idGr, idAct: concierto1.id, idGrupos: aespa.id, aceptado: true },
-      { idAp: artista2.idAp, idGr: artista2.idGr, idAct: concierto2.id, idGrupos: blackpink.id, aceptado: true },
-      { idAp: artista3.idAp, idGr: artista3.idGr, idAct: fanmeeting1.id, idGrupos: twice.id, aceptado: true },
-      { idAp: artista5.idAp, idGr: artista5.idGr, idAct: fanmeeting1.id, idGrupos: itzy.id, aceptado: true },
-      { idAp: artista4.idAp, idGr: artista4.idGr, idAct: showcase1.id, idGrupos: bts.id, aceptado: true },
-      { idAp: artista7.idAp, idGr: artista7.idGr, idAct: grabacion1.id, idGrupos: redVelvet.id, aceptado: true }
-    ]
-  })
-  console.log('✅ Participantes asignados a actividades')
+  const artistas = [artista1, artista2, artista3, artista4, artista5, artista6, artista7, artista8];
+  const grupos = [nct127, blackpink, twice, bts, itzy, aespa, redVelvet, seventeen];
+  const personasEnActividadData = actividades.map((act, idx) => {
+    const artista = artistas[idx % artistas.length] || artistas[0];
+    const grupo = grupos[idx % grupos.length] || grupos[0];
+    return {
+      idAp: artista?.idAp ?? 1,
+      idGr: artista?.idGr ?? 1,
+      idAct: act.id,
+      idGrupos: grupo?.id ?? 1,
+      aceptado: true
+    };
+  });
+  await prisma.personasEnActividad.createMany({ data: personasEnActividadData });
+  console.log(`✅ ${personasEnActividadData.length} Participantes asignados a actividades`)
 
   // 23. CREAR SOLICITUDES DE GRUPO
   console.log('📝 Creando solicitudes de formación de grupos...')
