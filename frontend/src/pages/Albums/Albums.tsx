@@ -40,46 +40,44 @@ const Albums: React.FC = () => {
 
   // Columnas base del DataTable
   const baseColumns: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 70 },
     { field: 'title', headerName: 'Título', width: 200 },
-    { field: 'artistName', headerName: 'Artista', width: 180 },
-    { field: 'groupName', headerName: 'Grupo', width: 150 },
+    { field: 'idGroup', headerName: 'ID Grupo', width: 100 },
+    { field: 'producer', headerName: 'Productor', width: 180 },
     {
       field: 'releaseDate',
       headerName: 'Fecha de Lanzamiento',
       width: 160,
-      valueFormatter: (params) => {
-        return new Date(params).toLocaleDateString('es-ES');
+      valueFormatter: (params: { value?: string }) => {
+        return params.value ? new Date(params.value).toLocaleDateString('es-ES') : '';
       }
     },
-    { field: 'genre', headerName: 'Género', width: 130 },
-    { field: 'totalTracks', headerName: 'Canciones', width: 100 },
+    { field: 'noSongs', headerName: 'Nº Canciones', width: 120 },
+    { field: 'noCopiesSold', headerName: 'Copias Vendidas', width: 140 },
     {
-      field: 'status',
-      headerName: 'Estado',
+      field: 'songs',
+      headerName: 'IDs Canciones',
       width: 130,
-      renderCell: (params) => {
-        const statusColors: Record<string, string> = {
-          'released': '#10b981',
-          'upcoming': '#3b82f6',
-          'recording': '#f59e0b',
-          'cancelled': '#ef4444'
-        };
-        const statusLabels: Record<string, string> = {
-          'released': 'Lanzado',
-          'upcoming': 'Próximo',
-          'recording': 'Grabando',
-          'cancelled': 'Cancelado'
-        };
-        return (
-          <span style={{
-            color: statusColors[params.value] || '#6b7280',
-            fontWeight: 600
-          }}>
-            {statusLabels[params.value] || params.value}
-          </span>
-        );
-      }
-    }
+      valueGetter: (params: any) => Array.isArray(params.row?.songs) ? params.row.songs.join(', ') : ''
+    },
+    {
+      field: 'artists',
+      headerName: 'Artistas',
+      width: 130,
+      valueGetter: (params: any) => Array.isArray(params.row?.artists) ? params.row.artists.map((a: any) => `Ap:${a.idAp}/Gr:${a.idGr}`).join(', ') : ''
+    },
+    {
+      field: 'awards',
+      headerName: 'Premios',
+      width: 130,
+      valueGetter: (params: any) => Array.isArray(params.row?.awards) ? params.row.awards.map((a: any) => `#${a.idPremio} (${a.año})`).join(', ') : ''
+    },
+    {
+      field: 'groups',
+      headerName: 'Grupos',
+      width: 100,
+      valueGetter: (params: any) => Array.isArray(params.row?.groups) ? params.row.groups.join(', ') : ''
+    },
   ];
 
   // Agregar columna de agencia solo para admin
