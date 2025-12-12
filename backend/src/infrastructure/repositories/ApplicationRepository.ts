@@ -26,7 +26,7 @@ export class ApplicationRepository implements IApplicationRepository
   }
 
   async createFromApplication(dto: ApplicationCreateGroupDTO, applicationId: number) {
-    // 1️⃣ Crear nuevo grupo
+
     const group = await this.db.Grupo.create({
       data: {
         nombreCompleto: dto.groupName,
@@ -39,12 +39,10 @@ export class ApplicationRepository implements IApplicationRepository
       }
     });
   
-    // 2️⃣ Debutar aprendices como artistas nuevos
     for (let i = 0; i < dto.apprentices.length; i++) {
       const apprenticeId = dto.apprentices[i];
       const role = dto.roles[i] ?? "Miembro";
   
-      // ✔ Verificar si ya existe artista para ese aprendiz
       const existingArtist = await this.db.Artista.findFirst({
         where: { idAp: apprenticeId }
       });
@@ -53,22 +51,18 @@ export class ApplicationRepository implements IApplicationRepository
         throw new Error(`El aprendiz ${apprenticeId} ya debutó como artista.`);
       }
   
-      // ✔ Crear Artista (PK compuesta idAp + idGr)
       await this.db.Artista.create({
         data: {
           idAp: apprenticeId,
           idGr: group.id,
-  
+          idSolicitud: applicationId, 
           nombreArtistico: `Artista ${apprenticeId}`,
           fechaDebut: dto.debut,
           estadoArtista: "Activo",
   
-          //grupo: { connect: { id: group.id } },
-          //aprendiz: { connect: { id: apprenticeId } }
         }
       });
   
-      // ✔ Registrar en historial
       await this.db.ArtistaEnGrupo.create({
         data: {
           idAp: apprenticeId,
@@ -80,7 +74,6 @@ export class ApplicationRepository implements IApplicationRepository
       });
     }
   
-    // 3️⃣ Artistas viejos → SOLO historial
     const existingArtists: [number, number][] = dto.artists ?? [];
   
     for (let j = 0; j < existingArtists.length; j++) {
@@ -101,17 +94,21 @@ export class ApplicationRepository implements IApplicationRepository
         }
       });
     }
+
+
+    await this.db.Solicitud.update({
+      where: { id: applicationId },
+      data: { estado: "Terminada" }
+    });
   
     return group;
   }
  
-
   async create(data: CreateApplicationDto): Promise<Application> {
 
     const idAgency = Number(data.idAgency);
     const idConcept = Number(data.idConcept);
   
-    // Validaciones
     const concept = await this.db.Concepto.findUnique({ where: { id: idConcept } });
     const agency = await this.db.Agencia.findUnique({ where: { id: idAgency } });
   
@@ -119,7 +116,6 @@ export class ApplicationRepository implements IApplicationRepository
       throw new Error("Agency or Concept not found");
     }
   
-    // Crear solicitud + conectar aprendices y artistas 
     const application = await this.db.Solicitud.create({
       data: {
         nombreGrupo: data.groupName,
@@ -127,43 +123,50 @@ export class ApplicationRepository implements IApplicationRepository
         idConcepto: idConcept,
         roles: data.roles,
         estado: data.status,
-        AprendizMiembro: data.apprentices ? { connect: data.apprentices.map(id => ({ id })) } : undefined,
-        ArtistaMiembro: data.artists ? 
-           { connect: data.artists.map(([idAp, idGr]) => ({
-                idAp_idGr: {
-                  idAp,
-                  idGr
-                }
+  
+        AprendizMiembro: data.apprentices
+          ? { connect: data.apprentices.map(id => ({ id })) }
+          : undefined,
+  
+        ArtistaMiembro: data.artists
+          ? {
+              connect: data.artists.map(([idAp, idGr]) => ({
+                idAp_idGr: { idAp, idGr }
               }))
             }
           : undefined
       },
+  
       include: {
         AprendizMiembro: true,
-        ArtistaMiembro: true
+        ArtistaMiembro: {
+          orderBy: {
+            idAp: "asc"   
+          }
+        }
       }
     });
   
     return ApplicationResponseDto.toEntity(application);
   }
 
-
     async findById(id: any): Promise<Application | null> {
          id=(Number)(id)
-         console.log(id);
         const application=await this.db.Solicitud.findUnique({
            where:{id},
-           include:{
-            AprendizMiembro:true,
-            ArtistaMiembro:true
-           }
+           include: {
+            AprendizMiembro: true,
+            ArtistaMiembro: {
+              orderBy: {
+                idAp: "asc"   
+              }
+            }
+          }
         })
 
         if(!application){
           throw new Error("Application not found");
         }
-        //const apprentices = await this.db.Solicitud.findMany()
-        console.log(application);
         return ApplicationResponseDto.toEntity(application)
     }
 
@@ -190,9 +193,13 @@ export class ApplicationRepository implements IApplicationRepository
 
     async findAll(): Promise<Application[]> {
       const applications = await this.db.Solicitud.findMany({
-        include:{
-         AprendizMiembro:true,
-         ArtistaMiembro:true
+        include: {
+          AprendizMiembro: true,
+          ArtistaMiembro: {
+            orderBy: {
+              idAp: "asc"   
+            }
+          }
         }
      });
 

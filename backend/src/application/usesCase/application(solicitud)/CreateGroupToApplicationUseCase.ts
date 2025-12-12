@@ -14,7 +14,6 @@ export class CreateGroupToApplicationUseCase {
     const app = await this.applicationRepository.findById(applicationId);
     if (!app) throw new Error("Application not found");
 
-    console.log(app);
     // Construir DTO
     const dto = ApplicationCreateGroupDTO.fromApplication(app);
 
