@@ -14,8 +14,7 @@ export class AlbumResponseDto {
     public readonly artists: { idAp: number; idGr: number; artisticName: string }[],
     public readonly awards:  { idAward: number; year: number; title: string }[],
 
-    // SOLO IDs de los grupos
-    public readonly groups: number[],
+    public readonly groups: { idGr: number; groupName: string }[], // ahora es array de objetos
   ) {}
 
   static fromEntity(album: Album): AlbumResponseDto {
@@ -49,14 +48,16 @@ export class AlbumResponseDto {
             id: c.id,
             name: c.titulo
         })
-    ) ?? [],
-    artists: raw.LanzamientoArtista?.map(
-      (a: { idAp: number; idGr: number; artista: { nombreArtistico: string } }) => ({
-        idAp: a.idAp,
-        idGr: a.idGr,
-        artisticName: a.artista.nombreArtistico
-      })
-    ) ?? [],
+      ) ?? [],
+
+      artists: raw.LanzamientoArtista?.map(
+        (a: { idAp: number; idGr: number; artista: { nombreArtistico: string } }) => ({
+          idAp: a.idAp,
+          idGr: a.idGr,
+          artisticName: a.artista.nombreArtistico
+        })
+      ) ?? [],
+
       awards: raw.Premios?.map(
         (p: { idPremio: number; año: number; premio: { tituloPremio: string } }) => ({
           idAward: p.idPremio,
@@ -64,11 +65,17 @@ export class AlbumResponseDto {
           title: p.premio.tituloPremio
         })
       ) ?? [],
-      groups: raw.LanzamientoGrupo?.map((g: { idGr: number }) => g.idGr) ?? [],
+
+      groups: raw.LanzamientoGrupo?.map(
+        (g: { idGr: number; grupo: { nombreCompleto: string } }) => ({
+          idGr: g.idGr,
+          groupName: g.grupo.nombreCompleto
+        })
+      ) ?? [],
     });
   }
 
-  static fromEntities(albums: any[]): AlbumResponseDto[] {
+  static fromEntities(albums: Album[]): AlbumResponseDto[] {
     return albums.map(a => this.fromEntity(a));
   }
 

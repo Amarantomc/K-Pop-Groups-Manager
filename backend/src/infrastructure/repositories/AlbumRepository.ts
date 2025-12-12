@@ -87,39 +87,40 @@ export class AlbumRepository implements IAlbumRepository
     return AlbumResponseDto.toEntity(album);
   }
 
-    async findById(id: any): Promise<Album| null> {
-         id=(Number)(id)
-        const album=await this.db.Album.findUnique({
-           where:{id},
-           include: {
-            Canciones: true,
-      
+  async findById(id: any): Promise<Album | null> {
+    const albumId = Number(id);
+
+    const album = await this.db.Album.findUnique({
+        where: { id: albumId },
+        include: {
+            Canciones: true, 
+
             Premios: {
-              include: {
-                premio: true 
-              }
+                include: {
+                    premio: true, 
+                }
             },
-      
+
             LanzamientoGrupo: {
-              include: {
-                grupo: true
-              }
+                include: {
+                    grupo: true, 
+                }
             },
-      
+
             LanzamientoArtista: {
-              include: {
-                artista: true  
-              }
+                include: {
+                    artista: true,
+                }
             }
-          }
-          //  include: {
-          //   Canciones: true,
-          //   LanzamientoArtista: true,
-          //   Premios: true,
-          // }
-        })
-        return album ? AlbumResponseDto.toEntity(album) : null
+        }
+    });
+
+    if (!album){
+      throw new Error('album not found');
     }
+
+    return AlbumResponseDto.toEntity(album);
+}
 
       async delete(id: string): Promise<void> {
         const numericId = Number(id);
@@ -241,29 +242,29 @@ export class AlbumRepository implements IAlbumRepository
 
     async findAll(): Promise<Album[]> {
       const albums = await this.db.Album.findMany({
-        include: {
-          Canciones: true,
-    
-          Premios: {
-            include: {
-              premio: true 
-            }
-          },
-    
-          LanzamientoGrupo: {
-            include: {
-              grupo: true
-            }
-          },
-    
-          LanzamientoArtista: {
-            include: {
-              artista: true  
-            }
+          include: {
+              Canciones: true, 
+  
+              Premios: {
+                  include: {
+                      premio: true, 
+                  }
+              },
+  
+              LanzamientoGrupo: {
+                  include: {
+                      grupo: true, 
+                  }
+              },
+  
+              LanzamientoArtista: {
+                  include: {
+                      artista: true, 
+                  }
+              }
           }
-        }
       });
-    
+  
       return AlbumResponseDto.toEntities(albums);
-    }
+  }
 }
