@@ -10,48 +10,27 @@ export class AlbumResponseDto {
     public readonly noSongs: number,
     public readonly noCopiesSold: number,
 
-    public readonly songs: number[],
-    public readonly artists: { idAp: number, idGr: number }[],
-    public readonly awards: { idPremio: number, año: number }[],
+    public readonly songs: { id: number; name: string }[],
+    public readonly artists: { idAp: number; idGr: number; artisticName: string }[],
+    public readonly awards:  { idAward: number; year: number; title: string }[],
 
     // SOLO IDs de los grupos
     public readonly groups: number[],
   ) {}
 
-  static fromEntity(album: any): AlbumResponseDto {
+  static fromEntity(album: Album): AlbumResponseDto {
     return new AlbumResponseDto(
       album.id,
-      album.idGrupo,
-      album.titulo,
-      album.fechaLanzamiento,
-      album.productor,
-      //album.Canciones.length,
-      album.NoCanciones,
-      album.NoCopiasVendidas,
-
-      // Canciones → Solo IDs
-      album.Canciones?.map((c: { id: number }) => c.id) ?? [],
-
-      // Artistas
-      album.LanzamientoArtista?.map(
-        (a: { idAp: number; idGr: number }) => ({
-          idAp: a.idAp,
-          idGr: a.idGr,
-        })
-      ) ?? [],
-
-      // Premios
-      album.Premios?.map(
-        (p: { idPremio: number; año: number }) => ({
-          idPremio: p.idPremio,
-          año: p.año,
-        })
-      ) ?? [],
-
-      // Grupos (IDs)
-      album.LanzamientoGrupo?.map(
-        (g: { idGr: number }) => g.idGr
-      ) ?? []
+      album.idGroup,
+      album.title,
+      album.releaseDate,
+      album.producer,
+      album.noSongs,
+      album.noCopiesSold,
+      album.songs,
+      album.artists,
+      album.awards,
+      album.groups
     );
   }
 
@@ -65,14 +44,26 @@ export class AlbumResponseDto {
       noSongs: raw.NoCanciones,
       noCopiesSold: raw.NoCopiasVendidas,
 
-      songs: raw.Canciones?.map((c: { id: number }) => c.id),
-      artists: raw.LanzamientoArtista?.map(
-        (a: { idAp: number; idGr: number }) => ({
-          idAp: a.idAp,
-          idGr: a.idGr,
+      songs: raw.Canciones?.map(
+        (c: { id: number; titulo: string }) => ({
+            id: c.id,
+            name: c.titulo
         })
-      ) ,
-      awards: raw.Premios?.map((p: { idPremio: number}) => p.idPremio),
+    ) ?? [],
+    artists: raw.LanzamientoArtista?.map(
+      (a: { idAp: number; idGr: number; artista: { nombreArtistico: string } }) => ({
+        idAp: a.idAp,
+        idGr: a.idGr,
+        artisticName: a.artista.nombreArtistico
+      })
+    ) ?? [],
+      awards: raw.Premios?.map(
+        (p: { idPremio: number; año: number; premio: { tituloPremio: string } }) => ({
+          idAward: p.idPremio,
+          year: p.año,
+          title: p.premio.tituloPremio
+        })
+      ) ?? [],
       groups: raw.LanzamientoGrupo?.map((g: { idGr: number }) => g.idGr) ?? [],
     });
   }
