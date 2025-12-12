@@ -31,7 +31,7 @@ export class ApplicationRepository implements IApplicationRepository
       data: {
         nombreCompleto: dto.groupName,
         fechaDebut: dto.debut,
-        estadoGrupo: dto.status,
+        estadoGrupo: "Activo",
         idConcepto: dto.conceptId,
         idConceptoVisual: dto.visualConceptId,
         Nomiembros: dto.memberCount,
@@ -39,12 +39,10 @@ export class ApplicationRepository implements IApplicationRepository
       }
     });
   
-    // 2️⃣ Debutar aprendices como artistas nuevos
     for (let i = 0; i < dto.apprentices.length; i++) {
       const apprenticeId = dto.apprentices[i];
       const role = dto.roles[i] ?? "Miembro";
   
-      // ✔ Verificar si ya existe artista para ese aprendiz
       const existingArtist = await this.db.Artista.findFirst({
         where: { idAp: apprenticeId }
       });
@@ -63,12 +61,11 @@ export class ApplicationRepository implements IApplicationRepository
           fechaDebut: dto.debut,
           estadoArtista: "Activo",
   
-          grupo: { connect: { id: group.id } },
-          aprendiz: { connect: { id: apprenticeId } }
+          //grupo: { connect: { id: group.id } },
+          //aprendiz: { connect: { id: apprenticeId } }
         }
       });
   
-      // ✔ Registrar en historial
       await this.db.ArtistaEnGrupo.create({
         data: {
           idAp: apprenticeId,
@@ -80,7 +77,6 @@ export class ApplicationRepository implements IApplicationRepository
       });
     }
   
-    // 3️⃣ Artistas viejos → SOLO historial
     const existingArtists: [number, number][] = dto.artists ?? [];
   
     for (let j = 0; j < existingArtists.length; j++) {
