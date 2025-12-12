@@ -3,104 +3,25 @@ import React, {useState, type JSX} from "react";
 import "./calendar.css"
 import ExportButton from "../exportButton/ExportButton";
 import ModalCreate from "../modal/ModalCreate";
-export interface EventItem{
-    id : string | number,
-    date : string,
-    title : string,
-    artist: string
-    subtitle? : string,
-    // color? : string,
-    time? : string,
-    type? : string,
-    // extra?:any
-}
 
 interface CalendarProps{
     title? : string,
     description? : string,
-    activities : EventItem[],
-    renderEventItem? : (event : EventItem) => JSX.Element,
-    renderEventIcon? : (type : string) => JSX.Element,
-    addButtonText? : string
-    onAddClick? : (date : Date) => void
-    onDateClick? : (date : string) => void
+    activitiesTest : any[]
 }
 
 const Calendar : React.FC<CalendarProps> = ({
     title = "",
     description = "",
-    events = [],
-    renderEventItem,
-    renderEventIcon,
-    addButtonText,
-    onAddClick,
-    onDateClick
+    activitiesTest = []
 }) => {
     const [currentDate,setCurrentDate] = useState(new Date());
-    const [selectedDate,setSelectedDate] = useState<Date | null>(null)
     const [showDayMenu,setShowDayMenu] = useState(false)
     const [selectedDay, setSelectedDay] = useState<number | null>(null)
     const [showAddModal, setShowAddModal] = useState(false)
-    const [selectedDates, setSelectedDates] = useState<string[]>([])
-    const [isSelectingMultipleDates, setIsSelectingMultipleDates] = useState(false)
-
-   const activities: Activity[] = [
-    {
-      id: 1,
-      title: "Festival de Música de Seúl",
-      artist: "BTS, BLACKPINK, TWICE",
-      group: "Varios grupos",
-      date: "2025-12-05",
-      time: "18:00",
-      type: "festival",
-    },
-    {
-      id: 2,
-      title: "Concierto World Tour",
-      artist: "BLACKPINK",
-      group: "BLACKPINK",
-      date: "2025-12-08",
-      time: "19:30",
-      type: "concert",
-    },
-    {
-      id: 3,
-      title: "Sesión fotográfica para revista Vogue",
-      artist: "Jungkook",
-      group: "BTS",
-      date: "2025-12-12",
-      time: "10:00",
-      type: "photoshoot",
-    },
-    {
-      id: 4,
-      title: "Show de Televisión - Music Bank",
-      artist: "NewJeans",
-      group: "NewJeans",
-      date: "2025-12-15",
-      time: "17:00",
-      type: "tv-show",
-    },
-    {
-      id: 5,
-      title: "Entrevista para Rolling Stone",
-      artist: "Stray Kids",
-      group: "Stray Kids",
-      date: "2025-12-18",
-      time: "14:00",
-      type: "interview",
-    },
-    {
-      id: 6,
-      title: "Fan Meeting en Busan",
-      artist: "SEVENTEEN",
-      group: "SEVENTEEN",
-      date: "2025-12-20",
-      time: "16:00",
-      type: "concert",
-    },
-  ]
- const getActivityIcon = (type: string) => {
+    // const [selectedDates, setSelectedDates] = useState<string[]>([])
+    // const [isSelectingMultipleDates, setIsSelectingMultipleDates] = useState(false)
+  const getActivityIcon = (type: string) => {
     switch (type) {
       case "festival":
         return (
@@ -130,21 +51,6 @@ const Calendar : React.FC<CalendarProps> = ({
             <path d="M9 18V5l12-2v13" />
             <circle cx="6" cy="18" r="3" />
             <circle cx="18" cy="16" r="3" />
-          </svg>
-        )
-      case "recording":
-        return (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <circle cx="12" cy="12" r="10" />
-            <circle cx="12" cy="12" r="3" />
           </svg>
         )
       case "photoshoot":
@@ -196,6 +102,28 @@ const Calendar : React.FC<CalendarProps> = ({
         )
     }
   }
+    const transformDate = (dateStr : string) => {
+      const date = new Date(dateStr)
+      
+      const year = date.getFullYear()
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+
+      return `${year}-${month}-${day}`;
+    }
+
+    const transformActivityType = (type : string) => {
+      const translations: Record<string, string> = {
+      'Concierto': 'concert',
+      'Festival': 'festival',
+      'Show de TV': 'tv-show',
+      'Entrevista': 'interview',
+      'Sesión fotográfica': 'photoshoot',
+      //Ensayos
+        };
+        return translations[type]
+    }
+    
     const getDaysInMonth = (date : Date) => {
         const year = date.getFullYear();
         const month = date.getMonth();
@@ -219,7 +147,7 @@ const Calendar : React.FC<CalendarProps> = ({
 
     const getEventsForDate = (day : number) => {
         const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1 ).padStart(2, "0")}-${String(day).padStart(2, "0")}`
-        return activities.filter((activity) => activity.date === dateStr);
+        return activitiesTest.filter((activity) => transformDate(activity.date) === dateStr);
     }
 
     const monthNames = [
@@ -234,7 +162,7 @@ const Calendar : React.FC<CalendarProps> = ({
     const renderCalendarDays = () => {
         const days = []
 
-         for (let i = 0; i < startingDayOfWeek; i++) {
+        for (let i = 0; i < startingDayOfWeek; i++) {
             days.push(<div key={`empty-${i}`} className="calendar-day calendar-day-empty" />)
         }
 
@@ -245,8 +173,6 @@ const Calendar : React.FC<CalendarProps> = ({
             day === new Date().getDate() &&
             currentDate.getMonth() === new Date().getMonth() &&
             currentDate.getFullYear() === new Date().getFullYear()
-
-            const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
             
             days.push(
                 <div 
@@ -257,21 +183,20 @@ const Calendar : React.FC<CalendarProps> = ({
                     }`}
                 >
                         <span className="calendar-day-number">{day}</span>
-
-                         {dayEvents.length > 0 && (
+                        {dayEvents.length > 0 && (
                                 <div className="calendar-day-dots">
                                 {dayEvents.slice(0, 3).map((event) => (
-                                <span key={event.id} className={`activity-dot activity-dot-${event.type}`} />
-                             ))}
+                                <span key={event.id} className={`activity-dot activity-dot-${transformActivityType(event.activityType)}`} />
+                            ))}
                                 </div>
-                         )}
+                        )}
                 </div>    
             )
         }
         return days
     }
 
-     const upcomingActivities = activities
+    const upcomingActivities = activitiesTest
     .filter((e) => new Date(e.date) >= new Date())
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     .slice(0, 5)
@@ -289,7 +214,6 @@ const Calendar : React.FC<CalendarProps> = ({
     const handleAddFromDayMenu = () => {
     if (selectedDay) {
       const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, "0")}-${String(selectedDay).padStart(2, "0")}`
-      setSelectedDates([dateStr])
     }
     setShowDayMenu(false)
     setShowAddModal(true)
@@ -363,10 +287,10 @@ const Calendar : React.FC<CalendarProps> = ({
                             <div key={activity.id} className={`activity-item activity-item-${activity.type}`}>
                                     <div className="activity-icon">{getActivityIcon(activity.type ?? "")}</div>
                                 <div className="activity-details">
-                                    <h4 className="activity-name">{activity.title}</h4>
-                                    <p className="activity-artist">{activity.artist}</p>
+                                    <h4 className="activity-name">{activity.eventType}</h4>
+                                    <p className="activity-artist">{activity.responsible}</p>
                                     <p className="activity-datetime">
-                                    {new Date(activity.date).toLocaleDateString("es-ES", {
+                                    {new Date(transformDate(activity.date)).toLocaleDateString("es-ES", {
                                     day: "numeric",
                                     month: "long",
                                     year: "numeric",
@@ -408,13 +332,13 @@ const Calendar : React.FC<CalendarProps> = ({
                 <>
                   <div className="day-menu-activities">
                     {selectedDayActivities.map((activity) => (
-                      <div key={activity.id} className={`day-menu-activity activity-item-${activity.type}`}>
-                        <div className="activity-icon">{getActivityIcon(activity.type)}</div>
+                      <div key={activity.id} className={`day-menu-activity activity-item-${transformActivityType(activity.activityType)}`}>
+                        <div className="activity-icon">{getActivityIcon(transformActivityType(activity.activityType))}</div>
                         <div className="activity-details">
-                          <h4 className="activity-name">{activity.title}</h4>
+                          <h4 className="activity-name">{activity.eventType}</h4>
                           <p className="activity-artist">
-                            {activity.artist}
-                            {activity.group && ` · ${activity.group}`}
+                            {activity.responsible}
+                            {activity.place && ` · ${activity.place}`}
                           </p>
                           <p className="activity-datetime">{activity.time}</p>
                         </div>
@@ -466,8 +390,6 @@ const Calendar : React.FC<CalendarProps> = ({
           isOpen={showAddModal}
           onClose={() => {
             setShowAddModal(false)
-            setSelectedDates([])
-            setIsSelectingMultipleDates(false)
           }}
           title="Agregar Actividad"
           createEntity="activity"

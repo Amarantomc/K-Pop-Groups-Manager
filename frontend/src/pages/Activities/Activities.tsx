@@ -1,33 +1,32 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react';
-import type { GridColDef } from '@mui/x-data-grid';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Calendar from '../../components/calendar/Calendar';
-import DataTable from '../../components/datatable/Datatable';
 import PageLayout from '../../components/pageLayout/PageLayout';
 import ConfirmDialog from '../../components/confirmDialog/ConfirmDialog';
 import { useAuth } from '../../contexts/auth/AuthContext';
 import { activityConstraints } from '../../config/modalConstraints';
 import './Activities.css';
 
-interface Activity {
-  id: number;
-  artistName: string;
-  groupName: string;
-  title: string;
-  type: string;
-  date: string;
-  time: string;
-  location: string;
-  status: string;
-  description: string;
-}
+// interface Activity {
+//   id: number;
+//   artistName: string;
+//   groupName: string;
+//   title: string;
+//   type: string;
+//   date: string;
+//   time: string;
+//   location: string;
+//   status: string;
+//   description: string;
+// }
 
 const Activities: React.FC = () => {
   const { user } = useAuth();
-  const [activities, setActivities] = useState<Activity[]>([]);
+  const [activities, setActivities] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
+  const [selectedActivity, setSelectedActivity] = useState<any | null>(null);
   const [activityToDelete, setActivityToDelete] = useState<number | null>(null);
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openAccept, setOpenAccept] = useState(false);
@@ -38,21 +37,6 @@ const Activities: React.FC = () => {
     setActivityToDelete(id);
     setOpenConfirm(true);
   };
-
-  // Columnas del DataTable para Manager/Director
-  const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 80 },
-    { field: 'responsible', headerName: 'Responsable', width: 180 },
-    { field: 'activityType', headerName: 'Tipo de Actividad', width: 150 },
-    {
-      field: 'date',
-      headerName: 'Fecha',
-      width: 120,
-      valueFormatter: (params) => new Date(params).toLocaleDateString('es-ES')
-    },
-    { field: 'place', headerName: 'Lugar', width: 180 },
-    { field: 'eventType', headerName: 'Tipo de Evento', width: 180 }
-  ];
 
   useEffect(() => {
     const fetchActivities = async () => {
@@ -103,11 +87,14 @@ const Activities: React.FC = () => {
         console.log(data.data)
         const formattedData = data.data.map((activity : any , index : number) => ({
                         id : activity.id?? index,
-                        type : activity.activityType,
-                        location : activity.address,
-                        founded : activity.foundation
+                        eventType : activity.eventType,
+                        activityType : activity.activityType,
+                        date : activity.date,
+                        place : activity.place,
+                        responsible : activity.responsible
                     }))
         setActivities(formattedData);
+        console.log(formattedData)
 
         // ============================================
         // FIN SECCIÓN: BACKEND ENDPOINT
@@ -449,7 +436,7 @@ const Activities: React.FC = () => {
                 {/* Calendario a la izquierda */}
                 <div className="calendar-section">
                   <Calendar
-                    activities={calendarEvents}
+                    activitiesTest={activities}
                     onDateClick={handleDateClick}
                   />
                 </div>
