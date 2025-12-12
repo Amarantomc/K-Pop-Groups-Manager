@@ -114,41 +114,24 @@ const Requests: React.FC = () => {
 
   // Columnas del DataTable
   const baseColumns: GridColDef[] = [
-    { field: 'apprenticeName', headerName: 'Aprendiz', width: 180 },
+    { field: 'id', headerName: 'ID', width: 70 },
     { field: 'groupName', headerName: 'Nombre del Grupo', width: 180 },
     {
-      field: 'createdAt',
+      field: 'date',
       headerName: 'Fecha de Solicitud',
       width: 150,
-      valueFormatter: (params) => {
-        return new Date(params).toLocaleDateString('es-ES');
+      valueFormatter: (params: { value?: string }) => {
+        return params.value ? new Date(params.value).toLocaleDateString('es-ES') : '';
       }
     },
-    { field: 'agencyName', headerName: 'Agencia', width: 150 },
+    { field: 'idConcept', headerName: 'ID Concepto', width: 120 },
     {
-      field: 'status',
-      headerName: 'Estado',
-      width: 130,
-      renderCell: (params) => {
-        const statusColors: Record<string, string> = {
-          'pending': '#f59e0b',
-          'approved': '#10b981',
-          'rejected': '#ef4444',
-          'completed': '#6366f1'
-        };
-        return (
-          <span style={{
-            color: statusColors[params.value] || '#6b7280',
-            fontWeight: 600
-          }}>
-            {params.value === 'pending' ? 'Pendiente' :
-              params.value === 'approved' ? 'Aprobada' :
-                params.value === 'rejected' ? 'Rechazada' :
-                  params.value === 'completed' ? 'Finalizada' : params.value}
-          </span>
-        );
-      }
-    }
+      field: 'roles',
+      headerName: 'Roles',
+      width: 220,
+      valueGetter: (params: any) => Array.isArray(params.row?.roles) ? params.row.roles.join(', ') : ''
+    },
+    { field: 'idAgency', headerName: 'ID Agencia', width: 120 },
   ];
 
   // Columna de gestión según rol

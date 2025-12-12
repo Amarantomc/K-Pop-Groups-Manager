@@ -55,6 +55,9 @@ export type ContractStatus = typeof CONTRACT_STATUS[number];
 export const ACTIVITY_TYPES = ['individual', 'grupal'] as const;
 export type ActivityType = typeof ACTIVITY_TYPES[number];
 
+export const ACTIVITY_TYPES_EVENTS = ['Concierto', 'Sesion Fotografica', 'Festival', 'Show TV', 'Entrevista', 'Ensayo'] as const;
+export type ActivityTypeEvent = typeof ACTIVITY_TYPES_EVENTS[number];
+
 export const ROLE_TYPES = ['Admin', 'Manager', 'Director', 'Artista', 'Aprendiz'] as const;
 export type RoleType = typeof ROLE_TYPES[number];
 
@@ -171,7 +174,7 @@ export const conceptFields: Field[] = [
 // Concepto Visual
 export const visualConceptFields: Field[] = [
     { id: 'image', name: 'image', label: 'Imagen', type: 'file' },
-    { id: 'description', name: 'description', label: 'Descripción', type: 'textarea' },
+    //{ id: 'description', name: 'description', label: 'Descripción', type: 'textarea' },
 ];
 
 // Actividad
@@ -179,6 +182,7 @@ export const activityFields: Field[] = [
     { id: 'date', name: 'date', label: 'Fecha', type: 'date', required: true },
     { id: 'place', name: 'place', label: 'Lugar', type: 'text' },
     { id: 'type', name: 'type', label: 'Tipo Actividad', type: 'select', options: enumToOptions(ACTIVITY_TYPES) },
+    { id: 'typeEvent', name: 'typeEvent', label: 'Evento', type: 'select', options: enumToOptions(ACTIVITY_TYPES_EVENTS) },
     { id: 'responsible', name: 'responsible', label: 'Responsable Actividad', type: 'text' },
 ];
 
@@ -210,21 +214,25 @@ export const requestFields: Field[] = [
 export const contractFields: Field[] = [
     { id: 'artistName', name: 'artistName', label: 'Artista', type: 'text', required: true, placeholder: 'Nombre del artista' },
     { id: 'groupName', name: 'groupName', label: 'Grupo', type: 'text', placeholder: 'Nombre del grupo (opcional)' },
-    { id: 'contractType', name: 'contractType', label: 'Tipo de Contrato', type: 'select', required: true, options: [
-        { value: 'exclusive', label: 'Exclusivo' },
-        { value: 'non_exclusive', label: 'No Exclusivo' },
-        { value: 'production', label: 'Producción' },
-        { value: 'distribution', label: 'Distribución' },
-    ] },
+    {
+        id: 'contractType', name: 'contractType', label: 'Tipo de Contrato', type: 'select', required: true, options: [
+            { value: 'exclusive', label: 'Exclusivo' },
+            { value: 'non_exclusive', label: 'No Exclusivo' },
+            { value: 'production', label: 'Producción' },
+            { value: 'distribution', label: 'Distribución' },
+        ]
+    },
     { id: 'startDate', name: 'startDate', label: 'Fecha Inicio', type: 'date', required: true },
     { id: 'endDate', name: 'endDate', label: 'Fecha Finalización', type: 'date', required: true },
     { id: 'value', name: 'value', label: 'Valor', type: 'number', required: true, placeholder: 'Monto del contrato' },
-    { id: 'status', name: 'status', label: 'Estado', type: 'select', required: true, options: [
-        { value: 'active', label: 'Activo' },
-        { value: 'expired', label: 'Expirado' },
-        { value: 'terminated', label: 'Terminado' },
-        { value: 'pending', label: 'Pendiente' },
-    ] },
+    {
+        id: 'status', name: 'status', label: 'Estado', type: 'select', required: true, options: [
+            { value: 'active', label: 'Activo' },
+            { value: 'expired', label: 'Expirado' },
+            { value: 'terminated', label: 'Terminado' },
+            { value: 'pending', label: 'Pendiente' },
+        ]
+    },
     { id: 'agencyName', name: 'agencyName', label: 'Agencia', type: 'text', required: true, placeholder: 'Nombre de la agencia' },
     { id: 'terms', name: 'terms', label: 'Términos', type: 'textarea', placeholder: 'Condiciones del contrato' },
 ];
