@@ -31,7 +31,7 @@ export class ApplicationRepository implements IApplicationRepository
       data: {
         nombreCompleto: dto.groupName,
         fechaDebut: dto.debut,
-        estadoGrupo: dto.status,
+        estadoGrupo: "Activo",
         idConcepto: dto.conceptId,
         idConceptoVisual: dto.visualConceptId,
         Nomiembros: dto.memberCount,
@@ -63,8 +63,8 @@ export class ApplicationRepository implements IApplicationRepository
           fechaDebut: dto.debut,
           estadoArtista: "Activo",
   
-          grupo: { connect: { id: group.id } },
-          aprendiz: { connect: { id: apprenticeId } }
+          //grupo: { connect: { id: group.id } },
+          //aprendiz: { connect: { id: apprenticeId } }
         }
       });
   
