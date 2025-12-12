@@ -8,6 +8,7 @@ export default class Application {
     readonly apprentices: number[];
     readonly artists:[number,number][];
     readonly status: string;
+    readonly idVisualConcept: number;
 
     constructor(attrs: {
         id: number;
@@ -19,6 +20,7 @@ export default class Application {
         apprentices:number[];
         artists:[number,number][];
         status: string;
+        idVisualConcept: number
     }) {
         this.id = attrs.id;
         this.date = attrs.date;
@@ -29,5 +31,6 @@ export default class Application {
         this.apprentices = attrs.apprentices;
         this.artists = attrs.artists;
         this.status = attrs.status;
+        this.idVisualConcept = attrs.idVisualConcept
     }
 }

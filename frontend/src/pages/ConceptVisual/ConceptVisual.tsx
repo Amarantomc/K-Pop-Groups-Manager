@@ -39,8 +39,6 @@ const ConceptVisual: React.FC = () => {
     askDelete(id);
   };
 
-  // Columnas del DataTable
-
 
   useEffect(() => {
     const fetchConceptVisuals = async () => {
