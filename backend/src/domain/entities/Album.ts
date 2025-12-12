@@ -8,13 +8,9 @@ export default class Album {
     readonly noCopiesSold: number;
 
     readonly songs: { id: number; name: string }[];
-
     readonly artists: { idAp: number; idGr: number; artisticName: string }[];
-
-    // Cambiado para coincidir con el DTO
     readonly awards: { idAward: number; year: number; title: string }[];
-
-    readonly groups: number[];
+    readonly groups: { idGr: number; groupName: string }[];
 
     constructor(attrs: {
         id: number;
@@ -28,7 +24,7 @@ export default class Album {
         songs: { id: number; name: string }[];
         artists: { idAp: number; idGr: number; artisticName: string }[];
         awards?: { idAward: number; year: number; title: string }[];
-        groups: number[];
+        groups: { idGr: number; groupName: string }[];
     }) {
         this.id = attrs.id;
         this.idGroup = attrs.idGroup;
