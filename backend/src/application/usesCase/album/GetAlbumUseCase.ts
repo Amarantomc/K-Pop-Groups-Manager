@@ -26,6 +26,7 @@ export class GetAlbumUseCase{
                         !album.songs? [] : album.songs,
                         album.artists,
                         album.awards,
+                        album.groups
                       );
         
     }
