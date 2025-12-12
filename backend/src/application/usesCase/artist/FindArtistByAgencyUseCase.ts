@@ -12,6 +12,7 @@ export class FindArtistByAgencyUseCase {
     ) {}
 
     async execute(agencyId: number): Promise<ArtistResponseDto[]> {
+         
         try {
             // Validar que el ID de agencia sea válido
             if (!agencyId || agencyId <= 0) {

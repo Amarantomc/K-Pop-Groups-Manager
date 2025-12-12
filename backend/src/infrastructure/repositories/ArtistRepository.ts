@@ -244,15 +244,16 @@ private get db() {
   }
 
    async findByAgency(id: number): Promise<Artist[]> {
-       const artists=await this.db.artista.findMany({
+      
+    const artists=await this.db.artista.findMany({
          where: {
-                aprendiz: {
-                    Agencia:{
-                      some:{
-                        idAg:1
-                      }
+                Contrato: {
+                    some:{
+                        idAg:id,
+                        fechaFinalizacion:null,
+                        }
                     }
-                }
+                
             },
             include:{
               HistorialGrupos:{
