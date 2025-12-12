@@ -93,9 +93,30 @@ export class AlbumRepository implements IAlbumRepository
            where:{id},
            include: {
             Canciones: true,
-            LanzamientoArtista: true,
-            Premios: true,
+      
+            Premios: {
+              include: {
+                premio: true 
+              }
+            },
+      
+            LanzamientoGrupo: {
+              include: {
+                grupo: true
+              }
+            },
+      
+            LanzamientoArtista: {
+              include: {
+                artista: true  
+              }
+            }
           }
+          //  include: {
+          //   Canciones: true,
+          //   LanzamientoArtista: true,
+          //   Premios: true,
+          // }
         })
         return album ? AlbumResponseDto.toEntity(album) : null
     }

@@ -13,34 +13,42 @@ export class ApplicationResponseDto{
       public readonly status?: string,
     ){}
 
-    static fromEntity(application: any): ApplicationResponseDto {
+    static fromEntity(application: Application): ApplicationResponseDto {
       //console.log(application);
       return new ApplicationResponseDto(
         application.id,
-        application.nombreGrupo,
-        application.fechaSolicitud,  // date
-        application.idConcepto,      // idConcept
-        application.roles,           // roles
-        application.idAgencia,       // idAgency
+        application.groupName,
+        application.date,  
+        application.idConcept,      
+        application.roles,           
+        application.idAgency,       
         application.apprentices,
         application.artists,
-        application.estatus
+        application.status
       );
     }
 
-      static toEntity(application: any): Application {
-        return new Application({
-          id: application.id,
-          groupName: application.nombreGrupo,
-          roles: application.roles,
-          idConcept: application.idConcepto,
-          idAgency: application.idAgencia,
-          date: application.fechaSolicitud,
-          apprentices: application.apprentices,
-          artists:application.artists,
-          status: application.estado
-        });
-      }
+    static toEntity(application: any): Application {
+
+      return new Application({
+        id: application.id,
+        groupName: application.nombreGrupo,
+        roles: application.roles,
+        idConcept: application.idConcepto,
+        idAgency: application.idAgencia,
+        date: application.fechaSolicitud,
+        status: application.estado,
+    
+        // AprendizMiembro → array de IDs
+        apprentices: application.AprendizMiembro?.map((a: any) => a.id) ?? [],
+    
+        // ArtistaMiembro → array de tuplas [idAp, idGr]
+        artists: application.ArtistaMiembro?.map((a: any) => [a.idAp, a.idGr]) ?? [],
+    
+        // tu schema NO guarda esto en Solicitud → default a 1
+        idVisualConcept: application.idConceptoVisual ?? 1
+      });
+    }
 
       static fromEntities(applications: any[]): ApplicationResponseDto[] {
         //console.log(applications);

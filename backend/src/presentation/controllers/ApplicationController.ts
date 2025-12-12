@@ -7,7 +7,6 @@ import type { DeleteApplicationUseCase } from "../../application/usesCase/applic
 import type { ListApplicationUseCase } from "../../application/usesCase/application(solicitud)/ListApplicationUseCase";
 import { CreateApplicationDto } from "../../application/dtos/application(solicitud)/CreateApplicationDto";
 import type { UpdateApplicationUseCase } from "../../application/usesCase/application(solicitud)/UpdateApplicationUseCase";
-import type { CreateGroupUseCase } from "../../application/usesCase/group/CreateGroupUseCase";
 import type { CreateGroupToApplicationUseCase } from "../../application/usesCase/application(solicitud)/CreateGroupToApplicationUseCase";
 
 
@@ -132,6 +131,8 @@ async createGroupToApplication(req: Request, res: Response) {
   try {
     const { id } = req.params;
 
+    //const applicationcreategroupDto = ApplicationToGroupDto.create(id!);
+    //const app = await this.getApplicationUseCase.excute(id!)
     const group = await this.createGroupToApplicationUseCase.execute(id!);
 
     return res.json({
