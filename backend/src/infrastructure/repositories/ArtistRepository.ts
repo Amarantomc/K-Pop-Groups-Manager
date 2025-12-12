@@ -14,6 +14,7 @@ export class ArtistRepository implements IArtistRepository {
                 @inject(Types.IUnitOfWork) private unitOfWork :UnitOfWork
                 
 ){}
+ 
 
   
 private get db() {
@@ -278,6 +279,19 @@ private get db() {
        
        
       return ArtistResponseDto.toEntitiesForManager(artists)
+  }
+
+   async getSoloArtists(): Promise<Artist[] | null> {
+    const artists= await this.db.artista.findMany({
+       where:{
+         HistorialGrupos:{
+            every:{
+              fechaFinalizacion:{not: null}
+            }
+         }
+       }
+    }) 
+      return artists ? ArtistResponseDto.toEntities(artists):null
   }
 
 
