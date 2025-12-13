@@ -284,8 +284,8 @@ const Calendar : React.FC<CalendarProps> = ({
                     <h3 className="activities-title">Próximas Actividades</h3>
                         <div className="activities-list">
                             {upcomingActivities.map((activity) => (
-                            <div key={activity.id} className={`activity-item activity-item-${activity.type}`}>
-                                    <div className="activity-icon">{getActivityIcon(activity.type ?? "")}</div>
+                            <div key={activity.id} className={`activity-item activity-item-${transformActivityType(activity.activityType)}`}>
+                                    <div className="activity-icon">{getActivityIcon(transformActivityType(activity.activityType) ?? "")}</div>
                                 <div className="activity-details">
                                     <h4 className="activity-name">{activity.eventType}</h4>
                                     <p className="activity-artist">{activity.responsible}</p>
@@ -295,7 +295,6 @@ const Calendar : React.FC<CalendarProps> = ({
                                     month: "long",
                                     year: "numeric",
                                     })}{" "}
-                                    · {activity.time}
                                     </p>
                                 </div>
                             </div>

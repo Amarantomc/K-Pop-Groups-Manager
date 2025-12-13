@@ -41,10 +41,122 @@ export const groupColumns: GridColDef[] = [
 
 // Álbum
 export const albumColumns: GridColDef[] = [
-    { field: 'title', headerName: 'Título Álbum', width: 200 },
+    { field: 'title', headerName: 'Título', width: 200 },
+    {field: 'producer',headerName: 'Productor',width:160},
     { field: 'releaseDate', headerName: 'Fecha Lanzamiento', width: 150 },
-    { field: 'tracks', headerName: 'No. Canciones', width: 120 },
-    { field: 'producer', headerName: 'Productor', width: 150 },
+    {field:'noCopiesSold',headerName:'Copias Vendidas',width:140},
+    {field:'artists',
+        headerName:'Artistas',
+        width:200,
+        renderCell:(params) => {
+            const artists = params.value || []
+             if (artists.length === 0) {
+        return (
+          <Typography variant="body2" color="text.secondary" sx={{ width: '100%', py: 1 }}>
+            Sin artistas
+          </Typography>
+        );
+      }
+            return(
+                     <Select
+                    value=""
+                    displayEmpty
+                    sx={{ width: '100%', height: 40 }}
+                renderValue={() => `${artists.length} artista${artists.length !== 1 ? 's' : ''}`}
+            >
+            {artists.map((artist: any) => (
+                <MenuItem key={artist.idAp} value={artist.idAp}>
+                {artist.artisticName}
+                </MenuItem>
+            ))}
+        </Select>
+            )
+        }
+    },
+    { field: 'songs'
+        , headerName: 'Canciones'
+        , width: 200,
+         renderCell:(params) => {
+            const songs = params.value || []
+             if (songs.length === 0) {
+        return (
+          <Typography variant="body2" color="text.secondary" sx={{ width: '100%', py: 1 }}>
+            Sin canciones
+          </Typography>
+        );
+      }
+            return(
+                     <Select
+                    value=""
+                    displayEmpty
+                    sx={{ width: '100%', height: 40 }}
+                renderValue={() => `${songs.length} Canci${songs.length !== 1 ? 'ones' : 'ón'}`}
+            >
+            {songs.map((song: any) => (
+                <MenuItem key={song.id} value={song.id}>
+                {song.name}
+                </MenuItem>
+            ))}
+        </Select>
+            )
+        }
+    },
+    { field: 'groups'
+        , headerName: 'Grupos'
+        , width: 200,
+        renderCell:(params) => {
+            const groups = params.value || []
+             if (groups.length === 0) {
+        return (
+          <Typography variant="body2" color="text.secondary" sx={{ width: '100%', py: 1 }}>
+            Sin grupos
+          </Typography>
+        );
+      }
+            return(
+                     <Select
+                    value=""
+                    displayEmpty
+                    sx={{ width: '100%', height: 40 }}
+                renderValue={() => `${groups.length} Grup${groups.length !== 1 ? 'os' : 'o'}`}
+            >
+            {groups.map((group: any) => (
+                <MenuItem key={group.idGr} value={group.idGr}>
+                {group.groupName}
+                </MenuItem>
+            ))}
+        </Select>
+            )
+        }
+    },
+    {field:'awards',
+      headerName : 'Premios',
+      width:200,
+        renderCell:(params) => {
+            const awards = params.value || []
+             if (awards.length === 0) {
+        return (
+          <Typography variant="body2" color="text.secondary" sx={{ width: '100%', py: 1 }}>
+            Sin premios
+          </Typography>
+        );
+      }
+            return(
+                     <Select
+                    value=""
+                    displayEmpty
+                    sx={{ width: '100%', height: 40 }}
+                renderValue={() => `${awards.length} Premi${awards.length !== 1 ? 'os' : 'o'}`}
+            >
+            {awards.map((award: any) => (
+                <MenuItem key={award.idAward} value={award.idAward}>
+                {award.title} - {award.year}
+                </MenuItem>
+            ))}
+        </Select>
+            )
+        }
+    },
 ]
 
 // Canción
@@ -54,14 +166,14 @@ export const songColumns: GridColDef[] = [
     { field: 'releaseDate', headerName: 'Fecha Lanzamiento', width: 150 },
     { field: 'genre', headerName: 'Género', width: 120 },
     {   field:'albums',
-        headerName:'Álbumes',
+        headerName:'Álbums',
         width:200,
         renderCell: (params) => {
         const albums = params.value || [];
           if (albums.length === 0) {
         return (
           <Typography variant="body2" color="text.secondary" sx={{ width: '100%', py: 1 }}>
-            Sin álbumes
+            Sin álbums
           </Typography>
         );
       }
