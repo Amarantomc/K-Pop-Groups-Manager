@@ -45,7 +45,7 @@ export class ArtistResponseDto {
   }
 
   static toEntity(artist:any):Artist {
-
+      
     
     return new Artist({ 
       ApprenticeId:artist.idAp,

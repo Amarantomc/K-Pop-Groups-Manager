@@ -158,6 +158,7 @@ import { DeleteAlbumUseCase } from "../../application/usesCase/album/DeleteAlbum
 import { UpdateAlbumUseCase } from "../../application/usesCase/album/UpdateAlbumUseCase";
 import { GetAlbumUseCase } from "../../application/usesCase/album/GetAlbumUseCase";
 import { AlbumController } from "../../presentation/controllers/AlbumController";
+import { GetArtistsOnDebutUseCase } from "../../application/usesCase/artist/GetArtistsOnDebutUseCase";
  
 const container=new Container()
  
@@ -452,6 +453,10 @@ container.bind<UpdateUserUseCase>(Types.UpdateUserUseCase)
 
   container.bind<FindArtistByAgencyUseCase>(Types.FindArtistByAgencyUseCase)
   .to(FindArtistByAgencyUseCase)
+  .inTransientScope();
+
+   container.bind<GetArtistsOnDebutUseCase>(Types.GetArtistsOnDebutUseCase)
+  .to(GetArtistsOnDebutUseCase)
   .inTransientScope();
   //#endregion
 
