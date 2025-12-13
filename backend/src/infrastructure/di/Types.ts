@@ -61,6 +61,7 @@ const Types = {
   FindArtistByIdUseCase :Symbol.for('FindArtistByIdUseCase'),
   GetAllArtistsUseCase :Symbol.for('GetAllArtistsUseCase'),
   FindArtistByAgencyUseCase :Symbol.for('FindArtistByAgencyUseCase'),
+  GetArtistsOnDebutUseCase :Symbol.for('GetArtistsOnDebutUseCase'),
 
   CreateConceptUseCase: Symbol.for('CreateConceptUseCase'),
   DeleteConceptUseCase: Symbol.for('DeleteConceptUseCase'),

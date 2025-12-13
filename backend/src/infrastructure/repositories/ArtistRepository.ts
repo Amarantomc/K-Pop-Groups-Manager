@@ -6,6 +6,7 @@ import { CreateArtistDto } from "../../application/dtos/artist/CreateArtistDto";
 import type { Artist } from "../../domain/entities/Artist";
 import { ArtistResponseDto } from "../../application/dtos/artist/ArtistResponseDto";
 import type { UpdateArtistDto } from "../../application/dtos/artist/UpdateArtistDto";
+import { ArtistOnDebutResponseDto } from "../../application/dtos/artist/ArtistsOnDebutResponseDto";
 
 @injectable()
 export class ArtistRepository implements IArtistRepository {
@@ -282,6 +283,7 @@ private get db() {
   }
 
    async getSoloArtists(): Promise<Artist[] | null> {
+    
     const artists= await this.db.artista.findMany({
        where:{
          HistorialGrupos:{
@@ -289,9 +291,69 @@ private get db() {
               fechaFinalizacion:{not: null}
             }
          }
+       }, include:{
+        HistorialGrupos:{
+          include:{
+            grupo:true
+          }
+        }, 
+         aprendiz:{
+                 include:{
+                  Agencia:{
+                    include:{
+                      agencia:true
+                    }
+                  }
+                 }
+                  
+              }
+          
        }
     }) 
-      return artists ? ArtistResponseDto.toEntities(artists):null
+      return artists ? ArtistResponseDto.toEntitiesForManager(artists):null
+  }
+
+  async getArtistsOnDebut(idAgency:number):Promise<ArtistOnDebutResponseDto[]|null>{
+      const artists =await this.db.$queryRaw`
+    SELECT DISTINCT
+      a."idAp",
+      a."idGr",
+      a."nombreArtistico",
+      a."fechaDebut",
+      a."estadoArtista",
+      -- Datos del grupo actual
+      g."nombreCompleto" as "grupoNombre",
+      g."fechaDebut" as "grupoFechaDebut",
+      g."estadoGrupo",
+      
+      -- Datos del contrato
+      c."fechaInicio" as "contratoFechaInicio",
+      c."estado" as "contratoEstado",
+      c."condicionesIniciales",
+      c."distribucionIngresos"
+       
+    FROM "Artista" a
+     JOIN "Grupo" g ON a."idGr" = g."id"
+     JOIN "Contrato" c ON a."idAp" = c."idAp" 
+      AND a."idGr" = c."idGr" 
+      AND c."idAg" = ${idAgency}
+      AND c."fechaFinalizacion" IS NULL
+       
+      
+    -- Join con historial de grupos para verificar participación en debut
+      JOIN "ArtistaEnGrupo" aeg ON a."idAp" = aeg."idAp" 
+      AND a."idGr" = aeg."idGrupoDebut"
+     JOIN "Grupo" g2 ON aeg."idGr" = g2."id"
+    WHERE 
+      -- La fecha de debut del grupo debe estar entre fechaInicio y fechaFinalizacion
+      g2."fechaDebut" >= aeg."fechaInicio"
+      AND (
+        aeg."fechaFinalizacion" IS NULL 
+        OR g2."fechaDebut" <= aeg."fechaFinalizacion"
+      )
+    ORDER BY a."nombreArtistico"
+  `;
+      return artists ? ArtistOnDebutResponseDto.fromQueryResults(artists):null;
   }
 
 

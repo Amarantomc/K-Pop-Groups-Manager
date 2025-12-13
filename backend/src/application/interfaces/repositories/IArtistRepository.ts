@@ -1,5 +1,6 @@
 import type { Apprentice } from "../../../domain";
 import type { Artist } from "../../../domain/entities/Artist";
+import type { ArtistOnDebutResponseDto } from "../../dtos/artist/ArtistsOnDebutResponseDto";
  
 import type { CreateArtistDto } from "../../dtos/artist/CreateArtistDto";
 import type { UpdateArtistDto } from "../../dtos/artist/UpdateArtistDto";
@@ -12,6 +13,7 @@ export interface IArtistRepository extends IBaseRepository<Artist,CreateArtistDt
         findByStatus(status: string): Promise<Artist[]>;
         findByAgency(id:number):Promise<Artist[]>
         getSoloArtists():Promise<Artist[]|null>
+        getArtistsOnDebut(idAgency:number):Promise<ArtistOnDebutResponseDto[]|null>
         
           // Métodos para tablas intermedias
   addGroupHistory(apprenticeId: number,groupId: number,debutGroupId: number,role: string,startDate: Date): Promise<void>;
