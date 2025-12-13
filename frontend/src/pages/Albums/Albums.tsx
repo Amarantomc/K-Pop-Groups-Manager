@@ -8,6 +8,7 @@ import { useAuth } from '../../contexts/auth/AuthContext';
 import { albumFields } from '../../config/formSource';
 import { albumConstraints } from '../../config/modalConstraints';
 import ConfirmDialog from '../../components/confirmDialog/ConfirmDialog';
+import { albumColumns } from '../../config/datatableSource';
 
 interface Album {
   id: number;
@@ -122,7 +123,21 @@ const Albums: React.FC = () => {
         }
 
         const data = await response.json();
-        setAlbums(data.data || data);
+        console.log(data)
+        const formattedData = data.data.map((album: any, index: number) => ({
+          id: album.id ?? index,
+          idGroup : album.idGroup,
+          noCopiesSold: album.noCopiesSold,
+          songs : album.songs,
+          producer : album.producer,
+          releaseDate : album.releaseDate,
+          title : album.title,
+          artists : album.artists,
+          groups : album.groups,
+          awards : album.awards
+        }));
+        console.log(formattedData);
+        setAlbums(formattedData);
         // ============================================
         // FIN SECCIÓN: BACKEND ENDPOINT
         // ============================================
@@ -369,7 +384,7 @@ const Albums: React.FC = () => {
       ) : (
         <>
           <DataTable
-            columns={columns}
+            columns={albumColumns}
             rows={albums}
             pagesize={10}
             onDelete={askDelete}

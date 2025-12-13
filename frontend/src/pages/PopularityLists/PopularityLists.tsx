@@ -10,6 +10,7 @@ import { useAuth } from '../../contexts/auth/AuthContext';
 import { popularityListFields } from '../../config/formSource';
 import { popularityListConstraints } from '../../config/modalConstraints';
 import { popularityListColumns } from '../../config/datatableSource';
+import PopuList from '../../components/List/PopuList';
 
 const PopularityLists: React.FC = () => {
   const { user } = useAuth();
@@ -112,7 +113,8 @@ const PopularityLists: React.FC = () => {
         const formattedData = data.data.map((popularityList: any, index: number) => ({
           id: popularityList.id ?? index,
           name: popularityList.name,
-          scope : popularityList.listType
+          listType : popularityList.listType,
+          songs : popularityList.songs
         }));
         console.log(formattedData);
         setPopularityListsRows(formattedData);
@@ -284,7 +286,7 @@ const PopularityLists: React.FC = () => {
         </div>
       ) : (
         <>
-          <DataTable
+          {/* <DataTable
             columns={popularityListColumns}
             rows={popularityListsRows}
             pagesize={10}
@@ -296,7 +298,10 @@ const PopularityLists: React.FC = () => {
             createEntity="popularityList"
             userRole={user?.role}
             // onCreateClick={() => setShowCreateModal(true)}
-          />
+          /> */}
+          <PopuList charts={popularityListsRows}>
+
+          </PopuList>
           <ModalCreate
             isOpen={showCreateModal}
             title="Crear Lista de Popularidad"
