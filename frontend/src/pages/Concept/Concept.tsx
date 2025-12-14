@@ -275,12 +275,14 @@ const Concept: React.FC = () => {
         message="¿Está seguro que desea eliminar este concepto?" 
         open={openConfirm} 
         onCancel={() => setOpenConfirm(false)} 
-        onConfirm={handleDelete}
+        onConfirm={handleDelete} 
+        type="confirm"
       />
       <ConfirmDialog 
         title="¡Éxito!"
         message="El concepto ha sido creado correctamente" 
-        open={openAccept} 
+        open={openAccept}
+        type="success" 
         onCancel={() => setOpenAccept(false)} 
         onConfirm={() => setOpenAccept(false)} 
         confirmText="Aceptar" 
@@ -289,6 +291,7 @@ const Concept: React.FC = () => {
       <ConfirmDialog 
         title="Error"
         message={errorMessage} 
+        type="error"
         open={openError} 
         onCancel={() => setOpenError(false)} 
         onConfirm={() => setOpenError(false)} 
