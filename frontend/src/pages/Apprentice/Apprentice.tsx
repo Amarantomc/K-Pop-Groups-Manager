@@ -2,33 +2,54 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import "./apprentice.css"
-import Sidebar from "../../components/sidebar/Sidebar"
-// import Navbar from "../../components/navbar/Navbar"
 import Datatable from "../../components/datatable/Datatable"
-import { apprenticeColumns } from "../../config/datatableSource"
 import React from "react"
 import { useEffect , useState  } from "react"
-import { apprenticeConstraints } from "../../config/modalConstraints"
+import { apprenticeConstraints, evaluationConstraints } from "../../config/modalConstraints"
 import { APPRENTICE_STATUS, APPRENTICE_STATUS_OPTIONS, apprenticeFields } from '../../config/formSource'
-import Header from "../../components/header/Header"
 import ConfirmDialog from "../../components/confirmDialog/ConfirmDialog"
 import PageLayout from "../../components/pageLayout/PageLayout"
 import { useAuth } from "../../contexts/auth/AuthContext"
 import ModalCreate from "../../components/modal/ModalCreate"
 import Modal from "../../components/modal/Modal"
+import QuizIcon from '@mui/icons-material/Quiz';
+import type { GridColDef } from "@mui/x-data-grid";
+import { Button } from "@mui/material"
 
 
 const ListApprentice: React.FC = () => {
-     const { user } = useAuth();
-     const [apprenticeRows, setApprenticeRows] = useState<any[]>([])
-     const [apprenticeToDelete,setApprenticeToDelete] = useState<number | null>(null)
-     const [openConfirm,setOpenConfirm] = useState(false)
-     const [openAccept,setOpenAccept] = useState(false)
-     const [openError, setOpenError] = useState(false);
-     const [errorMessage, setErrorMessage] = useState('');
-     const [isLoading,setIsLoading] = useState(false)
-     const [showCreateModal, setShowCreateModal] = useState(false);
-     const [showSuccessModal, setShowSuccessModal] = useState(false);
+      const { user } = useAuth();
+      const [apprenticeRows, setApprenticeRows] = useState<any[]>([])
+      const [apprenticeToDelete,setApprenticeToDelete] = useState<number | null>(null)
+      const [openConfirm,setOpenConfirm] = useState(false)
+      const [openAccept,setOpenAccept] = useState(false)
+      const [openError, setOpenError] = useState(false);
+      const [errorMessage, setErrorMessage] = useState('');
+      const [isLoading,setIsLoading] = useState(false)
+      const [showCreateModal, setShowCreateModal] = useState(false);
+      const [showSuccessModal, setShowSuccessModal] = useState(false);
+      const [showEvaluateModal,setShowEvaluateModal] = useState(false);
+      const [selectApprenticeToEvaluate,setSelectApprenticeToEvaluate] = useState<any|null>(null)
+      
+    const apprenticeColumns: GridColDef[] = [
+    { field: 'name', headerName: 'Nombre Completo', width: 150 },
+    { field: 'dateOfBirth', headerName: 'Fecha de Nacimiento', width: 250 },
+    { field: 'age', headerName: 'Edad', width: 90 },
+    // {field: 'agencyName', headerName: 'Agencia', width: 150},
+    { field: 'trainingLv', headerName: 'Nivel de Entrenamiento', width: 180 },
+    { field: 'status', headerName: 'Estado', width: 120 },
+    {   field:'evaluate',
+        headerName:'Evaluación',
+        width :200,
+        renderCell : (params) => {
+            return (
+                <div className="Evaluation">
+                    <Button startIcon = {<QuizIcon/>} className="evaluate-btn" onClick={() => {setSelectApprenticeToEvaluate(params.row.id);setShowEvaluateModal(true)}}>Evaluar Aprendiz</Button>
+                </div>
+            )
+        }
+    }
+]
 
      const askDelete = (id : number) =>{
       setApprenticeToDelete(id)
@@ -293,18 +314,26 @@ const ListApprentice: React.FC = () => {
           confirmText="Aceptar" 
           showDeleteButton={false}
         />
-        <ModalCreate
+        {/* <ModalCreate
           isOpen={showCreateModal}
           title="Crear Aprendiz"
           createFields={apprenticeFields}
           onSave={handleFormSubmit}
           onClose={() => setShowCreateModal(false)}
-        />
+        /> */}
         <Modal
           isOpen={showSuccessModal}
           title="Aprendiz creado exitosamente"
           onSave={() => setShowSuccessModal(false)}
           onClose={() => setShowSuccessModal(false)}
+        />
+        {/* Modal para evaluar */}
+        <Modal
+          isOpen={showEvaluateModal}
+          title="Evaluar Aprendiz"
+          onSave={() => setShowEvaluateModal(false)}
+          onClose={() => setShowEvaluateModal(false)}
+          constraints={evaluationConstraints}
         />
         </>
       )}
