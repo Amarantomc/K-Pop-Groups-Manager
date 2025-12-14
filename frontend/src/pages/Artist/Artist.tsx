@@ -22,8 +22,12 @@ const Artist: React.FC = () => {
   const [openError, setOpenError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const askDelete = (id : number) => {
-    setApprenticeToDelete(id);
+  const askDelete = (id : number | string) => {
+    const [apprenticeId, groupId] = String(id)
+    .split(':')
+    .map(Number);
+    setApprenticeToDelete(apprenticeId);
+    setGroupToDelete(groupId)
     setOpenConfirm(true);
   }
   // Columnas del DataTable
@@ -125,8 +129,8 @@ const Artist: React.FC = () => {
           apprenticeMap[appr.id] = { name: appr.name, dateOfBirth: appr.dateOfBirth };
         });
         // Mapear artistas con nombre real y fecha de nacimiento
-        const formattedData = data.data.map((artist: any, index: number) => ({
-          id: artist.id ?? index,
+        const formattedData = data.data.map((artist: any) => ({
+          id: `${artist.ApprenticeId}:${artist.GroupId}`,
           ArtistName: artist.ArtistName,
           DebutDate: artist.DebutDate,
           Status: artist.Status,
@@ -149,7 +153,7 @@ const Artist: React.FC = () => {
     if (apprenticeToDelete === null) return;
     try {
       // DELETE /api/artist/:apprenticeId&:groupId - Requiere rol Staff
-      const response = await fetch(`http://localhost:3000/api/artist/${apprenticeToDelete}&${groupToDelete}`, {
+      const response = await fetch(`http://localhost:3000/api/artist/${apprenticeToDelete}/${groupToDelete}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -160,7 +164,7 @@ const Artist: React.FC = () => {
         throw new Error('Error al eliminar artista');
       }
 
-      setArtistsRows(prev => prev.filter(artist => artist.id !== apprenticeToDelete));
+      setArtistsRows(prev => prev.filter(artist => artist.id !== `${apprenticeToDelete}:${groupToDelete}`));
       setOpenAccept(true);
     } catch (error) {
       console.error('Error al eliminar artista:', error);
