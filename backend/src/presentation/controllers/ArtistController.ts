@@ -16,6 +16,7 @@ import { RequestArtistWithIncomeDto } from "../../application/dtos/artist/Reques
 import type { GetBestAlbumsUseCase } from "../../application/usesCase/artist/GetBestAlbumsUseCase";
 import type { GetIncomeAndSuccesUseCase } from "../../application/usesCase/artist/GetIncomeAndSuccesUseCase";
 import type { GetArtistsWhoChangeAgencyUseCase } from "../../application/usesCase/artist/GetArtistsWhoChangeAgencyUseCase";
+import type { GetSoloArtistsProfesionalHistoryUseCase } from "../../application/usesCase/artist/GetSoloArtistsProfesionalHistoryUseCase";
 
 @injectable()
 export class ArtistController {
@@ -30,7 +31,8 @@ export class ArtistController {
                @inject(Types.GetTotalIncomeByArtistUseCase)private getIncome : GetTotalIncomeByArtistUseCase,
                @inject(Types.GetBestAlbumsUseCase)private getBestAlbumsUseCase:GetBestAlbumsUseCase,
                @inject(Types.GetIncomeAndSuccesUseCase)private getIncomeAndSuccesUseCase:GetIncomeAndSuccesUseCase,
-               @inject(Types.GetArtistsWhoChangeAgencyUseCase)private getArtistsWhoChangeAgency:GetArtistsWhoChangeAgencyUseCase
+               @inject(Types.GetArtistsWhoChangeAgencyUseCase)private getArtistsWhoChangeAgency:GetArtistsWhoChangeAgencyUseCase,
+               @inject(Types.GetSoloArtistsProfesionalHistoryUseCase)private getSoloArtistsProfesionalHistoryUseCase:GetSoloArtistsProfesionalHistoryUseCase
               ){}
 
 
@@ -232,11 +234,31 @@ async getIncomeAndSucces(req:Request,res:Response){
         });
   }
 }
-
+//Query6
 async getWhoChangeAgencyAndGroup(req:Request,res:Response){
     try {
          
          const artist= await this.getArtistsWhoChangeAgency.execute()
+          const serializedData = JSON.parse(JSON.stringify(artist, (key, value) =>
+             typeof value === 'bigint' ? value.toString() : value
+         ));
+          res.json({
+            success: true,
+            data: serializedData,
+            
+        });
+    } catch (error:any) {
+              res.status(400).json({
+            success: false,
+            error: error.message
+        });
+    }
+}
+
+async getSoloArtistsProfesionalHistory(req:Request,res:Response){
+    try {
+         
+         const artist= await this.getSoloArtistsProfesionalHistoryUseCase.execute()
           const serializedData = JSON.parse(JSON.stringify(artist, (key, value) =>
              typeof value === 'bigint' ? value.toString() : value
          ));

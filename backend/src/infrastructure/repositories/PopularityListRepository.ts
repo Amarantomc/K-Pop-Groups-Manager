@@ -13,6 +13,7 @@ export class PopularityListRepository implements IPopularityListRepository{
         @inject(Types.IUnitOfWork) private unitOfWork: UnitOfWork
       ) {}
  
+ 
   
       private get db() {
         return this.unitOfWork.getTransaction();
@@ -344,5 +345,25 @@ export class PopularityListRepository implements IPopularityListRepository{
               throw new Error(`Error deleting popularity list with id ${id}: ${error}`);
             }
           }
+  
+  async findBySongId(songId: number): Promise<PopularityList[]> {
+        const popularityLists = await this.db.ListaPopularidad.findMany({
+    where: {
+      Canciones: {
+        some: {
+          idCa: songId,
+        },
+      },
+    },
+      include: {
+    Canciones: {
+        include: {
+            cancion: true,
+        },
+    },}
+          
+  });
+      return PopularityListResponseDto.toEntities(popularityLists);
+  }
     
 }

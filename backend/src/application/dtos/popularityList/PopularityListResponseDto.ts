@@ -5,7 +5,7 @@ export class PopularityListResponseDto {
         public readonly id: number,
         public readonly name: string,
         public readonly listType: string,
-        public readonly songs: { id: number; title: string; position: number }[], // array de objetos
+        public readonly songs: { id: number; title: string; position: number , year?: number }[], // array de objetos
     ) {}
 
     static fromEntity(popularityList: PopularityList): PopularityListResponseDto {
@@ -19,11 +19,12 @@ export class PopularityListResponseDto {
 
     static toEntity(popularityList: any): PopularityList {
         // Convertimos las canciones a objetos {id, title, position}
-        const songs: { id: number; title: string; position: number }[] = popularityList.Canciones?.map(
+        const songs: { id: number; title: string; position: number, year?: number }[] = popularityList.Canciones?.map(
             (c: any) => ({
                 id: c.cancion.id,
                 title: c.cancion.titulo,
-                position: c.posicion
+                position: c.posicion,
+                year: c.año
             })
         ) || [];
 
