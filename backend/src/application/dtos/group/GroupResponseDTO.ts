@@ -31,7 +31,7 @@ export class GroupResponseDTO {
 			group.status,
 			group.memberCount,
 			
-			group.agency.id,
+			group.agency!.id,
 			group.concept?.id,
 			group.visualConcept?.id, // Cambiar por: group.visualConcept.id
 			
@@ -42,7 +42,7 @@ export class GroupResponseDTO {
 	}
 
 	static toEntity(group: any): Group {
-		console.log(group)
+		 
 		const agency=AgencyResponseDTO.toEntity(group.Agencia || group.Agencias?.[0] || null);
 		 
 		return new Group({
@@ -63,7 +63,7 @@ export class GroupResponseDTO {
 		return groups.map((group) => this.fromEntity(group));
 	}
 
-	 static toEntitySimple(group:any,agency:Agency):Group{
+	 static toEntitySimple(group:any,agency?:Agency|undefined):Group{
 		 
 		return new Group({
 		  id:group.id,
@@ -74,7 +74,7 @@ export class GroupResponseDTO {
 		  agency:agency})
 	  }
 
-	  static toEntitiesSimple(groups:any[],agency:Agency):Group[]{
+	  static toEntitiesSimple(groups:any[],agency?:Agency):Group[]{
 	    
 		return groups.map(g=> this.toEntitySimple(g.grupo,agency))	
 	}

@@ -18,6 +18,7 @@ export class AlbumResponseDto {
   ) {}
 
   static fromEntity(album: Album): AlbumResponseDto {
+    
     return new AlbumResponseDto(
       album.id,
       album.idGroup,
@@ -34,6 +35,7 @@ export class AlbumResponseDto {
   }
 
   static toEntity(raw: any): Album {
+    
     return new Album({
       id: raw.id,
       idGroup: raw.idGrupo,

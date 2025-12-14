@@ -16,6 +16,7 @@ export class AlbumRepository implements IAlbumRepository
     @inject(Types.IUnitOfWork) private unitOfWork: UnitOfWork
   ) {}
 
+
      private get db() {
     return this.unitOfWork.getTransaction();
   }
@@ -118,7 +119,7 @@ export class AlbumRepository implements IAlbumRepository
     if (!album){
       throw new Error('album not found');
     }
-
+     
     return AlbumResponseDto.toEntity(album);
 }
 
@@ -266,5 +267,14 @@ export class AlbumRepository implements IAlbumRepository
       });
   
       return AlbumResponseDto.toEntities(albums);
+  }
+
+  async  getByGroup(groupId: number): Promise<Album[]|null> {
+      const albums= await this.db.GrupoLanzaAlbum.findMany({
+          where:{idGr:groupId},
+
+      })
+        
+      return albums? await Promise.all(albums.map( async (album:any)=> await this.findById(album.idAlb))):null
   }
 }

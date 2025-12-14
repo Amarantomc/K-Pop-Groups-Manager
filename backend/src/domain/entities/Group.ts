@@ -13,7 +13,7 @@ export class Group {
 	readonly debut: Date;
 	readonly status: GroupStatus;
 	readonly memberCount: number;
-	readonly agency: Agency;
+	readonly agency?: Agency|undefined;
 	readonly concept ?: Concept |undefined;
 	readonly visualConcept?: VisualConcept |undefined;
 	readonly members?:Artist[]|undefined
@@ -26,7 +26,7 @@ export class Group {
 		debut: Date;
 		status: GroupStatus;
 		memberCount: number;
-		agency: Agency;
+		agency?: Agency|undefined;
 		concept?: Concept;
 		visualConcept?: VisualConcept;
 		members?:Artist[]
