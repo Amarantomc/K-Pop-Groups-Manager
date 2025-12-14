@@ -24,9 +24,15 @@ import { AuthMiddleware, type AuthenticatedRequest } from "../middlewares/AuthMi
     this.router.put('/:apprenticeId&:groupId',RoleMiddleware.onlyStaff(), (req, res) => this.artistController.updateArtist(req, res))
     this.router.delete('/:apprenticeId&:groupId',RoleMiddleware.onlyStaff(), (req, res) => this.artistController.deleteArtist(req, res))
     
+    this.router.get('/query/:id', (req, res) => this.artistController.getArtistsOnDebut(req, res));
+    this.router.get('/income',(req,res)=> this.artistController.getTotalIncome(req,res))
+    this.router.get('/bestAlbums',(req,res)=> this.artistController.getBestAlbums(req,res))
+    this.router.get('/succes',(req,res)=> this.artistController.getIncomeAndSucces(req,res))
+    
     this.router.get('/',(req, res) => this.artistController.getAll(req, res))
     this.router.get('/:id', (req, res) => this.artistController.getArtistsByAgency(req, res));
-    this.router.get('/query/:id', (req, res) => this.artistController.getArtistsOnDebut(req, res));
+   
+
    
   }
 

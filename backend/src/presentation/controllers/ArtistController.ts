@@ -10,6 +10,11 @@ import { UpdateArtistDto } from "../../application/dtos/artist/UpdateArtistDto";
 import type { GetAllArtistsUseCase } from "../../application/usesCase/artist/GetAllArtistsUseCase";
 import type { FindArtistByAgencyUseCase } from "../../application/usesCase/artist/FindArtistByAgencyUseCase";
 import type { GetArtistsOnDebutUseCase } from "../../application/usesCase/artist/GetArtistsOnDebutUseCase";
+import type { GetTotalIncomeByArtistUseCase } from "../../application/usesCase/artist/GetTotalIncomeByArtistUseCase";
+import { ArtistWithIncomeDto } from "../../application/dtos/artist/ArtistWithIncomeDto";
+import { RequestArtistWithIncomeDto } from "../../application/dtos/artist/RequestArtistWithIncomeDto";
+import type { GetBestAlbumsUseCase } from "../../application/usesCase/artist/GetBestAlbumsUseCase";
+import type { GetIncomeAndSuccesUseCase } from "../../application/usesCase/artist/GetIncomeAndSuccesUseCase";
 
 @injectable()
 export class ArtistController {
@@ -20,7 +25,10 @@ export class ArtistController {
                 @inject(Types.FindArtistByIdUseCase) private findArtistByIdUseCase :FindArtistByIdUseCase,
               @inject(Types.GetAllArtistsUseCase) private getAllArtistsUseCase :GetAllArtistsUseCase,
               @inject(Types.FindArtistByAgencyUseCase) private findArtistByAgency : FindArtistByAgencyUseCase,
-               @inject(Types.GetArtistsOnDebutUseCase) private getArtistsOnDebutUseCase:GetArtistsOnDebutUseCase
+               @inject(Types.GetArtistsOnDebutUseCase) private getArtistsOnDebutUseCase:GetArtistsOnDebutUseCase,
+               @inject(Types.GetTotalIncomeByArtistUseCase)private getIncome : GetTotalIncomeByArtistUseCase,
+               @inject(Types.GetBestAlbumsUseCase)private getBestAlbumsUseCase:GetBestAlbumsUseCase,
+               @inject(Types.GetIncomeAndSuccesUseCase)private getIncomeAndSuccesUseCase:GetIncomeAndSuccesUseCase
               ){}
 
 
@@ -161,4 +169,65 @@ async getArtistsOnDebut(req:Request,res:Response){
         });
          }
      }
+
+async getTotalIncome(req:Request,res:Response){
+   
+  try {  
+         
+         const data=RequestArtistWithIncomeDto.create(req.body)
+         const artist= await this.getIncome.execute(data)
+          res.json({
+            success: true,
+            data: artist,
+            
+        });
+  } catch (error:any) {
+     
+      res.status(400).json({
+            success: false,
+            
+            error: error.message
+        });
+  }
+}
+
+async getBestAlbums(req:Request,res:Response){
+     try {
+         const data=RequestArtistWithIncomeDto.create(req.body)
+         const artist= await this.getBestAlbumsUseCase.execute(data)
+         const serializedData = JSON.parse(JSON.stringify(artist, (key, value) =>
+             typeof value === 'bigint' ? value.toString() : value
+         ));
+         res.json({
+            success: true,
+            data: serializedData,
+            
+        });
+  } catch (error:any) {
+      res.status(400).json({
+            success: false,
+            error: error.message
+        });
+  }
+}
+//Query 5
+async getIncomeAndSucces(req:Request,res:Response){
+     try {
+         const data=RequestArtistWithIncomeDto.create(req.body)
+         const artist= await this.getIncomeAndSuccesUseCase.execute(data)
+          const serializedData = JSON.parse(JSON.stringify(artist, (key, value) =>
+             typeof value === 'bigint' ? value.toString() : value
+         ));
+          res.json({
+            success: true,
+            data: serializedData,
+            
+        });
+  } catch (error:any) {
+      res.status(400).json({
+            success: false,
+            error: error.message
+        });
+  }
+}
 }

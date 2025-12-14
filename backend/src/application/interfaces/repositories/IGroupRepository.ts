@@ -16,6 +16,9 @@ export interface IGroupRepository
 	findByConcept(concept: number): Promise<Group[]>;
 	findByVisualConcept(visualConcept: number): Promise<Group | null>;
 	findAll(): Promise<Group[]>;
+	getGroupHistory(apprenticeId:number,groupId:number):Promise<Group[]>
+	getLastGroup(apprenticeId:number,groupId:number):Promise<Group>
+	
 	addMembers(
 		groupId: number,
 		artistIds: number[],
