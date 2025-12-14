@@ -32,6 +32,21 @@ export class ApprenticeRepository implements IApprenticeRepository
      private get db() {
     return this.unitOfWork.getTransaction();
   }
+
+
+
+  async addEvaluation(apprenticeId: number,agencyId: number,evaluation: number,date: Date): Promise<void> {
+
+    await this.db.evaluacionAprendiz.create({
+      data: {
+        idAp: apprenticeId,
+        idAg: agencyId,
+        evaluacion: evaluation,
+        fechaEvaluacion: date
+      }
+    });
+  
+  }
     
    async create(data: CreateApprenticeDto): Promise<Apprentice> {
          

@@ -8,6 +8,8 @@ export interface IApprenticeRepository extends IBaseRepository<Apprentice,Create
     findAll(): Promise<Apprentice[]>;
     listByAgency(id:number): Promise<Apprentice[]>;
     findByName(name:string):Promise<Apprentice|null>;
+    addEvaluation(apprenticeId:number,agencyId: number,evaluation: number,date: Date ):Promise<void>;
+
 }
 
  
