@@ -88,7 +88,6 @@ const Contracts: React.FC = () => {
 
         // ============================================
         // SECCIÓN: BACKEND ENDPOINT
-        // Descomenta esta sección para usar el backend real
         // ============================================
         const response = await fetch(`http://localhost:3000${endpoint}`, {
           headers: {

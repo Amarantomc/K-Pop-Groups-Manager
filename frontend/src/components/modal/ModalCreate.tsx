@@ -20,15 +20,18 @@ interface ModalCreateProps {
 const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, createEntity, createFields, onSave, onFieldChange }) => {
   const [formData, setFormData] = useState<any>({})
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
+  const [dynamicOptions, setDynamicOptions] = useState<Record<string, any[]>>({})
 
   useEffect(() => {
     if (!isOpen) return
 
     // Obtener campos desde createFields o formFieldsByEntity[createEntity]
     const fields = createFields ?? (createEntity ? formFieldsByEntity[createEntity] : undefined)
+    console.log('[ModalCreate] Campos recibidos para el modal:', fields);
     if (!fields || !Array.isArray(fields)) {
       setFormData({})
       setErrors({})
+      setDynamicOptions({})
       return
     }
 
@@ -42,7 +45,44 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
     })
     setFormData(emptyData)
     setErrors({})
+    setDynamicOptions({})
+    console.log('[ModalCreate] formData inicializado:', emptyData);
   }, [isOpen, createEntity, createFields])
+
+  // Efecto para cargar opciones dinámicas de selects con optionsEndpoint
+  useEffect(() => {
+    if (!isOpen) return;
+    const fields = createFields ?? (createEntity ? formFieldsByEntity[createEntity] : undefined);
+    if (!fields || !Array.isArray(fields)) return;
+
+    fields.forEach(async (f) => {
+      if (f.type === 'select' && (f as any).optionsEndpoint) {
+        const endpoint = (f as any).optionsEndpoint;
+        try {
+          const headers: Record<string, string> = {};
+          const token = localStorage.getItem('token');
+          if (token) headers['Authorization'] = `Bearer ${token}`;
+          const res = await fetch(endpoint, { headers });
+          const raw = await res.text();
+          let data: any = [];
+          try {
+            data = JSON.parse(raw);
+          } catch (e) {
+            console.error('[ModalCreate] Error parseando JSON para', f.name || f.id, e, raw);
+            return;
+          }
+          // Si la respuesta es { success, data: [...] }, usar data
+          const arr = Array.isArray(data)
+            ? data
+            : (Array.isArray(data.data) ? data.data : []);
+          const options = arr.map((item: any) => ({ value: item.id, label: item.name || item.fullName || item.nombre || item.label || item.id }));
+          setDynamicOptions(prev => ({ ...prev, [f.name || f.id]: options }));
+        } catch (err) {
+          console.error('[ModalCreate] Error cargando opciones para', f.name || f.id, err);
+        }
+      }
+    });
+  }, [isOpen, createEntity, createFields]);
 
   if (!isOpen) return null
 
@@ -189,6 +229,8 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
             }
 
             if (f.type === 'select') {
+              // Usar opciones dinámicas si existen, si no, las del campo
+              const selectOptions = dynamicOptions[f.name || f.id] || f.options || [];
               return (
                 <div className={`form-group ${errorMessage ? 'form-group-error' : ''}`} key={key}>
                   <label htmlFor={key}>{f.label}</label>
@@ -198,9 +240,9 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
                     onChange={(e) => handleFieldChange(key, e.target.value)}
                   >
                     <option value="">-- Seleccionar --</option>
-                    {f.options?.map((o) => (
-                      <option key={(o as any).value} value={(o as any).value}>
-                        {(o as any).label}
+                    {selectOptions.map((o: any) => (
+                      <option key={o.value} value={o.value}>
+                        {o.label}
                       </option>
                     ))}
                   </select>

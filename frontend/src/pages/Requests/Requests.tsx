@@ -9,14 +9,20 @@ import ConfirmDialog from '../../components/confirmDialog/ConfirmDialog';
 import PageLayout from '../../components/pageLayout/PageLayout';
 import { useAuth } from '../../contexts/auth/AuthContext';
 import { requestConstraints } from '../../config/modalConstraints';
+import { transformDate } from '../../components/calendar/Calendar';
 
 interface Request {
   id: number;
-  apprenticeName: string;
+  entityName: string;
   groupName: string;
+  agency: string;
+  date: string;
+  concept: string;
+  members: string[];
+  roles: string[];
+  //idAgency: string;
   status: string;
-  createdAt: string;
-  agencyName?: string;
+  type: string;
 }
 
 const Requests: React.FC = () => {
@@ -112,26 +118,108 @@ const Requests: React.FC = () => {
     }
   };
 
+  const fetchAgencyName = async (id: number | string) => {
+    if (!id) return '';
+    const res = await fetch(`http://localhost:3000/api/agency/${id}`, {
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+    });
+    if (!res.ok) return id;
+    const data = await res.json();
+    return data?.data?.name || id;
+  };
+  const fetchConceptName = async (id: number | string) => {
+    if (!id) return '';
+    const res = await fetch(`http://localhost:3000/api/concept/${id}`, {
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+    });
+    if (!res.ok) return id;
+    const data = await res.json();
+    return data?.data?.name || id;
+  };
+
   // Columnas del DataTable
   const baseColumns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 70 },
-    { field: 'groupName', headerName: 'Nombre del Grupo', width: 180 },
+    //{ field: 'id', headerName: 'ID', width: 70 },
+    { field: 'groupName', headerName: 'Nombre de Grupo', width: 150 },
+    {
+      field: 'entityName',
+      headerName: 'Aprendiz/Artista',
+      width: 150,
+      renderCell: (params) => {
+        const tipo = params.row.type === 'Artist' ? 'Artista' : params.row.type === 'Apprentice' ? 'Aprendiz' : '';
+        const color = params.row.type === 'Artist' ? '#2563eb' : params.row.type === 'Apprentice' ? '#10b981' : '#6b7280';
+        return (
+          <span>
+            <span style={{ color, fontWeight: 600 }}>{params.value || ''}</span>
+            {tipo && (
+              <span style={{ color: '#6b7280', fontSize: '13px', fontWeight: 500, marginLeft: 8 }}>[{tipo}]</span>
+            )}
+          </span>
+        );
+      }
+    },
     {
       field: 'date',
       headerName: 'Fecha de Solicitud',
       width: 150,
-      valueFormatter: (params: { value?: string }) => {
-        return params.value ? new Date(params.value).toLocaleDateString('es-ES') : '';
-      }
     },
-    { field: 'idConcept', headerName: 'ID Concepto', width: 120 },
+    //{ field: 'idConcept', headerName: 'ID Concepto', width: 120 },
+    { field: 'concept', headerName: 'Concepto', width: 120 },
+    {
+      field: 'members',
+      headerName: 'Miembros',
+      width: 220,
+      renderCell: (params) => {
+        const members = Array.isArray(params.value)
+          ? params.value.map((m: any) =>
+              m.name ? `${m.name}${m.rol ? ` (${m.rol})` : ''}` : ''
+            ).join(', ')
+          : params.value || '';
+        return (
+          <span style={{ color: '#2563eb', fontWeight: 600 }}>{members}</span>
+        );
+      }
+      /*
+       renderCell: (params) => {
+        const albums = params.value || [];
+          if (albums.length === 0) {
+        return (
+          <Typography variant="body2" color="text.secondary" sx={{ width: '100%', py: 1 }}>
+            Sin álbumes
+          </Typography>
+        );
+      }
+        return (
+            <Select
+            value=""
+            displayEmpty
+            sx={{ width: '100%', height: 40 }}
+            renderValue={() => `${albums.length} álbum${albums.length !== 1 ? 'es' : ''}`}
+            >
+            {albums.map((album: any) => (
+                <MenuItem key={album.id} value={album.id}>
+                {album.title}
+                </MenuItem>
+            ))}
+        </Select>
+        );
+    },
+    */
+    },
     {
       field: 'roles',
       headerName: 'Roles',
       width: 220,
-      valueGetter: (params: any) => Array.isArray(params.row?.roles) ? params.row.roles.join(', ') : ''
+      renderCell: (params) => {
+        const roles = Array.isArray(params.value) ? params.value.join(', ') : params.value || '';
+        return (
+          <span style={{ color: '#10b981', fontWeight: 600 }}>{roles}</span>
+        );
+      }
     },
-    { field: 'idAgency', headerName: 'ID Agencia', width: 120 },
+    //{ field: 'idAgency', headerName: 'ID Agencia', width: 120 },
+    { field: 'agency', headerName: 'Agencia', width: 150 },
+    { field: 'status', headerName: 'Estado', width: 120 }
   ];
 
   // Columna de gestión según rol
@@ -227,27 +315,19 @@ const Requests: React.FC = () => {
 
         switch (user.role) {
           case 'apprentice':
-            // Solicitudes del aprendiz específico en su agencia
             endpoint = `/api/application?apprenticeId=${user.id}&agencyId=${user.agencyId}`;
             break;
 
           case 'artist':
-            // Solicitudes del artista específico en su agencia
             endpoint = `/api/application?artistId=${user.id}&agencyId=${user.agencyId}`;
             break;
 
           case 'manager':
-            // Todas las solicitudes de la agencia del manager
-            endpoint = `/api/application?agencyId=${user.agencyId}`;
-            break;
-
           case 'director':
-            // Todas las solicitudes de la agencia del director
             endpoint = `/api/application?agencyId=${user.agencyId}`;
             break;
 
           case 'admin':
-            // TODO: Implementar más adelante - todas las solicitudes del sistema
             endpoint = '/api/application';
             break;
 
@@ -259,7 +339,7 @@ const Requests: React.FC = () => {
         // ============================================
         // SECCIÓN: BACKEND ENDPOINT
         // ============================================
-        
+
         const response = await fetch(`http://localhost:3000${endpoint}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -271,57 +351,51 @@ const Requests: React.FC = () => {
         }
 
         const data = await response.json();
-        setRequests(data.data || data);
-        
-        // ============================================
-        // FIN SECCIÓN: BACKEND ENDPOINT
-        // ============================================
 
-        // ============================================
-        // SECCIÓN: DATOS DEMO
-        //============================================
-        /*
-        const mockRequests: Request[] = [
-          {
-            id: 1,
-            apprenticeName: 'Kim Ji-soo',
-            groupName: 'Starlight',
-            status: 'pending',
-            createdAt: '2025-11-25T10:00:00',
-            agencyName: 'K-Pop Stars Agency'
-          },
-          {
-            id: 2,
-            apprenticeName: 'Lee Min-ho',
-            groupName: 'Phoenix',
-            status: 'approved',
-            createdAt: '2025-11-20T15:30:00',
-            agencyName: 'K-Pop Stars Agency'
-          },
-          {
-            id: 3,
-            apprenticeName: 'Park Soo-young',
-            groupName: 'Dreamers',
-            status: 'rejected',
-            createdAt: '2025-11-18T09:15:00',
-            agencyName: 'Global Entertainment'
+        const requestsArray = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
+
+        // Obtener nombres de agencia y concepto para cada solicitud
+        const formattedRequests = await Promise.all(requestsArray.map(async (req: any, index: number) => {
+          // Obtener nombre de agencia
+          let agencyName = req.agency?.name || '';
+          if (!agencyName && req.idAgency) {
+            agencyName = await fetchAgencyName(req.idAgency);
           }
-        ];
 
-        // Filtrar según rol para la demo
-        let filteredRequests = mockRequests;
-        if (user.role === 'apprentice') {
-          filteredRequests = mockRequests.filter(r => r.id === 1);
-        } else if (user.role === 'artist') {
-          filteredRequests = mockRequests.filter(r => r.id <= 2);
-        }
+          // Obtener nombre de concepto
+          let conceptName = req.concept?.name || '';
+          let conceptId = req.concept?.id || req.idConcept || req.concept;
+          if (!conceptName && conceptId) {
+            conceptName = await fetchConceptName(conceptId);
+          }
+           // Unir artistas y aprendices, asociar roles
+          const artists = Array.isArray(req.artists) ? req.artists : [];
+          const apprentices = Array.isArray(req.apprentices) ? req.apprentices : [];
+          const roles = Array.isArray(req.roles) ? req.roles : [];
+          const members = [...artists, ...apprentices].map((member, idx) => ({
+            ...member,
+            rol: roles[idx] || ''
+          }));
 
-        setRequests(filteredRequests);
-        */
-        // ============================================
-        // FIN SECCIÓN: DATOS DEMO
-        // ============================================ 
+          return {
+            id: req.id || index,
+            entityName: req.artist?.name || req.apprentice?.name || '',
+            groupName: req.groupName || '',
+            agency: agencyName,
+            date: transformDate(req.date) || '',
+            concept: conceptName,
+            members,
+            roles,
+            idAgency: req.agencyId || '',
+            status: req.status || '',
+            type: req.type || '',
+          };
+        }));
+        
+        console.log('Solicitudes obtenidas del backend:', formattedRequests);
+        setRequests(formattedRequests);
 
+        //setRequests(formattedData);
       } catch (error) {
         console.error('Error al cargar solicitudes:', error);
       } finally {

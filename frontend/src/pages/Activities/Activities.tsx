@@ -9,18 +9,18 @@ import { useAuth } from '../../contexts/auth/AuthContext';
 import { activityConstraints } from '../../config/modalConstraints';
 import './Activities.css';
 
-// interface Activity {
-//   id: number;
-//   artistName: string;
-//   groupName: string;
-//   title: string;
-//   type: string;
-//   date: string;
-//   time: string;
-//   location: string;
-//   status: string;
-//   description: string;
-// }
+ interface Activity {
+   id: number;
+   artistName: string;
+   groupName: string;
+   title: string;
+   type: string;
+   date: string;
+   time: string;
+   location: string;
+   status: string;
+   description: string;
+ }
 
 const Activities: React.FC = () => {
   const { user } = useAuth();
