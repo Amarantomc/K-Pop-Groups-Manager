@@ -74,13 +74,19 @@ const Types = {
   UpdateVisualConceptUseCase: Symbol.for('UpdateVisualConceptUseCase'),
   ListVisualConceptUseCase :Symbol.for('ListVisualConceptUseCase'),
 
+  //#region Popularity List
   CreatePopularityListUseCase: Symbol.for('CreatePopularityListUseCase'),
   GetPopularityListUseCase: Symbol.for('GetPopularityListUseCase'),
   ListPopularityListsUseCase: Symbol.for('GetPopularityListsUseCase'),
   UpdatePopularityListUseCase: Symbol.for('UpdatePopularityListUseCase'),
   DeletePopularityListUseCase: Symbol.for('DeletePopularityListUseCase'),
   AddSongToPopularityListUseCase: Symbol.for('AddSongToPopularityListUseCase'),
-   
+  DeleteSongFromPopularityListUseCase: Symbol.for('DeleteSongFromPopularityListUseCase'),
+  UpdatePositionInPopularityListUseCase: Symbol.for('UpdatePositionInPopularityListUseCase'),
+
+   //#endregion
+
+
   LoginUserUseCase: Symbol.for('LoginUserUseCase'),
   ValidateTokenUseCase: Symbol.for('ValidateTokenUseCase'),
 

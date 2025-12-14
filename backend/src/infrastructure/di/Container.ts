@@ -96,6 +96,8 @@ import { AddSongToPopularityListUseCase } from '../../application/usesCase/popul
 import { PopularityListRepository } from '../repositories/PopularityListRepository';
 import { PopularityListController } from '../../presentation/controllers/PopularityListController';
 import { ListPopularityListUseCase } from '../../application/usesCase/popularityList/ListPopularityListUseCase';
+import { DeleteSongFromPopularityListUseCase } from '../../application/usesCase/popularityList/DeleteSongFromPopularityListuseCase';
+
 
 import { CreateApplicationUseCase } from "../../application/usesCase/application(solicitud)/CreateApplicatonUseCase";
 import { GetApplicationUseCase } from "../../application/usesCase/application(solicitud)/GetApplicationUseCase";
@@ -158,6 +160,7 @@ import { DeleteAlbumUseCase } from "../../application/usesCase/album/DeleteAlbum
 import { UpdateAlbumUseCase } from "../../application/usesCase/album/UpdateAlbumUseCase";
 import { GetAlbumUseCase } from "../../application/usesCase/album/GetAlbumUseCase";
 import { AlbumController } from "../../presentation/controllers/AlbumController";
+import { UpdatePositionInPopularityListUseCase } from "../../application/usesCase/popularityList/UpdatePositionInPopularityListUseCase";
  
 const container=new Container()
  
@@ -250,8 +253,21 @@ container
 
   //#endregion
 
-// Use Cases - User
- // Use Cases - Group
+//#region  Use Cases
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  //#region Group
 container
 	.bind<CreateGroupUseCase>(Types.CreateGroupUseCase)
@@ -340,6 +356,14 @@ container
 
   //#endregion
 
+
+
+
+
+
+
+
+
   //#region User
 container.bind<CreateUserUseCase>(Types.CreateUserUseCase)
   .to(CreateUserUseCase)
@@ -362,6 +386,14 @@ container.bind<UpdateUserUseCase>(Types.UpdateUserUseCase)
   .inTransientScope();
 
   //#endregion
+
+
+
+
+
+
+
+
 
   //#region Apprentice
 
@@ -390,6 +422,15 @@ container.bind<UpdateUserUseCase>(Types.UpdateUserUseCase)
   .inTransientScope();
  //#endregion
   
+
+
+
+
+
+
+
+
+
   //#region Agency
   container.bind<ListByAgencyUseCase>(Types.ListByAgencyUseCase)
   .to(ListByAgencyUseCase)
@@ -428,6 +469,17 @@ container.bind<UpdateUserUseCase>(Types.UpdateUserUseCase)
   .inTransientScope();
   //#endregion
 
+
+
+
+
+
+
+
+
+
+
+
   //#region Artist
 
   container.bind<CreateArtistUseCase>(Types.CreateArtistUseCase)
@@ -455,6 +507,17 @@ container.bind<UpdateUserUseCase>(Types.UpdateUserUseCase)
   .inTransientScope();
   //#endregion
 
+
+
+
+
+
+
+
+
+
+
+
   //#region Concept
 
    container.bind<CreateConceptUseCase>(Types.CreateConceptUseCase)
@@ -480,6 +543,15 @@ container.bind<UpdateUserUseCase>(Types.UpdateUserUseCase)
   //#endregion
 
 
+
+
+
+
+
+
+
+
+
 //#region Income
 
 container.bind<CreateIncomeUseCase>(Types.CreateIncomeUseCase)
@@ -503,6 +575,17 @@ container.bind<ListIncomeUseCase>(Types.ListIncomeUseCase)
 .inTransientScope();
 
 //#endregion
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -533,7 +616,25 @@ container.bind<UpdatePopularityListUseCase>(Types.UpdatePopularityListUseCase)
   .to(AddSongToPopularityListUseCase)
   .inTransientScope();
 
+  container.bind<DeleteSongFromPopularityListUseCase>(Types.DeleteSongFromPopularityListUseCase)
+  .to(DeleteSongFromPopularityListUseCase)
+  .inTransientScope();
+  
+  container.bind<UpdatePositionInPopularityListUseCase>(Types.UpdatePositionInPopularityListUseCase)
+  .to(UpdatePositionInPopularityListUseCase)
+  .inTransientScope();
+
   //#endregion
+
+
+
+
+
+
+
+
+
+
 
 
 //#region Application
@@ -566,6 +667,19 @@ container.bind<UpdatePopularityListUseCase>(Types.UpdatePopularityListUseCase)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 //#region Album
 
   container.bind<GetAlbumUseCase>(Types.GetAlbumUseCase)
@@ -590,6 +704,21 @@ container.bind<UpdatePopularityListUseCase>(Types.UpdatePopularityListUseCase)
 
 //#endregion
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   // // Use Cases - Auth
 
 //#region Auth
@@ -598,6 +727,18 @@ container
 	.to(LoginUserUseCase)
 	.inTransientScope();
 //#endregion
+
+
+
+
+
+
+
+
+
+
+
+
 
 //#region Activity
 
@@ -635,6 +776,18 @@ container.bind<FindActivitiesByArtist>(Types.FindActivitiesByArtist)
 
   //#endregion
 
+
+
+
+
+
+
+
+
+
+
+
+
   //#region Award Use Case
   container.bind<CreateAwardUseCase>(Types.CreateAwardUseCase)
   .to(CreateAwardUseCase)
@@ -656,6 +809,20 @@ container.bind<FindActivitiesByArtist>(Types.FindActivitiesByArtist)
   .to(UpdateAwardUseCase)
   .inTransientScope();
 //#endregion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // container.bind<ValidateTokenUseCase>(ValidateTokenUseCase)
 //   .to(ValidateTokenUseCase)
@@ -684,6 +851,17 @@ container.bind<CreateVisualConceptUseCase>(Types.CreateVisualConceptUseCase)
 
   //#endregion
 
+
+
+
+
+
+
+
+
+
+
+
   //#region Contract
     container.bind<CreateContractUseCase>(Types.CreateContractUseCase)
   .to(CreateContractUseCase)
@@ -705,6 +883,20 @@ container.bind<CreateVisualConceptUseCase>(Types.CreateVisualConceptUseCase)
   .to(FindContractByIdUseCase)
   .inTransientScope();
   //#endregion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   //#region Song UseCase
