@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */ 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react';
 import PageLayout from '../../components/pageLayout/PageLayout';
 import StatCard from '../../components/statCard/StatCard';
@@ -19,7 +19,7 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import "./Dashboard.css"
 
-const Dashboard : React.FC = () =>{
+const Dashboard: React.FC = () => {
   const [agenciesCount, setAgenciesCount] = useState<number | null>(null);
   const [apprenticesCount, setApprenticesCount] = useState<number | null>(null);
   const [usersCount, setUsersCount] = useState<number | null>(null);
@@ -84,7 +84,7 @@ const Dashboard : React.FC = () =>{
     };
 
     (async () => {
-      const [a, p, u, ar, g, al, ac, s, aw, c, vc, pl, co, i, r,e] = await Promise.all([
+      const [a, p, u, ar, g, al, ac, s, aw, c, vc, pl, co, i, r, e] = await Promise.all([
         fetchCount(`${API_BASE}/api/agency/`),
         fetchCount(`${API_BASE}/api/apprentice/`),
         fetchCount(`${API_BASE}/api/user`),
@@ -124,8 +124,8 @@ const Dashboard : React.FC = () =>{
   const renderValue = (v: number | null) => v == null ? '—' : String(v);
 
   return (
-    <PageLayout 
-      title='Bienvenido a Gestión de Agencias del K-Pop' 
+    <PageLayout
+      title='Bienvenido a Gestión de Agencias del K-Pop'
       description='Administra agencias, artistas y actividades desde este panel. Aquí tienes un resumen rápido para comenzar.'
       className='dashboard-page'
     >
@@ -238,7 +238,7 @@ const Dashboard : React.FC = () =>{
           color="#dc2626"
           subtitle="Peticiones pendientes"
         />
-        {/*
+
         <StatCard
           title="Evaluaciones"
           value={renderValue(evaluationsCount)}
@@ -246,7 +246,6 @@ const Dashboard : React.FC = () =>{
           color="#7c3aed"
           subtitle="Valoraciones registradas"
         />
-        */}
       </div>
     </PageLayout>
   )

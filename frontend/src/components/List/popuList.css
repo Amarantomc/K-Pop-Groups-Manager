@@ -84,7 +84,7 @@
   justify-content: center;
   z-index: 1000;
   padding: 2rem;
-  /* backdrop-filter: blur(4px); */
+  backdrop-filter: blur(4px);
 }
 
 .chart-modal-content {
@@ -124,6 +124,53 @@
   display: flex;
   gap: 1rem;
   align-items: center;
+}
+
+/* Added styles for year filter dropdown */
+.year-filter-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: white;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.year-filter-label {
+  font-weight: 600;
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+.year-filter-select {
+  background: linear-gradient(135deg, #fce7f3 0%, #ede9fe 100%);
+  border: 2px solid #ec4899;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #831843;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease;
+  min-width: 100px;
+}
+
+.year-filter-select:hover {
+  border-color: #a855f7;
+  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.2);
+}
+
+.year-filter-select:focus {
+  border-color: #a855f7;
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1);
+}
+
+.year-filter-select option {
+  background: white;
+  color: #1e293b;
+  padding: 0.5rem;
 }
 
 .chart-modal-close {

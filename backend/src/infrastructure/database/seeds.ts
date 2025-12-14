@@ -242,8 +242,7 @@ async function main() {
       nombreCompleto: "Kim Minju",
       fechaNacimiento: new Date("2001-02-05"),
       edad: 23,
-      nivelEntrenamiento: 3,
-      estadoAprendiz: "En entrenamiento"
+      nivelEntrenamiento: 3
     }
   })
   const aprendiz2 = await prisma.aprendiz.create({
@@ -251,8 +250,7 @@ async function main() {
       nombreCompleto: "Park Jisung",
       fechaNacimiento: new Date("2002-02-05"),
       edad: 22,
-      nivelEntrenamiento: 2,
-      estadoAprendiz: "En entrenamiento"
+      nivelEntrenamiento: 2
     }
   })
   const aprendiz3 = await prisma.aprendiz.create({
@@ -260,8 +258,7 @@ async function main() {
       nombreCompleto: "Lee Chaeryeong",
       fechaNacimiento: new Date("2001-06-05"),
       edad: 23,
-      nivelEntrenamiento: 4,
-      estadoAprendiz: "En entrenamiento"
+      nivelEntrenamiento: 4
     }
   })
   const aprendiz4 = await prisma.aprendiz.create({
@@ -269,8 +266,7 @@ async function main() {
       nombreCompleto: "Choi Yeonjun",
       fechaNacimiento: new Date("1999-09-13"),
       edad: 25,
-      nivelEntrenamiento: 5,
-      estadoAprendiz: "Debutado"
+      nivelEntrenamiento: 5
     }
   })
   const aprendiz5 = await prisma.aprendiz.create({
@@ -278,8 +274,7 @@ async function main() {
       nombreCompleto: "Hwang Yeji",
       fechaNacimiento: new Date("2000-05-26"),
       edad: 24,
-      nivelEntrenamiento: 5,
-      estadoAprendiz: "Debutado"
+      nivelEntrenamiento: 5
     }
   })
   const aprendiz6 = await prisma.aprendiz.create({
@@ -287,8 +282,7 @@ async function main() {
       nombreCompleto: "Yoo Jimin (Karina)",
       fechaNacimiento: new Date("2000-04-11"),
       edad: 24,
-      nivelEntrenamiento: 5,
-      estadoAprendiz: "Debutado"
+      nivelEntrenamiento: 5
     }
   })
   const aprendiz7 = await prisma.aprendiz.create({
@@ -296,8 +290,7 @@ async function main() {
       nombreCompleto: "Jung Somin",
       fechaNacimiento: new Date("2003-08-15"),
       edad: 21,
-      nivelEntrenamiento: 2,
-      estadoAprendiz: "En entrenamiento"
+      nivelEntrenamiento: 2
     }
   })
   const aprendiz8 = await prisma.aprendiz.create({
@@ -305,8 +298,7 @@ async function main() {
       nombreCompleto: "Lee Minho",
       fechaNacimiento: new Date("2002-10-25"),
       edad: 22,
-      nivelEntrenamiento: 3,
-      estadoAprendiz: "En entrenamiento"
+      nivelEntrenamiento: 3
     }
   })
   const aprendiz9 = await prisma.aprendiz.create({
@@ -314,8 +306,7 @@ async function main() {
       nombreCompleto: "Bae Joohyun (Irene)",
       fechaNacimiento: new Date("1991-03-29"),
       edad: 33,
-      nivelEntrenamiento: 5,
-      estadoAprendiz: "Debutado"
+      nivelEntrenamiento: 5
     }
   })
   const aprendiz10 = await prisma.aprendiz.create({
@@ -323,8 +314,7 @@ async function main() {
       nombreCompleto: "Choi Seungcheol (S.Coups)",
       fechaNacimiento: new Date("1995-08-08"),
       edad: 29,
-      nivelEntrenamiento: 5,
-      estadoAprendiz: "Debutado"
+      nivelEntrenamiento: 5
     }
   })
   const aprendiz11 = await prisma.aprendiz.create({
@@ -332,8 +322,7 @@ async function main() {
       nombreCompleto: "Kim Taehyung (V)",
       fechaNacimiento: new Date("1995-12-30"),
       edad: 28,
-      nivelEntrenamiento: 5,
-      estadoAprendiz: "Debutado"
+      nivelEntrenamiento: 5
     }
   })
   const aprendiz12 = await prisma.aprendiz.create({
@@ -341,8 +330,7 @@ async function main() {
       nombreCompleto: "Park Chaeyoung (Rosé)",
       fechaNacimiento: new Date("1997-02-11"),
       edad: 27,
-      nivelEntrenamiento: 5,
-      estadoAprendiz: "Debutado"
+      nivelEntrenamiento: 5
     }
   })
   console.log('✅ 12 Aprendices creados')
@@ -351,18 +339,18 @@ async function main() {
   console.log('🏢 Asignando aprendices a agencias...')
   await prisma.aprendizEnAgencia.createMany({
     data: [
-      { idAp: aprendiz1.id, idAg: smEntertainment.id, fechaInicio: new Date("2019-01-15") },
-      { idAp: aprendiz2.id, idAg: ygEntertainment.id, fechaInicio: new Date("2018-06-20") },
-      { idAp: aprendiz3.id, idAg: jypEntertainment.id, fechaInicio: new Date("2017-03-10") },
-      { idAp: aprendiz4.id, idAg: hibeEntertainment.id, fechaInicio: new Date("2016-05-01"), fechaFinalizacion: new Date("2019-03-04") },
-      { idAp: aprendiz5.id, idAg: jypEntertainment.id, fechaInicio: new Date("2017-08-15"), fechaFinalizacion: new Date("2019-02-12") },
-      { idAp: aprendiz6.id, idAg: smEntertainment.id, fechaInicio: new Date("2016-09-01"), fechaFinalizacion: new Date("2020-11-17") },
-      { idAp: aprendiz7.id, idAg: starshipEntertainment.id, fechaInicio: new Date("2021-07-10") },
-      { idAp: aprendiz8.id, idAg: hibeEntertainment.id, fechaInicio: new Date("2020-11-05") },
-      { idAp: aprendiz9.id, idAg: smEntertainment.id, fechaInicio: new Date("2009-03-20"), fechaFinalizacion: new Date("2014-08-01") },
-      { idAp: aprendiz10.id, idAg: pledisEntertainment.id, fechaInicio: new Date("2010-05-15"), fechaFinalizacion: new Date("2015-05-26") },
-      { idAp: aprendiz11.id, idAg: hibeEntertainment.id, fechaInicio: new Date("2011-06-13"), fechaFinalizacion: new Date("2013-06-13") },
-      { idAp: aprendiz12.id, idAg: ygEntertainment.id, fechaInicio: new Date("2012-08-08"), fechaFinalizacion: new Date("2016-08-08") }
+      { idAp: aprendiz1.id, idAg: smEntertainment.id, fechaInicio: new Date("2019-01-15"), estado: "En entrenamiento" },
+      { idAp: aprendiz2.id, idAg: ygEntertainment.id, fechaInicio: new Date("2018-06-20"), estado: "En entrenamiento" },
+      { idAp: aprendiz3.id, idAg: jypEntertainment.id, fechaInicio: new Date("2017-03-10"), estado: "En entrenamiento" },
+      { idAp: aprendiz4.id, idAg: hibeEntertainment.id, fechaInicio: new Date("2016-05-01"), fechaFinalizacion: new Date("2019-03-04"), estado: "Debutado" },
+      { idAp: aprendiz5.id, idAg: jypEntertainment.id, fechaInicio: new Date("2017-08-15"), fechaFinalizacion: new Date("2019-02-12"), estado: "Debutado" },
+      { idAp: aprendiz6.id, idAg: smEntertainment.id, fechaInicio: new Date("2016-09-01"), fechaFinalizacion: new Date("2020-11-17"), estado: "Debutado" },
+      { idAp: aprendiz7.id, idAg: starshipEntertainment.id, fechaInicio: new Date("2021-07-10"), estado: "En entrenamiento" },
+      { idAp: aprendiz8.id, idAg: hibeEntertainment.id, fechaInicio: new Date("2020-11-05"), estado: "En entrenamiento" },
+      { idAp: aprendiz9.id, idAg: smEntertainment.id, fechaInicio: new Date("2009-03-20"), fechaFinalizacion: new Date("2014-08-01"), estado: "Debutado" },
+      { idAp: aprendiz10.id, idAg: pledisEntertainment.id, fechaInicio: new Date("2010-05-15"), fechaFinalizacion: new Date("2015-05-26"), estado: "Debutado" },
+      { idAp: aprendiz11.id, idAg: hibeEntertainment.id, fechaInicio: new Date("2011-06-13"), fechaFinalizacion: new Date("2013-06-13"), estado: "Debutado" },
+      { idAp: aprendiz12.id, idAg: ygEntertainment.id, fechaInicio: new Date("2012-08-08"), fechaFinalizacion: new Date("2016-08-08"), estado: "Debutado" }
     ]
   })
   console.log('✅ Aprendices asignados a agencias')

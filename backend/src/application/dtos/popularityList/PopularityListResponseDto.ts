@@ -8,14 +8,14 @@ export class PopularityListResponseDto {
         public readonly songs: { id: number; title: string; position: number , year?: number }[], // array de objetos
     ) {}
 
-    static fromEntity(popularityList: PopularityList): PopularityListResponseDto {
-        return new PopularityListResponseDto(
-            popularityList.id,
-            popularityList.name,
-            popularityList.listType,
-            popularityList.songs, // ya vienen como objetos
-        );
-    }
+  static fromEntity(popularityList: PopularityList): PopularityListResponseDto {
+    return new PopularityListResponseDto(
+      popularityList.id,
+      popularityList.name,
+      popularityList.listType,
+      popularityList.songs,
+    );
+  }
 
     static toEntity(popularityList: any): PopularityList {
         // Convertimos las canciones a objetos {id, title, position}
@@ -28,19 +28,19 @@ export class PopularityListResponseDto {
             })
         ) || [];
 
-        return new PopularityList({
-            id: popularityList.id,
-            name: popularityList.nombre,
-            listType: popularityList.tipoLista,
-            songs,
-        });
-    }
+    return new PopularityList({
+      id: popularityList.id,
+      name: popularityList.nombre,
+      listType: popularityList.tipoLista,
+      songs,
+    });
+  }
 
-    static fromEntities(popularityLists: PopularityList[]): PopularityListResponseDto[] {
-        return popularityLists.map(popularityList => this.fromEntity(popularityList));
-    }
+  static fromEntities(popularityLists: PopularityList[]): PopularityListResponseDto[] {
+    return popularityLists.map(pl => this.fromEntity(pl));
+  }
 
-    static toEntities(popularityLists: any[]): PopularityList[] {
-        return popularityLists.map(popularityList => this.toEntity(popularityList));
-    }
+  static toEntities(popularityLists: any[]): PopularityList[] {
+    return popularityLists.map(pl => this.toEntity(pl));
+  }
 }

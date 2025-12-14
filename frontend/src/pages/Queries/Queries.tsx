@@ -44,18 +44,57 @@ const Queries: React.FC = () => {
   const [agencies, setAgencies] = useState<any[]>([]);
   const [selectedAgencyId, setSelectedAgencyId] = useState('');
   
-  // Estados para Query 3: Conflictos de agenda
-  const [conflictStart, setConflictStart] = useState('');
-  const [conflictEnd, setConflictEnd] = useState('');
-  const [conflictResults, setConflictResults] = useState<any[]>([]);
+
 
   // Estados para Query 4: Artistas con debut y contrato activo
   const [debutContractResults, setDebutContractResults] = useState<any[]>([]);
 
-  // Estados para Query 5: Ingresos por artista
+  // Estados para Query 4: Ingresos por artista
   const [incomeStart, setIncomeStart] = useState('');
   const [incomeEnd, setIncomeEnd] = useState('');
   const [incomeResults, setIncomeResults] = useState<any[]>([]);
+  const [artistList, setArtistList] = useState<any[]>([]);
+  const [apprenticeList, setApprenticeList] = useState<any[]>([]);
+  const [artistApprenticeJoin, setArtistApprenticeJoin] = useState<any[]>([]);
+  const [selectedArtistId, setSelectedArtistId] = useState('');
+  // Obtener lista de artistas y aprendices, y hacer join por id de aprendiz
+  useEffect(() => {
+    const fetchArtistsAndApprentices = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+        // Obtener artistas
+        const resArtists = await fetch('http://localhost:3000/api/artist', { headers });
+        const dataArtists = await resArtists.json();
+        setArtistList(dataArtists.data || []);
+        // Obtener aprendices
+        const resApprentices = await fetch('http://localhost:3000/api/apprentice', { headers });
+        const dataApprentices = await resApprentices.json();
+        setApprenticeList(dataApprentices.data || []);
+        // Hacer join por id de aprendiz
+        const join = (dataArtists.data || []).map((artist: any) => {
+          const apprentice = (dataApprentices.data || []).find((a: any) => a.id === artist.apprenticeId || a.id === artist.ApprenticeId);
+          if (apprentice) {
+            return {
+              apprenticeId: artist.apprenticeId || artist.ApprenticeId,
+              groupId: artist.groupId || artist.GroupId,
+              realName: apprentice.name || apprentice.Name,
+              artistName: artist.artistName || artist.ArtistName
+            };
+          }
+          return null;
+        }).filter(Boolean);
+        console.log('Artistas:', dataArtists.data);
+        console.log('Aprendices:', dataApprentices.data);
+        console.log('Join:', join);
+        setArtistApprenticeJoin(join);
+      } catch (e) {
+        console.log('Error en fetchArtistsAndApprentices:', e);
+      }
+    };
+    fetchArtistsAndApprentices();
+  }, []);
 
   // Estados para Query 6: Artistas con cambios de agencia y grupos
   const [agencyChangeResults, setAgencyChangeResults] = useState<any[]>([]);
@@ -140,7 +179,7 @@ const Queries: React.FC = () => {
     // Limpiar resultados anteriores
     setActivities([]);
     setArtistInfo([]); // Limpiar artistas mostrados al cambiar consulta
-    setConflictResults([]);
+    // setConflictResults([]); // Eliminado: ya no hay query 3
     setDebutContractResults([]);
     setIncomeResults([]);
     setAgencyChangeResults([]);
@@ -154,7 +193,6 @@ const Queries: React.FC = () => {
       description="Consultas especializadas del sistema"
     >
       <div className="queries-container">
-        {/* Selector de consulta: solo consultas 1 y 2 */}
         <div className="query-selector">
           <button className={`query-btn ${selectedQuery === 1 ? 'active' : ''}`} style={{ width: '320px' }} onClick={() => handleQueryChange(1)}>
             1. Artistas activos por agencia
@@ -162,8 +200,17 @@ const Queries: React.FC = () => {
           <button className={`query-btn ${selectedQuery === 2 ? 'active' : ''}`} style={{ width: '320px' }} onClick={() => handleQueryChange(2)}>
             2. Actividades por grupo
           </button>
+          <button className={`query-btn ${selectedQuery === 3 ? 'active' : ''}`} style={{ width: '320px' }} onClick={() => handleQueryChange(3)}>
+            3. Artistas con debut y contrato activo
+          </button>
           <button className={`query-btn ${selectedQuery === 4 ? 'active' : ''}`} style={{ width: '320px' }} onClick={() => handleQueryChange(4)}>
-            4. Artistas con debut y contrato activo
+            4. Ingresos por artista
+          </button>
+          <button className={`query-btn ${selectedQuery === 5 ? 'active' : ''}`} style={{ width: '320px' }} onClick={() => handleQueryChange(5)}>
+            5. Cambios de agencia y grupos
+          </button>
+          <button className={`query-btn ${selectedQuery === 6 ? 'active' : ''}`} style={{ width: '320px' }} onClick={() => handleQueryChange(6)}>
+            6. Solistas de grupos disueltos con álbum exitoso
           </button>
         </div>
 
@@ -187,7 +234,8 @@ const Queries: React.FC = () => {
                       <option key={a.id} value={a.id}>{a.name}</option>
                     ))}
                   </select>
-                  <button className="btn-primary" disabled={isLoading} onClick={async () => {
+                  <button className="btn-primary" disabled={isLoading || !selectedAgencyId} onClick={async () => {
+                    if (!selectedAgencyId) return;
                     fetchArtistsByAgency();
                   }}>
                     Consultar
@@ -229,7 +277,6 @@ const Queries: React.FC = () => {
             )}
           </div>
         )}
-
         
         {/* Contenido de Query 2: Calendario de actividades por grupo */}
         {selectedQuery === 2 && (
@@ -246,7 +293,7 @@ const Queries: React.FC = () => {
                   <option key={g.id} value={g.id}>{g.name}</option>
                 ))}
               </select>
-              <button className="btn-primary" onClick={fetchActivitiesByGroup} disabled={isLoading}>
+              <button className="btn-primary" onClick={fetchActivitiesByGroup} disabled={isLoading || !selectedGroupId}>
                 {isLoading ? 'Consultando...' : 'Consultar'}
               </button>
             </div>
@@ -287,74 +334,28 @@ const Queries: React.FC = () => {
           </div>
         )}
 
-        {/* Contenido de Query 3: Conflictos de agenda */}
+        {/* Contenido de Query 3: Artistas con debut y contrato activo */}
         {selectedQuery === 3 && (
-          <div className="query-content">
-            <h3>Conflictos de Agenda</h3>
-            <p className="query-description">
-              Verifica qué artistas tienen conflictos de agenda en un periodo, cruzando actividades grupales e individuales.
-            </p>
-            <div className="query-form">
-              <label>Fecha Inicio:</label>
-              <input type="date" value={conflictStart} onChange={e => setConflictStart(e.target.value)} />
-              <label>Fecha Fin:</label>
-              <input type="date" value={conflictEnd} onChange={e => setConflictEnd(e.target.value)} />
-              <button className="btn-primary" disabled={isLoading} onClick={async () => {
-                if (!conflictStart || !conflictEnd) {
-                  setErrorMessage('Debe ingresar ambas fechas'); setOpenError(true); return;
-                }
-                setIsLoading(true);
-                try {
-                  const token = localStorage.getItem('token');
-                  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-                  if (token) headers['Authorization'] = `Bearer ${token}`;
-                  const response = await fetch(`http://localhost:3000/api/activity/conflicts?start=${conflictStart}&end=${conflictEnd}`, { headers });
-                  const data = await response.json();
-                  setConflictResults(data.data || []);
-                } catch (error) { setErrorMessage('Error al consultar conflictos'); setOpenError(true); }
-                finally { setIsLoading(false); }
-              }}>
-                {isLoading ? 'Consultando...' : 'Consultar'}
-              </button>
-            </div>
-            {conflictResults.length > 0 && (
-              <div className="query-results">
-                <h4>Artistas con Conflictos de Agenda</h4>
-                <div className="results-table">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Artista</th>
-                        <th>Actividades en Conflicto</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {conflictResults.map((row, i) => (
-                        <tr key={i}>
-                          <td>{row.artistName}</td>
-                          <td>{row.conflictingActivities?.join(', ')}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            )}
-            {conflictResults.length === 0 && !isLoading && conflictStart && conflictEnd && (
-              <div className="no-results">No se encontraron conflictos de agenda en el periodo seleccionado.</div>
-            )}
-          </div>
-        )}
-
-        {/* Contenido de Query 4: Artistas con debut y contrato activo */}
-        {selectedQuery === 4 && (
           <div className="query-content">
             <h3>Artistas con Debut y Contrato Activo</h3>
             <p className="query-description">
               Identifica artistas que han participado en al menos un debut y tienen contratos activos, mostrando datos del grupo y contrato.
             </p>
             <div className="query-form">
-              <button className="btn-primary" disabled={isLoading} onClick={async () => {
+              <label>Agencia:</label>
+              <select value={selectedAgencyId} onChange={e => {
+                setSelectedAgencyId(e.target.value);
+                setDebutContractResults([]);
+              }}>
+                <option value="">Selecciona una agencia</option>
+                {agencies.map((a: any) => (
+                  <option key={a.id} value={a.id}>{a.name}</option>
+                ))}
+              </select>
+              <button className="btn-primary" disabled={isLoading || !selectedAgencyId} onClick={async () => {
+                if (!selectedAgencyId) {
+                  setErrorMessage('Debe seleccionar una agencia'); setOpenError(true); return;
+                }
                 setIsLoading(true);
                 try {
                   const token = localStorage.getItem('token');
@@ -378,15 +379,19 @@ const Queries: React.FC = () => {
                       <tr>
                         <th>Artista</th>
                         <th>Grupo</th>
-                        <th>Contrato</th>
+                        <th>Debut Grupo</th>
+                        <th>Contrato (inicio)</th>
+                        <th>Status Contrato</th>
                       </tr>
                     </thead>
                     <tbody>
                       {debutContractResults.map((row, i) => (
                         <tr key={i}>
                           <td>{row.artistName}</td>
-                          <td>{row.groupName}</td>
-                          <td>{row.contractInfo}</td>
+                          <td>{row.group?.name}</td>
+                          <td>{row.group?.debutDate ? new Date(row.group.debutDate).toLocaleDateString() : ''}</td>
+                          <td>{row.contract?.startDate ? new Date(row.contract.startDate).toLocaleDateString() : ''}</td>
+                          <td>{row.contract?.status}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -400,31 +405,60 @@ const Queries: React.FC = () => {
           </div>
         )}
 
-        {/* Contenido de Query 5: Ingresos por artista */}
-        {selectedQuery === 5 && (
+        {/* Contenido de Query 4: Ingresos por artista */}
+        {selectedQuery === 4 && (
           <div className="query-content">
-            <h3>Ingresos por Artista</h3>
+            <h3>Ingresos y Éxitos por Artista</h3>
             <p className="query-description">
               Calcula el total de ingresos generados por cada artista, considerando ingresos grupales e individuales en un periodo, mostrando éxitos principales y último grupo.
             </p>
             <div className="query-form">
+              <label>Artista:</label>
+              <select value={selectedArtistId} onChange={e => {
+                setSelectedArtistId(e.target.value);
+                setIncomeResults([]);
+              }}>
+                <option value="">Selecciona un artista</option>
+                {artistApprenticeJoin.map((a: any) => (
+                  <option key={a.apprenticeId} value={a.apprenticeId}>
+                    {a.realName}
+                  </option>
+                ))}
+              </select>
               <label>Fecha Inicio:</label>
               <input type="date" value={incomeStart} onChange={e => setIncomeStart(e.target.value)} />
               <label>Fecha Fin:</label>
               <input type="date" value={incomeEnd} onChange={e => setIncomeEnd(e.target.value)} />
-              <button className="btn-primary" disabled={isLoading} onClick={async () => {
-                if (!incomeStart || !incomeEnd) {
-                  setErrorMessage('Debe ingresar ambas fechas'); setOpenError(true); return;
+              <button className="btn-primary" disabled={isLoading || !incomeStart || !incomeEnd || !selectedArtistId} onClick={async () => {
+                if (!incomeStart || !incomeEnd || !selectedArtistId) {
+                  setErrorMessage('Debe ingresar todos los campos'); setOpenError(true); return;
                 }
                 setIsLoading(true);
                 try {
                   const token = localStorage.getItem('token');
                   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
                   if (token) headers['Authorization'] = `Bearer ${token}`;
-                  const response = await fetch(`http://localhost:3000/api/artist/income?start=${incomeStart}&end=${incomeEnd}`, { headers });
+                  // Buscar el artista seleccionado para obtener su groupId
+                  const selectedArtist = artistApprenticeJoin.find((a: any) => String(a.apprenticeId) === selectedArtistId);
+                  console.log('Artista seleccionado:', selectedArtist);
+                  const apprenticeId = selectedArtist?.apprenticeId;
+                  const groupId = selectedArtist?.groupId;
+                  const response = await fetch(`http://localhost:3000/api/artist/succes`, {
+                    method: 'GET',
+                    headers,
+                    body: JSON.stringify({
+                      apprenticeId,
+                      groupId,
+                      startDate: incomeStart,
+                      endDate: incomeEnd
+                    })
+                  });
                   const data = await response.json();
-                  setIncomeResults(data.data || []);
-                } catch (error) { setErrorMessage('Error al consultar ingresos'); setOpenError(true); }
+                  setIncomeResults(data.data ? [data.data] : []);
+                } catch (error) { 
+                  setErrorMessage('Error al consultar ingresos'); setOpenError(true); 
+                  console.log('Error en consulta de ingresos:', error);
+                }
                 finally { setIsLoading(false); }
               }}>
                 {isLoading ? 'Consultando...' : 'Consultar'}
@@ -432,24 +466,24 @@ const Queries: React.FC = () => {
             </div>
             {incomeResults.length > 0 && (
               <div className="query-results">
-                <h4>Ingresos por Artista</h4>
+                <h4>Ingresos y Éxitos</h4>
                 <div className="results-table">
                   <table>
                     <thead>
                       <tr>
-                        <th>Artista</th>
                         <th>Ingresos Totales</th>
-                        <th>Éxitos Solista</th>
-                        <th>Último Grupo</th>
+                        <th>Éxitos</th>
                       </tr>
                     </thead>
                     <tbody>
                       {incomeResults.map((row, i) => (
                         <tr key={i}>
-                          <td>{row.artistName}</td>
-                          <td>{row.totalIncome}</td>
-                          <td>{row.topHits?.join(', ')}</td>
-                          <td>{row.lastGroup}</td>
+                          <td>{row.incomes?.TotalIncome}</td>
+                          <td>
+                            {row.succes?.map((s: any, idx: number) => (
+                              <div key={idx}>{s.Title} ({new Date(s.releaseDate).toLocaleDateString()})</div>
+                            ))}
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -463,8 +497,8 @@ const Queries: React.FC = () => {
           </div>
         )}
 
-        {/* Contenido de Query 6: Cambios de agencia y grupos */}
-        {selectedQuery === 6 && (
+        {/* Contenido de Query 5: Cambios de agencia y grupos */}
+        {selectedQuery === 5 && (
           <div className="query-content">
             <h3>Cambios de Agencia y Grupos</h3>
             <p className="query-description">
@@ -477,7 +511,8 @@ const Queries: React.FC = () => {
                   const token = localStorage.getItem('token');
                   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
                   if (token) headers['Authorization'] = `Bearer ${token}`;
-                  const response = await fetch('http://localhost:3000/api/artist/agency-changes', { headers });
+                  // Endpoint según imagen: /artist/agencyChanges/
+                  const response = await fetch('http://localhost:3000/api/artist/agencyChanges/', { headers });
                   const data = await response.json();
                   setAgencyChangeResults(data.data || []);
                 } catch (error) { setErrorMessage('Error al consultar artistas'); setOpenError(true); }
@@ -500,7 +535,7 @@ const Queries: React.FC = () => {
                     <tbody>
                       {agencyChangeResults.map((row, i) => (
                         <tr key={i}>
-                          <td>{row.artistName}</td>
+                          <td>{row.artistName || row.name}</td>
                           <td>
                             {row.history && Array.isArray(row.history) ? (
                               <ul>{row.history.map((h: any, idx: number) => <li key={idx}>{h}</li>)}</ul>
@@ -519,8 +554,8 @@ const Queries: React.FC = () => {
           </div>
         )}
 
-        {/* Contenido de Query 7: Solistas de grupos disueltos con álbum exitoso */}
-        {selectedQuery === 7 && (
+        {/* Contenido de Query 6: Solistas de grupos disueltos con álbum exitoso */}
+        {selectedQuery === 6 && (
           <div className="query-content">
             <h3>Solistas de Grupos Disueltos con Álbum Exitoso</h3>
             <p className="query-description">

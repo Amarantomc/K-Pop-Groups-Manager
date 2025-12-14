@@ -62,6 +62,36 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
           const headers: Record<string, string> = {};
           const token = localStorage.getItem('token');
           if (token) headers['Authorization'] = `Bearer ${token}`;
+
+          // Lógica especial para el campo username de artista: join artistas + aprendices
+          if ((f.name === 'username' || f.id === 'username') && (createEntity === 'user' || createEntity === 'User')) {
+            // Detectar si el rol seleccionado es artista
+            // Buscar el campo de rol en formData
+            const roleValue = formData['role'] || formData['rol'] || '';
+            const roleNorm = String(roleValue).toLowerCase();
+            if (roleNorm === 'artist' || roleNorm === 'artista') {
+              // 1. Traer artistas
+              const resArtist = await fetch('http://localhost:3000/api/artist', { headers });
+              const dataArtist = await resArtist.json();
+              const artists = dataArtist.data || dataArtist;
+              // 2. Obtener los apprenticeId únicos
+              const artistApprenticeIds = new Set(
+                artists.map((a: any) => Number(a.apprenticeId || a.IdAp || a.idAp || a.ApprenticeId)).filter((id: any) => !isNaN(id))
+              );
+              // 3. Traer aprendices
+              const resApprentice = await fetch('http://localhost:3000/api/apprentice', { headers });
+              const dataApprentice = await resApprentice.json();
+              const apprentices = dataApprentice.data || dataApprentice;
+              // 4. Filtrar aprendices que están en artistApprenticeIds
+              const options = apprentices
+                .filter((a: any) => artistApprenticeIds.has(Number(a.id)) && a.name && a.name.trim() !== '')
+                .map((a: any) => ({ value: a.id, label: a.name }));
+              setDynamicOptions(prev => ({ ...prev, [f.name || f.id]: options }));
+              return;
+            }
+          }
+
+          // Lógica normal para otros selects
           const res = await fetch(endpoint, { headers });
           const raw = await res.text();
           let data: any = [];
@@ -82,19 +112,41 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
         }
       }
     });
-  }, [isOpen, createEntity, createFields]);
+  }, [isOpen, createEntity, createFields, formData]);
 
   if (!isOpen) return null
 
   const handleFieldChange = (key: string, value: any) => {
-    setFormData({ ...formData, [key]: value })
+    let updatedFormData = { ...formData, [key]: value };
 
-    // Limpiar error cuando el usuario empieza a escribir
+    // Si el campo es username, buscar el label en las opciones del campo actual
+    if (key === 'username') {
+      const roleNorm = String(formData['role'] || formData['rol'] || '').toLowerCase();
+      if (roleNorm === 'apprentice' || roleNorm === 'aprendiz' || roleNorm === 'artist' || roleNorm === 'artista') {
+        // Buscar opciones en dynamicOptions, en createFields o en el propio campo actual
+        let options = dynamicOptions['username'] || [];
+        if ((!options.length || !Array.isArray(options)) && Array.isArray(createFields)) {
+          const usernameField = createFields.find(f => (f.name || f.id) === 'username');
+          if (usernameField && Array.isArray(usernameField.options)) {
+            options = usernameField.options;
+          }
+        }
+        // fallback: buscar en el propio campo actual si existe
+        if ((!options.length || !Array.isArray(options)) && Array.isArray(formData.options)) {
+          options = formData.options;
+        }
+        const found = options.find((opt: any) => String(opt.value) === String(value));
+        updatedFormData.name = found ? found.label : '';
+      }
+    }
+
+    setFormData(updatedFormData);
+    console.log('[ModalCreate] handleFieldChange - formData actualizado:', updatedFormData);
+
     if (errors[key]) {
       setErrors({ ...errors, [key]: "" })
     }
 
-    // Notificar al componente padre sobre el cambio
     if (onFieldChange) {
       onFieldChange(key, value)
     }
@@ -149,8 +201,8 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
       if (isNaN(parsed.getTime())) return { ok: false, msg: `${f.label || f.name} no es una fecha válida` };
       const today = new Date();
       // normalize to date-only for comparison
-      parsed.setHours(0,0,0,0);
-      today.setHours(0,0,0,0);
+      parsed.setHours(0, 0, 0, 0);
+      today.setHours(0, 0, 0, 0);
       if (parsed.getTime() > today.getTime()) return { ok: false, msg: `${f.label || f.name} no puede ser una fecha futura` };
     }
 
@@ -177,13 +229,53 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
   }
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    if (validateForm()) {
-      onSave?.(formData)
+    if (!validateForm()) return;
+
+    // Copia del formData para manipular
+    let dataToSend = { ...formData };
+    console.log('[ModalCreate] handleSubmit - formData inicial:', formData);
+
+    // Si es creación de usuario y el campo username es select, normalizar como en Users.tsx pero para aprendiz y artista
+    if (createEntity === 'user' || createEntity === 'User') {
+      const roleValue = dataToSend['role'] || dataToSend['rol'] || '';
+      const roleNorm = String(roleValue).toLowerCase();
+      console.log('[ModalCreate] handleSubmit - roleValue:', roleValue, 'roleNorm:', roleNorm);
+      // Solo si existe username y es select
+      if (dataToSend['username']) {
+        const options = dynamicOptions['username'] || [];
+        console.log('[ModalCreate] handleSubmit - dynamicOptions[username]:', options);
+        const found = options.find((opt: any) => String(opt.value) === String(dataToSend['username']));
+        console.log('[ModalCreate] handleSubmit - opción encontrada para username:', found);
+        if (roleNorm === 'apprentice' || roleNorm === 'aprendiz') {
+          if (found) {
+            dataToSend['name'] = found.label;
+            dataToSend['apprenticeId'] = found.value;
+            console.log('[ModalCreate] handleSubmit - Asignando para aprendiz:', { name: found.label, apprenticeId: found.value });
+          } else {
+            dataToSend['apprenticeId'] = dataToSend['username'];
+            console.log('[ModalCreate] handleSubmit - No se encontró opción, apprenticeId:', dataToSend['username']);
+          }
+        } else if (roleNorm === 'artist' || roleNorm === 'artista') {
+          if (found) {
+            dataToSend['name'] = found.label;
+            dataToSend['apprenticeId'] = found.value;
+            console.log('[ModalCreate] handleSubmit - Asignando para artista:', { name: found.label, apprenticeId: found.value });
+          } else {
+            dataToSend['apprenticeId'] = dataToSend['username'];
+            console.log('[ModalCreate] handleSubmit - No se encontró opción, apprenticeId:', dataToSend['username']);
+          }
+        }
+        // Eliminar username del payload
+        delete dataToSend['username'];
+        console.log('[ModalCreate] handleSubmit - dataToSend después de procesar username:', dataToSend);
+      }
     }
-  }
 
+    console.log('[ModalCreate] handleSubmit - payload final a enviar:', dataToSend);
+    onSave?.(dataToSend);
+  }
   const fields = createFields ?? (createEntity ? formFieldsByEntity[createEntity] : [])
 
   return (
@@ -240,8 +332,9 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
                     onChange={(e) => handleFieldChange(key, e.target.value)}
                   >
                     <option value="">-- Seleccionar --</option>
-                    {selectOptions.map((o: any) => (
-                      <option key={o.value} value={o.value}>
+                    {selectOptions.map((o: any, idx: number) => (
+                      <option key={o.value !== undefined && o.value !== null && o.value !== '' ? String(o.value) : `option-${idx}`}
+                        value={o.value}>
                         {o.label}
                       </option>
                     ))}

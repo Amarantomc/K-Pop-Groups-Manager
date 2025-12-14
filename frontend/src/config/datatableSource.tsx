@@ -20,7 +20,7 @@ export const userColumns: GridColDef[] = [
     { field: 'username', headerName: 'Nombre de Usuario', width: 150 },
     { field: 'email', headerName: 'Correo Electrónico', width: 200 },
     // {field: 'password', headerName: 'Contraseña', width: 150},
-    // {field: 'role', headerName: 'Rol', width: 120},
+    {field: 'role', headerName: 'Rol', width: 120},
 ]
 
 export const artistColumns: GridColDef[] = [

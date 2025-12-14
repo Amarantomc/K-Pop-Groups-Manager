@@ -25,6 +25,8 @@ export class ApprenticeRoutes{
     this.router.delete('/:id',RoleMiddleware.onlyStaff(),(req, res) => this.apprenticeController.deleteApprentice(req, res))
     this.router.get('/',(req, res) => this.apprenticeController.listApprentice(req, res))
     this.router.get('/agency/:id',(req, res) => this.apprenticeController.listByAgency(req,res))
+    this.router.post('/evaluation', (req, res) => this.apprenticeController.addEvaluation(req, res))
+
 
    
     this.router.get('/name/:name', (req, res) => this.apprenticeController.getByNameApprentice(req,res))

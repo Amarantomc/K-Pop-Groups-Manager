@@ -62,7 +62,7 @@ export class VisualConceptRoutes {
   private setupRoutes(): void {
    // this.router.post('/', upload.single('image'), (req, res) => this.VisualConceptController.createVisualConcept(req, res));
     this.router.get('/:id', (req, res) => this.VisualConceptController.getVisualConcept(req, res));
-   // this.router.put('/:id', upload.single('image'), (req, res) => this.VisualConceptController.updateVisualConcept(req, res));
+    this.router.put('/:id', (req, res) => this.VisualConceptController.updateVisualConcept(req, res));
     this.router.delete('/:id', (req, res) => this.VisualConceptController.deleteVisualConcept(req, res));
     this.router.get('/', (req, res) => this.VisualConceptController.listVisualConcept(req, res));
   }

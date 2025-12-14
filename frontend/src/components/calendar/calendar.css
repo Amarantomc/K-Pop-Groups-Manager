@@ -169,6 +169,10 @@
   background: #ec4899;
 }
 
+.activity-dot-recording {
+  background: #a855f7;
+}
+
 .activity-dot-photoshoot {
   background: #3b82f6;
 }
@@ -184,6 +188,11 @@
 
 .activity-dot-tv-show {
   background: #8b5cf6;
+}
+
+/* Adding style for "ensayo" event type dot */
+.activity-dot-ensayo {
+  background: #06b6d4;
 }
 
 .calendar-legend {
@@ -292,6 +301,12 @@
   border-color: #ddd6fe;
 }
 
+/* Adding style for "ensayo" activity items */
+.activity-item-ensayo {
+  background: linear-gradient(135deg, #cffafe, #fff);
+  border-color: #a5f3fc;
+}
+
 .activity-item:hover {
   transform: translateX(5px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -335,6 +350,12 @@
 
 .activity-item-tv-show .activity-icon {
   background: #8b5cf6;
+  color: white;
+}
+
+/* Adding icon style for "ensayo" */
+.activity-item-ensayo .activity-icon {
+  background: #06b6d4;
   color: white;
 }
 

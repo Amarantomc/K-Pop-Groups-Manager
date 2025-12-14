@@ -28,12 +28,12 @@ export class CreateContractDto {
       body.type,
       Number(body.agencyId),
       body.startDate,
-      body.status || 'ACTIVO',
+      'Pendiente',
       body.initialConditions,
       body.incomeDistribution,
       body.apprenticeId ? Number(body.apprenticeId) : undefined,
       body.groupId ? Number(body.groupId) : undefined,
-     body.completionDate
+      body.completionDate
     );
   }
 }

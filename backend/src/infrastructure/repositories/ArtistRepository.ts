@@ -58,66 +58,125 @@ private get db() {
       return artist ? ArtistResponseDto.toEntity(artist) : null;
   }
 
-    async delete(id:any): Promise<void> {
-    
-       // Primero eliminar registros en tablas intermedias
+  async delete(id: any): Promise<void> {
+    const apprenticeId = id.apprenticeId;
+    const groupId = id.groupId;
+  
+    // 1️⃣ Borrar relaciones del artista
     await this.db.artistaEnGrupo.deleteMany({
-      where: {
-        idAp: id.apprenticeId,
-        idGrupoDebut: id.groupId,
-      },
+      where: { idAp: apprenticeId },
     });
-    //   await this.db.artistaEnActividad.deleteMany({
-    //   where: {
-    //     idAp: apprenticeId,
-    //     idGr: groupId,
-    //   },
-    // });
-
-    // await this.db.contrato.deleteMany({
-    //   where: {
-    //     idAp: apprenticeId,
-    //     idGr: groupId,
-    //   },
-    // });
-
-    // await this.db.artistaLanzaAlbum.deleteMany({
-    //   where: {
-    //     idAp: apprenticeId,
-    //     idGr: groupId,
-    //   },
-    // });
-
-    // Finalmente eliminar el artista
+  
+    await this.db.artistaLanzaAlbum.deleteMany({
+      where: { idAp: apprenticeId, idGr: groupId },
+    });
+  
+    await this.db.personasEnActividad.deleteMany({
+      where: { idAp: apprenticeId, idGr: groupId },
+    });
+  
+    await this.db.artistaSolicitaGrupo.deleteMany({
+      where: { idAp: apprenticeId, idGr: groupId },
+    });
+  
+    await this.db.contrato.deleteMany({
+      where: { idAp: apprenticeId, idGr: groupId },
+    });
+  
+    await this.db.perfilArtista.deleteMany({
+      where: { IdAp: apprenticeId, IdGr: groupId },
+    });
+  
+    // 2️⃣ Borrar el artista
     await this.db.artista.delete({
       where: {
-        idAp_idGr: {
-          idAp: id.apprenticeId,
-          idGr: id.groupId,
-        },
+        idAp_idGr: { idAp: apprenticeId, idGr: groupId },
       },
+    });
+  
+    // 3️⃣ Borrar el perfil del aprendiz (si existe)
+    await this.db.perfilAprendiz.deleteMany({
+      where: { aprendizId: apprenticeId },
+    });
+  
+    // 4️⃣ Borrar evaluaciones del aprendiz
+    await this.db.evaluacionAprendiz.deleteMany({
+      where: { idAp: apprenticeId },
+    });
+  
+    // 5️⃣ Borrar asignaciones en agencias
+    await this.db.aprendizEnAgencia.deleteMany({
+      where: { idAp: apprenticeId },
+    });
+  
+    // 6️⃣ Borrar solicitudes de grupo del aprendiz
+    await this.db.aprendizSolicitaGrupo.deleteMany({
+      where: { idAp: apprenticeId },
+    });
+  
+    // 7️⃣ Finalmente, borrar el aprendiz
+    await this.db.aprendiz.delete({
+      where: { id: apprenticeId },
+    });
+  
+    // ⚠️ Opcional: si el usuario del aprendiz también debe borrarse
+    await this.db.user.deleteMany({
+      where: { id: id.userId }, // si tienes userId
     });
   }
 
-    async update(id:any, data: Partial<UpdateArtistDto>): Promise<Artist> {
-        
-     const artist = await this.db.artista.update({
-                where: {    idAp_idGr: {
-                              idAp: id.apprenticeId,
-                              idGr: id.groupId
-                            }
-                       
-                      },
-                    data: {
-                      nombreArtistico:data.ArtistName,
-                      fechaDebut:data.DebutDate,
-                      estadoArtista:data.Status
-                    }
-                  });
-                  console.log(artist)
-                
-                  return ArtistResponseDto.toEntity(artist);
+  async update(id: any, data: any): Promise<Artist> {
+    // Validamos que id tenga apprenticeId y groupId
+    if (!id?.apprenticeId || !id?.groupId) {
+      throw new Error("Se requiere apprenticeId y groupId válidos en el ID");
+    }
+  
+    // Construimos solo los campos que vienen definidos
+    const updateData: any = {};
+  
+    if (data?.ArtistName !== undefined) {
+      updateData.nombreArtistico = String(data.ArtistName);
+    }
+  
+    if (data?.DebutDate !== undefined) {
+      const debutDate = new Date(data.DebutDate);
+      if (isNaN(debutDate.getTime())) {
+        throw new Error("DebutDate no es una fecha válida");
       }
+      updateData.fechaDebut = debutDate;
+    }
+  
+    if (data?.Status !== undefined) {
+      updateData.estadoArtista = String(data.Status);
+    }
+  
+    // Verificamos si el artista existe antes de actualizar
+    const existing = await this.db.artista.findUnique({
+      where: {
+        idAp_idGr: {
+          idAp: id.apprenticeId,
+          idGr: id.groupId
+        }
+      }
+    });
+  
+    if (!existing) {
+      throw new Error(`No existe el artista con apprenticeId=${id.apprenticeId} y groupId=${id.groupId}`);
+    }
+  
+    // Actualizamos
+    const artist = await this.db.artista.update({
+      where: {
+        idAp_idGr: {
+          idAp: id.apprenticeId,
+          idGr: id.groupId
+        }
+      },
+      data: updateData
+    });
+  
+    return ArtistResponseDto.toEntity(artist);
+  }
     
     async getAll(): Promise<Artist[]> {
         const artists = await this.db.artista.findMany();

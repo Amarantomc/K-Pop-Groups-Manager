@@ -32,6 +32,21 @@ export class ApprenticeRepository implements IApprenticeRepository
      private get db() {
     return this.unitOfWork.getTransaction();
   }
+
+
+
+  async addEvaluation(apprenticeId: number,agencyId: number,evaluation: number,date: Date): Promise<void> {
+
+    await this.db.evaluacionAprendiz.create({
+      data: {
+        idAp: apprenticeId,
+        idAg: agencyId,
+        evaluacion: evaluation,
+        fechaEvaluacion: date
+      }
+    });
+  
+  }
     
    async create(data: CreateApprenticeDto): Promise<Apprentice> {
          
@@ -80,12 +95,82 @@ export class ApprenticeRepository implements IApprenticeRepository
       
         return ApprenticeResponseDto.toEntity(apprentice);
       }
-   async delete(id: string): Promise<void> {
+  //  async delete(id: string): Promise<void> {
     
-      await this.db.Aprendiz.delete({
-        where: { id: Number(id) },
-      });
+  //     await this.db.Aprendiz.delete({
+  //       where: { id: Number(id) },
+  //     });
       
+  // }
+
+
+  async delete(id: string): Promise<void> {
+    const aprendizId = Number(id);
+  
+    // 1. Aprendiz intermedias
+    await this.db.aprendizSolicitaGrupo.deleteMany({
+      where: { idAp: aprendizId },
+    });
+  
+    await this.db.evaluacionAprendiz.deleteMany({
+      where: { idAp: aprendizId },
+    });
+  
+    await this.db.aprendizEnAgencia.deleteMany({
+      where: { idAp: aprendizId },
+    });
+  
+    await this.db.perfilAprendiz.deleteMany({
+      where: { aprendizId },
+    });
+  
+    // 2. Si fue artista
+    const artista = await this.db.artista.findFirst({
+      where: { idAp: aprendizId },
+    });
+  
+    if (artista) {
+      await this.db.artistaLanzaAlbum.deleteMany({
+        where: {
+          idAp: artista.idAp,
+          idGr: artista.idGr,
+        },
+      });
+  
+      await this.db.artistaSolicitaGrupo.deleteMany({
+        where: {
+          idAp: artista.idAp,
+          idGr: artista.idGr,
+        },
+      });
+  
+      await this.db.artistaEnGrupo.deleteMany({
+        where: {
+          idAp: artista.idAp,
+        },
+      });
+  
+      await this.db.contrato.deleteMany({
+        where: {
+          idAp: artista.idAp,
+          idGr: artista.idGr,
+        },
+      });
+  
+      await this.db.artista.delete({
+        where: {
+          idAp_idGr: {
+            idAp: artista.idAp,
+            idGr: artista.idGr,
+          },
+        },
+      });
+    }
+  
+    // 3. Borrar aprendiz
+    await this.db.aprendiz.delete({
+      where: { id: aprendizId },
+    });
   }
 
     async findAll(): Promise<Apprentice[]> {

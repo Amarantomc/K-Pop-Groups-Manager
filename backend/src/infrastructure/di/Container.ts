@@ -167,6 +167,7 @@ import { GetBestAlbumsUseCase } from "../../application/usesCase/artist/GetBestA
 import { GetIncomeAndSuccesUseCase } from "../../application/usesCase/artist/GetIncomeAndSuccesUseCase";
 import { GetArtistsWhoChangeAgencyUseCase } from "../../application/usesCase/artist/GetArtistsWhoChangeAgencyUseCase";
 import { GetSoloArtistsProfesionalHistoryUseCase } from "../../application/usesCase/artist/GetSoloArtistsProfesionalHistoryUseCase";
+import { AddEvaluationUseCase } from "../../application/usesCase/apprentice/AddEvaluationUseCase";
  
 const container=new Container()
  
@@ -411,6 +412,10 @@ container.bind<UpdateUserUseCase>(Types.UpdateUserUseCase)
   .to(UpdateApprenticeUseCase)
   .inTransientScope();
 
+  container.bind<AddEvaluationUseCase>(Types.AddEvaluationUseCase)
+  .to(AddEvaluationUseCase)
+  .inTransientScope();
+
   container.bind<DeleteApprenticeUseCase>(Types.DeleteApprenticeUseCase)
   .to(DeleteApprenticeUseCase)
   .inTransientScope();
@@ -491,6 +496,8 @@ container.bind<UpdateUserUseCase>(Types.UpdateUserUseCase)
   container.bind<CreateArtistUseCase>(Types.CreateArtistUseCase)
   .to(CreateArtistUseCase)
   .inTransientScope();
+
+  
 
   container.bind<UpdateArtistUseCase>(Types.UpdateArtistUseCase)
   .to(UpdateArtistUseCase)

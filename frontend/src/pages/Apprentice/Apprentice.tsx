@@ -95,10 +95,13 @@ const ListApprentice: React.FC = () => {
       };
 
        const handleEditSave = async (updated: any) => {
+        const token = localStorage.getItem('token')
     try {
       await fetch(`http://localhost:3000/api/apprentice/${updated.id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify(
           {
               name: updated.name,

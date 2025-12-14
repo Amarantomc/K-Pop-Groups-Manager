@@ -44,6 +44,9 @@ const Types = {
   ListApprenticeUseCase :Symbol.for('ListApprenticeUseCase'),
   ListByAgencyUseCase :Symbol.for('ListByAgencyUseCase'),
   GetApprenticeByNameUseCase :Symbol.for('GetApprenticeByNameUseCase'),
+  AddEvaluationUseCase :Symbol.for('AddEvaluationUseCase'),
+
+
 
   CreateAgencyUseCase :Symbol.for('CreateAgencyUseCase'),
   DeleteAgencyUseCase :Symbol.for('DeleteAgencyUseCase'),
@@ -67,6 +70,7 @@ const Types = {
   GetIncomeAndSuccesUseCase:Symbol.for('GetIncomeAndSuccesUseCase'),
   GetArtistsWhoChangeAgencyUseCase: Symbol.for('GetArtistsWhoChangeAgencyUseCase'),
   GetSoloArtistsProfesionalHistoryUseCase: Symbol.for('GetSoloArtistsProfesionalHistory'),
+
 
   CreateConceptUseCase: Symbol.for('CreateConceptUseCase'),
   DeleteConceptUseCase: Symbol.for('DeleteConceptUseCase'),
