@@ -27,7 +27,7 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
 
     // Obtener campos desde createFields o formFieldsByEntity[createEntity]
     const fields = createFields ?? (createEntity ? formFieldsByEntity[createEntity] : undefined)
-    console.log('[ModalCreate] Campos recibidos para el modal:', fields);
+    console.log('[ModalCreate][LOG] Campos recibidos para el modal:', fields);
     if (!fields || !Array.isArray(fields)) {
       setFormData({})
       setErrors({})
@@ -46,7 +46,7 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
     setFormData(emptyData)
     setErrors({})
     setDynamicOptions({})
-    console.log('[ModalCreate] formData inicializado:', emptyData);
+    console.log('[ModalCreate][LOG] formData inicializado:', emptyData);
   }, [isOpen, createEntity, createFields])
 
   // Efecto para cargar opciones dinámicas de selects con optionsEndpoint
@@ -68,7 +68,7 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
           try {
             data = JSON.parse(raw);
           } catch (e) {
-            console.error('[ModalCreate] Error parseando JSON para', f.name || f.id, e, raw);
+            console.error('[ModalCreate][LOG] Error parseando JSON para', f.name || f.id, e, raw);
             return;
           }
           // Si la respuesta es { success, data: [...] }, usar data
@@ -77,8 +77,9 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
             : (Array.isArray(data.data) ? data.data : []);
           const options = arr.map((item: any) => ({ value: item.id, label: item.name || item.fullName || item.nombre || item.label || item.id }));
           setDynamicOptions(prev => ({ ...prev, [f.name || f.id]: options }));
+          console.log(`[ModalCreate][LOG] Opciones dinámicas para ${f.name || f.id}:`, options);
         } catch (err) {
-          console.error('[ModalCreate] Error cargando opciones para', f.name || f.id, err);
+          console.error('[ModalCreate][LOG] Error cargando opciones para', f.name || f.id, err);
         }
       }
     });
@@ -87,7 +88,12 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
   if (!isOpen) return null
 
   const handleFieldChange = (key: string, value: any) => {
-    setFormData({ ...formData, [key]: value })
+    console.log(`[ModalCreate][LOG] handleFieldChange: key=${key}, value=${value}`);
+    setFormData(prev => {
+      const updated = { ...prev, [key]: value };
+      console.log('[ModalCreate][LOG] formData actualizado:', updated);
+      return updated;
+    });
 
     // Limpiar error cuando el usuario empieza a escribir
     if (errors[key]) {
@@ -178,9 +184,12 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-
+    console.log('[ModalCreate][LOG] handleSubmit - formData antes de validar:', formData);
     if (validateForm()) {
+      console.log('[ModalCreate][LOG] handleSubmit - formData válido, enviando a onSave:', formData);
       onSave?.(formData)
+    } else {
+      console.log('[ModalCreate][LOG] handleSubmit - formData inválido:', formData);
     }
   }
 
@@ -231,13 +240,24 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
             if (f.type === 'select') {
               // Usar opciones dinámicas si existen, si no, las del campo
               const selectOptions = dynamicOptions[f.name || f.id] || f.options || [];
+              // Si el campo es el select de usuario (aprendiz/artista), guardar el id en apprenticeId y no en name
+              const isUserNameSelect = (f.name === 'name' && (f.label?.toLowerCase().includes('usuario') || f.label?.toLowerCase().includes('aprendiz') || f.label?.toLowerCase().includes('artista')));
               return (
                 <div className={`form-group ${errorMessage ? 'form-group-error' : ''}`} key={key}>
                   <label htmlFor={key}>{f.label}</label>
                   <select
                     id={key}
-                    value={value ?? ''}
-                    onChange={(e) => handleFieldChange(key, e.target.value)}
+                    value={isUserNameSelect ? (formData['apprenticeId'] ?? '') : (value ?? '')}
+                    onChange={(e) => {
+                      if (isUserNameSelect) {
+                        const selectedId = e.target.value;
+                        const selectedOption = selectOptions.find((o: any) => String(o.value) === String(selectedId));
+                        handleFieldChange('apprenticeId', selectedId);
+                        handleFieldChange('name', selectedOption ? selectedOption.label : '');
+                      } else {
+                        handleFieldChange(key, e.target.value);
+                      }
+                    }}
                   >
                     <option value="">-- Seleccionar --</option>
                     {selectOptions.map((o: any, idx: number) => (
