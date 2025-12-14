@@ -10,18 +10,161 @@ import { PopularityListResponseDto } from "../../application/dtos/popularityList
 export class PopularityListRepository implements IPopularityListRepository{
 
      constructor(
-        @inject(Types.PrismaClient) private prisma: any,
         @inject(Types.IUnitOfWork) private unitOfWork: UnitOfWork
       ) {}
+ 
+  
       private get db() {
         return this.unitOfWork.getTransaction();
       }
       
-      // async findAll(): Promise<PopularityList[]> {
-      //   const  popularityLists  = await this.db.ListaPopularidad.findMany();
+      
+      async updatePositionInPopularityList(popularityListId: number,songId: number,newPosition: number): Promise<PopularityList> {
+      
+        const songInList = await this.db.CancionEnListaDePopularidad.findFirst({
+          where: {
+            idLista: popularityListId,
+            idCa: songId,
+          },
+        });
+      
+        if (!songInList) {
+          throw new Error("Song not found in this popularity list");
+        }
+      
+        const currentPosition = songInList.posicion;
+      
+        if (currentPosition === newPosition) {
+          const popularityList = await this.findById(popularityListId);
+        
+          if (!popularityList) {
+            throw new Error("Popularity list not found");
+          }
+        
+          return popularityList;
+        }
+      
+        const totalSongs = await this.db.CancionEnListaDePopularidad.count({
+          where: { idLista: popularityListId },
+        });
+      
+        if (newPosition < 1 || newPosition > totalSongs) {
+          throw new Error(`Position must be between 1 and ${totalSongs}`);
+        }
+      
+        if (newPosition < currentPosition) {
+          await this.db.CancionEnListaDePopularidad.updateMany({
+            where: {
+              idLista: popularityListId,
+              posicion: {
+                gte: newPosition,
+                lt: currentPosition,
+              },
+            },
+            data: {
+              posicion: { increment: 1 },
+            },
+          });
+        }
+      
+        if (newPosition > currentPosition) {
+          await this.db.CancionEnListaDePopularidad.updateMany({
+            where: {
+              idLista: popularityListId,
+              posicion: {
+                gt: currentPosition,
+                lte: newPosition,
+              },
+            },
+            data: {
+              posicion: { decrement: 1 },
+            },
+          });
+        }
+      
+        await this.db.CancionEnListaDePopularidad.update({
+          where: {
+            idCa_idLista: {
+              idCa: songId,
+              idLista: popularityListId,
+            },
+          },
+          data: {
+            posicion: newPosition,
+          },
+        });
+      
+        const popularityList = await this.findById(popularityListId);
 
-      //   return PopularityListResponseDto.toEntities(popularityLists);
-      // }
+        if (!popularityList) {
+            throw new Error("Popularity list not found");
+        }
+
+        return popularityList;
+      }
+
+
+
+
+      async deleteSongFromPopularityList(popularityListId: number,songId: number): Promise<PopularityList> {
+      
+        const listForError = await this.findById(popularityListId);
+      
+        if (!listForError) {
+          throw new Error("Popularity list not found");
+        }
+      
+        const songInList = await this.db.CancionEnListaDePopularidad.findFirst({
+          where: {
+            idLista: popularityListId,
+            idCa: songId,
+          },
+        });
+      
+        if (!songInList) {
+          throw new Error(
+            `The song does not exist in the popularity list '${listForError.name}'.`
+          );
+        }
+      
+        const deletedPosition = songInList.posicion;
+      
+        await this.db.CancionEnListaDePopularidad.delete({
+          where: {
+            idCa_idLista: {
+              idCa: songId,
+              idLista: popularityListId,
+            },
+          },
+        });
+      
+        await this.db.CancionEnListaDePopularidad.updateMany({
+          where: {
+            idLista: popularityListId,
+            posicion: {
+              gt: deletedPosition,
+            },
+          },
+          data: {
+            posicion: {
+              decrement: 1,
+            },
+          },
+        });
+      
+        const popularityList = await this.findById(popularityListId);
+      
+        if (!popularityList) {
+          throw new Error("Popularity list not found");
+        }
+      
+        return PopularityListResponseDto.toEntity(popularityList);
+      }
+
+
+
+
+
 
       async findAll(): Promise<PopularityList[]> {
         const popularityLists = await this.db.ListaPopularidad.findMany({
@@ -38,8 +181,13 @@ export class PopularityListRepository implements IPopularityListRepository{
             throw new Error("Popularity lists not found");
         }
         return PopularityListResponseDto.toEntities(popularityLists);
-    }
+      }
     
+
+
+
+
+
 
       async findSongByName(songName: string, popularityListId: number): Promise<Song> {
         const list = await this.db.listaPopularidad.findUnique({
@@ -71,21 +219,61 @@ export class PopularityListRepository implements IPopularityListRepository{
         return match
         //return SongMapper.toEntity(match.cancion);
       }
-    async addSongToPopularityList(
-      popularityListId: number,
-      songId: number,
-      year: number,
-      position: number
-    ): Promise<void> {
-      await this.db.cancionEnListaDePopularidad.create({
-        data: {
-          idCa: songId,
-          idLista: popularityListId,
-          posicion: position,
-          año: year
+
+
+
+
+
+
+      async addSongToPopularityList( popularityListId: number,songId: number): Promise<PopularityList> {
+      
+        const count = await this.db.CancionEnListaDePopularidad.count({
+          where: {
+            idLista: popularityListId,
+          },
+        });
+      
+        await this.db.CancionEnListaDePopularidad.create({
+          data: {
+            idCa: songId,
+            idLista: popularityListId,
+            posicion: count + 1,
+            año: new Date().getFullYear(),
+          },
+        });
+      
+        const popularityList = await this.db.ListaPopularidad.findUnique({
+          where: { id: popularityListId },
+          include: {
+            Canciones: {
+              orderBy: {
+                posicion: "asc",
+              },
+              include: {
+                cancion: {
+                  select: {
+                    id: true,
+                    titulo: true,
+                  },
+                },
+              },
+            },
+          },
+        });
+      
+
+        if (!popularityList) {
+          throw new Error("Popularity list not found");
         }
-      });
-    }
+      
+        return PopularityListResponseDto.toEntity(popularityList);
+      }
+
+    
+
+
+
+
      async create(data: CreatePopularityListDto): Promise<PopularityList> {
              
             
@@ -100,6 +288,9 @@ export class PopularityListRepository implements IPopularityListRepository{
             
             return PopularityListResponseDto.toEntity(popularityList)
         }
+
+
+
 
         async findById(id: any): Promise<PopularityList | null> {
           id = Number(id);
@@ -122,6 +313,11 @@ export class PopularityListRepository implements IPopularityListRepository{
           return PopularityListResponseDto.toEntity(popularityList);
       }
 
+
+
+
+
+
     async update(id: string, data: Partial<CreatePopularityListDto>): Promise<PopularityList> {
             const popularityList = await this.db.ListaPopularidad.update({
               where: { id: Number(id) },
@@ -134,6 +330,10 @@ export class PopularityListRepository implements IPopularityListRepository{
           
             return PopularityListResponseDto.toEntity(popularityList);
           }
+
+
+
+
 
           async delete(id: string): Promise<void> {
             try {

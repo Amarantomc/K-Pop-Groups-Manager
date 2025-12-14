@@ -21,7 +21,10 @@ export class PopularityListRoutes{
     this.router.put('/:id', (req, res) => this.popularityListController.updatePopularityList(req, res))
     this.router.delete('/:id',(req, res) => this.popularityListController.deletePopularityList(req, res))
     this.router.get('/',(req, res) => this.popularityListController.listPopularityList(req, res))
-    this.router.post('/addSong',(req, res) => this.popularityListController.addSongToPopularityPopularityList(req, res))
+    this.router.post('/addSong',(req, res) => this.popularityListController.addSongToPopularityList(req, res))
+    this.router.post('/delSong',(req, res) => this.popularityListController.deleteSongFromPopularityPopularityList(req, res))
+    this.router.post('/ranking', (req, res) => this.popularityListController.updatePopularityList(req, res))
+
 
 
   }

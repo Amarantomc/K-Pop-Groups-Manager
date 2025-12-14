@@ -10,6 +10,8 @@ import type { ListPopularityListUseCase } from "../../application/usesCase/popul
  
 import type { AddSongToPopularityListUseCase } from "../../application/usesCase/popularityList/AddSongToPopularityListUseCase";
 import { CreatePopularityListDto } from "../../application/dtos/popularityList/CreatePopularityListDto";
+import type { DeleteSongFromPopularityListUseCase } from "../../application/usesCase/popularityList/DeleteSongFromPopularityListuseCase";
+import type { UpdatePositionInPopularityListUseCase } from "../../application/usesCase/popularityList/UpdatePositionInPopularityListUseCase";
 
 
 
@@ -21,8 +23,47 @@ constructor(@inject(Types.CreatePopularityListUseCase)  private createPopularity
             @inject(Types.DeletePopularityListUseCase) private deletePopularityListUseCase:DeletePopularityListUseCase,
             @inject(Types.UpdatePopularityListUseCase) private updatePopularityListUseCase:UpdatePopularityListUseCase,
             @inject(Types.AddSongToPopularityListUseCase) private addSongToPopularityListUseCase:AddSongToPopularityListUseCase,
-            @inject(Types.ListPopularityListsUseCase) private listPopularityListUseCase:ListPopularityListUseCase){}
+            @inject(Types.ListPopularityListsUseCase) private listPopularityListUseCase:ListPopularityListUseCase,
+            @inject(Types.DeleteSongFromPopularityListUseCase) private deleteSongFromPopularityListUseCase:DeleteSongFromPopularityListUseCase,
+            @inject(Types.UpdatePositionInPopularityListUseCase) private updatePositionInPopularityListUseCase:UpdatePositionInPopularityListUseCase,
+
+          ){}
     
+          async updateSongPositionInPopularityList(req: Request, res: Response) {
+            try {
+              const { popularityListId, songId, newPosition } = req.body;
+          
+              if (
+                popularityListId === undefined ||
+                songId === undefined ||
+                newPosition === undefined
+              ) {
+                return res.status(400).json({
+                  success: false,
+                  error: "popularityListId, songId and newPosition are required",
+                });
+              }
+          
+              const updatedPopularityList =
+                await this.updatePositionInPopularityListUseCase.execute({
+                  popularityListId: Number(popularityListId),
+                  songId: Number(songId),
+                  newPosition: Number(newPosition),
+                });
+          
+              return res.json({
+                success: true,
+                data: updatedPopularityList,
+              });
+            } catch (error: any) {
+              return res.status(400).json({
+                success: false,
+                error: error.message,
+              });
+            }
+          }
+          
+
   async createPopularityList(req: Request, res: Response) 
       {
     try {
@@ -66,9 +107,44 @@ constructor(@inject(Types.CreatePopularityListUseCase)  private createPopularity
     }
   }
 
+  async addSongToPopularityList(req: Request, res: Response) {
 
-  async addSongToPopularityPopularityList(req: Request, res: Response) {
-        throw new Error('not implemented');
+    try{
+      
+    const popularityList = await this.addSongToPopularityListUseCase.execute(req.body)
+
+
+        res.json({
+          success: true,
+          data: popularityList
+        });
+  
+      } catch (error: any) {
+        res.status(500).json({
+          success: false,
+          error: error.message
+        });
+      }
+  }
+
+
+  async deleteSongFromPopularityPopularityList(req: Request, res: Response) {
+
+    try{
+    const popularityList = await this.deleteSongFromPopularityListUseCase.execute(req.body)
+
+
+        res.json({
+          success: true,
+          data: popularityList
+        });
+  
+      } catch (error: any) {
+        res.status(500).json({
+          success: false,
+          error: error.message
+        });
+      }
   }
 
     async deletePopularityList(req: Request, res: Response) {
