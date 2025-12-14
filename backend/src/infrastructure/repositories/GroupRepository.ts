@@ -166,7 +166,7 @@ export class GroupRepository implements IGroupRepository {
 					where: { fechaFinalizacion: null },
 					select: { idAp: true },
 				},
-				Album: { select: { id: true } },
+				Lanzamiento: { select: { idAlb: true } },
 				Actividades: { select: { idAct: true } },
 			},
 		});
@@ -197,7 +197,7 @@ export class GroupRepository implements IGroupRepository {
 					where: { fechaFinalizacion: null },
 					select: { idAp: true },
 				},
-				Album: { select: { id: true } },
+				Lanzamiento: { select: { idAlb: true } },
 				Actividades: { select: { idAct: true } },
 			},
 		});
@@ -340,17 +340,17 @@ export class GroupRepository implements IGroupRepository {
 		return !group
 			? null
 			: GroupResponseDTO.toEntity({
-					...group,
-					agency:
-						group.Agencias && group.Agencias.length > 0
-							? group.Agencias[0]
-							: null,
-					concept: group.concepto,
-					visualConcept:group.conceptoVisual, // group.conceptoVisual,
-					members: group.HistorialArtistas.map((a: any) => a.idAp),
-					albums: group.Album.map((a: any) => a.id),
-					activities: group.Actividades.map((a: any) => a.idAct),
-			  });
+				...group,
+				agency:
+					group.Agencias && group.Agencias.length > 0
+						? group.Agencias[0]
+						: null,
+				concept: group.concepto,
+				visualConcept: group.conceptoVisual, // group.conceptoVisual,
+				members: group.HistorialArtistas.map((a: any) => a.idAp),
+				// albums: group.Lanzamiento.map((l: any) => l.idAlb),
+				activities: group.Actividades.map((a: any) => a.idAct),
+			});
 	}
 
 	async findAll(): Promise<Group[]> {
@@ -363,7 +363,7 @@ export class GroupRepository implements IGroupRepository {
 					where: { fechaFinalizacion: null },
 					select: { idAp: true },
 				},
-				Album: { select: { id: true } },
+				Lanzamiento: { select: { idAlb: true } },
 				Actividades: { select: { idAct: true } },
 			},
 		});
@@ -375,9 +375,9 @@ export class GroupRepository implements IGroupRepository {
 						? group.Agencias[0]
 						: null,
 				concept: group.concepto,
-				visualConcept:group.conceptoVisual, // group.conceptoVisual,
+				visualConcept: group.conceptoVisual, // group.conceptoVisual,
 				members: group.HistorialArtistas.map((a: any) => a.idAp),
-				albums: group.Album.map((a: any) => a.id),
+				albums: group.Lanzamiento.map((l: any) => l.idAlb),
 				activities: group.Actividades.map((a: any) => a.idAct),
 			})
 		);

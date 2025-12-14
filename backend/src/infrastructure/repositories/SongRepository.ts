@@ -29,11 +29,7 @@ export class SongRepository implements ISongRepository{
         } : undefined
       },
       include: {
-        Albums: {
-          include: {
-            grupo: true
-          }
-        },
+        Albums: true,
         ListaDePopularidad: {
           include: {
             listaPopularidad: true
@@ -94,11 +90,7 @@ export class SongRepository implements ISongRepository{
     async findAll(): Promise<Song[]> {
      const songs= await this.db.cancion.findMany({
       include: {
-        Albums: {
-          include: {
-            grupo: true
-          }
-        },
+        Albums: true,
         ListaDePopularidad: {
           include: {
             listaPopularidad: true
