@@ -413,14 +413,14 @@ export const evaluationConstraints: Constraints = {
         type: "number",
         label: "Puntuación",
         validate: (value) => {
-            const num = Number(value);
-            if (isNaN(num) || num < 0 || num > 100) return "La puntuación debe estar entre 0 y 100";
+            const valueText = String(value)
+            if(!value || valueText.trim() === "") return "Debe ingresar una evaluación";
+            if (!/^\d+$/.test(valueText)) return "La evaluación debe ser un número natural";
+            const num = parseInt(valueText);
+            if(num < 0 || num > 10) return "La evaluación debe estar entre 0 y 10";
             return null;
         }
     },
-    comments: {editable: true, type: "string", label: "Comentarios"},
-    evaluationDate: {editable: true, type: "date", label: "Fecha de Evaluación"},
-    apprenticeName: {editable: false, label: "Aprendiz"}
 }
 
 // Usuario
