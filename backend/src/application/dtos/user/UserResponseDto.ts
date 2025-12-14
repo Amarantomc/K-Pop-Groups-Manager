@@ -43,8 +43,8 @@ export class UserResponseDto {
       }
     } else if (userData.perfilArtista) {
       profileData = {
-        artistaIdAp: userData.perfilArtista.IdAp,
-        artistaIdGr: userData.perfilArtista.IdGr
+        IdAp: userData.perfilArtista.IdAp,
+        IdGr: userData.perfilArtista.IdGr
       }
     }
 
