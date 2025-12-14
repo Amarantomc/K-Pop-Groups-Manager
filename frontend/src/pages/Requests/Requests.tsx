@@ -529,7 +529,7 @@ const Requests: React.FC = () => {
       />
       <ConfirmDialog 
         title="¡Éxito!"
-        message="La solicitud ha sido eliminada correctamente" 
+        message="La solicitud ha sido creada correctamente" 
         open={openAccept}
         type="success" 
         onCancel={() => setOpenAccept(false)} 

@@ -47,16 +47,17 @@ const ListUsers: React.FC = () => {
                     artists.map((a: any) => Number(a.apprenticeId || a.IdAp || a.idAp || a.ApprenticeId)).filter((id: any) => !isNaN(id))
                 );
                 console.log('[Users] IDs de aprendices que son artistas (numéricos):', artistApprenticeIds);
-                const resApprentice = await fetch('http://localhost:3000/api/apprentice', { headers });
-                const dataApprentice = await resApprentice.json();
-
-                let options = (dataApprentice.data || dataApprentice)
+                const res = await fetch('http://localhost:3000/api/apprentice', { headers });
+                const data = await res.json();
+                // Solo los aprendices cuyo id (numérico) está en artistApprenticeIds y tienen nombre definido
+                let options = (data.data || data)
                     .filter((a: any) => artistApprenticeIds.has(Number(a.id)) && a.name && a.name.trim() !== '')
                     .map((a: any) => ({ label: a.name, value: a.id }));
                 // Log detallado para depuración
-                console.log('[Users] Opciones de aprendices-artistas (raw):', (dataApprentice.data || dataApprentice)
+                console.log('[Users] Opciones de aprendices-artistas (raw):', (data.data || data)
                     .filter((a: any) => artistApprenticeIds.has(Number(a.id))));
                 console.log('[Users] Opciones de aprendices-artistas cargadas (solo nombre real, sin vacíos):', options);
+                // Si todas las opciones están vacías, log extra
                 if (options.length === 0) {
                     console.warn('[Users] ¡No se encontraron aprendices-artistas válidos! Revisa los datos de artistas y aprendices.');
                 }
@@ -82,32 +83,58 @@ const ListUsers: React.FC = () => {
     const [openError, setOpenError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
-    // Flujo análogo al de "Nombre de Agencia" para manager/director, pero reemplazando el campo username
+    // Campos dinámicos basados en el rol seleccionado
+    /*
     const userFormFields = useMemo<Field[]>(() => {
-        const baseFields = formFieldsByEntity['user'] || [];
+        let baseFields = formFieldsByEntity['user'] || [];
         const roleNormalized = selectedRole.toLowerCase();
-        let fields: Field[] = baseFields;
-
-        // Reemplazar el campo username por un select dinámico según el rol
         if (roleNormalized === 'apprentice' || roleNormalized === 'aprendiz') {
-            fields = baseFields.map(f =>
+            baseFields = apprenticeUserFields;
+        } else if (roleNormalized === 'artist' || roleNormalized === 'artista') {
+            baseFields = artistUserFields;
+        }
+        console.log('[Users] selectedRole:', selectedRole, 'roleNormalized:', roleNormalized);
+        let fields = [...baseFields];
+        if (roleNormalized === 'apprentice' || roleNormalized === 'aprendiz') {
+            console.log('[Users] Asignando apprenticeOptions a username:', apprenticeOptions);
+            fields = fields.map(f =>
                 f.id === 'username'
-                    ? { ...apprenticeUserFields[0], options: apprenticeOptions }
+                    ? { ...f, type: 'select', options: apprenticeOptions }
                     : f
             );
         } else if (roleNormalized === 'artist' || roleNormalized === 'artista') {
-            fields = baseFields.map(f =>
+            console.log('[Users] Asignando artistApprenticeOptions a username:', artistApprenticeOptions);
+            fields = fields.map(f =>
                 f.id === 'username'
-                    ? { ...artistUserFields[0], options: artistApprenticeOptions }
+                    ? { ...f, type: 'select', options: artistApprenticeOptions }
                     : f
             );
         }
-
-        // Para manager/director, añadir el campo de agencia (igual que el flujo de agencia)
+        
         if (roleNormalized === 'manager' || roleNormalized === 'director') {
             fields = [...fields, ...managerDirectorFields];
         }
-        // Debug para ver los campos finales
+        console.log('[Users] Campos finales para el formulario:', fields);
+        return fields;
+    }, [selectedRole, apprenticeOptions, artistApprenticeOptions]);
+    */
+    const userFormFields = useMemo<Field[]>(() => {
+        const baseFields = formFieldsByEntity['user'] || [];
+        const roleNormalized = selectedRole.toLowerCase();
+        let fields = baseFields.map(f => {
+            if (f.id === 'username' && (roleNormalized === 'apprentice' || roleNormalized === 'aprendiz')) {
+                // Usa la config especial de apprenticeUserFields[0] pero con las opciones dinámicas (value=id)
+                return { ...apprenticeUserFields[0], options: apprenticeOptions };
+            }
+            if (f.id === 'username' && (roleNormalized === 'artist' || roleNormalized === 'artista')) {
+                // Usa la config especial de artistUserFields[0] pero con las opciones dinámicas (value=id)
+                return { ...artistUserFields[0], options: artistApprenticeOptions };
+            }
+            return f;
+        });
+        if (roleNormalized === 'manager' || roleNormalized === 'director') {
+            fields = [...fields, ...managerDirectorFields];
+        }
         console.log('[Users] Campos finales para el formulario:', fields);
         return fields;
     }, [selectedRole, apprenticeOptions, artistApprenticeOptions]);
@@ -140,16 +167,10 @@ const ListUsers: React.FC = () => {
                 }
                 const data = await response.json();
                 console.log(data);
-                // Mapear el rol de inglés a español usando ROLE_MAPPING inverso
-                const ROLE_MAPPING_INV: Record<string, string> = Object.fromEntries(
-                    Object.entries(ROLE_MAPPING).map(([es, en]) => [en, es])
-                );
-                const usersArray = Array.isArray(data.data) ? data.data : [];
-                const formattedData = usersArray.map((user: any, index: number) => ({
+                const formattedData = data.data.map((user: any, index: number) => ({
                     id: user.id ?? index,
                     username: user.name,
                     email: user.email,
-                    role: ROLE_MAPPING_INV[user.role] || user.role
                 }));
                 setUserRows(formattedData);
             } catch (error) {
@@ -158,6 +179,8 @@ const ListUsers: React.FC = () => {
         };
         fetchUsers();
     }, [user]);
+
+    // Eliminada la lógica de join artistas+aprendices, ahora se maneja en el modal
 
     const handleDelete = async () => {
         try {
@@ -208,12 +231,17 @@ const ListUsers: React.FC = () => {
         } else {
             Object.assign(payload, data);
         }
-        // Ya no reasignamos payload.name, confiamos en el valor recibido desde el modal
-        console.log('[Users] handleCreateSave - payload normalizado:', payload);
-        // Convertir apprenticeId a número si existe
-        if (payload.apprenticeId) {
-            payload.apprenticeId = Number(payload.apprenticeId);
+        // Si el campo username es un select, su value es el id del aprendiz
+        if (payload.username) {
+            console.log('[Users] Valor de username recibido:', payload.username);
+            payload.apprenticeId = Number(payload.username);
+            // Buscar el nombre real para el payload.name si es necesario
+            const allOptions = [...apprenticeOptions, ...artistApprenticeOptions];
+            const found = allOptions.find(opt => String(opt.value) === String(payload.username));
+            console.log('[Users] Opción encontrada para username:', found);
+            if (found) payload.name = found.label;
         }
+        console.log('[Users] handleCreateSave - payload normalizado:', payload);
         // Detectar el rol seleccionado del formulario
         const formRole = (payload.rol || payload.role || '').toLowerCase();
         if (formRole) {
@@ -224,6 +252,11 @@ const ListUsers: React.FC = () => {
             try {
                 console.log('=== INICIO CREACIÓN DE USUARIO ===');
                 console.log('[Users] Payload recibido del formulario:', payload);
+
+                // Compatibilidad: si backend espera 'name' en lugar de 'username', rellenarlo desde username
+                if (!payload.name && payload.username) {
+                    payload.name = payload.username;
+                }
 
                 // Normalizar el rol usando el mapeo correcto
                 let userRole = payload.rol || payload.role || '';
@@ -402,8 +435,6 @@ const ListUsers: React.FC = () => {
 
                 } else if (userRole === 'Apprentice') {
                     console.log('Procesando Apprentice...');
-                    console.log('Aprendiz seleccionado con ID:', payload.name);
-                    console.log(payload);
                     if (!payload.apprenticeId) {
                         setErrorMessage('Debe seleccionar un aprendiz');
                         setOpenError(true);
@@ -414,7 +445,7 @@ const ListUsers: React.FC = () => {
                 } else if (userRole === 'Artist') {
                     console.log('Procesando Artist...');
                     if (!payload.name) {
-                        setErrorMessage('Debe proporcionar un artista');
+                        setErrorMessage('Debe proporcionar el nombre de usuario');
                         setOpenError(true);
                         return;
                     }
