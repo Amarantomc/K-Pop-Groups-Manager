@@ -22,31 +22,38 @@ const Form: React.FC<FormProps> = ({ fields, entity, onSubmit, initialValues = {
 
         const loadDynamicOptions = async () => {
             const options: Record<string, FieldOption[]> = {};
+            console.log('[Form] Iniciando carga de opciones dinámicas para fields:', fields);
 
             for (const field of fields) {
                 if (field.type === 'select' && field.optionsEndpoint) {
                     try {
                         const token = localStorage.getItem('token');
-                        const headers: Record<string, string> = {};
+                        const headers: Record<string, string> = {
+                            'Content-Type': 'application/json'
+                        };
                         if (token) {
                             headers['Authorization'] = `Bearer ${token}`;
                         }
 
-                        const response = await fetch(`http://localhost:3000${field.optionsEndpoint}`, { headers });
+                        const url = `http://localhost:3000${field.optionsEndpoint}`;
+                        console.log(`[Form] Fetching options for field '${field.name}' from:`, url, 'headers:', headers);
+                        const response = await fetch(url, { headers });
 
+                        console.log(`[Form] Respuesta HTTP para '${field.name}':`, response.status, response.statusText);
                         if (!response.ok) {
-                            console.error(`Error cargando opciones para ${field.name}:`, response.statusText);
+                            const errorText = await response.text();
+                            console.error(`[Form] Error cargando opciones para ${field.name}:`, response.statusText, errorText);
                             continue;
                         }
 
                         const data = await response.json();
+                        console.log(`[Form] Datos crudos recibidos para '${field.name}':`, data);
                         const items = Array.isArray(data) ? data : data.data || [];
+                        console.log(`[Form] Items parseados para '${field.name}':`, items);
 
                         // Convertir items a FieldOption
-                        // Esperamos que cada item tenga 'id' y un campo identificador (name, ArtistName, etc.)
                         const fieldOptions: FieldOption[] = items.map((item: any) => {
                             const id = item.id || item.Id || item.ID;
-                            // Buscar el nombre: name, ArtistName, AgencyName, GroupName, etc.
                             const label = 
                                 item.name || 
                                 item.ArtistName || 
@@ -58,7 +65,7 @@ const Form: React.FC<FormProps> = ({ fields, entity, onSubmit, initialValues = {
                                 item.Title ||
                                 item.fullName ||
                                 String(id);
-
+                            console.log(`[Form] Opción generada para '${field.name}':`, { value: String(id), label: String(label) });
                             return {
                                 value: String(id),
                                 label: String(label)
@@ -66,13 +73,15 @@ const Form: React.FC<FormProps> = ({ fields, entity, onSubmit, initialValues = {
                         });
 
                         options[field.name] = fieldOptions;
+                        console.log(`[Form] Opciones finales para '${field.name}':`, fieldOptions);
                     } catch (error) {
-                        console.error(`Error fetching options for ${field.name}:`, error);
+                        console.error(`[Form] Error fetching options for ${field.name}:`, error);
                     }
                 }
             }
 
             setDynamicOptions(options);
+            console.log('[Form] dynamicOptions actualizado:', options);
         };
 
         loadDynamicOptions();

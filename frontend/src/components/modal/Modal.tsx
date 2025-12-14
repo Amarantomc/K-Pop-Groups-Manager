@@ -134,6 +134,19 @@ const Modal : React.FC<ModalProps> = ({ isOpen, onClose, title, data, constraint
               )
             }
 
+            if (rule.type === "file") {
+              return (
+                <div key={key} className={`form-group ${errorMessage ? "form-group-error" : ""}`}>
+                  <label htmlFor={key}>{rule.label}</label>
+                  <input
+                    id={key}
+                    type="file"
+                    onChange={(e) => handleFieldChange(key, e.target.files && e.target.files[0] ? e.target.files[0] : null)}
+                  />
+                  {errorMessage && <span className="error-message">{errorMessage}</span>}
+                </div>
+              )
+            }
             return (
               <div key={key} className={`form-group ${errorMessage ? "form-group-error" : ""}`}>
                 <label htmlFor={key}>{rule.label}</label>

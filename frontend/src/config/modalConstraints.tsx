@@ -2,7 +2,7 @@
 export interface FieldConstraint {
   editable: boolean;              // Si el campo se puede modificar
   required?: boolean;             // Si es obligatorio
-  type?: "string" | "number" | "date" | "boolean"|"select"; // Tipo de dato esperado
+  type?: "string" | "number" | "date" | "boolean"|"select"|"file"; // Tipo de dato esperado
   label?: string;
   options? : string[];                 // Nombre visible en el modal
   validate?: (value: any) => string | null; // Función de validación personalizada
@@ -317,20 +317,7 @@ export const conceptConstraints: Constraints = {
 // Concepto Visual
 export const visualConceptConstraints: Constraints = {
     id: {editable: false, label: "ID"},
-    name: {
-        editable: true,
-        required: true,
-        type: "string",
-        label: "Nombre",
-        validate: (value) => {
-            const valueText = String(value).trim();
-            if (!valueText) return "El nombre es obligatorio";
-            return null;
-        }
-    },
-    description: {editable: true, type: "string", label: "Descripción"},
-    imageUrl: {editable: true, type: "string", label: "URL de Imagen"},
-    conceptName: {editable: false, label: "Concepto Asociado"}
+    imageUrl: {editable: true, type: "file", label: "Imagen"},
 }
 
 // Actividad

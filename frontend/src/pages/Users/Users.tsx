@@ -25,15 +25,19 @@ const ListUsers: React.FC = () => {
     const userFormFields = useMemo<Field[]>(() => {
         const baseFields = formFieldsByEntity['user'] || [];
         const roleNormalized = selectedRole.toLowerCase();
-        
+        console.log('[Users] selectedRole:', selectedRole, 'roleNormalized:', roleNormalized);
         if (roleNormalized === 'manager' || roleNormalized === 'director') {
-            return [...baseFields, ...managerDirectorFields];
+            const fields = [...baseFields, ...managerDirectorFields];
+            console.log('[Users] Campos para manager/director:', fields);
+            return fields;
         } else if (roleNormalized === 'apprentice' || roleNormalized === 'aprendiz') {
+            console.log('[Users] Campos para apprentice:', baseFields);
             return [...baseFields];
         } else if (roleNormalized === 'artist' || roleNormalized === 'artista') {
+            console.log('[Users] Campos para artist:', baseFields);
             return [...baseFields];
         }
-        
+        console.log('[Users] Campos base:', baseFields);
         return baseFields;
     }, [selectedRole]);
 
@@ -126,7 +130,7 @@ const ListUsers: React.FC = () => {
         } else {
             Object.assign(payload, data);
         }
-        
+        console.log('[Users] handleCreateSave - payload recibido:', payload);
         // Detectar el rol seleccionado del formulario
         const formRole = (payload.rol || payload.role || '').toLowerCase();
         if (formRole) {
@@ -136,7 +140,7 @@ const ListUsers: React.FC = () => {
         (async () => {
             try {
                 console.log('=== INICIO CREACIÓN DE USUARIO ===');
-                console.log('Payload recibido del formulario:', payload);
+                console.log('[Users] Payload recibido del formulario:', payload);
 
                 // Compatibilidad: si backend espera 'name' en lugar de 'username', rellenarlo desde username
                 if (!payload.name && payload.username) {
@@ -304,7 +308,7 @@ const ListUsers: React.FC = () => {
                 if (userRole === 'Manager' || userRole === 'Director') {
                     console.log('Procesando Manager/Director...');
                     if (!payload.agencyName) {
-                        setErrorMessage('Debe proporcionar el nombre de la agencia');
+                        setErrorMessage('Debe seleccionar una agencia');
                         setOpenError(true);
                         return;
                     }
