@@ -9,6 +9,7 @@ import { CreateApprenticeDto } from "../../application/dtos/apprentice/CreateApp
 import type { Request,Response } from "express";
 import type { ListApprenticeUseCase } from "../../application/usesCase/apprentice/ListApprenticeUseCase";
 import type { ListByAgencyUseCase } from "../../application/usesCase/apprentice/ListByAgencyUseCase";
+import type { AddEvaluationUseCase } from "../../application/usesCase/apprentice/AddEvaluationUseCase";
 
 
 @injectable()
@@ -19,11 +20,14 @@ constructor(@inject(Types.CreateApprenticeUseCase)  private createApprenticeUseC
             @inject(Types.DeleteApprenticeUseCase) private deleteApprenticeUseCase:DeleteApprenticeUseCase,
             @inject(Types.UpdateApprenticeUseCase) private updateApprenticeUseCase:UpdateApprenticeUseCase,
             @inject(Types.ListApprenticeUseCase) private listApprenticeUseCase:ListApprenticeUseCase,
-             @inject(Types.ListByAgencyUseCase) private listByAgencyUseCase: ListByAgencyUseCase,
+            @inject(Types.ListByAgencyUseCase) private listByAgencyUseCase: ListByAgencyUseCase,
             @inject(Types.GetApprenticeByNameUseCase) private getByNameApprenticeUseCase:GetApprenticeByNameUseCase,
+            @inject(Types.AddEvaluationUseCase) private addEvaluationUseCase: AddEvaluationUseCase,
           ){}
 
     
+
+          
   async createApprentice(req: Request, res: Response) 
       {
     try {
@@ -149,6 +153,28 @@ constructor(@inject(Types.CreateApprenticeUseCase)  private createApprenticeUseC
       });
     }
   }
+
+
+  async addEvaluation(req: Request, res: Response) {
+    try {
+      const { apprenticeId, agencyId, evaluation } = req.body;
+
+
+      await this.addEvaluationUseCase.execute(Number(apprenticeId), Number(agencyId),Number(evaluation));
+
+      res.status(201).json({
+        success: true,
+        message: "Evaluation successfully added.",
+      });
+    } catch (error: any) {
+      console.log(error);
+      res.status(500).json({
+        success: false,
+        error: error.message,
+      });
+    }
+  }
+  
 
       async listByAgency(req: Request, res: Response) {
     try {
