@@ -76,22 +76,11 @@ export class UserRepository implements IUserRepository {
 
       case Role.Artist:
 
-        /*
-          const artistProfile = await this.db.perfilArtista.create({
-            data: {
-              userId: user.id,
-              IdAp: data.IdAp,
-              IdGr: data.IdGr,
-              usuario: { connect: { id: user.id } }
-            }
-          })*/
         const artistProfile = await this.db.perfilArtista.create({
           data: {
             userId: user.id,
             IdAp: data.IdAp,
-            IdGr: data.IdGr,
-            usuario: { connect: { id: user.id } },
-            artista: { connect: { idAp: data.IdAp, idGr: data.IdGr } }
+            IdGr: data.IdGr
           }
         })
         profileData = artistProfile
