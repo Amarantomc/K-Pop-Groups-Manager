@@ -37,7 +37,7 @@ export class CreateApplicationUseCase{
             );
         }
         catch(error){
-            //console.log(error);
+            console.log(error);
             await this.unitOfWork.rollback();
             throw error;
         }

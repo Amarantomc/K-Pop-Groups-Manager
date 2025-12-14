@@ -245,6 +245,7 @@ export class PopularityListRepository implements IPopularityListRepository{
           },
         });
       
+        // 3️⃣ Traer la lista completa ordenada por año y posición
         const popularityList = await this.db.ListaPopularidad.findUnique({
           where: { id: popularityListId },
           include: {
@@ -271,6 +272,50 @@ export class PopularityListRepository implements IPopularityListRepository{
       
         return PopularityListResponseDto.toEntity(popularityList);
       }
+
+      // async addSongToPopularityList( popularityListId: number,songId: number): Promise<PopularityList> {
+      
+      //   const count = await this.db.CancionEnListaDePopularidad.count({
+      //     where: {
+      //       idLista: popularityListId,
+      //     },
+      //   });
+      
+      //   await this.db.CancionEnListaDePopularidad.create({
+      //     data: {
+      //       idCa: songId,
+      //       idLista: popularityListId,
+      //       posicion: count + 1,
+      //       año: new Date().getFullYear(),
+      //     },
+      //   });
+      
+      //   const popularityList = await this.db.ListaPopularidad.findUnique({
+      //     where: { id: popularityListId },
+      //     include: {
+      //       Canciones: {
+      //         orderBy: {
+      //           posicion: "asc",
+      //         },
+      //         include: {
+      //           cancion: {
+      //             select: {
+      //               id: true,
+      //               titulo: true,
+      //             },
+      //           },
+      //         },
+      //       },
+      //     },
+      //   });
+      
+
+      //   if (!popularityList) {
+      //     throw new Error("Popularity list not found");
+      //   }
+      
+      //   return PopularityListResponseDto.toEntity(popularityList);
+      // }
 
     
 

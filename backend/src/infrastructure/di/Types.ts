@@ -65,6 +65,7 @@ const Types = {
   GetTotalIncomeByArtistUseCase:Symbol.for('GetTotalIncomeByArtistUseCase'),
   GetBestAlbumsUseCase:Symbol.for('GetBestAlbumsUseCase'),
   GetIncomeAndSuccesUseCase:Symbol.for('GetIncomeAndSuccesUseCase'),
+  GetArtistsWhoChangeAgencyUseCase: Symbol.for('GetArtistsWhoChangeAgencyUseCase'),
 
   CreateConceptUseCase: Symbol.for('CreateConceptUseCase'),
   DeleteConceptUseCase: Symbol.for('DeleteConceptUseCase'),

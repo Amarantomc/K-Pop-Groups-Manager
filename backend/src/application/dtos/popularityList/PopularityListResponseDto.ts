@@ -5,13 +5,7 @@ export class PopularityListResponseDto {
     public readonly id: number,
     public readonly name: string,
     public readonly listType: string,
-    public readonly songs: {
-      id: number;
-      title: string;
-      position: number;
-      year: number;
-    }[],
-  ) {}
+    public readonly songs: {id: number;title: string;position: number;year: number;}[] ) {}
 
   static fromEntity(popularityList: PopularityList): PopularityListResponseDto {
     return new PopularityListResponseDto(

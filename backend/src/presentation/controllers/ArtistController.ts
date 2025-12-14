@@ -15,6 +15,7 @@ import { ArtistWithIncomeDto } from "../../application/dtos/artist/ArtistWithInc
 import { RequestArtistWithIncomeDto } from "../../application/dtos/artist/RequestArtistWithIncomeDto";
 import type { GetBestAlbumsUseCase } from "../../application/usesCase/artist/GetBestAlbumsUseCase";
 import type { GetIncomeAndSuccesUseCase } from "../../application/usesCase/artist/GetIncomeAndSuccesUseCase";
+import type { GetArtistsWhoChangeAgencyUseCase } from "../../application/usesCase/artist/GetArtistsWhoChangeAgencyUseCase";
 
 @injectable()
 export class ArtistController {
@@ -28,7 +29,8 @@ export class ArtistController {
                @inject(Types.GetArtistsOnDebutUseCase) private getArtistsOnDebutUseCase:GetArtistsOnDebutUseCase,
                @inject(Types.GetTotalIncomeByArtistUseCase)private getIncome : GetTotalIncomeByArtistUseCase,
                @inject(Types.GetBestAlbumsUseCase)private getBestAlbumsUseCase:GetBestAlbumsUseCase,
-               @inject(Types.GetIncomeAndSuccesUseCase)private getIncomeAndSuccesUseCase:GetIncomeAndSuccesUseCase
+               @inject(Types.GetIncomeAndSuccesUseCase)private getIncomeAndSuccesUseCase:GetIncomeAndSuccesUseCase,
+               @inject(Types.GetArtistsWhoChangeAgencyUseCase)private getArtistsWhoChangeAgency:GetArtistsWhoChangeAgencyUseCase
               ){}
 
 
@@ -229,5 +231,25 @@ async getIncomeAndSucces(req:Request,res:Response){
             error: error.message
         });
   }
+}
+
+async getWhoChangeAgencyAndGroup(req:Request,res:Response){
+    try {
+         
+         const artist= await this.getArtistsWhoChangeAgency.execute()
+          const serializedData = JSON.parse(JSON.stringify(artist, (key, value) =>
+             typeof value === 'bigint' ? value.toString() : value
+         ));
+          res.json({
+            success: true,
+            data: serializedData,
+            
+        });
+    } catch (error:any) {
+              res.status(400).json({
+            success: false,
+            error: error.message
+        });
+    }
 }
 }
