@@ -1,5 +1,6 @@
 import type { Apprentice } from "../../../domain";
 import type { Artist } from "../../../domain/entities/Artist";
+import type { ActivityResponseDto } from "../../dtos/activity/ActivityResponseDto";
 import type { ArtistOnDebutResponseDto } from "../../dtos/artist/ArtistsOnDebutResponseDto";
 import type { ArtistWithIncomeDto } from "../../dtos/artist/ArtistWithIncomeDto";
 import type { ArtistWithSuccesDto } from "../../dtos/artist/ArtistWithSuccesDto";
@@ -22,6 +23,7 @@ export interface IArtistRepository extends IBaseRepository<Artist,CreateArtistDt
         
         getBestAlbums(data:RequestArtistWithIncomeDto):Promise<ArtistWithSuccesDto[]|null>
         getBestSongs(data:RequestArtistWithIncomeDto):Promise<ArtistWithSuccesDto[]|null>
+        getWhoChangeAgencyAndGroup():Promise<Artist[]|null>
         
           // Métodos para tablas intermedias
   addGroupHistory(apprenticeId: number,groupId: number,debutGroupId: number,role: string,startDate: Date): Promise<void>;
@@ -29,7 +31,7 @@ export interface IArtistRepository extends IBaseRepository<Artist,CreateArtistDt
    
 
    
-  getActivities(apprenticeId: number,groupId: number): Promise<Array<{activityId: number;accepted: boolean;}>>;
+  getActivities(apprenticeId: number,groupId: number): Promise<ActivityResponseDto[]>;
   addContract(apprenticeId: number,groupId: number,agencyId: number,startDate: Date,endDate?: Date,status?: string,initialConditions?: string,incomeDistribution?: string): Promise<void>;
   getContracts(apprenticeId: number,groupId: number): Promise<Array<{agencyId: number;startDate: Date;endDate?: Date;status: string;}>>;
 

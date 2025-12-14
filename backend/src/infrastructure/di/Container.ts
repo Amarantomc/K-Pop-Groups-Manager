@@ -165,6 +165,7 @@ import { GetArtistsOnDebutUseCase } from "../../application/usesCase/artist/GetA
 import { GetTotalIncomeByArtistUseCase } from "../../application/usesCase/artist/GetTotalIncomeByArtistUseCase";
 import { GetBestAlbumsUseCase } from "../../application/usesCase/artist/GetBestAlbumsUseCase";
 import { GetIncomeAndSuccesUseCase } from "../../application/usesCase/artist/GetIncomeAndSuccesUseCase";
+import { GetArtistsWhoChangeAgencyUseCase } from "../../application/usesCase/artist/GetArtistsWhoChangeAgencyUseCase";
  
 const container=new Container()
  
@@ -524,6 +525,10 @@ container.bind<UpdateUserUseCase>(Types.UpdateUserUseCase)
 
     container.bind<GetIncomeAndSuccesUseCase>(Types.GetIncomeAndSuccesUseCase)
   .to(GetIncomeAndSuccesUseCase)
+  .inTransientScope();
+
+  container.bind<GetArtistsWhoChangeAgencyUseCase>(Types.GetArtistsWhoChangeAgencyUseCase)
+  .to(GetArtistsWhoChangeAgencyUseCase)
   .inTransientScope();
   //#endregion
 

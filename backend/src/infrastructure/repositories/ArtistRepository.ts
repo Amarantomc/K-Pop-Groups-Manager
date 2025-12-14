@@ -10,6 +10,7 @@ import { ArtistOnDebutResponseDto } from "../../application/dtos/artist/ArtistsO
 import { ArtistWithIncomeDto } from "../../application/dtos/artist/ArtistWithIncomeDto";
 import type { RequestArtistWithIncomeDto } from "../../application/dtos/artist/RequestArtistWithIncomeDto";
 import { ArtistWithSuccesDto } from "../../application/dtos/artist/ArtistWithSuccesDto";
+import type { ActivityResponseDto } from "../../application/dtos/activity/ActivityResponseDto";
 
 @injectable()
 export class ArtistRepository implements IArtistRepository {
@@ -18,6 +19,7 @@ export class ArtistRepository implements IArtistRepository {
                 @inject(Types.IUnitOfWork) private unitOfWork :UnitOfWork
                 
 ){}
+
   
 
 
@@ -172,17 +174,24 @@ private get db() {
   }
   
  
-  async getActivities(apprenticeId: number, groupId: number): Promise<Array<{ activityId: number; accepted: boolean; }>> {
-        const activities = await this.db.artistaEnActividad.findMany({
+  async getActivities(apprenticeId: number, groupId: number): Promise<ActivityResponseDto[]> {
+        const activities = await this.db.personasEnActividad.findMany({
       where: {
         idAp: apprenticeId,
         idGr: groupId,
-      },
+      },include:{
+        actividad:true
+      }
     });
 
     return activities.map((a: any) => ({
       activityId: a.idAct,
       accepted: a.aceptado,
+      responsible:a.actividad.responsable,
+      activityType:a.actividad.tipoActividad,
+      date:a.actividad.fecha,
+      place:a.actividad.lugar,
+      eventType:a.actividad.tipoEvento
     }));
   }
   async addContract(apprenticeId: number, groupId: number, agencyId: number, startDate: Date, endDate?: Date, status?: string, initialConditions?: string, incomeDistribution?: string): Promise<void> {
@@ -418,6 +427,53 @@ private get db() {
 
   getBestSongs(data: RequestArtistWithIncomeDto): Promise<ArtistWithSuccesDto[] | null> {
     throw new Error("Method not implemented.");
+  }
+
+   async getWhoChangeAgencyAndGroup(): Promise<Artist[] | null> {
+      const artists =await this.db.artista.findMany({
+         include:{
+                         Contrato: {
+                orderBy: {
+                    fechaInicio: 'asc'
+                },
+                include: {
+                    Agencia: true
+                }
+            },HistorialGrupos: {
+                orderBy: {
+                    fechaInicio: 'asc'
+                },
+                include: {
+                    grupo: true
+                }
+            },          aprendiz:{
+                 include:{
+                  Agencia:{
+                    include:{
+                      agencia:true
+                    }
+                  }
+                 }
+                  
+              }
+         }
+      })
+      const eligibleArtists = artists.filter((artist:any) => {
+         
+        const uniqueAgencies = new Set(
+            artist.Contrato.map((c:any) => c.idAg)
+        );
+        const hasMultipleAgencyChanges = uniqueAgencies.size >= 2;
+
+         
+        const uniqueGroups = new Set(
+            artist.HistorialGrupos.map((h:any) => h.idGr)
+        );
+        const hasMultipleGroups = uniqueGroups.size > 1;
+
+        return hasMultipleAgencyChanges && hasMultipleGroups;
+    });
+      return eligibleArtists ? ArtistResponseDto.toEntitiesForManager(eligibleArtists):null;
   }
    
 
