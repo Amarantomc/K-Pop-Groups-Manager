@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { Types } from "../../../infrastructure/di/Types";
-import type { CreatePopularityListDto } from "../../dtos/popularityList/CreatepopularityListDto";
+import type { CreatePopularityListDto } from "../../dtos/popularityList/CreatePopularityListDto";
 import { PopularityListResponseDto } from "../../dtos/popularityList/PopularityListResponseDto";
 import type { IPopularityListRepository } from "../../interfaces/repositories/IPopularityListRepository";
 

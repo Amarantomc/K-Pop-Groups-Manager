@@ -7,6 +7,9 @@ export interface IPopularityListRepository extends IBaseRepository<PopularityLis
 
 
     findSongByName(songName:string,popularityListId:number): Promise<Song>|null;
-    addSongToPopularityList(popularityListId:number,songId:number,year:number,position:number): Promise<void>;
+    addSongToPopularityList(popularityListId:number,songId:number): Promise<PopularityList>;
+    deleteSongFromPopularityList(popularityListId:number,songId:number): Promise<PopularityList>;
+    updatePositionInPopularityList(popularityListId: number, songId:number, position: number): Promise<PopularityList>
+
 }
 
