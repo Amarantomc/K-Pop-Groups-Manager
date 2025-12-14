@@ -4,12 +4,59 @@ import * as bcrypt from 'bcrypt'
 
 const prisma = new PrismaClient()
 
+
+
+
+async function cleanDatabase(prisma: PrismaClient) {
+  // El orden importa por claves foráneas
+  await prisma.artistaSolicitaGrupo.deleteMany({});
+  await prisma.aprendizSolicitaGrupo.deleteMany({});
+  await prisma.solicitud.deleteMany({});
+  await prisma.personasEnActividad.deleteMany({});
+  await prisma.ingreso.deleteMany({});
+  await prisma.actividad.deleteMany({});
+  await prisma.albumPremiado.deleteMany({});
+  await prisma.premio.deleteMany({});
+  await prisma.grupoLanzaAlbum.deleteMany({});
+  await prisma.artistaLanzaAlbum.deleteMany({});
+  await prisma.album.deleteMany({});
+  await prisma.cancionEnListaDePopularidad.deleteMany({});
+  await prisma.listaPopularidad.deleteMany({});
+  await prisma.cancion.deleteMany({});
+  await prisma.artistaEnGrupo.deleteMany({});
+  await prisma.contratoGrupo.deleteMany({});
+  await prisma.contrato.deleteMany({});
+  await prisma.artista.deleteMany({});
+  await prisma.evaluacionAprendiz.deleteMany({});
+  await prisma.aprendizEnAgencia.deleteMany({});
+  await prisma.aprendiz.deleteMany({});
+  await prisma.grupo.deleteMany({});
+  await prisma.conceptoVisual.deleteMany({});
+  await prisma.concepto.deleteMany({});
+  await prisma.agencia.deleteMany({});
+  await prisma.perfilManager.deleteMany({});
+  await prisma.perfilDirector.deleteMany({});
+  await prisma.perfilAprendiz.deleteMany({});
+  await prisma.perfilArtista.deleteMany({});
+  await prisma.user.deleteMany({});
+}
+
 async function main() {
+        // Asociar idSolicitud en Aprendiz (ya hecho arriba)
+        // Asociar idSolicitud en Artista (ya hecho arriba)
+
+        // Ya se agregó para PersonasEnActividad (idAp, idGr, idGrupos)
+
+        // No hay más entidades con campos opcionales de FK relevantes para poblar según el schema actual.
+      // ...existing code...
+    // ...existing code...
   console.log('🌱 Iniciando población de la base de datos...')
+  console.log('🧹 Limpiando base de datos...')
+  await cleanDatabase(prisma);
+  console.log('✅ Base de datos limpia')
 
   // 0. CREAR USUARIO ADMINISTRADOR
   console.log('👤 Creando usuario administrador...')
-  await prisma.user.deleteMany({ where: { email: "admin@gmail.com" } });
   const hashedPassword = await bcrypt.hash('admin123', 10)
   const adminUser = await prisma.user.create({
     data: {
@@ -319,6 +366,40 @@ async function main() {
     ]
   })
   console.log('✅ Aprendices asignados a agencias')
+
+  // Asociar aprendices a agencias y viceversa para que los arrays se vean en Prisma Studio
+  const aprendizEnAgencia = [
+    { idAp: aprendiz1.id, idAg: smEntertainment.id, fechaInicio: new Date("2019-01-15") },
+    { idAp: aprendiz2.id, idAg: ygEntertainment.id, fechaInicio: new Date("2018-06-20") },
+    { idAp: aprendiz3.id, idAg: jypEntertainment.id, fechaInicio: new Date("2017-03-10") },
+    { idAp: aprendiz4.id, idAg: hibeEntertainment.id, fechaInicio: new Date("2016-05-01") },
+    { idAp: aprendiz5.id, idAg: jypEntertainment.id, fechaInicio: new Date("2017-08-15") },
+    { idAp: aprendiz6.id, idAg: smEntertainment.id, fechaInicio: new Date("2016-09-01") },
+    { idAp: aprendiz7.id, idAg: starshipEntertainment.id, fechaInicio: new Date("2021-07-10") },
+    { idAp: aprendiz8.id, idAg: hibeEntertainment.id, fechaInicio: new Date("2020-11-05") },
+    { idAp: aprendiz9.id, idAg: smEntertainment.id, fechaInicio: new Date("2009-03-20") },
+    { idAp: aprendiz10.id, idAg: pledisEntertainment.id, fechaInicio: new Date("2010-05-15") },
+    { idAp: aprendiz11.id, idAg: hibeEntertainment.id, fechaInicio: new Date("2011-06-13") },
+    { idAp: aprendiz12.id, idAg: ygEntertainment.id, fechaInicio: new Date("2012-08-08") }
+  ];
+  for (const { idAp, idAg, fechaInicio } of aprendizEnAgencia) {
+    await prisma.aprendiz.update({
+      where: { id: idAp },
+      data: {
+        Agencia: {
+          connect: { idAp_idAg_fechaInicio: { idAp, idAg, fechaInicio } }
+        }
+      }
+    });
+    await prisma.agencia.update({
+      where: { id: idAg },
+      data: {
+        Aprendices: {
+          connect: { idAp_idAg_fechaInicio: { idAp, idAg, fechaInicio } }
+        }
+      }
+    });
+  }
 
   // 7. EVALUACIONES DE APRENDICES
   console.log('📊 Creando evaluaciones de aprendices...')
@@ -637,7 +718,7 @@ async function main() {
   console.log('💿 Creando álbumes...')
   const albumNCT = await prisma.album.create({
     data: {
-      idGrupo: nct127.id,
+      // idGrupo eliminado, relación ahora es por tablas intermedias
       titulo: "Neo Zone",
       fechaLanzamiento: new Date("2020-03-06"),
       productor: "SM Entertainment",
@@ -651,7 +732,7 @@ async function main() {
 
   const albumBlackpink = await prisma.album.create({
     data: {
-      idGrupo: blackpink.id,
+      // idGrupo eliminado, relación ahora es por tablas intermedias
       titulo: "THE ALBUM",
       fechaLanzamiento: new Date("2020-10-02"),
       productor: "YG Entertainment",
@@ -665,7 +746,7 @@ async function main() {
 
   const albumTwice = await prisma.album.create({
     data: {
-      idGrupo: twice.id,
+      // idGrupo eliminado, relación ahora es por tablas intermedias
       titulo: "Formula of Love: O+T=<3",
       fechaLanzamiento: new Date("2021-11-12"),
       productor: "JYP Entertainment",
@@ -679,7 +760,7 @@ async function main() {
 
   const albumBTS = await prisma.album.create({
     data: {
-      idGrupo: bts.id,
+      // idGrupo eliminado, relación ahora es por tablas intermedias
       titulo: "BE",
       fechaLanzamiento: new Date("2020-11-20"),
       productor: "Big Hit Entertainment",
@@ -693,7 +774,7 @@ async function main() {
 
   const albumITZY = await prisma.album.create({
     data: {
-      idGrupo: itzy.id,
+      // idGrupo eliminado, relación ahora es por tablas intermedias
       titulo: "CRAZY IN LOVE",
       fechaLanzamiento: new Date("2021-09-24"),
       productor: "JYP Entertainment",
@@ -707,7 +788,7 @@ async function main() {
 
   const albumAespa = await prisma.album.create({
     data: {
-      idGrupo: aespa.id,
+      // idGrupo eliminado, relación ahora es por tablas intermedias
       titulo: "Savage",
       fechaLanzamiento: new Date("2021-10-05"),
       productor: "SM Entertainment",
@@ -721,7 +802,7 @@ async function main() {
 
   const albumRedVelvet = await prisma.album.create({
     data: {
-      idGrupo: redVelvet.id,
+      // idGrupo eliminado, relación ahora es por tablas intermedias
       titulo: "The ReVe Festival Finale",
       fechaLanzamiento: new Date("2019-12-23"),
       productor: "SM Entertainment",
@@ -735,7 +816,7 @@ async function main() {
 
   const albumSeventeen = await prisma.album.create({
     data: {
-      idGrupo: seventeen.id,
+      // idGrupo eliminado, relación ahora es por tablas intermedias
       titulo: "Your Choice",
       fechaLanzamiento: new Date("2021-06-18"),
       productor: "Pledis Entertainment",
@@ -764,6 +845,36 @@ async function main() {
   })
   console.log('✅ Lanzamientos de artistas creados')
 
+  // Actualizar arrays directos para ArtistaLanzaAlbum
+  const artistaLanzaAlbum = [
+    { idAp: artista1.idAp, idGr: artista1.idGr, idAlb: albumNCT.id },
+    { idAp: artista2.idAp, idGr: artista2.idGr, idAlb: albumBlackpink.id },
+    { idAp: artista3.idAp, idGr: artista3.idGr, idAlb: albumTwice.id },
+    { idAp: artista4.idAp, idGr: artista4.idGr, idAlb: albumBTS.id },
+    { idAp: artista5.idAp, idGr: artista5.idGr, idAlb: albumITZY.id },
+    { idAp: artista6.idAp, idGr: artista6.idGr, idAlb: albumAespa.id },
+    { idAp: artista7.idAp, idGr: artista7.idGr, idAlb: albumRedVelvet.id },
+    { idAp: artista8.idAp, idGr: artista8.idGr, idAlb: albumSeventeen.id }
+  ];
+  for (const { idAp, idGr, idAlb } of artistaLanzaAlbum) {
+    await prisma.artista.update({
+      where: { idAp_idGr: { idAp, idGr } },
+      data: {
+        Lanzamientos: {
+          connect: { idAp_idGr_idAlb: { idAp, idGr, idAlb } }
+        }
+      }
+    });
+    await prisma.album.update({
+      where: { id: idAlb },
+      data: {
+        LanzamientoArtista: {
+          connect: { idAp_idGr_idAlb: { idAp, idGr, idAlb } }
+        }
+      }
+    });
+  }
+
   // 15. LANZAMIENTOS DE ÁLBUMES POR GRUPOS
   console.log('🎸 Creando lanzamientos de grupos...')
   await prisma.grupoLanzaAlbum.createMany({
@@ -779,6 +890,36 @@ async function main() {
     ]
   })
   console.log('✅ Lanzamientos de grupos creados')
+
+  // Actualizar arrays directos para GrupoLanzaAlbum
+  const grupoLanzaAlbum = [
+    { idGr: nct127.id, idAlb: albumNCT.id },
+    { idGr: blackpink.id, idAlb: albumBlackpink.id },
+    { idGr: twice.id, idAlb: albumTwice.id },
+    { idGr: bts.id, idAlb: albumBTS.id },
+    { idGr: itzy.id, idAlb: albumITZY.id },
+    { idGr: aespa.id, idAlb: albumAespa.id },
+    { idGr: redVelvet.id, idAlb: albumRedVelvet.id },
+    { idGr: seventeen.id, idAlb: albumSeventeen.id }
+  ];
+  for (const { idGr, idAlb } of grupoLanzaAlbum) {
+    await prisma.grupo.update({
+      where: { id: idGr },
+      data: {
+        Lanzamiento: {
+          connect: { idGr_idAlb: { idGr, idAlb } }
+        }
+      }
+    });
+    await prisma.album.update({
+      where: { id: idAlb },
+      data: {
+        LanzamientoGrupo: {
+          connect: { idGr_idAlb: { idGr, idAlb } }
+        }
+      }
+    });
+  }
 
   // 16. CREAR PREMIOS
   console.log('🏆 Creando premios...')
@@ -809,6 +950,37 @@ async function main() {
     ]
   })
   console.log('✅ Premios asignados a álbumes')
+
+  // Asociar premios a álbumes y álbumes a premios para que los arrays se vean en Prisma Studio
+  // (rellena los arrays directos en Album y Premio)
+  const albumPremiados = [
+    { idAlb: albumBTS.id, idPremio: premioMAMA.id },
+    { idAlb: albumBTS.id, idPremio: premioGoldenDisc.id },
+    { idAlb: albumBlackpink.id, idPremio: premioSeoul.id },
+    { idAlb: albumSeventeen.id, idPremio: premioGaon.id },
+    { idAlb: albumNCT.id, idPremio: premioSeoul.id },
+    { idAlb: albumAespa.id, idPremio: premioMAMA.id }
+  ];
+  for (const { idAlb, idPremio } of albumPremiados) {
+    // Actualiza el array de premios en el álbum
+    await prisma.album.update({
+      where: { id: idAlb },
+      data: {
+        Premios: {
+          connect: { idAlb_idPremio: { idAlb, idPremio } }
+        }
+      }
+    });
+    // Actualiza el array de álbumes en el premio
+    await prisma.premio.update({
+      where: { id: idPremio },
+      data: {
+        Albums: {
+          connect: { idAlb_idPremio: { idAlb, idPremio } }
+        }
+      }
+    });
+  }
 
   // 18. CREAR LISTAS DE POPULARIDAD
   console.log('📊 Creando listas de popularidad...')
@@ -909,6 +1081,20 @@ async function main() {
   await prisma.ingreso.createMany({ data: ingresosData });
   console.log(`✅ ${ingresosData.length} Registros de ingresos creados`)
 
+  // Actualizar arrays directos en Actividad para los ingresos
+  // Buscar los ingresos creados y asociarlos a su actividad
+  const allIngresos = await prisma.ingreso.findMany();
+  for (const ingreso of allIngresos) {
+    await prisma.actividad.update({
+      where: { id: ingreso.idAct },
+      data: {
+        Ingreso: {
+          connect: { idIng_idAct: { idIng: ingreso.idIng, idAct: ingreso.idAct } }
+        }
+      }
+    });
+  }
+
   // 22. PERSONAS EN ACTIVIDADES
   console.log('👤 Asignando participantes a actividades...')
   const artistas = [artista1, artista2, artista3, artista4, artista5, artista6, artista7, artista8];
@@ -926,6 +1112,31 @@ async function main() {
   });
   await prisma.personasEnActividad.createMany({ data: personasEnActividadData });
   console.log(`✅ ${personasEnActividadData.length} Participantes asignados a actividades`)
+
+  // Asociar campos opcionales en PersonasEnActividad para poblar arrays inversos (idAp, idGr, idGrupos)
+  const personasEnActividad = await prisma.personasEnActividad.findMany();
+  for (const persona of personasEnActividad) {
+    // Asignar idAp y idGr si corresponde (relación con artista)
+    if (!persona.idAp && artistas[0] && typeof artistas[0].idAp === 'number') {
+      await prisma.personasEnActividad.update({
+        where: { id: persona.id },
+        data: { idAp: artistas[0].idAp }
+      });
+    }
+    if (!persona.idGr && artistas[0] && typeof artistas[0].idGr === 'number') {
+      await prisma.personasEnActividad.update({
+        where: { id: persona.id },
+        data: { idGr: artistas[0].idGr }
+      });
+    }
+    // Asignar idGrupos si corresponde (relación con grupo)
+    if (!persona.idGrupos && grupos[0] && typeof grupos[0].id === 'number') {
+      await prisma.personasEnActividad.update({
+        where: { id: persona.id },
+        data: { idGrupos: grupos[0].id }
+      });
+    }
+  }
 
   // 23. CREAR SOLICITUDES DE GRUPO
   console.log('📝 Creando solicitudes de formación de grupos...')
@@ -972,6 +1183,39 @@ async function main() {
   })
   console.log('✅ Solicitudes de aprendices creadas')
 
+  // Actualizar arrays directos para AprendizSolicitaGrupo
+  const aprendizSolicitaGrupo = [
+    { idAp: aprendiz1.id, idAg: smEntertainment.id, idSolicitud: solicitud1.id },
+    { idAp: aprendiz7.id, idAg: starshipEntertainment.id, idSolicitud: solicitud2.id },
+    { idAp: aprendiz8.id, idAg: hibeEntertainment.id, idSolicitud: solicitud3.id }
+  ];
+  for (const { idAp, idAg, idSolicitud } of aprendizSolicitaGrupo) {
+    await prisma.aprendiz.update({
+      where: { id: idAp },
+      data: {
+        SolicitudGrupo: {
+          connect: { idAp_idAg_idSolicitud: { idAp, idAg, idSolicitud } }
+        }
+      }
+    });
+    await prisma.agencia.update({
+      where: { id: idAg },
+      data: {
+        SolicitudesAprendiz: {
+          connect: { idAp_idAg_idSolicitud: { idAp, idAg, idSolicitud } }
+        }
+      }
+    });
+    await prisma.solicitud.update({
+      where: { id: idSolicitud },
+      data: {
+        SolicitudGrupoAprendiz: {
+          connect: { idAp_idAg_idSolicitud: { idAp, idAg, idSolicitud } }
+        }
+      }
+    });
+  }
+
   // 25. ARTISTAS SOLICITANDO GRUPOS
   console.log('⭐ Creando solicitudes de artistas para nuevos grupos...')
   await prisma.artistaSolicitaGrupo.createMany({
@@ -982,25 +1226,79 @@ async function main() {
   })
   console.log('✅ Solicitudes de artistas creadas')
 
-  console.log('\n🎉 ¡Semilla completada exitosamente!')
-  console.log('📊 Resumen de datos creados:')
-  console.log('   - 1 Usuario administrador')
-  console.log('   - 7 Agencias')
-  console.log('   - 7 Conceptos y 7 Conceptos visuales')
-  console.log('   - 8 Grupos K-Pop')
-  console.log('   - 12 Aprendices')
-  console.log('   - 8 Artistas')
-  console.log('   - 16 Contratos (8 individuales + 8 de grupo)')
-  console.log('   - 24 Canciones')
-  console.log('   - 8 Álbumes')
-  console.log('   - 4 Premios')
-  console.log('   - 4 Listas de popularidad')
-  console.log('   - 5 Actividades con ingresos')
-  console.log('   - 3 Solicitudes de formación de grupos')
-  console.log('   - Y mucho más...')
+  // Actualizar arrays directos para ArtistaSolicitaGrupo
+  const artistaSolicitaGrupo = [
+    { idAp: artista1.idAp, idGr: artista1.idGr, idAg: smEntertainment.id, idSolicitud: solicitud1.id },
+    { idAp: artista5.idAp, idGr: artista5.idGr, idAg: jypEntertainment.id, idSolicitud: solicitud2.id }
+  ];
+  for (const { idAp, idGr, idAg, idSolicitud } of artistaSolicitaGrupo) {
+    await prisma.artista.update({
+      where: { idAp_idGr: { idAp, idGr } },
+      data: {
+        SolicitudGrupo: {
+          connect: { idAp_idGr_idAg_idSolicitud: { idAp, idGr, idAg, idSolicitud } }
+        }
+      }
+    });
+    await prisma.agencia.update({
+      where: { id: idAg },
+      data: {
+        SolicitudesArtistas: {
+          connect: { idAp_idGr_idAg_idSolicitud: { idAp, idGr, idAg, idSolicitud } }
+        }
+      }
+    });
+    await prisma.solicitud.update({
+      where: { id: idSolicitud },
+      data: {
+        SolicitudGrupoArtista: {
+          connect: { idAp_idGr_idAg_idSolicitud: { idAp, idGr, idAg, idSolicitud } }
+        }
+      }
+    });
+  }
+
+  // Asociar aprendices directamente a la solicitud (para llenar AprendizMiembro)
+  await prisma.aprendiz.update({ where: { id: aprendiz1.id }, data: { idSolicitud: solicitud1.id } });
+  await prisma.aprendiz.update({ where: { id: aprendiz7.id }, data: { idSolicitud: solicitud2.id } });
+  await prisma.aprendiz.update({ where: { id: aprendiz8.id }, data: { idSolicitud: solicitud3.id } });
+
+  // Asociar artistas directamente a la solicitud (para llenar ArtistaMiembro)
+  await prisma.artista.update({ where: { idAp_idGr: { idAp: artista1.idAp, idGr: artista1.idGr } }, data: { idSolicitud: solicitud1.id } });
+  await prisma.artista.update({ where: { idAp_idGr: { idAp: artista5.idAp, idGr: artista5.idGr } }, data: { idSolicitud: solicitud2.id } });
+
+  // Ejemplo de consultas con include para verificar relaciones intermedias
+  // (Se ejecutan solo al final, después de poblar todas las tablas)
+  console.log('\n🔎 Ejemplo de consultas con include para relaciones intermedias:');
+  // Solicitud con aprendices y artistas asociados
+  const solicitudesIncl = await prisma.solicitud.findMany({
+    include: {
+      SolicitudGrupoAprendiz: { include: { aprendiz: true, agencia: true } },
+      SolicitudGrupoArtista: { include: { artista: true, agencia: true } }
+    }
+  });
+  console.log('Solicitudes con aprendices y artistas asociados:', JSON.stringify(solicitudesIncl, null, 2));
 }
 
 main()
+  .then(() => {
+    console.log('\n🎉 ¡Semilla completada exitosamente!')
+    console.log('📊 Resumen de datos creados:')
+    console.log('   - 1 Usuario administrador')
+    console.log('   - 7 Agencias')
+    console.log('   - 7 Conceptos y 7 Conceptos visuales')
+    console.log('   - 8 Grupos K-Pop')
+    console.log('   - 12 Aprendices')
+    console.log('   - 8 Artistas')
+    console.log('   - 16 Contratos (8 individuales + 8 de grupo)')
+    console.log('   - 24 Canciones')
+    console.log('   - 8 Álbumes')
+    console.log('   - 4 Premios')
+    console.log('   - 4 Listas de popularidad')
+    console.log('   - 18+ Actividades con ingresos')
+    console.log('   - 3 Solicitudes de formación de grupos')
+    console.log('   - Y mucho más...')
+  })
   .catch((e) => {
     console.error('❌ Error al ejecutar la semilla:', e)
     process.exit(1)
