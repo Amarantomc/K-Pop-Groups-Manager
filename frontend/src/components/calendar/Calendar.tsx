@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, type JSX } from "react";
 import "./calendar.css"
@@ -110,6 +111,20 @@ const Calendar: React.FC<CalendarProps> = ({
             <line x1="8" y1="23" x2="16" y2="23" />
           </svg>
         )
+        case "ensayo":
+        return (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+        </svg>
+        )
     }
   }
 
@@ -120,7 +135,7 @@ const Calendar: React.FC<CalendarProps> = ({
       'Show de TV': 'tv-show',
       'Entrevista': 'interview',
       'Sesión fotográfica': 'photoshoot',
-      //Ensayos
+      'Ensayos' : 'ensayo'
     };
     return translations[type]
   }
@@ -276,6 +291,10 @@ const Calendar: React.FC<CalendarProps> = ({
               <span className="legend-dot activity-dot-tv-show" />
               <span>Show de TV</span>
             </div>
+            <div className="legend-item">
+              <span className="legend-dot activity-dot-ensayo" />
+              <span>Ensayo</span>
+            </div>
           </div>
 
 
@@ -290,11 +309,7 @@ const Calendar: React.FC<CalendarProps> = ({
                   <h4 className="activity-name">{activity.eventType}</h4>
                   <p className="activity-artist">{activity.responsible}</p>
                   <p className="activity-datetime">
-                    {new Date(transformDate(activity.date)).toLocaleDateString("es-ES", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    })}{" "}
+                    {transformDate(activity.date)}{" "}
                   </p>
                 </div>
               </div>
