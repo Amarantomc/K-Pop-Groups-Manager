@@ -267,7 +267,7 @@ export const apprenticeUserFields: Field[] = [
         label: 'Nombre de usuario',
         type: 'select',
         required: true,
-        optionsEndpoint: '/api/apprentice/?fields=name'
+        optionsEndpoint: '/api/apprentice'
     }
 ];
 
@@ -279,7 +279,7 @@ export const artistUserFields: Field[] = [
         label: 'Nombre de usuario',
         type: 'select',
         required: true,
-        optionsEndpoint: '/api/artist/?fields=fullName'
+        optionsEndpoint: '/api/artist'
     }
 ];
 

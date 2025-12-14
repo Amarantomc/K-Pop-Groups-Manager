@@ -240,8 +240,9 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
                     onChange={(e) => handleFieldChange(key, e.target.value)}
                   >
                     <option value="">-- Seleccionar --</option>
-                    {selectOptions.map((o: any) => (
-                      <option key={o.value} value={o.value}>
+                    {selectOptions.map((o: any, idx: number) => (
+                      <option key={o.value !== undefined && o.value !== null && o.value !== '' ? String(o.value) : `option-${idx}`}
+                              value={o.value}>
                         {o.label}
                       </option>
                     ))}
