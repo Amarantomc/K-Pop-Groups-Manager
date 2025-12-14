@@ -83,7 +83,6 @@ model Aprendiz{
   fechaNacimiento DateTime @default(now())
   edad Int
   nivelEntrenamiento Int
-  estadoAprendiz String
   Agencia AprendizEnAgencia[]
   Evaluacion EvaluacionAprendiz[]
   Artista Artista ?
@@ -305,6 +304,7 @@ model AprendizEnAgencia {
   idAg              Int
   fechaInicio       DateTime
   fechaFinalizacion DateTime?
+  estado String @default("en entrenamiento")
 
   aprendiz Aprendiz @relation(fields: [idAp], references: [id],onDelete: Cascade)
   agencia  Agencia  @relation(fields: [idAg], references: [id],onDelete: Cascade)
