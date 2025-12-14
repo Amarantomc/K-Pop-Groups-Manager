@@ -157,17 +157,17 @@ constructor(@inject(Types.CreateApprenticeUseCase)  private createApprenticeUseC
 
   async addEvaluation(req: Request, res: Response) {
     try {
-      const { apprenticeId, agencyId, evaluation, date } = req.body;
+      const { apprenticeId, agencyId, evaluation } = req.body;
 
 
-      await this.addEvaluationUseCase.execute(Number(apprenticeId), Number(agencyId),Number(evaluation),new Date(date)
-      );
+      await this.addEvaluationUseCase.execute(Number(apprenticeId), Number(agencyId),Number(evaluation));
 
       res.status(201).json({
         success: true,
-        message: "Evaluación agregada correctamente",
+        message: "Evaluation successfully added.",
       });
     } catch (error: any) {
+      console.log(error);
       res.status(500).json({
         success: false,
         error: error.message,

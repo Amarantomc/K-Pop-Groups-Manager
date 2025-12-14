@@ -5,14 +5,14 @@ import type { IApprenticeRepository } from "../../interfaces/repositories/IAppre
 @injectable()
 export class AddEvaluationUseCase {
   constructor(
-    @inject(Types.IArtistRepository) private artistRepository: IApprenticeRepository
+    @inject(Types.IApprenticeRepository) private apprenticeRepository: IApprenticeRepository
   ) {}
 
-  async execute(apprenticeId: number, agencyId: number, evaluation: number,date: Date): Promise<void> {
-    if (!apprenticeId || !agencyId || evaluation == null || !date) {
+  async execute(apprenticeId: number, agencyId: number, evaluation: number): Promise<void> {
+    if (!apprenticeId || !agencyId || evaluation == null ) {
       throw new Error("Missing fields required");
     }
 
-    await this.artistRepository.addEvaluation(apprenticeId, agencyId, evaluation, date);
+    await this.apprenticeRepository.addEvaluation(apprenticeId, agencyId, evaluation, new Date());
   }
 }
