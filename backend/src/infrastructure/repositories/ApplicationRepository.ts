@@ -7,7 +7,6 @@ import { ApplicationResponseDto } from "../../application/dtos/application(solic
 import type { CreateApplicationDto } from "../../application/dtos/application(solicitud)/CreateApplicationDto";
 import type { UpdateApplicationDto } from "../../application/dtos/application(solicitud)/UpdateApplicationDto";
 import { CreateGroupUseCase } from '../../application/usesCase/group/CreateGroupUseCase';
-import type { Group } from "../../domain/entities/Group";
 import type { ApplicationCreateGroupDTO } from "../../application/dtos/application(solicitud)/ApplicationCreateGroupDTO";
 
 
@@ -104,8 +103,111 @@ export class ApplicationRepository implements IApplicationRepository
     return group;
   }
  
-  async create(data: CreateApplicationDto): Promise<Application> {
 
+  // async create(data: CreateApplicationDto): Promise<Application> {
+
+  //   const idAgency = Number(data.idAgency);
+  //   const idConcept = Number(data.idConcept);
+  
+  //   const concept = await this.db.Concepto.findUnique({
+  //     where: { id: idConcept }
+  //   });
+  
+  //   const agency = await this.db.Agencia.findUnique({
+  //     where: { id: idAgency }
+  //   });
+  
+  //   if (!agency || !concept) {
+  //     throw new Error("Agency or Concept not found");
+  //   }
+  
+  //   const application = await this.db.Solicitud.create({
+  //     data: {
+  //       nombreGrupo: data.groupName,
+  //       idAgencia: idAgency,
+  //       idConcepto: idConcept,
+  //       roles: data.roles,
+  //       estado: "Pendiente",
+  
+  //       SolicitudGrupoAprendiz: data.apprentices
+  //         ? {
+  //             create: data.apprentices.map((idAp) => ({
+  //               idAp,
+  //               idAg: idAgency,
+  //               estado: "Pendiente",
+  //             }))
+  //           }
+  //         : undefined,
+  
+  //       SolicitudGrupoArtista: data.artists
+  //         ? {
+  //             create: data.artists.map(([idAp, idGr]) => ({
+  //               idAp,
+  //               idGr,
+  //               idAg: idAgency,
+  //               estado: "Pendiente",
+  //             }))
+  //           }
+  //         : undefined,
+  //     },
+  
+  //     include: {
+  //       SolicitudGrupoAprendiz: true,
+  //       SolicitudGrupoArtista: true,
+  //     }
+  //   });
+  
+  //   return ApplicationResponseDto.toEntity(application);
+  // }
+
+  // async create(data: CreateApplicationDto): Promise<Application> {
+
+  //   const idAgency = Number(data.idAgency);
+  //   const idConcept = Number(data.idConcept);
+  
+  //   const concept = await this.db.Concepto.findUnique({ where: { id: idConcept } });
+  //   const agency = await this.db.Agencia.findUnique({ where: { id: idAgency } });
+  
+  //   if (!agency || !concept) {
+  //     throw new Error("Agency or Concept not found");
+  //   }
+  
+  //   const application = await this.db.Solicitud.create({
+  //     data: {
+  //       nombreGrupo: data.groupName,
+  //       idAgencia: idAgency,
+  //       idConcepto: idConcept,
+  //       roles: data.roles,
+  //       estado: data.status,
+  
+  //       AprendizMiembro: data.apprentices
+  //         ? { connect: data.apprentices.map(id => ({ id })) }
+  //         : undefined,
+  
+  //       ArtistaMiembro: data.artists
+  //         ? {
+  //             connect: data.artists.map(([idAp, idGr]) => ({
+  //               idAp_idGr: { idAp, idGr }
+  //             }))
+  //           }
+  //         : undefined
+  //     },
+  
+  //     include: {
+  //       AprendizMiembro: true,
+  //       ArtistaMiembro: {
+  //         orderBy: {
+  //           idAp: "asc"   
+  //         }
+  //       }
+  //     }
+  //   });
+  
+  //   return ApplicationResponseDto.toEntity(application);
+  // }
+
+  
+  async create(data: CreateApplicationDto): Promise<Application> {
     const idAgency = Number(data.idAgency);
     const idConcept = Number(data.idConcept);
   
@@ -122,33 +224,47 @@ export class ApplicationRepository implements IApplicationRepository
         idAgencia: idAgency,
         idConcepto: idConcept,
         roles: data.roles,
-        estado: data.status,
+        estado: "Pendiente",
   
-        AprendizMiembro: data.apprentices
-          ? { connect: data.apprentices.map(id => ({ id })) }
-          : undefined,
+        AprendizMiembro: {
+          connect: data.apprentices.map(idAp => ({ id: idAp })),
+        },
   
-        ArtistaMiembro: data.artists
-          ? {
-              connect: data.artists.map(([idAp, idGr]) => ({
-                idAp_idGr: { idAp, idGr }
-              }))
-            }
-          : undefined
+        ArtistaMiembro: {
+          connect: data.artists.map(([idAp, idGr]) => ({
+            idAp_idGr: { idAp, idGr },
+          })),
+        },
+  
+        SolicitudGrupoAprendiz: {
+          create: data.apprentices.map(idAp => ({
+            idAp,
+            idAg: idAgency,
+            estado: "Pendiente",
+          })),
+        },
+  
+        SolicitudGrupoArtista: {
+          create: data.artists.map(([idAp, idGr]) => ({
+            idAp,
+            idGr,
+            idAg: idAgency,
+            estado: "Pendiente",
+          })),
+        },
       },
   
       include: {
         AprendizMiembro: true,
-        ArtistaMiembro: {
-          orderBy: {
-            idAp: "asc"   
-          }
-        }
-      }
+        ArtistaMiembro: true,
+        SolicitudGrupoAprendiz: true,
+        SolicitudGrupoArtista: true,
+      },
     });
   
     return ApplicationResponseDto.toEntity(application);
   }
+
 
     async findById(id: any): Promise<Application | null> {
          id=(Number)(id)
@@ -183,13 +299,25 @@ export class ApplicationRepository implements IApplicationRepository
         });
         return ApplicationResponseDto.toEntity(application);
       }
-   async delete(id: string): Promise<void> {
-    
-      await this.db.Solicitud.delete({
-        where: { id: Number(id) },
-      });
+
+
+      async delete(id: string): Promise<void> {
+        const solicitudId = Number(id);
       
-  }
+        await this.db.$transaction([
+          this.db.AprendizSolicitaGrupo.deleteMany({
+            where: { idSolicitud: solicitudId },
+          }),
+      
+          this.db.ArtistaSolicitaGrupo.deleteMany({
+            where: { idSolicitud: solicitudId },
+          }),
+      
+          this.db.Solicitud.delete({
+            where: { id: solicitudId },
+          }),
+        ]);
+      }
 
     async findAll(): Promise<Application[]> {
       const applications = await this.db.Solicitud.findMany({
@@ -207,4 +335,6 @@ export class ApplicationRepository implements IApplicationRepository
       return ApplicationResponseDto.toEntities(applications);
   }
 
+
+  
 }

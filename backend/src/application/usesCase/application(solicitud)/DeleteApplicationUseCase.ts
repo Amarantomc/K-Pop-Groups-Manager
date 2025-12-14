@@ -21,6 +21,7 @@ export class DeleteApplicationUseCase {
     await this.applicationRepository.delete(applicationId);
     await this.unitOfWork.commit();
     } catch (error) {
+      console.log(error);
       await this.unitOfWork.rollback();
       throw error;
     }
