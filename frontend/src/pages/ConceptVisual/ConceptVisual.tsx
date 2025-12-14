@@ -237,28 +237,31 @@ const ConceptVisual: React.FC = () => {
           {/* ConfirmDialog y Modal con z-index alto para prioridad visual */}
           <div style={{ position: 'fixed', zIndex: 20000, top: 0, left: 0, width: '100vw', height: '100vh', pointerEvents: 'none' }}>
             <div style={{ pointerEvents: 'auto' }}>
-              <ConfirmDialog
-                message="¿Está seguro que desea eliminar este concepto visual?"
-                open={openConfirm}
-                onCancel={() => setOpenConfirm(false)}
-                onConfirm={handleDelete}
+              <ConfirmDialog 
+                message="¿Está seguro que desea eliminar este concepto visual?" 
+                open={openConfirm} 
+                onCancel={() => setOpenConfirm(false)} 
+                onConfirm={handleDelete} 
+                type="confirm"
               />
-              <ConfirmDialog
+              <ConfirmDialog 
                 title="¡Éxito!"
-                message="El concepto visual ha sido creado correctamente"
+                message="El concepto visual ha sido creado correctamente" 
                 open={openAccept}
-                onCancel={() => setOpenAccept(false)}
-                onConfirm={() => setOpenAccept(false)}
-                confirmText="Aceptar"
+                type="success" 
+                onCancel={() => setOpenAccept(false)} 
+                onConfirm={() => setOpenAccept(false)} 
+                confirmText="Aceptar" 
                 showDeleteButton={false}
               />
-              <ConfirmDialog
+              <ConfirmDialog 
                 title="Error"
-                message={errorMessage}
-                open={openError}
-                onCancel={() => setOpenError(false)}
-                onConfirm={() => setOpenError(false)}
-                confirmText="Aceptar"
+                message={errorMessage} 
+                type="error"
+                open={openError} 
+                onCancel={() => setOpenError(false)} 
+                onConfirm={() => setOpenError(false)} 
+                confirmText="Aceptar" 
                 showDeleteButton={false}
               />
             </div>

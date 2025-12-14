@@ -636,11 +636,13 @@ const Profile: React.FC = () => {
         onCancel={() => setOpenConfirmDelete(false)}
         onConfirm={handleDeleteProfile}
         title="Confirmar eliminación"
+        type="confirm"
       />
       <ConfirmDialog 
         title="¡Éxito!"
         message={dialogMessage}
         open={openSuccess}
+        type="success"
         onCancel={() => setOpenSuccess(false)}
         onConfirm={() => setOpenSuccess(false)}
         confirmText="Aceptar"
@@ -649,6 +651,7 @@ const Profile: React.FC = () => {
       <ConfirmDialog 
         title="Error"
         message={dialogMessage}
+        type="error"
         open={openError}
         onCancel={() => setOpenError(false)}
         onConfirm={() => setOpenError(false)}

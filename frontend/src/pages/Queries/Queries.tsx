@@ -577,13 +577,14 @@ const Queries: React.FC = () => {
 
       </div>
 
-      <ConfirmDialog
-        title="Aviso de Consulta"
-        message={errorMessage}
-        open={openError}
-        onCancel={() => setOpenError(false)}
-        onConfirm={() => setOpenError(false)}
-        confirmText="Cerrar"
+      <ConfirmDialog 
+        title="Error"
+        message={errorMessage} 
+        type="error"
+        open={openError} 
+        onCancel={() => setOpenError(false)} 
+        onConfirm={() => setOpenError(false)} 
+        confirmText="Aceptar" 
         showDeleteButton={false}
       />
     </PageLayout>

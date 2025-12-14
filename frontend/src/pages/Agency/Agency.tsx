@@ -257,12 +257,33 @@ const ListAgency: React.FC = () => {
           userRole={user?.role}
           // onCreateClick={() => setShowCreateModal(true)}
         />
-        <ConfirmDialog message="¿Está seguro que desea eliminar esta agencia?" open={openConfirm} onCancel={() => setOpenConfirm(false)} onConfirm={handleDelete}>
-          </ConfirmDialog>
-          <ConfirmDialog title="¡Éxito!" message="La agencia ha sido creada correctamente" open={openAccept} onCancel={() => setOpenAccept(false)} onConfirm={() => setOpenAccept(false) } confirmText="Aceptar" showDeleteButton={false}>
-          </ConfirmDialog>
-          <ConfirmDialog title="Error" message={errorMessage} open={openError} onCancel={() => setOpenError(false)} onConfirm={() => setOpenError(false)} confirmText="Aceptar" showDeleteButton={false}>
-          </ConfirmDialog>
+        <ConfirmDialog 
+          message="¿Está seguro que desea eliminar esta agencia?" 
+          open={openConfirm} 
+          onCancel={() => setOpenConfirm(false)} 
+          onConfirm={handleDelete} 
+          type="confirm"
+        />
+        <ConfirmDialog 
+          title="¡Éxito!"
+          message="La agencia ha sido creada correctamente" 
+          open={openAccept}
+          type="success" 
+          onCancel={() => setOpenAccept(false)} 
+          onConfirm={() => setOpenAccept(false)} 
+          confirmText="Aceptar" 
+          showDeleteButton={false}
+        />
+        <ConfirmDialog 
+          title="Error"
+          message={errorMessage} 
+          type="error"
+          open={openError} 
+          onCancel={() => setOpenError(false)} 
+          onConfirm={() => setOpenError(false)} 
+          confirmText="Aceptar" 
+          showDeleteButton={false}
+        />
         <ModalCreate
           isOpen={showCreateModal}
           title="Crear Agencia"

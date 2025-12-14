@@ -266,26 +266,31 @@ const Artist: React.FC = () => {
             //constraints={artistConstraints}
             //createEntity="artist"
           />
-          <ConfirmDialog
-            message="¿Está seguro de que desea eliminar este artista?"
-            open={openConfirm}
-            onConfirm={handleDelete}
-            onCancel={() => setOpenConfirm(false)}
+          <ConfirmDialog 
+            message="¿Está seguro que desea eliminar este artista?" 
+            open={openConfirm} 
+            onCancel={() => setOpenConfirm(false)} 
+            onConfirm={handleDelete} 
+            type="confirm"
           />
-          <ConfirmDialog
+          <ConfirmDialog 
             title="¡Éxito!"
-            message="Operación realizada correctamente"
+            message="El artista ha sido registrado correctamente" 
             open={openAccept}
-            onConfirm={() => setOpenAccept(false)}
-            onCancel={() => setOpenAccept(false)}
+            type="success" 
+            onCancel={() => setOpenAccept(false)} 
+            onConfirm={() => setOpenAccept(false)} 
+            confirmText="Aceptar" 
             showDeleteButton={false}
           />
-          <ConfirmDialog
+          <ConfirmDialog 
             title="Error"
-            message={errorMessage}
-            open={openError}
-            onConfirm={() => setOpenError(false)}
-            onCancel={() => setOpenError(false)}
+            message={errorMessage} 
+            type="error"
+            open={openError} 
+            onCancel={() => setOpenError(false)} 
+            onConfirm={() => setOpenError(false)} 
+            confirmText="Aceptar" 
             showDeleteButton={false}
           />
         </>
