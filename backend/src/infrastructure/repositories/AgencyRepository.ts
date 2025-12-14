@@ -80,6 +80,51 @@ export class AgencyRepository implements IAgencyRepository {
 
 	async delete(id: string): Promise<void> {
 		const numericId = Number(id);
+	
+		const contratosArtistas = await this.db.contrato.findMany({
+			where: { idAg: numericId },
+			select: { idAp: true, idGr: true },
+		});
+	
+		for (const contrato of contratosArtistas) {
+			await this.db.artista.update({
+				where: { idAp_idGr: { idAp: contrato.idAp, idGr: contrato.idGr } },
+				data: { estadoArtista: "En Pausa" },
+			});
+		}
+	
+		const contratosGrupo = await this.db.contratoGrupo.findMany({
+			where: { idAg: numericId },
+			select: { IdGr: true },
+		});
+	
+		for (const contrato of contratosGrupo) {
+			await this.db.grupo.update({
+				where: { id: contrato.IdGr },
+				data: { estadoGrupo: "En Pausa" },
+			});
+		}
+	
+		const aprendices = await this.db.aprendizEnAgencia.findMany({
+			where: { idAg: numericId },
+			select: { idAp: true },
+		});
+	
+		for (const aprendiz of aprendices) {
+			await this.db.aprendiz.update({
+				where: { id: aprendiz.idAp },
+				data: { estadoAprendiz: "Proceso de Selección" },
+			});
+		}
+	
+		await this.db.aprendizEnAgencia.deleteMany({ where: { idAg: numericId } });
+		await this.db.evaluacionAprendiz.deleteMany({ where: { idAg: numericId } });
+		await this.db.aprendizSolicitaGrupo.deleteMany({ where: { idAg: numericId } });
+		await this.db.artistaSolicitaGrupo.deleteMany({ where: { idAg: numericId } });
+		await this.db.contrato.deleteMany({ where: { idAg: numericId } });
+		await this.db.contratoGrupo.deleteMany({ where: { idAg: numericId } });
+	
 		await this.db.agencia.delete({ where: { id: numericId } });
 	}
+
 }
