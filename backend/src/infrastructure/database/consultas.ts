@@ -1,4 +1,5 @@
 // consultas.ts
+import { stringify } from 'querystring'
 import { PrismaClient } from '../../generated/prisma'
 
 const prisma = new PrismaClient()
@@ -11,9 +12,8 @@ async function consultas() {
        
 //   `
 //   console.table(resultadoSQL)
- 
- 
-      
+    	 
+  
 }
 
 consultas()

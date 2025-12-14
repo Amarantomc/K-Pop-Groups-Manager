@@ -16,6 +16,8 @@ export class GroupRepository implements IGroupRepository {
 		@inject(Types.PrismaClient) private prisma: any,
 		@inject(Types.IUnitOfWork) private unitOfWork: UnitOfWork
 	) {}
+	
+	
 
 	private get db() {
 		return this.unitOfWork.getTransaction();
@@ -484,5 +486,41 @@ async removeMembers(groupId: number, artistIds: number[]): Promise<void> {
 				},
 			});
 		}
+	}
+
+	async getGroupHistory(apprenticeId: number, groupId: number): Promise<Group[]> {
+		const groups= await this.db.grupo.findMany({
+			 where:{
+				 HistorialArtistas:{
+					some:{
+						idAp:apprenticeId,
+						idGrupoDebut:groupId
+					}
+				 }
+			 }
+		})
+		return GroupResponseDTO.toEntitiesSimple(groups)
+	}
+
+	async getLastGroup(apprenticeId: number, groupId: number): Promise<Group> {
+		 const groups= await this.db.$queryRaw`
+		       SELECT 
+        aeg."idAp",
+        aeg."idGrupoDebut",
+        g."id" as "id",
+        g."nombreCompleto" as "nombreCompleto",
+        aeg."fechaInicio",
+        aeg."fechaFinalizacion",
+        aeg."rol",
+		g."Nomiembros",
+		g."estadoGrupo"
+      FROM "ArtistaEnGrupo" aeg
+       JOIN "Grupo" g ON aeg."idGr" = g."id"
+      WHERE aeg."idAp" = ${apprenticeId}
+        AND aeg."idGrupoDebut" = ${groupId}
+      ORDER BY aeg."fechaInicio" DESC
+      LIMIT 1
+		 `
+	   return GroupResponseDTO.toEntitySimple(groups[0])
 	}
 }

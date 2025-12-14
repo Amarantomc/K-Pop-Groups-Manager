@@ -34,6 +34,16 @@ const Queries: React.FC = () => {
   const { user } = useAuth();
   const [selectedQuery, setSelectedQuery] = useState<number>(1);
 
+    // Estados para Query 1: Actividades por grupo
+  const [activities, setActivities] = useState<Activity[]>([]);
+  const [groups, setGroups] = useState<any[]>([]);
+  const [selectedGroupId, setSelectedGroupId] = useState('');
+
+  // Estados para Query 2: Información de artista
+  const [artistInfo, setArtistInfo] = useState<Artist[]>([]);
+  const [agencies, setAgencies] = useState<any[]>([]);
+  const [selectedAgencyId, setSelectedAgencyId] = useState('');
+  
   // Estados para Query 3: Conflictos de agenda
   const [conflictStart, setConflictStart] = useState('');
   const [conflictEnd, setConflictEnd] = useState('');
@@ -55,16 +65,6 @@ const Queries: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [openError, setOpenError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-
-  // Estados para Query 1: Actividades por grupo
-  const [activities, setActivities] = useState<Activity[]>([]);
-  const [groups, setGroups] = useState<any[]>([]);
-  const [selectedGroupId, setSelectedGroupId] = useState('');
-
-  // Estados para Query 2: Información de artista
-  const [artistInfo, setArtistInfo] = useState<Artist[]>([]);
-  const [agencies, setAgencies] = useState<any[]>([]);
-  const [selectedAgencyId, setSelectedAgencyId] = useState('');
 
   // Fetch dinámico de grupos y agencias al montar
   useEffect(() => {
@@ -162,7 +162,131 @@ const Queries: React.FC = () => {
           <button className={`query-btn ${selectedQuery === 2 ? 'active' : ''}`} style={{ width: '320px' }} onClick={() => handleQueryChange(2)}>
             2. Actividades por grupo
           </button>
+          <button className={`query-btn ${selectedQuery === 4 ? 'active' : ''}`} style={{ width: '320px' }} onClick={() => handleQueryChange(4)}>
+            4. Artistas con debut y contrato activo
+          </button>
         </div>
+
+        
+        {/* Contenido de Query 1: Artistas activos por agencia */}
+        {selectedQuery === 1 && (
+          <div className="query-content">
+            <h3>Artistas activos por agencia</h3>
+            <p className="query-description">Consulta los artistas activos de una agencia específica.</p>
+            <div className="query-form">
+              {user?.role === 'manager' && (
+                <>
+                  <label>Agencia:</label>
+                  <select value={selectedAgencyId} onChange={e => {
+                    console.log(e.target);
+                    setSelectedAgencyId(e.target.value);
+                    setArtistInfo([]);
+                  }}>
+                    <option value="">Selecciona una agencia</option>
+                    {agencies.map((a: any) => (
+                      <option key={a.id} value={a.id}>{a.name}</option>
+                    ))}
+                  </select>
+                  <button className="btn-primary" disabled={isLoading} onClick={async () => {
+                    fetchArtistsByAgency();
+                  }}>
+                    Consultar
+                  </button>
+                </>
+              )}
+            </div>
+            {artistInfo.length > 0 && (
+              <div className="query-results">
+                <h4>Artistas activos de la agencia seleccionada</h4>
+                <div className="results-table">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Grupo</th>
+                        <th>Debut</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {artistInfo.filter((artist: any) => artist.Status === 'Activo').map((artist: any) => (
+                        <tr key={artist.ApprenticeId || artist.id}>
+                          <td>{artist.ApprenticeId || artist.id}</td>
+                          <td>{artist.ArtistName}</td>
+                          <td>{artist.groupHistory?.map((g: { id: number; name: string; debut: string; status: string; memberCount: number; IdAgency: number }) => g.name).join(', ')}</td>
+                          <td>{artist.DebutDate}</td>
+                          <td>{artist.Status}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+            {artistInfo.filter((artist: any) => artist.Status === 'Activo').length === 0 && !isLoading && selectedAgencyId && (
+              <div className="no-results">No se encontraron artistas activos para la agencia seleccionada</div>
+            )}
+          </div>
+        )}
+
+        
+        {/* Contenido de Query 2: Calendario de actividades por grupo */}
+        {selectedQuery === 2 && (
+          <div className="query-content">
+            <h3>Calendario de actividades por grupo</h3>
+            <p className="query-description">
+              Consulta el calendario completo de actividades programadas para un grupo en un rango de fechas, con detalles de lugar, hora y tipo de actividad.
+            </p>
+            <div className="query-form">
+              <label htmlFor="groupId">Seleccione el grupo:</label>
+              <select id="groupId" value={selectedGroupId} onChange={e => setSelectedGroupId(e.target.value)}>
+                <option value="">-- Seleccione un grupo --</option>
+                {groups.map((g: any) => (
+                  <option key={g.id} value={g.id}>{g.name}</option>
+                ))}
+              </select>
+              <button className="btn-primary" onClick={fetchActivitiesByGroup} disabled={isLoading}>
+                {isLoading ? 'Consultando...' : 'Consultar'}
+              </button>
+            </div>
+            {activities.length > 0 && (
+              <div className="query-results">
+                <h4>Actividades del Grupo seleccionado</h4>
+                <div className="results-table">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Responsable</th>
+                        <th>Tipo de Actividad</th>
+                        <th>Fecha</th>
+                        <th>Lugar</th>
+                        <th>Tipo de Evento</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {activities.map((activity) => (
+                        <tr key={activity.id}>
+                          <td>{activity.id}</td>
+                          <td>{activity.responsible}</td>
+                          <td>{activity.activityType}</td>
+                          <td>{new Date(activity.date).toLocaleDateString()}</td>
+                          <td>{activity.place}</td>
+                          <td>{activity.eventType}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+            {activities.length === 0 && !isLoading && selectedGroupId && (
+              <div className="no-results">No se encontraron actividades para el grupo seleccionado</div>
+            )}
+          </div>
+        )}
+
         {/* Contenido de Query 3: Conflictos de agenda */}
         {selectedQuery === 3 && (
           <div className="query-content">
@@ -236,7 +360,7 @@ const Queries: React.FC = () => {
                   const token = localStorage.getItem('token');
                   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
                   if (token) headers['Authorization'] = `Bearer ${token}`;
-                  const response = await fetch('http://localhost:3000/api/artist/debut-contract', { headers });
+                  const response = await fetch(`http://localhost:3000/api/artist/query/${selectedAgencyId}`, { headers });
                   const data = await response.json();
                   setDebutContractResults(data.data || []);
                 } catch (error) { setErrorMessage('Error al consultar artistas'); setOpenError(true); }
@@ -451,132 +575,16 @@ const Queries: React.FC = () => {
           </div>
         )}
 
-        {/* Contenido de Query 1: Artistas activos por agencia */}
-        {selectedQuery === 1 && (
-          <div className="query-content">
-            <h3>Artistas activos por agencia</h3>
-            <p className="query-description">Consulta los artistas activos de una agencia específica.</p>
-            <div className="query-form">
-              {user?.role === 'manager' && (
-                <>
-                  <label>Agencia:</label>
-                  <select value={selectedAgencyId} onChange={e => {
-                    console.log(e.target);
-                    setSelectedAgencyId(e.target.value);
-                    setArtistInfo([]);
-                  }}>
-                    <option value="">Selecciona una agencia</option>
-                    {agencies.map((a: any) => (
-                      <option key={a.id} value={a.id}>{a.name}</option>
-                    ))}
-                  </select>
-                  <button className="btn-primary" disabled={isLoading} onClick={async () => {
-                    fetchArtistsByAgency();
-                  }}>
-                    Consultar
-                  </button>
-                </>
-              )}
-            </div>
-            {artistInfo.length > 0 && (
-              <div className="query-results">
-                <h4>Artistas activos de la agencia seleccionada</h4>
-                <div className="results-table">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Grupo</th>
-                        <th>Debut</th>
-                        <th>Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {artistInfo.filter((artist: any) => artist.Status === 'Activo').map((artist: any) => (
-                        <tr key={artist.ApprenticeId || artist.id}>
-                          <td>{artist.ApprenticeId || artist.id}</td>
-                          <td>{artist.ArtistName}</td>
-                          <td>{artist.groupHistory?.map((g: { id: number; name: string; debut: string; status: string; memberCount: number; IdAgency: number }) => g.name).join(', ')}</td>
-                          <td>{artist.DebutDate}</td>
-                          <td>{artist.Status}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            )}
-            {artistInfo.filter((artist: any) => artist.Status === 'Activo').length === 0 && !isLoading && selectedAgencyId && (
-              <div className="no-results">No se encontraron artistas activos para la agencia seleccionada</div>
-            )}
-          </div>
-        )}
-
-        {/* Contenido de Query 2: Calendario de actividades por grupo */}
-        {selectedQuery === 2 && (
-          <div className="query-content">
-            <h3>Calendario de actividades por grupo</h3>
-            <p className="query-description">
-              Consulta el calendario completo de actividades programadas para un grupo en un rango de fechas, con detalles de lugar, hora y tipo de actividad.
-            </p>
-            <div className="query-form">
-              <label htmlFor="groupId">Seleccione el grupo:</label>
-              <select id="groupId" value={selectedGroupId} onChange={e => setSelectedGroupId(e.target.value)}>
-                <option value="">-- Seleccione un grupo --</option>
-                {groups.map((g: any) => (
-                  <option key={g.id} value={g.id}>{g.name}</option>
-                ))}
-              </select>
-              <button className="btn-primary" onClick={fetchActivitiesByGroup} disabled={isLoading}>
-                {isLoading ? 'Consultando...' : 'Consultar'}
-              </button>
-            </div>
-            {activities.length > 0 && (
-              <div className="query-results">
-                <h4>Actividades del Grupo seleccionado</h4>
-                <div className="results-table">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>ID</th>
-                        <th>Responsable</th>
-                        <th>Tipo de Actividad</th>
-                        <th>Fecha</th>
-                        <th>Lugar</th>
-                        <th>Tipo de Evento</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {activities.map((activity) => (
-                        <tr key={activity.id}>
-                          <td>{activity.id}</td>
-                          <td>{activity.responsible}</td>
-                          <td>{activity.activityType}</td>
-                          <td>{new Date(activity.date).toLocaleDateString()}</td>
-                          <td>{activity.place}</td>
-                          <td>{activity.eventType}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            )}
-            {activities.length === 0 && !isLoading && selectedGroupId && (
-              <div className="no-results">No se encontraron actividades para el grupo seleccionado</div>
-            )}
-          </div>
-        )}
       </div>
 
-      <ConfirmDialog
-        title="Aviso de Consulta"
-        message={errorMessage}
-        open={openError}
-        onCancel={() => setOpenError(false)}
-        onConfirm={() => setOpenError(false)}
-        confirmText="Cerrar"
+      <ConfirmDialog 
+        title="Error"
+        message={errorMessage} 
+        type="error"
+        open={openError} 
+        onCancel={() => setOpenError(false)} 
+        onConfirm={() => setOpenError(false)} 
+        confirmText="Aceptar" 
         showDeleteButton={false}
       />
     </PageLayout>

@@ -268,12 +268,13 @@ const ListApprentice: React.FC = () => {
           userRole={user?.role}
           // onCreateClick={() => setShowCreateModal(true)}
         />
-        <ConfirmDialog message="¿Está seguro que desea eliminar este aprendiz?" open={openConfirm} onCancel={() => setOpenConfirm(false)} onConfirm={handleDelete}>
+        <ConfirmDialog message="¿Está seguro que desea eliminar este aprendiz?" open={openConfirm} onCancel={() => setOpenConfirm(false)} onConfirm={handleDelete} type="confirm">
           </ConfirmDialog>
         <ConfirmDialog 
           title="¡Éxito!"
           message="El aprendiz ha sido creado correctamente" 
-          open={openAccept} 
+          open={openAccept}
+          type="success" 
           onCancel={() => setOpenAccept(false)} 
           onConfirm={() => setOpenAccept(false)} 
           confirmText="Aceptar" 
@@ -282,6 +283,7 @@ const ListApprentice: React.FC = () => {
         <ConfirmDialog 
           title="Error"
           message={errorMessage} 
+          type="error"
           open={openError} 
           onCancel={() => setOpenError(false)} 
           onConfirm={() => setOpenError(false)} 

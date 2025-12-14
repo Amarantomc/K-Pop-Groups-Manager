@@ -397,12 +397,14 @@ const Groups: React.FC = () => {
             message="¿Está seguro que desea eliminar este grupo?" 
             open={openConfirm} 
             onCancel={() => setOpenConfirm(false)} 
-            onConfirm={handleDelete}
+            onConfirm={handleDelete} 
+            type="confirm"
           />
           <ConfirmDialog 
             title="¡Éxito!"
             message="El grupo ha sido creado correctamente" 
-            open={openAccept} 
+            open={openAccept}
+            type="success" 
             onCancel={() => setOpenAccept(false)} 
             onConfirm={() => setOpenAccept(false)} 
             confirmText="Aceptar" 
@@ -411,6 +413,7 @@ const Groups: React.FC = () => {
           <ConfirmDialog 
             title="Error"
             message={errorMessage} 
+            type="error"
             open={openError} 
             onCancel={() => setOpenError(false)} 
             onConfirm={() => setOpenError(false)} 

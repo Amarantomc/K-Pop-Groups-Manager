@@ -6,6 +6,10 @@ import { CreateArtistDto } from "../../application/dtos/artist/CreateArtistDto";
 import type { Artist } from "../../domain/entities/Artist";
 import { ArtistResponseDto } from "../../application/dtos/artist/ArtistResponseDto";
 import type { UpdateArtistDto } from "../../application/dtos/artist/UpdateArtistDto";
+import { ArtistOnDebutResponseDto } from "../../application/dtos/artist/ArtistsOnDebutResponseDto";
+import { ArtistWithIncomeDto } from "../../application/dtos/artist/ArtistWithIncomeDto";
+import type { RequestArtistWithIncomeDto } from "../../application/dtos/artist/RequestArtistWithIncomeDto";
+import { ArtistWithSuccesDto } from "../../application/dtos/artist/ArtistWithSuccesDto";
 
 @injectable()
 export class ArtistRepository implements IArtistRepository {
@@ -14,6 +18,11 @@ export class ArtistRepository implements IArtistRepository {
                 @inject(Types.IUnitOfWork) private unitOfWork :UnitOfWork
                 
 ){}
+  
+
+
+  
+ 
 
   
 private get db() {
@@ -161,21 +170,7 @@ private get db() {
       },
     });
   }
-  async getGroupHistory(apprenticeId: number, groupId: number): Promise<Array<{ groupId: number; role: string; startDate: Date; endDate?: Date; }>> {
-        const history = await this.db.artistaEnGrupo.findMany({
-      where: {
-        idAp: apprenticeId,
-        idGrupoDebut: groupId,
-      },
-    });
-
-    return history.map((h: any) => ({
-      groupId: h.idGr,
-      role: h.rol,
-      startDate: h.fechaInicio,
-      endDate: h.fechaFinalizacion,
-    }));
-  }
+  
  
   async getActivities(apprenticeId: number, groupId: number): Promise<Array<{ activityId: number; accepted: boolean; }>> {
         const activities = await this.db.artistaEnActividad.findMany({
@@ -244,15 +239,16 @@ private get db() {
   }
 
    async findByAgency(id: number): Promise<Artist[]> {
-       const artists=await this.db.artista.findMany({
+      
+    const artists=await this.db.artista.findMany({
          where: {
-                aprendiz: {
-                    Agencia:{
-                      some:{
-                        idAg:1
-                      }
+                Contrato: {
+                    some:{
+                        idAg:id,
+                        fechaFinalizacion:null,
+                        }
                     }
-                }
+                
             },
             include:{
               HistorialGrupos:{
@@ -278,6 +274,152 @@ private get db() {
        
       return ArtistResponseDto.toEntitiesForManager(artists)
   }
+
+   async getSoloArtists(): Promise<Artist[] | null> {
+    
+    const artists= await this.db.artista.findMany({
+       where:{
+         HistorialGrupos:{
+            every:{
+              fechaFinalizacion:{not: null}
+            }
+         }
+       }, include:{
+        HistorialGrupos:{
+          include:{
+            grupo:true
+          }
+        }, 
+         aprendiz:{
+                 include:{
+                  Agencia:{
+                    include:{
+                      agencia:true
+                    }
+                  }
+                 }
+                  
+              }
+          
+       }
+    }) 
+      return artists ? ArtistResponseDto.toEntitiesForManager(artists):null
+  }
+
+  async getArtistsOnDebut(idAgency:number):Promise<ArtistOnDebutResponseDto[]|null>{
+      const artists =await this.db.$queryRaw`
+    SELECT DISTINCT
+      a."idAp",
+      a."idGr",
+      a."nombreArtistico",
+      a."fechaDebut",
+      a."estadoArtista",
+      -- Datos del grupo actual
+      g."nombreCompleto" as "grupoNombre",
+      g."fechaDebut" as "grupoFechaDebut",
+      g."estadoGrupo",
+      
+      -- Datos del contrato
+      c."fechaInicio" as "contratoFechaInicio",
+      c."estado" as "contratoEstado",
+      c."condicionesIniciales",
+      c."distribucionIngresos"
+       
+    FROM "Artista" a
+     JOIN "Grupo" g ON a."idGr" = g."id"
+     JOIN "Contrato" c ON a."idAp" = c."idAp" 
+      AND a."idGr" = c."idGr" 
+      AND c."idAg" = ${idAgency}
+      AND c."fechaFinalizacion" IS NULL
+       
+      
+    -- Join con historial de grupos para verificar participación en debut
+      JOIN "ArtistaEnGrupo" aeg ON a."idAp" = aeg."idAp" 
+      AND a."idGr" = aeg."idGrupoDebut"
+     JOIN "Grupo" g2 ON aeg."idGr" = g2."id"
+    WHERE 
+      -- La fecha de debut del grupo debe estar entre fechaInicio y fechaFinalizacion
+      g2."fechaDebut" >= aeg."fechaInicio"
+      AND (
+        aeg."fechaFinalizacion" IS NULL 
+        OR g2."fechaDebut" <= aeg."fechaFinalizacion"
+      )
+    ORDER BY a."nombreArtistico"
+  `;
+      return artists ? ArtistOnDebutResponseDto.fromQueryResults(artists):null;
+  }
+
+  async getIndividualIncome(data:RequestArtistWithIncomeDto): Promise<ArtistWithIncomeDto> {
+       const artist = await this.db.$queryRaw`
+         SELECT 
+        a."idAp" as "apprenticeId",
+        a."idGr" as "groupId",
+         
+        SUM(i."monto") as "TotalIncome"
+      FROM "Artista" a
+       JOIN "PersonasEnActividad" pea ON a."idAp" = pea."idAp" 
+        AND a."idGr" = pea."idGr"
+       JOIN "Actividad" act ON pea."idAct" = act."id"
+       JOIN "Ingreso" i ON act."id" = i."idAct"
+      WHERE a."idAp" = ${data.apprenticeId}
+        AND a."idGr" = ${data.groupId}
+        AND i."fecha" BETWEEN ${data.startDate} AND ${data.endDate}
+      GROUP BY a."idAp", a."idGr"
+       `
+       
+       return ArtistWithIncomeDto.fromQueryResult(artist[0])
+  }
+
+  async  getIncomeGeneratedInGroups(data: RequestArtistWithIncomeDto): Promise<ArtistWithIncomeDto> {
+     const artist= await this.db.$queryRaw`
+          SELECT 
+        a."idAp" as "apprenticeId",
+        a."idGr"as "groupId",
+        SUM(i."monto" / g."Nomiembros") as "TotalIncome"
+      FROM "Artista" a
+       JOIN "ArtistaEnGrupo" ag ON a."idGr" = ag."idGrupoDebut" And a."idAp"=ag."idAp"
+       JOIN "Grupo" g On ag."idGr" = g."id"
+       JOIN "PersonasEnActividad" pea ON ag."idGr" = pea."idGrupos"
+       JOIN "Actividad" act ON pea."idAct" = act."id"
+       JOIN "Ingreso" i ON act."id" = i."idAct"
+      WHERE a."idAp" = ${data.apprenticeId}
+        AND a."idGr" = ${data.groupId}
+        AND i."fecha" BETWEEN ${data.startDate} AND ${data.endDate}
+      GROUP BY a."idAp", a."idGr"
+      `
+       
+      return ArtistWithIncomeDto.fromQueryResult(artist[0])
+  }
+
+  async getBestAlbums(data: RequestArtistWithIncomeDto): Promise<ArtistWithSuccesDto[]|null> {
+        const bestAlbums = await this.db.$queryRaw`
+
+         SELECT 
+       ala."idAp",
+       ala."idGr",
+       alb."id" as "albumId",
+       alb."titulo",
+       alb."NoCopiasVendidas",
+       alb."fechaLanzamiento",
+       Count(p."id") as "numeroPremios"
+       From "ArtistaLanzaAlbum" ala
+       Join "Album" alb On ala."idAlb"=alb."id"
+       Join "AlbumPremiado" ap On alb."id"=ap."idAlb"
+       Join "Premio" p On ap."idPremio"= p."id"
+       Where ala."idAp"=${data.apprenticeId} And ala."idGr"=${data.groupId}
+       AND alb."fechaLanzamiento" BETWEEN ${data.startDate} AND ${data.endDate}
+        GROUP BY ala."idAp", ala."idGr", alb."id", alb."titulo", 
+               alb."NoCopiasVendidas", alb."fechaLanzamiento"
+      ORDER BY alb."NoCopiasVendidas" DESC
+      LIMIT 5
+  `;
+      return bestAlbums? ArtistWithSuccesDto.fromQueryResultArray(bestAlbums):null
+  }
+
+  getBestSongs(data: RequestArtistWithIncomeDto): Promise<ArtistWithSuccesDto[] | null> {
+    throw new Error("Method not implemented.");
+  }
+   
 
 
 

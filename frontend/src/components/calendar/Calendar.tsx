@@ -1,26 +1,36 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, {useState, type JSX} from "react";
+import React, { useState, type JSX } from "react";
 import "./calendar.css"
 import ExportButton from "../exportButton/ExportButton";
 import ModalCreate from "../modal/ModalCreate";
 
-interface CalendarProps{
-    title? : string,
-    description? : string,
-    activitiesTest : any[]
+interface CalendarProps {
+  title?: string,
+  description?: string,
+  activitiesTest: any[]
 }
 
-const Calendar : React.FC<CalendarProps> = ({
-    title = "",
-    description = "",
-    activitiesTest = []
+export const transformDate = (dateStr: string) => {
+  const date = new Date(dateStr)
+
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
+
+const Calendar: React.FC<CalendarProps> = ({
+  title = "",
+  description = "",
+  activitiesTest = []
 }) => {
-    const [currentDate,setCurrentDate] = useState(new Date());
-    const [showDayMenu,setShowDayMenu] = useState(false)
-    const [selectedDay, setSelectedDay] = useState<number | null>(null)
-    const [showAddModal, setShowAddModal] = useState(false)
-    // const [selectedDates, setSelectedDates] = useState<string[]>([])
-    // const [isSelectingMultipleDates, setIsSelectingMultipleDates] = useState(false)
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [showDayMenu, setShowDayMenu] = useState(false)
+  const [selectedDay, setSelectedDay] = useState<number | null>(null)
+  const [showAddModal, setShowAddModal] = useState(false)
+  // const [selectedDates, setSelectedDates] = useState<string[]>([])
+  // const [isSelectingMultipleDates, setIsSelectingMultipleDates] = useState(false)
   const getActivityIcon = (type: string) => {
     switch (type) {
       case "festival":
@@ -102,209 +112,198 @@ const Calendar : React.FC<CalendarProps> = ({
         )
     }
   }
-    const transformDate = (dateStr : string) => {
-      const date = new Date(dateStr)
-      
-      const year = date.getFullYear()
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
 
-      return `${year}-${month}-${day}`;
-    }
-
-    const transformActivityType = (type : string) => {
-      const translations: Record<string, string> = {
+  const transformActivityType = (type: string) => {
+    const translations: Record<string, string> = {
       'Concierto': 'concert',
       'Festival': 'festival',
       'Show de TV': 'tv-show',
       'Entrevista': 'interview',
       'Sesión fotográfica': 'photoshoot',
       //Ensayos
-        };
-        return translations[type]
+    };
+    return translations[type]
+  }
+
+  const getDaysInMonth = (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const firstDay = new Date(year, month, 1)
+    const lastDay = new Date(year, month + 1, 0)
+    return {
+      daysInMonth: lastDay.getDate(),
+      startingDayOfWeek: firstDay.getDay()
     }
-    
-    const getDaysInMonth = (date : Date) => {
-        const year = date.getFullYear();
-        const month = date.getMonth();
-        const firstDay = new Date(year,month,1)
-        const lastDay = new Date(year,month+1,0)
-        return {
-            daysInMonth : lastDay.getDate(),
-            startingDayOfWeek : firstDay.getDay()
-        }
-    }
+  }
 
-    const {daysInMonth,startingDayOfWeek} = getDaysInMonth(currentDate);
+  const { daysInMonth, startingDayOfWeek } = getDaysInMonth(currentDate);
 
-    const previousMonth = () => {
-        setCurrentDate(new Date(currentDate.getFullYear(),currentDate.getMonth()-1))
-    }
+  const previousMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1))
+  }
 
-    const nextMonth = () => {
-        setCurrentDate(new Date(currentDate.getFullYear(),currentDate.getMonth()+1))
-    }
+  const nextMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1))
+  }
 
-    const getEventsForDate = (day : number) => {
-        const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1 ).padStart(2, "0")}-${String(day).padStart(2, "0")}`
-        return activitiesTest.filter((activity) => transformDate(activity.date) === dateStr);
-    }
+  const getEventsForDate = (day: number) => {
+    const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`
+    return activitiesTest.filter((activity) => transformDate(activity.date) === dateStr);
+  }
 
-    const monthNames = [
-        "Enero","Febrero","Marzo","Abril","Mayo","Junio",
-        "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"
-    ]
+  const monthNames = [
+    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+  ]
 
-    const dayNames = [
-        "Dom","Lun","Mar","Mié","Jue","Vie","Sáb"
-    ]
+  const dayNames = [
+    "Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"
+  ]
 
-    const renderCalendarDays = () => {
-        const days = []
+  const renderCalendarDays = () => {
+    const days = []
 
-        for (let i = 0; i < startingDayOfWeek; i++) {
-            days.push(<div key={`empty-${i}`} className="calendar-day calendar-day-empty" />)
-        }
-
-        for (let day = 1;day <= daysInMonth;day++){
-            const dayEvents = getEventsForDate(day)
-
-            const isToday = 
-            day === new Date().getDate() &&
-            currentDate.getMonth() === new Date().getMonth() &&
-            currentDate.getFullYear() === new Date().getFullYear()
-            
-            days.push(
-                <div 
-                    key={day} 
-                    onClick = {() => handleDayClick(day)}
-                    className={`calendar-day ${isToday ? "calendar-day-today" : ""} ${
-                        dayEvents.length > 0 ? "calendar-day-has-activity" : ""
-                    }`}
-                >
-                        <span className="calendar-day-number">{day}</span>
-                        {dayEvents.length > 0 && (
-                                <div className="calendar-day-dots">
-                                {dayEvents.slice(0, 3).map((event) => (
-                                <span key={event.id} className={`activity-dot activity-dot-${transformActivityType(event.activityType)}`} />
-                            ))}
-                                </div>
-                        )}
-                </div>    
-            )
-        }
-        return days
+    for (let i = 0; i < startingDayOfWeek; i++) {
+      days.push(<div key={`empty-${i}`} className="calendar-day calendar-day-empty" />)
     }
 
-    const upcomingActivities = activitiesTest
+    for (let day = 1; day <= daysInMonth; day++) {
+      const dayEvents = getEventsForDate(day)
+
+      const isToday =
+        day === new Date().getDate() &&
+        currentDate.getMonth() === new Date().getMonth() &&
+        currentDate.getFullYear() === new Date().getFullYear()
+
+      days.push(
+        <div
+          key={day}
+          onClick={() => handleDayClick(day)}
+          className={`calendar-day ${isToday ? "calendar-day-today" : ""} ${dayEvents.length > 0 ? "calendar-day-has-activity" : ""
+            }`}
+        >
+          <span className="calendar-day-number">{day}</span>
+          {dayEvents.length > 0 && (
+            <div className="calendar-day-dots">
+              {dayEvents.slice(0, 3).map((event) => (
+                <span key={event.id} className={`activity-dot activity-dot-${transformActivityType(event.activityType)}`} />
+              ))}
+            </div>
+          )}
+        </div>
+      )
+    }
+    return days
+  }
+
+  const upcomingActivities = activitiesTest
     .filter((e) => new Date(e.date) >= new Date())
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     .slice(0, 5)
 
-    const handleDayClick = (day: number) => {
+  const handleDayClick = (day: number) => {
     setSelectedDay(day)
     setShowDayMenu(true)
   }
 
-    const handleCloseDayMenu = () => {
+  const handleCloseDayMenu = () => {
     setShowDayMenu(false)
     setSelectedDay(null)
   }
 
-    const handleAddFromDayMenu = () => {
+  const handleAddFromDayMenu = () => {
     if (selectedDay) {
       const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, "0")}-${String(selectedDay).padStart(2, "0")}`
     }
     setShowDayMenu(false)
     setShowAddModal(true)
   }
-    const selectedDayActivities = selectedDay ? getEventsForDate(selectedDay) : []
+  const selectedDayActivities = selectedDay ? getEventsForDate(selectedDay) : []
 
-    return(
-        <div className="calendar-container">
-             <ExportButton onExport={() => console.log("Exportando...")} />
-            <div className="calendar-header-section">
-                <h2 className="calendar-main-title">{title}</h2>
-                <p className="calendar-main-description">{description}</p>
-            </div>
-            <div className="calendar-grid">
-                <div className="calendar-card">
-                    <div className="calendar-header">
-                        <button onClick={previousMonth} className="calendar-nav-button">
-                            <svg width="20" height="20" viewBox="0 0 24 24">
-                                <polyline points="15 18 9 12 15 6" />
-                            </svg>
-                        </button>
+  return (
+    <div className="calendar-container">
+      <ExportButton onExport={() => console.log("Exportando...")} />
+      <div className="calendar-header-section">
+        <h2 className="calendar-main-title">{title}</h2>
+        <p className="calendar-main-description">{description}</p>
+      </div>
+      <div className="calendar-grid">
+        <div className="calendar-card">
+          <div className="calendar-header">
+            <button onClick={previousMonth} className="calendar-nav-button">
+              <svg width="20" height="20" viewBox="0 0 24 24">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </button>
 
-                        <h3 className="calendar-title">
-                                {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
-                        </h3>
+            <h3 className="calendar-title">
+              {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
+            </h3>
 
-                        <button onClick={nextMonth} className="calendar-nav-button">
-                            <svg width="20" height="20" viewBox="0 0 24 24">
-                                <polyline points="9 18 15 12 9 6" />
-                            </svg>
-                        </button>
-                    </div>
+            <button onClick={nextMonth} className="calendar-nav-button">
+              <svg width="20" height="20" viewBox="0 0 24 24">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </button>
+          </div>
 
-                    <div className="calendar-weekdays">
-                        {dayNames.map((day) => (
-                            <div key={day} className="calendar-weekday">{day}</div>
-                        ))}
-                    </div>
-
-                    <div className="calendar-days">{renderCalendarDays()}</div>
-
-                    <div className="calendar-legend">
-                        <div className="legend-item">
-                            <span className="legend-dot activity-dot-concert" />
-                            <span>Concierto</span>
-                        </div>
-                        <div className="legend-item">
-                            <span className="legend-dot activity-dot-photoshoot" />
-                            <span>Sesión fotográfica</span>
-                        </div>
-                        <div className="legend-item">
-                            <span className="legend-dot activity-dot-interview" />
-                            <span>Entrevista</span>
-                        </div>
-                        <div className="legend-item">
-                              <span className="legend-dot activity-dot-festival" />
-                              <span>Festival</span>
-                        </div>
-                        <div className="legend-item">
-                              <span className="legend-dot activity-dot-tv-show" />
-                              <span>Show de TV</span>
-                        </div>
-                    </div>
-
-                    
-            </div>
-                        <div className="activities-card">
-                    <h3 className="activities-title">Próximas Actividades</h3>
-                        <div className="activities-list">
-                            {upcomingActivities.map((activity) => (
-                            <div key={activity.id} className={`activity-item activity-item-${activity.type}`}>
-                                    <div className="activity-icon">{getActivityIcon(activity.type ?? "")}</div>
-                                <div className="activity-details">
-                                    <h4 className="activity-name">{activity.eventType}</h4>
-                                    <p className="activity-artist">{activity.responsible}</p>
-                                    <p className="activity-datetime">
-                                    {new Date(transformDate(activity.date)).toLocaleDateString("es-ES", {
-                                    day: "numeric",
-                                    month: "long",
-                                    year: "numeric",
-                                    })}{" "}
-                                    · {activity.time}
-                                    </p>
-                                </div>
-                            </div>
+          <div className="calendar-weekdays">
+            {dayNames.map((day) => (
+              <div key={day} className="calendar-weekday">{day}</div>
             ))}
-                        </div>
-                    </div>
-            
+          </div>
+
+          <div className="calendar-days">{renderCalendarDays()}</div>
+
+          <div className="calendar-legend">
+            <div className="legend-item">
+              <span className="legend-dot activity-dot-concert" />
+              <span>Concierto</span>
             </div>
-            {showDayMenu && selectedDay && (
+            <div className="legend-item">
+              <span className="legend-dot activity-dot-photoshoot" />
+              <span>Sesión fotográfica</span>
+            </div>
+            <div className="legend-item">
+              <span className="legend-dot activity-dot-interview" />
+              <span>Entrevista</span>
+            </div>
+            <div className="legend-item">
+              <span className="legend-dot activity-dot-festival" />
+              <span>Festival</span>
+            </div>
+            <div className="legend-item">
+              <span className="legend-dot activity-dot-tv-show" />
+              <span>Show de TV</span>
+            </div>
+          </div>
+
+
+        </div>
+        <div className="activities-card">
+          <h3 className="activities-title">Próximas Actividades</h3>
+          <div className="activities-list">
+            {upcomingActivities.map((activity) => (
+              <div key={activity.id} className={`activity-item activity-item-${transformActivityType(activity.activityType)}`}>
+                <div className="activity-icon">{getActivityIcon(transformActivityType(activity.activityType) ?? "")}</div>
+                <div className="activity-details">
+                  <h4 className="activity-name">{activity.eventType}</h4>
+                  <p className="activity-artist">{activity.responsible}</p>
+                  <p className="activity-datetime">
+                    {new Date(transformDate(activity.date)).toLocaleDateString("es-ES", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}{" "}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+      </div>
+      {showDayMenu && selectedDay && (
         <div className="day-menu-overlay" onClick={handleCloseDayMenu}>
           <div className="day-menu" onClick={(e) => e.stopPropagation()}>
             <div className="day-menu-header">
@@ -385,7 +384,7 @@ const Calendar : React.FC<CalendarProps> = ({
           </div>
         </div>
       )}
-        {showAddModal && (
+      {showAddModal && (
         <ModalCreate
           isOpen={showAddModal}
           onClose={() => {
@@ -396,8 +395,8 @@ const Calendar : React.FC<CalendarProps> = ({
         >
         </ModalCreate>
       )}
-      </div>
-    )
+    </div>
+  )
 }
 
 export default Calendar

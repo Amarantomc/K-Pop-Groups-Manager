@@ -332,26 +332,31 @@ const Evaluations: React.FC = () => {
             onSave={() => setShowSuccessModal(false)}
             onClose={() => setShowSuccessModal(false)}
           />
-          <ConfirmDialog
-            message="¿Está seguro de que desea eliminar esta evaluación?"
-            open={openConfirm}
-            onConfirm={handleDelete}
-            onCancel={() => setOpenConfirm(false)}
+          <ConfirmDialog 
+            message="¿Está seguro que desea eliminar esta evaluación?" 
+            open={openConfirm} 
+            onCancel={() => setOpenConfirm(false)} 
+            onConfirm={handleDelete} 
+            type="confirm"
           />
-          <ConfirmDialog
+          <ConfirmDialog 
             title="¡Éxito!"
-            message="Operación realizada correctamente"
+            message="La evaluación ha sido registrada correctamente" 
             open={openAccept}
-            onConfirm={() => setOpenAccept(false)}
-            onCancel={() => setOpenAccept(false)}
+            type="success" 
+            onCancel={() => setOpenAccept(false)} 
+            onConfirm={() => setOpenAccept(false)} 
+            confirmText="Aceptar" 
             showDeleteButton={false}
           />
-          <ConfirmDialog
+          <ConfirmDialog 
             title="Error"
-            message={errorMessage}
-            open={openError}
-            onConfirm={() => setOpenError(false)}
-            onCancel={() => setOpenError(false)}
+            message={errorMessage} 
+            type="error"
+            open={openError} 
+            onCancel={() => setOpenError(false)} 
+            onConfirm={() => setOpenError(false)} 
+            confirmText="Aceptar" 
             showDeleteButton={false}
           />
         </>

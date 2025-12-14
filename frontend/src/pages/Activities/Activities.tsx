@@ -9,18 +9,18 @@ import { useAuth } from '../../contexts/auth/AuthContext';
 import { activityConstraints } from '../../config/modalConstraints';
 import './Activities.css';
 
-// interface Activity {
-//   id: number;
-//   artistName: string;
-//   groupName: string;
-//   title: string;
-//   type: string;
-//   date: string;
-//   time: string;
-//   location: string;
-//   status: string;
-//   description: string;
-// }
+ interface Activity {
+   id: number;
+   artistName: string;
+   groupName: string;
+   title: string;
+   type: string;
+   date: string;
+   time: string;
+   location: string;
+   status: string;
+   description: string;
+ }
 
 const Activities: React.FC = () => {
   const { user } = useAuth();
@@ -336,8 +336,8 @@ const Activities: React.FC = () => {
               {/* Calendario a la izquierda */}
               <div className="calendar-section">
                 <Calendar
-                  activities={calendarEvents}
-                  onDateClick={handleDateClick}
+                  activitiesTest={calendarEvents}
+                  //onDateClick={handleDateClick}
                 />
               </div>
 
@@ -437,7 +437,7 @@ const Activities: React.FC = () => {
                 <div className="calendar-section">
                   <Calendar
                     activitiesTest={activities}
-                    onDateClick={handleDateClick}
+                    //onDateClick={handleDateClick}
                   />
                 </div>
 
@@ -531,26 +531,31 @@ const Activities: React.FC = () => {
               </div>
             </div>
           )}
-          <ConfirmDialog
-            message="¿Está seguro de que desea eliminar esta actividad?"
-            open={openConfirm}
-            onConfirm={handleDelete}
-            onCancel={() => setOpenConfirm(false)}
+          <ConfirmDialog 
+            message="¿Está seguro que desea eliminar esta actividad?" 
+            open={openConfirm} 
+            onCancel={() => setOpenConfirm(false)} 
+            onConfirm={handleDelete} 
+            type="confirm"
           />
-          <ConfirmDialog
+          <ConfirmDialog 
             title="¡Éxito!"
-            message="Operación realizada correctamente"
+            message="La actividad ha sido registrada correctamente" 
             open={openAccept}
-            onConfirm={() => setOpenAccept(false)}
-            onCancel={() => setOpenAccept(false)}
+            type="success" 
+            onCancel={() => setOpenAccept(false)} 
+            onConfirm={() => setOpenAccept(false)} 
+            confirmText="Aceptar" 
             showDeleteButton={false}
           />
-          <ConfirmDialog
+          <ConfirmDialog 
             title="Error"
-            message={errorMessage}
-            open={openError}
-            onConfirm={() => setOpenError(false)}
-            onCancel={() => setOpenError(false)}
+            message={errorMessage} 
+            type="error"
+            open={openError} 
+            onCancel={() => setOpenError(false)} 
+            onConfirm={() => setOpenError(false)} 
+            confirmText="Aceptar" 
             showDeleteButton={false}
           />
         </>

@@ -310,12 +310,14 @@ const Award: React.FC = () => {
         message="¿Está seguro que desea eliminar este premio?" 
         open={openConfirm} 
         onCancel={() => setOpenConfirm(false)} 
-        onConfirm={handleDelete}
+        onConfirm={handleDelete} 
+        type="confirm"
       />
       <ConfirmDialog 
         title="¡Éxito!"
         message="El premio ha sido creado correctamente" 
-        open={openAccept} 
+        open={openAccept}
+        type="success" 
         onCancel={() => setOpenAccept(false)} 
         onConfirm={() => setOpenAccept(false)} 
         confirmText="Aceptar" 
@@ -324,6 +326,7 @@ const Award: React.FC = () => {
       <ConfirmDialog 
         title="Error"
         message={errorMessage} 
+        type="error"
         open={openError} 
         onCancel={() => setOpenError(false)} 
         onConfirm={() => setOpenError(false)} 

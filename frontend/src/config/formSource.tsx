@@ -82,15 +82,6 @@ export const userFields: Field[] = [
     { id: 'role', name: 'role', label: 'Rol de usuario', type: 'select', options: enumToOptions(ROLE_TYPES), required: true }
 ];
 
-// Campo dinámico: agencia
-{/* 
-        id: 'agencyId', 
-        name: 'agencyId', 
-        label: 'Agencia', 
-        type: 'select',
-        optionsEndpoint: '/api/agency/'
-    */}
-
 // Agencia
 export const agencyFields: Field[] = [
     // Alineado con CreateAgencyDTO del backend: name, address, foundation
@@ -264,7 +255,7 @@ export const managerDirectorFields: Field[] = [
         label: 'Agencia',
         type: 'select',
         required: true,
-        optionsEndpoint: '/api/agency/?fields=name'
+        optionsEndpoint: '/api/agency'
     }
 ];
 

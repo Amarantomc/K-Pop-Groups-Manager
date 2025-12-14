@@ -10,6 +10,7 @@ import { useAuth } from '../../contexts/auth/AuthContext';
 import { popularityListFields } from '../../config/formSource';
 import { popularityListConstraints } from '../../config/modalConstraints';
 import { popularityListColumns } from '../../config/datatableSource';
+import PopuList from '../../components/List/PopuList';
 
 const PopularityLists: React.FC = () => {
   const { user } = useAuth();
@@ -112,7 +113,8 @@ const PopularityLists: React.FC = () => {
         const formattedData = data.data.map((popularityList: any, index: number) => ({
           id: popularityList.id ?? index,
           name: popularityList.name,
-          scope : popularityList.listType
+          listType : popularityList.listType,
+          songs : popularityList.songs
         }));
         console.log(formattedData);
         setPopularityListsRows(formattedData);
@@ -284,7 +286,7 @@ const PopularityLists: React.FC = () => {
         </div>
       ) : (
         <>
-          <DataTable
+          {/* <DataTable
             columns={popularityListColumns}
             rows={popularityListsRows}
             pagesize={10}
@@ -296,7 +298,10 @@ const PopularityLists: React.FC = () => {
             createEntity="popularityList"
             userRole={user?.role}
             // onCreateClick={() => setShowCreateModal(true)}
-          />
+          /> */}
+          <PopuList charts={popularityListsRows}>
+
+          </PopuList>
           <ModalCreate
             isOpen={showCreateModal}
             title="Crear Lista de Popularidad"
@@ -310,26 +315,31 @@ const PopularityLists: React.FC = () => {
             onSave={() => setShowSuccessModal(false)}
             onClose={() => setShowSuccessModal(false)}
           />
-          <ConfirmDialog
-            message="¿Está seguro de que desea eliminar este registro de lista de popularidad?"
-            open={openConfirm}
-            onConfirm={handleDelete}
-            onCancel={() => setOpenConfirm(false)}
+          <ConfirmDialog 
+            message="¿Está seguro que desea eliminar este registro de lista de popularidad?" 
+            open={openConfirm} 
+            onCancel={() => setOpenConfirm(false)} 
+            onConfirm={handleDelete} 
+            type="confirm"
           />
-          <ConfirmDialog
+          <ConfirmDialog 
             title="¡Éxito!"
-            message="Operación realizada correctamente"
+            message="La lista de popularidad ha sido registrada correctamente" 
             open={openAccept}
-            onConfirm={() => setOpenAccept(false)}
-            onCancel={() => setOpenAccept(false)}
+            type="success" 
+            onCancel={() => setOpenAccept(false)} 
+            onConfirm={() => setOpenAccept(false)} 
+            confirmText="Aceptar" 
             showDeleteButton={false}
           />
-          <ConfirmDialog
+          <ConfirmDialog 
             title="Error"
-            message={errorMessage}
-            open={openError}
-            onConfirm={() => setOpenError(false)}
-            onCancel={() => setOpenError(false)}
+            message={errorMessage} 
+            type="error"
+            open={openError} 
+            onCancel={() => setOpenError(false)} 
+            onConfirm={() => setOpenError(false)} 
+            confirmText="Aceptar" 
             showDeleteButton={false}
           />
         </>

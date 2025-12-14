@@ -277,12 +277,14 @@ const Songs: React.FC = () => {
         message="¿Está seguro que desea eliminar esta canción?" 
         open={openConfirm} 
         onCancel={() => setOpenConfirm(false)} 
-        onConfirm={handleDelete}
+        onConfirm={handleDelete} 
+        type="confirm"
       />
       <ConfirmDialog 
         title="¡Éxito!"
         message="La canción ha sido creada correctamente" 
         open={openAccept} 
+        type="success" 
         onCancel={() => setOpenAccept(false)} 
         onConfirm={() => setOpenAccept(false)} 
         confirmText="Aceptar" 
@@ -291,6 +293,7 @@ const Songs: React.FC = () => {
       <ConfirmDialog 
         title="Error"
         message={errorMessage} 
+        type="error"
         open={openError} 
         onCancel={() => setOpenError(false)} 
         onConfirm={() => setOpenError(false)} 

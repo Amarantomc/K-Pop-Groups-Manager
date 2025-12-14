@@ -8,6 +8,7 @@ import { useAuth } from '../../contexts/auth/AuthContext';
 import { albumFields } from '../../config/formSource';
 import { albumConstraints } from '../../config/modalConstraints';
 import ConfirmDialog from '../../components/confirmDialog/ConfirmDialog';
+import { albumColumns } from '../../config/datatableSource';
 
 interface Album {
   id: number;
@@ -122,85 +123,24 @@ const Albums: React.FC = () => {
         }
 
         const data = await response.json();
-        setAlbums(data.data || data);
+        console.log(data)
+        const formattedData = data.data.map((album: any, index: number) => ({
+          id: album.id ?? index,
+          idGroup : album.idGroup,
+          noCopiesSold: album.noCopiesSold,
+          songs : album.songs,
+          producer : album.producer,
+          releaseDate : album.releaseDate,
+          title : album.title,
+          artists : album.artists,
+          groups : album.groups,
+          awards : album.awards
+        }));
+        console.log(formattedData);
+        setAlbums(formattedData);
         // ============================================
         // FIN SECCIÓN: BACKEND ENDPOINT
         // ============================================
-
-        // ============================================
-        //SECCIÓN: DATOS DEMO
-        //============================================
-        /*
-     const mockAlbums: Album[] = [
-       {
-         id: 1,
-         title: 'Rising Phoenix',
-         artistName: 'Lee Min-ho',
-         groupName: 'Phoenix',
-         releaseDate: '2025-10-15',
-         genre: 'K-Pop',
-         totalTracks: 12,
-         status: 'released',
-         agencyName: 'K-Pop Stars Agency'
-       },
-       {
-         id: 2,
-         title: 'Starlight Dreams',
-         artistName: 'Kim Ji-soo',
-         groupName: 'Starlight',
-         releaseDate: '2025-11-20',
-         genre: 'K-Pop',
-         totalTracks: 10,
-         status: 'released',
-         agencyName: 'K-Pop Stars Agency'
-       },
-       {
-         id: 3,
-         title: 'Dreamscape',
-         artistName: 'Park Soo-young',
-         groupName: 'Dreamers',
-         releaseDate: '2025-12-25',
-         genre: 'Pop',
-         totalTracks: 8,
-         status: 'upcoming',
-         agencyName: 'K-Pop Stars Agency'
-       },
-       {
-         id: 4,
-         title: 'Thunder Strikes',
-         artistName: 'Choi Min-jun',
-         groupName: 'Thunder Squad',
-         releaseDate: '2025-09-10',
-         genre: 'Hip-Hop',
-         totalTracks: 15,
-         status: 'released',
-         agencyName: 'Global Entertainment'
-       },
-       {
-         id: 5,
-         title: 'New Beginnings',
-         artistName: 'Lee Min-ho',
-         groupName: 'Phoenix',
-         releaseDate: '2026-02-14',
-         genre: 'K-Pop',
-         totalTracks: 14,
-         status: 'recording',
-         agencyName: 'K-Pop Stars Agency'
-       }
-     ];
-
-     // Filtrar según rol para la demo
-     let filteredAlbums = mockAlbums;
-     if (user.role === 'manager' || user.role === 'director') {
-       // Filtrar por agencia (en demo mostramos los de K-Pop Stars Agency)
-       filteredAlbums = mockAlbums.filter(album => album.agencyName === 'K-Pop Stars Agency');
-     }
-
-     setAlbums(filteredAlbums);
-     */
-        //============================================
-        //FIN SECCIÓN: DATOS DEMO
-        //============================================ 
 
       } catch (error) {
         console.error('Error al cargar álbumes:', error);
@@ -369,7 +309,7 @@ const Albums: React.FC = () => {
       ) : (
         <>
           <DataTable
-            columns={columns}
+            columns={albumColumns}
             rows={albums}
             pagesize={10}
             onDelete={askDelete}
@@ -385,12 +325,14 @@ const Albums: React.FC = () => {
             message="¿Está seguro que desea eliminar este álbum?" 
             open={openConfirm} 
             onCancel={() => setOpenConfirm(false)} 
-            onConfirm={handleDelete}
+            onConfirm={handleDelete} 
+            type="confirm"
           />
           <ConfirmDialog 
             title="¡Éxito!"
             message="El álbum ha sido creado correctamente" 
-            open={openAccept} 
+            open={openAccept}
+            type="success" 
             onCancel={() => setOpenAccept(false)} 
             onConfirm={() => setOpenAccept(false)} 
             confirmText="Aceptar" 
@@ -399,6 +341,7 @@ const Albums: React.FC = () => {
           <ConfirmDialog 
             title="Error"
             message={errorMessage} 
+            type="error"
             open={openError} 
             onCancel={() => setOpenError(false)} 
             onConfirm={() => setOpenError(false)} 

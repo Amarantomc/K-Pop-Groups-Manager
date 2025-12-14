@@ -144,7 +144,7 @@ model Grupo{
   conceptoVisual ConceptoVisual @relation(fields: [idConceptoVisual], references: [id])
 
   Actividades PersonasEnActividad[]
-  Album Album[]
+ // Album Album[]
   Artista Artista[]
   HistorialArtistas ArtistaEnGrupo[]
   Lanzamiento GrupoLanzaAlbum[]
@@ -155,14 +155,14 @@ model Grupo{
 
 model Album{
   id Int @id @default(autoincrement())
-  idGrupo Int
+  //idGrupo Int
   titulo String
   fechaLanzamiento DateTime @default(now())
   productor String
   NoCanciones Int
   NoCopiasVendidas Int
   Canciones Cancion[]
-  grupo Grupo @relation(fields: [idGrupo], references: [id])
+ // grupo Grupo @relation(fields: [idGrupo], references: [id])
   Premios AlbumPremiado[]
   LanzamientoArtista ArtistaLanzaAlbum[]
   LanzamientoGrupo GrupoLanzaAlbum[]
@@ -284,7 +284,7 @@ model AlbumPremiado {
   premio Premio @relation(fields: [idPremio], references: [id])
 
   @@id([idAlb, idPremio])
-  @@map("AlbúmPremiado")
+  @@map("AlbumPremiado")
 }
 
 model CancionEnListaDePopularidad {
@@ -297,7 +297,7 @@ model CancionEnListaDePopularidad {
   listaPopularidad ListaPopularidad @relation(fields: [idLista], references: [id])
 
   @@id([idCa, idLista])
-  @@map("CanciónEnListaDePopularidad")
+  @@map("CancionEnListaDePopularidad")
 }
 
 model AprendizEnAgencia {
@@ -323,7 +323,7 @@ model EvaluacionAprendiz {
   agencia  Agencia  @relation(fields: [idAg], references: [id],onDelete: Cascade)
 
   @@id([idAp, idAg, fechaEvaluacion])
-  @@map("EvaluaciónAprendiz")
+  @@map("EvaluacionAprendiz")
 }
 
 model PersonasEnActividad {
@@ -357,7 +357,7 @@ model ArtistaLanzaAlbum {
  
 
   @@id([idAp, idGr, idAlb])
-  @@map("ArtistaLanzaÁlbum")
+  @@map("ArtistaLanzaAlbum")
 }
 
 model GrupoLanzaAlbum {
@@ -370,7 +370,7 @@ model GrupoLanzaAlbum {
  
 
   @@id([idGr, idAlb])
-  @@map("GrupoLanzaÁlbum")
+  @@map("GrupoLanzaAlbum")
 }
 
 
