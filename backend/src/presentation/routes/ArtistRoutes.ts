@@ -29,6 +29,7 @@ import { AuthMiddleware, type AuthenticatedRequest } from "../middlewares/AuthMi
     this.router.get('/bestAlbums/',(req,res)=> this.artistController.getBestAlbums(req,res))
     this.router.get('/succes/',(req,res)=> this.artistController.getIncomeAndSucces(req,res))
     this.router.get('/agencyChanges/',(req,res)=> this.artistController.getWhoChangeAgencyAndGroup(req,res))
+    this.router.get('/soloArtists/',(req,res)=> this.artistController.getSoloArtistsProfesionalHistory(req,res))
     
     this.router.get('/',(req, res) => this.artistController.getAll(req, res))
     this.router.get('/:id', (req, res) => this.artistController.getArtistsByAgency(req, res));

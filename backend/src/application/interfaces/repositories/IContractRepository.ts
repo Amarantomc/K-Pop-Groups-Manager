@@ -4,5 +4,6 @@ import type { IBaseRepository } from "./IBaseRepository";
 
 export interface IContractRepository extends IBaseRepository<Contract,CreateContractDto,any>{
     findAll(): Promise<Contract[]>;
+    findByArtist(apprenticeId:number,groupId:number):Promise<Contract[]>;
     
 }

@@ -5,6 +5,7 @@ import type { IBaseRepository } from "./IBaseRepository";
 export interface IAlbumRepository extends IBaseRepository<Album,CreateAlbumDto,any> {
     findAll(): Promise<Album[]>;
     getByGroup(groupId:number):Promise<Album[]|null>
+    getByArtist(apprenticeId:number,groupId:number):Promise<Album[]|null>
 
     
 }

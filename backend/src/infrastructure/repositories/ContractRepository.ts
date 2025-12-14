@@ -14,6 +14,7 @@ export class ContractRepository implements IContractRepository{
     @inject(Types.IUnitOfWork) private unitOfWork: IUnitOfWork
   ) {}
 
+
        private get db() {
     return this.unitOfWork.getTransaction();
   }
@@ -180,4 +181,18 @@ export class ContractRepository implements IContractRepository{
         return ContractResponseDto.toEntities(artistContracts);
     }
 
+    async findByArtist(apprenticeId: number, groupId: number): Promise<Contract[]> {
+      const  contracts=await this.db.contrato.findMany({
+         where:{idAp: Number (apprenticeId),
+            idGr: Number (groupId),
+          
+         },
+          include:{
+            Agencia:true,
+            Artista:true
+          }
+  })  
+      return ContractResponseDto.toEntities(contracts);
+
+}
 }

@@ -111,7 +111,7 @@ export class ActivityRepository implements IActivityRepository {
   async findByArtist(apprenticeId: number, groupId: number): Promise<Activity[]> {
     const activities = await this.db.actividad.findMany({
       where: {
-        Artistas: {
+        Personas: {
           some: {
             idAp: apprenticeId,
             idGr: groupId

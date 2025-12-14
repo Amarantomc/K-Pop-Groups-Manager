@@ -1,11 +1,12 @@
 import { PopularityList } from "../../../domain";
 
 export class PopularityListResponseDto {
-  constructor(
-    public readonly id: number,
-    public readonly name: string,
-    public readonly listType: string,
-    public readonly songs: {id: number;title: string;position: number;year: number;}[] ) {}
+    constructor(
+        public readonly id: number,
+        public readonly name: string,
+        public readonly listType: string,
+        public readonly songs: { id: number; title: string; position: number , year?: number }[], // array de objetos
+    ) {}
 
   static fromEntity(popularityList: PopularityList): PopularityListResponseDto {
     return new PopularityListResponseDto(
@@ -16,13 +17,16 @@ export class PopularityListResponseDto {
     );
   }
 
-  static toEntity(popularityList: any): PopularityList {
-    const songs = popularityList.Canciones?.map((c: any) => ({
-      id: c.cancion.id,
-      title: c.cancion.titulo,
-      position: c.posicion,
-      year: c.año,          
-    })) ?? [];
+    static toEntity(popularityList: any): PopularityList {
+        // Convertimos las canciones a objetos {id, title, position}
+        const songs: { id: number; title: string; position: number, year?: number }[] = popularityList.Canciones?.map(
+            (c: any) => ({
+                id: c.cancion.id,
+                title: c.cancion.titulo,
+                position: c.posicion,
+                year: c.año
+            })
+        ) || [];
 
     return new PopularityList({
       id: popularityList.id,
