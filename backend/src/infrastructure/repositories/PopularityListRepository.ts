@@ -225,11 +225,7 @@ export class PopularityListRepository implements IPopularityListRepository{
 
 
 
-
-      async addSongToPopularityList(
-        popularityListId: number,
-        songId: number
-      ): Promise<PopularityList> {
+      async addSongToPopularityList(popularityListId: number,songId: number): Promise<PopularityList> {
       
         const currentYear = new Date().getFullYear();
       
