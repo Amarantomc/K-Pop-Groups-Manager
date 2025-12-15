@@ -52,7 +52,7 @@ async function main() {
     // ...existing code...
   console.log('🌱 Iniciando población de la base de datos...')
   console.log('🧹 Limpiando base de datos...')
-  await cleanDatabase(prisma);
+  //await cleanDatabase(prisma);
   console.log('✅ Base de datos limpia')
 
   // 0. CREAR USUARIO ADMINISTRADOR

@@ -168,6 +168,18 @@ import { GetIncomeAndSuccesUseCase } from "../../application/usesCase/artist/Get
 import { GetArtistsWhoChangeAgencyUseCase } from "../../application/usesCase/artist/GetArtistsWhoChangeAgencyUseCase";
 import { GetSoloArtistsProfesionalHistoryUseCase } from "../../application/usesCase/artist/GetSoloArtistsProfesionalHistoryUseCase";
 import { AddEvaluationUseCase } from "../../application/usesCase/apprentice/AddEvaluationUseCase";
+import { PdfExporter } from "../PdfExporter";
+import type { IExportable } from "../../application/interfaces/exports/IExportable";
+import { ExportArtistsToPdfUseCase } from "../../application/usesCase/exports/ExportArtistsToPdfUseCase";
+import { ExportController } from "../../presentation/controllers/ExportController";
+import { ExportCalendarToPdfUseCase } from "../../application/usesCase/exports/ExportCalendarToPdfUseCase";
+import { ExportArtistsOnDebutPdfUseCase } from "../../application/usesCase/exports/ExportArtistsOnDebutPdfUseCase";
+import { ExportAgenciesPdfUseCase } from "../../application/usesCase/exports/ExportAgenciesPdfUseCase";
+import { ExportApprenticesPdfUseCase } from "../../application/usesCase/exports/ExportApprenticesPdfUseCase";
+import { ExportGroupsPdfUseCase } from "../../application/usesCase/exports/ExportGroupsPdfUseCase";
+import { ExportConceptsPdfUseCase } from "../../application/usesCase/exports/ExportConceptsPdfUseCase";
+import { ExportAwardsPdfUseCase } from "../../application/usesCase/exports/ExportAwardsPdfUseCase";
+import { ExportSongsPdfUseCase } from "../../application/usesCase/exports/ExportSongsPdfUseCase";
 import { OfferContractUseCase } from "../../application/usesCase/contract/OfferContractUseCase";
 import { ApprenticeScoutUseCase } from "../../application/usesCase/apprentice/ApprenticeScoutUseCase";
 import { AttractApprenticesUseCase } from "../../application/usesCase/apprentice/AttractApprenticeUsaCase";
@@ -976,8 +988,52 @@ container.bind<CreateVisualConceptUseCase>(Types.CreateVisualConceptUseCase)
 
   //#endregion
 
+  
+  //#region PDF
+  container.bind(Types.IExportable)
+  .to(PdfExporter)
+  .inSingletonScope();
+
+  container.bind<ExportArtistsToPdfUseCase>(Types.ExportArtistsToPdfUseCase)
+  .to(ExportArtistsToPdfUseCase)
+  .inTransientScope();
+
+  container.bind<ExportCalendarToPdfUseCase>(Types.ExportCalendarToPdfUseCase)
+  .to(ExportCalendarToPdfUseCase)
+  .inTransientScope();
+
+  container.bind<ExportArtistsOnDebutPdfUseCase>(Types.ExportArtistsOnDebutPdfUseCase)
+  .to(ExportArtistsOnDebutPdfUseCase)
+  .inTransientScope();
+
+  container.bind<ExportAgenciesPdfUseCase>(Types.ExportAgenciesPdfUseCase)
+  .to(ExportAgenciesPdfUseCase)
+  .inTransientScope();
+
+  container.bind<ExportApprenticesPdfUseCase>(Types.ExportApprenticesPdfUseCase)
+  .to(ExportApprenticesPdfUseCase)
+  .inTransientScope();
+
+    container.bind<ExportGroupsPdfUseCase>(Types.ExportGroupsPdfUseCase)
+  .to(ExportGroupsPdfUseCase)
+  .inTransientScope();
+
+  container.bind<ExportConceptsPdfUseCase>(Types.ExportConceptsPdfUseCase)
+  .to(ExportConceptsPdfUseCase)
+  .inTransientScope();
+
+  container.bind<ExportAwardsPdfUseCase>(Types.ExportAwardsPdfUseCase)
+  .to(ExportAwardsPdfUseCase)
+  .inTransientScope();
+
+  container.bind<ExportSongsPdfUseCase>(Types.ExportSongsPdfUseCase)
+  .to(ExportSongsPdfUseCase)
+  .inTransientScope();
+
+  
 
 
+  //#endregion
 
 
 
@@ -1073,6 +1129,10 @@ container.bind<AgencyController>(Types.AgencyController)
 
   container.bind<SongController>(Types.SongController)
   .to(SongController)
+  .inTransientScope()
+
+    container.bind<ExportController>(Types.ExportController)
+  .to(ExportController)
   .inTransientScope()
   
   //#endregion

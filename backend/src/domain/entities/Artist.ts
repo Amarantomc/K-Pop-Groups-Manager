@@ -12,6 +12,7 @@ export class Artist{
     readonly GroupHistory?:Group[] | undefined
     readonly realName?: string | undefined
     
+    
      
 
 

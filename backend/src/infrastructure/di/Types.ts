@@ -28,6 +28,8 @@ const Types = {
   IContractRepository:Symbol.for('IContractRepository'),
   ISongRepository: Symbol.for('ISongRepository'),
   IIncomeRepository: Symbol.for('IIncomeRepository'),
+  IExportable: Symbol.for('IExportable'),
+  PdfExporter: Symbol.for('PdfExporter'),
   //#endregion
   
   // Use Cases
@@ -205,6 +207,18 @@ GetAllSongsUseCase : Symbol.for('GetAllSongsUseCase'),
 //#region Album
 //#endregion
 
+//#region PDF Export Use Cases
+ExportArtistsToPdfUseCase: Symbol.for('ExportArtistsToPdfUseCase'),
+ExportCalendarToPdfUseCase: Symbol.for('ExportCalendarToPdfUseCase'),
+ExportArtistsOnDebutPdfUseCase: Symbol.for('ExportArtistsOnDebutPdfUseCase'),
+ExportAgenciesPdfUseCase:Symbol.for('ExportAgenciesPdfUseCase'),
+ExportApprenticesPdfUseCase:Symbol.for('ExportApprenticesPdfUseCase'),
+ExportGroupsPdfUseCase:Symbol.for('ExportGroupsPdfUseCase'),
+ExportConceptsPdfUseCase:Symbol.for('ExportConceptsPdfUseCase'),
+ExportAwardsPdfUseCase:Symbol.for('ExportAwardsPdfUseCase'),
+ExportSongsPdfUseCase:Symbol.for('ExportSongsPdfUseCase'),
+//#endregion
+
   //#region Controllers 
   // Presentation
    UserController: Symbol.for('UserController'),
@@ -222,6 +236,7 @@ GetAllSongsUseCase : Symbol.for('GetAllSongsUseCase'),
   ContractController :Symbol.for('ContractController'),
   SongController :Symbol.for('SongController'),
   IncomeController :Symbol.for('IncomeController'),
+  ExportController :Symbol.for('ExportController'),
 
   //#endregion
 
