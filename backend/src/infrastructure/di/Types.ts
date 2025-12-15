@@ -74,7 +74,7 @@ const Types = {
   GetBestAlbumsUseCase:Symbol.for('GetBestAlbumsUseCase'),
   GetIncomeAndSuccesUseCase:Symbol.for('GetIncomeAndSuccesUseCase'),
   GetArtistsWhoChangeAgencyUseCase: Symbol.for('GetArtistsWhoChangeAgencyUseCase'),
-
+  GetSoloArtistsProfesionalHistoryUseCase:Symbol.for('GetSoloArtistsProfesionalHistoryUseCase'),
 
   CreateConceptUseCase: Symbol.for('CreateConceptUseCase'),
   DeleteConceptUseCase: Symbol.for('DeleteConceptUseCase'),
@@ -217,6 +217,12 @@ ExportGroupsPdfUseCase:Symbol.for('ExportGroupsPdfUseCase'),
 ExportConceptsPdfUseCase:Symbol.for('ExportConceptsPdfUseCase'),
 ExportAwardsPdfUseCase:Symbol.for('ExportAwardsPdfUseCase'),
 ExportSongsPdfUseCase:Symbol.for('ExportSongsPdfUseCase'),
+ExportAlbumsPdfUseCase:Symbol.for('ExportAlbumsPdfUseCase'),
+ExportActivitiesPdfUseCase:Symbol.for('ExportActivitiesPdfUseCase'),
+ExportContractsPdfUseCase:Symbol.for('ExportContractsPdfUseCase'),
+ExportIncomesPdfUseCase:Symbol.for('ExportIncomesPdfUseCase'),
+ExportApplicationsPdfUseCase:Symbol.for('ExportApplicationsPdfUseCase'),
+ExportUsersPdfUseCase:Symbol.for('ExportUsersPdfUseCase'),
 //#endregion
 
   //#region Controllers 
