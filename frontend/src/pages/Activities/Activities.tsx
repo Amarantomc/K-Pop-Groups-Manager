@@ -32,6 +32,7 @@ const Activities: React.FC = () => {
   const [openAccept, setOpenAccept] = useState(false);
   const [openError, setOpenError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [falso,setfalso] = useState(false)
 
 
   useEffect(() => {
@@ -105,7 +106,10 @@ const Activities: React.FC = () => {
 
     fetchActivities();
   }, [user]);
-
+  const askConfirm = (id : number) =>{
+      setSelectedActivity(id)
+      handleAcceptActivity()
+     }
   const handleDelete = async () => {
     if (activityToDelete === null) return;
     try {
@@ -197,13 +201,14 @@ const Activities: React.FC = () => {
     if (!selectedActivity) return;
 
     try {
-      const response = await fetch(`http://localhost:3000/api/activitie/${selectedActivity.id}/decision`, {
-        method: 'PATCH',
+      console.log(user)
+      const response = await fetch(`http://localhost:3000/api/activitie/${selectedActivity}/decision`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify({ accepted: true })
+        body: JSON.stringify({ accepted: false ,apprenticeId : user.profileData.IdAp,groupId : user.profileData.IdGr }),
       });
 
       if (!response.ok) {
@@ -370,12 +375,13 @@ const Activities: React.FC = () => {
                   activitiesTest={activities}
                   onExport={console.log("Exportando")}
                   isArtist = {true}
+                  onAcept={askConfirm}
                   //onDateClick={handleDateClick}
                 />
               </div>
 
               {/* Panel de detalles a la derecha - solo visible cuando hay selección */}
-              {selectedActivity && (
+              {falso && (
                 <div className="details-section">
                   <div className="activity-details">
                     <div className="activity-header">
@@ -472,6 +478,7 @@ const Activities: React.FC = () => {
                     activitiesTest={activities}
                     onExport={handleExportPdf}
                     isArtist={false}
+                    
                     //onDateClick={handleDateClick}
                   />
                 </div>

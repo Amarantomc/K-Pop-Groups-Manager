@@ -56,44 +56,45 @@
         ]);
       }
 
-      async acceptedActivity(activityId: number,isAccepted: Boolean,apprenticeId: number,groupId: number ): Promise<void> {
-      
+      async acceptedActivity(
+        activityId: number,
+        isAccepted: boolean,
+        apprenticeId: number,
+        groupId: number
+    ): Promise<void> {
+        // 1️⃣ Actualizar el registro del aprendiz en la actividad
         await this.db.PersonasEnActividad.updateMany({
-          where: {
-            idAct: activityId,
-            idAp: apprenticeId,
-            idGr: groupId
-          },
-          data: {
-            aceptado: Boolean(isAccepted)
-          }
-        });
-      
-        const acceptedCount = await this.db.PersonasEnActividad.count({
-          where: {
-            idAct: activityId,
-            aceptado: true
-          }
-        });
-      
-        if (acceptedCount === 0) {
-          await this.db.ingreso.deleteMany({
             where: {
-              idAct: activityId
-            }
-          });
-      
-          await this.db.actividad.update({
-            where: { id: activityId },
+                idAct: activityId,
+                idAp: apprenticeId,
+                idGr: groupId
+            },
             data: {
-              estado: "CANCELADA"
+                aceptado: isAccepted
             }
-          });
-      
-          return;
+        });
+    
+        // 2️⃣ Contar cuántos participantes aceptaron
+        const acceptedCount = await this.db.PersonasEnActividad.count({
+            where: {
+                idAct: activityId,
+                aceptado: true
+            }
+        });
+    
+        // 3️⃣ Si nadie aceptó, eliminar ingresos y cancelar la actividad
+        if (acceptedCount === 0) {
+            await this.db.$transaction([
+                this.db.ingreso.deleteMany({
+                    where: { idAct: activityId }
+                }),
+                this.db.actividad.update({
+                    where: { id: activityId },
+                    data: { estado: "CANCELADA" }
+                })
+            ]);
         }
-      
-      }
+    }
 
     async create(data: CreateActivityDto): Promise<Activity> {
       const activity = await this.db.actividad.create({
