@@ -324,7 +324,7 @@ const PopularityLists: React.FC = () => {
           />
           <ConfirmDialog 
             title="¡Éxito!"
-            message="La lista de popularidad ha sido registrada correctamente" 
+            message="Operación realizada correctamente" 
             open={openAccept}
             type="success" 
             onCancel={() => setOpenAccept(false)} 

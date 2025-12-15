@@ -334,7 +334,7 @@ const Income: React.FC = () => {
           />
           <ConfirmDialog 
             title="¡Éxito!"
-            message="El ingreso ha sido registrado correctamente" 
+            message="Operación realizada correctamente" 
             open={openAccept}
             type="success" 
             onCancel={() => setOpenAccept(false)} 

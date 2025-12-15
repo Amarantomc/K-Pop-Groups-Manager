@@ -65,27 +65,30 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
 
           // Lógica especial para el campo username de artista: join artistas + aprendices
           if ((f.name === 'username' || f.id === 'username') && (createEntity === 'user' || createEntity === 'User')) {
-            // Detectar si el rol seleccionado es artista
-            // Buscar el campo de rol en formData
+                        console.log('[ModalCreate] Cargando opciones para username según rol:', formData['role'] || formData['rol'] || '');
+            // Detectar si el rol seleccionado es artista o aprendiz
             const roleValue = formData['role'] || formData['rol'] || '';
             const roleNorm = String(roleValue).toLowerCase();
             if (roleNorm === 'artist' || roleNorm === 'artista') {
-              // 1. Traer artistas
+                            console.log('[ModalCreate] Rol artista detectado, obteniendo artistas para select...');
+              // Traer solo artistas y usar realName como value y label
               const resArtist = await fetch('http://localhost:3000/api/artist', { headers });
               const dataArtist = await resArtist.json();
               const artists = dataArtist.data || dataArtist;
-              // 2. Obtener los apprenticeId únicos
-              const artistApprenticeIds = new Set(
-                artists.map((a: any) => Number(a.apprenticeId || a.IdAp || a.idAp || a.ApprenticeId)).filter((id: any) => !isNaN(id))
-              );
-              // 3. Traer aprendices
+              const options = artists
+                .filter((a: any) => a.realName && a.realName.trim() !== '')
+                .map((a: any) => ({ value: a.realName, label: a.realName }));
+              setDynamicOptions(prev => ({ ...prev, [f.name || f.id]: options }));
+              return;
+            } else if (roleNorm === 'apprentice' || roleNorm === 'aprendiz') {
+              // Traer solo aprendices y usar id como value y name como label
               const resApprentice = await fetch('http://localhost:3000/api/apprentice', { headers });
               const dataApprentice = await resApprentice.json();
               const apprentices = dataApprentice.data || dataApprentice;
-              // 4. Filtrar aprendices que están en artistApprenticeIds
-              const options = apprentices
-                .filter((a: any) => artistApprenticeIds.has(Number(a.id)) && a.name && a.name.trim() !== '')
-                .map((a: any) => ({ value: a.id, label: a.name }));
+                const options = apprentices
+                .filter((a: any) => a.name && a.name.trim() !== '')
+                .filter((a: any) => a.id && a.name && a.name.trim() !== '')
+                .map((a: any) => ({ value: a.name, label: a.name }));
               setDynamicOptions(prev => ({ ...prev, [f.name || f.id]: options }));
               return;
             }
@@ -117,6 +120,7 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
   if (!isOpen) return null
 
   const handleFieldChange = (key: string, value: any) => {
+
     let updatedFormData = { ...formData, [key]: value };
 
     // Si el campo es username, buscar el label en las opciones del campo actual
@@ -136,6 +140,7 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
           options = formData.options;
         }
         const found = options.find((opt: any) => String(opt.value) === String(value));
+        // Solo guardar el label (nombre) en name, nunca el id, tanto para aprendiz como para artista
         updatedFormData.name = found ? found.label : '';
       }
     }
@@ -254,7 +259,9 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
             dataToSend['apprenticeId'] = found.value;
             console.log('[ModalCreate] handleSubmit - Asignando para aprendiz:', { name: found.label, apprenticeId: found.value });
           } else {
+            // Si no se encuentra, usar el valor seleccionado (debería ser el id)
             dataToSend['apprenticeId'] = dataToSend['username'];
+            dataToSend['name'] = '';
             console.log('[ModalCreate] handleSubmit - No se encontró opción, apprenticeId:', dataToSend['username']);
           }
         } else if (roleNorm === 'artist' || roleNorm === 'artista') {

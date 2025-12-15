@@ -282,7 +282,7 @@ const Songs: React.FC = () => {
       />
       <ConfirmDialog 
         title="¡Éxito!"
-        message="La canción ha sido creada correctamente" 
+        message="Operación realizada correctamente" 
         open={openAccept} 
         type="success" 
         onCancel={() => setOpenAccept(false)} 

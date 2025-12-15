@@ -444,16 +444,17 @@ const Queries: React.FC = () => {
                   const apprenticeId = selectedArtist?.apprenticeId;
                   const groupId = selectedArtist?.groupId;
                   const response = await fetch(`http://localhost:3000/api/artist/succes`, {
-                    method: 'GET',
+                    method: 'POST',
                     headers,
                     body: JSON.stringify({
-                      apprenticeId,
-                      groupId,
+                      apprenticeId: Number(apprenticeId),
+                      groupId: Number(groupId),
                       startDate: incomeStart,
                       endDate: incomeEnd
                     })
                   });
                   const data = await response.json();
+                  console.log('Respuesta de ingresos:', data);
                   setIncomeResults(data.data ? [data.data] : []);
                 } catch (error) { 
                   setErrorMessage('Error al consultar ingresos'); setOpenError(true); 
@@ -478,11 +479,17 @@ const Queries: React.FC = () => {
                     <tbody>
                       {incomeResults.map((row, i) => (
                         <tr key={i}>
-                          <td>{row.incomes?.TotalIncome}</td>
+                          <td>{row.incomes?.TotalIncome ?? row.incomes?.totalIncome ?? row.incomes?.totalincome}</td>
                           <td>
-                            {row.succes?.map((s: any, idx: number) => (
-                              <div key={idx}>{s.Title} ({new Date(s.releaseDate).toLocaleDateString()})</div>
-                            ))}
+                            {Array.isArray(row.succes) && row.succes.length > 0 ? (
+                              row.succes.map((s: any, idx: number) => (
+                                <div key={idx}>
+                                  {s.Title || s.title} {s.releaseDate || s.releasedate ? `(${new Date(s.releaseDate || s.releasedate).toLocaleDateString()})` : ''}
+                                </div>
+                              ))
+                            ) : (
+                              <span>No hay éxitos</span>
+                            )}
                           </td>
                         </tr>
                       ))}
@@ -568,7 +575,7 @@ const Queries: React.FC = () => {
                   const token = localStorage.getItem('token');
                   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
                   if (token) headers['Authorization'] = `Bearer ${token}`;
-                  const response = await fetch('http://localhost:3000/api/artist/soloist-history', { headers });
+                  const response = await fetch('http://localhost:3000/api/artist/soloArtists', { headers });
                   const data = await response.json();
                   setSoloistResults(data.data || []);
                 } catch (error) { setErrorMessage('Error al consultar solistas'); setOpenError(true); }
