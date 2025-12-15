@@ -19,6 +19,7 @@ import { ApplicationRoutes } from "./ApplicationRoutes";
 import { SongRoutes } from "./SongRoutes";
 import { IncomeRoutes } from "./IncomeRoutes";
 import { AlbumRoutes } from "./AlbumRoutes";
+import { ExportRoutes } from "./ExportRoutes";
  
  
 
@@ -40,6 +41,7 @@ const applicationRoutes=new ApplicationRoutes();
 const songRoutes=new SongRoutes();
 const incomeRoutes = new IncomeRoutes();
 const albumRoutes=new AlbumRoutes();
+const exportRoutes=new ExportRoutes();
 
  
 
@@ -60,6 +62,7 @@ rootRouter.use('/application',applicationRoutes.getRouter())
 rootRouter.use('/song',songRoutes.getRouter())
 rootRouter.use('/income',incomeRoutes.getRouter())
 rootRouter.use("/album", albumRoutes.getRouter());
+rootRouter.use("/export", exportRoutes.getRouter());
  
 
 

@@ -17,6 +17,8 @@ export class ArtistResponseDto {
     //   startDate: string;
     //   endDate?: string;
     // }>,
+    public  debutGroup?:{name:string},
+    
     public readonly contracts?: Array<{
       agencyId: number;
       startDate: string;

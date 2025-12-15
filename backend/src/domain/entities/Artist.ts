@@ -11,6 +11,7 @@ export class Artist{
     readonly Status:ArtistStatus
     readonly GroupHistory?:Group[] | undefined
     
+    
      
 
 
