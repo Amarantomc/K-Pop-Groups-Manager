@@ -16,51 +16,68 @@ export class SongRepository implements ISongRepository{
   }
 
 
-    private async syncPopularityLists(): Promise<void> {
+  private async syncPopularityLists(): Promise<void> {
     const now = new Date();
+    const currentYear = now.getFullYear();
+  
     const oneYearAgo = new Date();
     oneYearAgo.setFullYear(now.getFullYear() - 1);
   
-    // 1. Traemos canciones que tengan al menos 1 año
-    const songs = await this.db.cancion.findMany({
-      where: {
-        fechaLanzamiento: {
-          lte: oneYearAgo
-        }
-      },
-      include: {
-        ListaDePopularidad: true
-      }
-    });
-  
-    // 2. Traemos todas las listas de popularidad
+    // Obtener todas las listas de popularidad
     const lists = await this.db.listaPopularidad.findMany();
   
-    for (const song of songs) {
-      for (const list of lists) {
+    for (const list of lists) {
   
-        // 3. Verificamos requisito de reproducciones
-        if (song.reproducciones < list.requisito) continue;
+      // 1️⃣ Borramos los rankings actuales del año en curso
+      await this.db.cancionEnListaDePopularidad.deleteMany({
+        where: {
+          idLista: list.id,
+          año: currentYear,
+        },
+      });
   
-        // 4. Verificamos que NO esté ya en la lista
-        const alreadyExists = song.ListaDePopularidad.some(
-          (          lp: { idLista: any; }) => lp.idLista === list.id
-        );
+      // 2️⃣ Canciones elegibles para la lista
+      const songs = await this.db.cancion.findMany({
+        where: {
+          fechaLanzamiento: {
+            lte: oneYearAgo, // lanzadas hace más de un año
+          },
+          reproducciones: {
+            gte: list.requisito, // cumplen el requisito mínimo
+          },
+        },
+        orderBy: {
+          reproducciones: 'desc', // de más a menos reproducciones
+        },
+      });
   
-        if (alreadyExists) continue;
+      let position = 1;
   
-        // 5. Insertamos relación
-        await this.db.cancionEnListaDePopularidad.create({
-          data: {
+      // 3️⃣ Insertar o actualizar canciones en la lista
+      for (const song of songs) {
+        await this.db.cancionEnListaDePopularidad.upsert({
+          where: {
+            idCa_idLista: {
+              idCa: song.id,
+              idLista: list.id,
+            },
+          },
+          update: {
+            posicion: position,
+            año: currentYear,
+          },
+          create: {
             idCa: song.id,
             idLista: list.id,
-            posicion: 0, // luego puedes recalcular rankings
-            año: now.getFullYear()
-          }
+            posicion: position,
+            año: currentYear,
+          },
         });
+  
+        position++;
       }
     }
-    }
+  }
 
     async create(data: CreateSongDto): Promise<Song> {
         const created = await this.db.cancion.create({
