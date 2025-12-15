@@ -42,28 +42,16 @@ const ListUsers: React.FC = () => {
                 const resArtist = await fetch('http://localhost:3000/api/artist', { headers });
                 const dataArtist = await resArtist.json();
                 const artists = dataArtist.data || dataArtist;
-                // Asegurarse de que los IDs sean numéricos
-                const artistApprenticeIds = new Set(
-                    artists.map((a: any) => Number(a.apprenticeId || a.IdAp || a.idAp || a.ApprenticeId)).filter((id: any) => !isNaN(id))
-                );
-                console.log('[Users] IDs de aprendices que son artistas (numéricos):', artistApprenticeIds);
-                const res = await fetch('http://localhost:3000/api/apprentice', { headers });
-                const data = await res.json();
-                // Solo los aprendices cuyo id (numérico) está en artistApprenticeIds y tienen nombre definido
-                let options = (data.data || data)
-                    .filter((a: any) => artistApprenticeIds.has(Number(a.id)) && a.name && a.name.trim() !== '')
-                    .map((a: any) => ({ label: a.name, value: a.id }));
-                // Log detallado para depuración
-                console.log('[Users] Opciones de aprendices-artistas (raw):', (data.data || data)
-                    .filter((a: any) => artistApprenticeIds.has(Number(a.id))));
-                console.log('[Users] Opciones de aprendices-artistas cargadas (solo nombre real, sin vacíos):', options);
-                // Si todas las opciones están vacías, log extra
+                // Opciones: usar realName como label y value
+                let options = artists
+                    .filter((a: any) => a.realName && a.realName.trim() !== '')
+                    .map((a: any) => ({ label: a.realName, value: a.realName }));
                 if (options.length === 0) {
-                    console.warn('[Users] ¡No se encontraron aprendices-artistas válidos! Revisa los datos de artistas y aprendices.');
+                    console.warn('[Users] ¡No se encontraron artistas válidos! Revisa los datos de artistas.');
                 }
                 setArtistApprenticeOptions(options);
             } catch (e) {
-                console.error('[Users] Error cargando aprendices-artistas:', e);
+                console.error('[Users] Error cargando artistas:', e);
                 setArtistApprenticeOptions([]);
             }
         };
@@ -83,41 +71,6 @@ const ListUsers: React.FC = () => {
     const [openError, setOpenError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
-    // Campos dinámicos basados en el rol seleccionado
-    /*
-    const userFormFields = useMemo<Field[]>(() => {
-        let baseFields = formFieldsByEntity['user'] || [];
-        const roleNormalized = selectedRole.toLowerCase();
-        if (roleNormalized === 'apprentice' || roleNormalized === 'aprendiz') {
-            baseFields = apprenticeUserFields;
-        } else if (roleNormalized === 'artist' || roleNormalized === 'artista') {
-            baseFields = artistUserFields;
-        }
-        console.log('[Users] selectedRole:', selectedRole, 'roleNormalized:', roleNormalized);
-        let fields = [...baseFields];
-        if (roleNormalized === 'apprentice' || roleNormalized === 'aprendiz') {
-            console.log('[Users] Asignando apprenticeOptions a username:', apprenticeOptions);
-            fields = fields.map(f =>
-                f.id === 'username'
-                    ? { ...f, type: 'select', options: apprenticeOptions }
-                    : f
-            );
-        } else if (roleNormalized === 'artist' || roleNormalized === 'artista') {
-            console.log('[Users] Asignando artistApprenticeOptions a username:', artistApprenticeOptions);
-            fields = fields.map(f =>
-                f.id === 'username'
-                    ? { ...f, type: 'select', options: artistApprenticeOptions }
-                    : f
-            );
-        }
-        
-        if (roleNormalized === 'manager' || roleNormalized === 'director') {
-            fields = [...fields, ...managerDirectorFields];
-        }
-        console.log('[Users] Campos finales para el formulario:', fields);
-        return fields;
-    }, [selectedRole, apprenticeOptions, artistApprenticeOptions]);
-    */
     const userFormFields = useMemo<Field[]>(() => {
         const baseFields = formFieldsByEntity['user'] || [];
         const roleNormalized = selectedRole.toLowerCase();
@@ -167,11 +120,24 @@ const ListUsers: React.FC = () => {
                 }
                 const data = await response.json();
                 console.log(data);
-                const formattedData = data.data.map((user: any, index: number) => ({
-                    id: user.id ?? index,
-                    username: user.name,
-                    email: user.email,
-                }));
+                // Mapeo de roles backend -> español para la tabla
+                const ROLE_LABELS: Record<string, string> = {
+                    'Admin': 'Admin',
+                    'Manager': 'Manager',
+                    'Director': 'Director',
+                    'Artist': 'Artista',
+                    'Apprentice': 'Aprendiz',
+                };
+                const formattedData = data.data.map((user: any, index: number) => {
+                    // Buscar el rol ignorando mayúsculas/minúsculas, pero mostrar el label exacto
+                    const foundKey = Object.keys(ROLE_LABELS).find(k => k.toLowerCase() === String(user.role).toLowerCase());
+                    return {
+                        id: user.id ?? index,
+                        username: user.name,
+                        email: user.email,
+                        role: foundKey ? ROLE_LABELS[foundKey] : user.role
+                    };
+                });
                 setUserRows(formattedData);
             } catch (error) {
                 console.error(error);
@@ -215,6 +181,7 @@ const ListUsers: React.FC = () => {
     };
 
     const handleCreateSave = async (data: FormData | Record<string, any>) => {
+            console.log('[Users] handleCreateSave - INICIO', data);
         console.log('[Users] handleCreateSave - datos recibidos:', data);
         // Verificar que solo el admin pueda crear usuarios
         if (user?.role !== 'admin') {
@@ -231,19 +198,29 @@ const ListUsers: React.FC = () => {
         } else {
             Object.assign(payload, data);
         }
+        // Detectar el rol seleccionado del formulario
+        const formRole = (payload.rol || payload.role || '').toLowerCase();
+
         // Si el campo username es un select, su value es el id del aprendiz
         if (payload.username) {
+                        console.log('[Users] handleCreateSave - username detectado, apprenticeOptions:', apprenticeOptions, 'artistApprenticeOptions:', artistApprenticeOptions);
             console.log('[Users] Valor de username recibido:', payload.username);
-            payload.apprenticeId = Number(payload.username);
             // Buscar el nombre real para el payload.name si es necesario
             const allOptions = [...apprenticeOptions, ...artistApprenticeOptions];
             const found = allOptions.find(opt => String(opt.value) === String(payload.username));
-            console.log('[Users] Opción encontrada para username:', found);
             if (found) payload.name = found.label;
+                        console.log('[Users] handleCreateSave - found para username:', found);
+            // Si el rol es artista, el value es el realName, así que apprenticeId se buscará después
+            if (formRole === 'artist' || formRole === 'artista') {
+                                console.log('[Users] handleCreateSave - rol artista, no asigna apprenticeId aquí');
+                                console.log('[Users] handleCreateSave - rol aprendiz, asignando apprenticeId:', payload.username);
+                // No asignar apprenticeId aquí, se buscará por nombre real más adelante
+            } else {
+                payload.apprenticeId = Number(payload.username);
+            }
         }
         console.log('[Users] handleCreateSave - payload normalizado:', payload);
-        // Detectar el rol seleccionado del formulario
-        const formRole = (payload.rol || payload.role || '').toLowerCase();
+                            console.log('[Users] handleCreateSave - flujo rol Apprentice, payload:', payload);
         if (formRole) {
             setSelectedRole(formRole);
         }
@@ -417,6 +394,7 @@ const ListUsers: React.FC = () => {
 
                 // Obtener IDs consultando al backend según el rol
                 if (userRole === 'Manager' || userRole === 'Director') {
+
                     console.log('Procesando Manager/Director...');
                     // Asegurarse de que agencyId esté presente y sea un número
                     if (!payload.agencyId) {
@@ -435,12 +413,32 @@ const ListUsers: React.FC = () => {
 
                 } else if (userRole === 'Apprentice') {
                     console.log('Procesando Apprentice...');
-                    if (!payload.apprenticeId) {
+                    // Buscar el id del aprendiz de forma robusta
+                    let apprenticeId = payload.apprenticeId || payload.username;
+                    // Si no, intenta si name es un id numérico
+                    if (!apprenticeId && payload.name && !isNaN(Number(payload.name))) {
+                        apprenticeId = payload.name;
+                    }
+                    // Si no, busca el id por el nombre en apprenticeOptions
+                    if (!apprenticeId && payload.name) {
+                        const foundByName = apprenticeOptions.find(opt => opt.label === payload.name);
+                        if (foundByName) apprenticeId = foundByName.value;
+                    }
+                    console.log('ApprenticeId detectado:', apprenticeId);
+                    console.log('Payload completo:', payload);
+                    if (!apprenticeId) {
                         setErrorMessage('Debe seleccionar un aprendiz');
                         setOpenError(true);
                         return;
                     }
-                    finalPayload.IdAp = payload.apprenticeId;
+                    // Buscar el aprendiz por id en la lista de aprendices
+                    const foundApprentice = apprenticeOptions.find(opt => String(opt.value) === String(apprenticeId));
+                    if (foundApprentice) {
+                        finalPayload.IdAp = Number(foundApprentice.value);
+                        finalPayload.name = foundApprentice.label;
+                    } else {
+                        finalPayload.IdAp = Number(apprenticeId);
+                    }
 
                 } else if (userRole === 'Artist') {
                     console.log('Procesando Artist...');
@@ -449,28 +447,31 @@ const ListUsers: React.FC = () => {
                         setOpenError(true);
                         return;
                     }
-
-                    console.log('Paso 1: Buscando aprendiz por nombre:', payload.name);
-                    const apprenticeId = await getApprenticeIdByName(payload.name);
-                    if (!apprenticeId) {
-                        setErrorMessage(`No se encontró el aprendiz con nombre: ${payload.name}`);
+                    // Buscar el artista por realName
+                    const token = localStorage.getItem('token');
+                    const headers: Record<string, string> = {};
+                    if (token) headers['Authorization'] = `Bearer ${token}`;
+                    const resArtist = await fetch(`${API_BASE}/api/artist`, { headers });
+                    const dataArtist = await resArtist.json();
+                    const artists = dataArtist.data || dataArtist;
+                    const artist = artists.find((a: any) => a.realName === payload.name);
+                    if (!artist) {
+                        setErrorMessage(`No se encontró el artista con nombre real: ${payload.name}`);
                         setOpenError(true);
                         return;
                     }
-                    console.log('Aprendiz encontrado con ID:', apprenticeId);
-
-                    console.log('Paso 2: Buscando artista con apprenticeId:', apprenticeId);
-                    const groupId = await getArtistGroupByApprenticeId(apprenticeId);
-
-                    if (!groupId) {
-                        setErrorMessage(`El aprendiz "${payload.name}" no está registrado como artista o no tiene grupo asignado`);
+                    if (!artist.ApprenticeId && !artist.apprenticeId) {
+                        setErrorMessage(`El artista "${payload.name}" no tiene ApprenticeId asociado.`);
                         setOpenError(true);
                         return;
                     }
-                    console.log('Artista encontrado con IdGr:', groupId);
-
-                    finalPayload.IdAp = apprenticeId;
-                    finalPayload.IdGr = groupId;
+                    if (!artist.GroupId && !artist.groupId) {
+                        setErrorMessage(`El artista "${payload.name}" no tiene GroupId asociado.`);
+                        setOpenError(true);
+                        return;
+                    }
+                    finalPayload.IdAp = artist.ApprenticeId || artist.apprenticeId;
+                    finalPayload.IdGr = artist.GroupId || artist.groupId;
                 } else {
                     console.log('Rol Admin - no requiere campos adicionales');
                 }
@@ -500,12 +501,22 @@ const ListUsers: React.FC = () => {
                 }
 
                 if (responseData?.success) {
-                    // Agregar el nuevo usuario a la tabla
+                    // Agregar el nuevo usuario a la tabla con el rol mapeado
                     if (responseData?.data) {
+                        const ROLE_LABELS: Record<string, string> = {
+                            'Admin': 'Admin',
+                            'Manager': 'Manager',
+                            'Director': 'Director',
+                            'Artist': 'Artista',
+                            'Apprentice': 'Aprendiz',
+                        };
+                        const userRole = responseData.data.role;
+                        const foundKey = Object.keys(ROLE_LABELS).find(k => k.toLowerCase() === String(userRole).toLowerCase());
                         const newRow = {
                             id: responseData.data.id ?? Date.now(),
                             username: responseData.data.name,
                             email: responseData.data.email,
+                            role: foundKey ? ROLE_LABELS[foundKey] : userRole
                         };
                         setUserRows((prev) => [...prev, newRow]);
                     }
@@ -564,7 +575,7 @@ const ListUsers: React.FC = () => {
                     />
                     <ConfirmDialog
                         title="¡Éxito!"
-                        message="El usuario ha sido creado correctamente"
+                        message="Operación realizada correctamente"
                         open={openAccept}
                         type="success"
                         onCancel={() => setOpenAccept(false)}
