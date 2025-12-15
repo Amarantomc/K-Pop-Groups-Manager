@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, type JSX } from "react";
+import React, { use, useState, type JSX } from "react";
 import "./calendar.css"
 import ExportButton from "../exportButton/ExportButton";
 import ModalCreate from "../modal/ModalCreate";
@@ -8,7 +8,9 @@ import ModalCreate from "../modal/ModalCreate";
 interface CalendarProps {
   title?: string,
   description?: string,
-  activitiesTest: any[]
+  activitiesTest: any[],
+  onExport? : any,
+  isArtist? : boolean
 }
 
 export const transformDate = (dateStr: string) => {
@@ -20,11 +22,12 @@ export const transformDate = (dateStr: string) => {
 
   return `${year}-${month}-${day}`;
 }
-
 const Calendar: React.FC<CalendarProps> = ({
   title = "",
   description = "",
-  activitiesTest = []
+  activitiesTest = [],
+  onExport,
+  isArtist
 }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [showDayMenu, setShowDayMenu] = useState(false)
@@ -237,7 +240,7 @@ const Calendar: React.FC<CalendarProps> = ({
 
   return (
     <div className="calendar-container">
-      <ExportButton onExport={() => console.log("Exportando...")} />
+      <ExportButton onExport={onExport} />
       <div className="calendar-header-section">
         <h2 className="calendar-main-title">{title}</h2>
         <p className="calendar-main-description">{description}</p>
@@ -318,7 +321,7 @@ const Calendar: React.FC<CalendarProps> = ({
         </div>
 
       </div>
-      {showDayMenu && selectedDay && (
+      {showDayMenu && selectedDay &&(
         <div className="day-menu-overlay" onClick={handleCloseDayMenu}>
           <div className="day-menu" onClick={(e) => e.stopPropagation()}>
             <div className="day-menu-header">
@@ -359,7 +362,7 @@ const Calendar: React.FC<CalendarProps> = ({
                       </div>
                     ))}
                   </div>
-                  <button className="day-menu-add-button" onClick={handleAddFromDayMenu}>
+                  {!isArtist && (<button className="day-menu-add-button" onClick={handleAddFromDayMenu}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="18"
@@ -373,7 +376,37 @@ const Calendar: React.FC<CalendarProps> = ({
                       <line x1="5" y1="12" x2="19" y2="12" />
                     </svg>
                     Agregar actividad
-                  </button>
+                  </button>)}
+                    {isArtist && (<button className="day-menu-add-button" onClick={handleAddFromDayMenu}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <line x1="12" y1="5" x2="12" y2="19" />
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                    Confirmar
+                  </button>)}
+                  {isArtist && (<button className="day-menu-add-button" onClick={handleAddFromDayMenu}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <line x1="12" y1="5" x2="12" y2="19" />
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                    Rechazar
+                  </button>)}
                 </>
               ) : (
                 <div className="day-menu-empty">
@@ -399,7 +432,7 @@ const Calendar: React.FC<CalendarProps> = ({
           </div>
         </div>
       )}
-      {showAddModal && (
+      {showAddModal && !isArtist &&(
         <ModalCreate
           isOpen={showAddModal}
           onClose={() => {

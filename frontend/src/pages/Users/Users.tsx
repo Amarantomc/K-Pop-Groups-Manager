@@ -541,6 +541,42 @@ const ListUsers: React.FC = () => {
             setSelectedRole(String(value || ''));
         }
     };
+
+       const handleExportPdf = async () => {
+  try {
+    const response = await fetch('http://localhost:3000/api/export/users', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al exportar PDF');
+    }
+
+    
+    const blob = await response.blob();
+
+    const url = window.URL.createObjectURL(blob);
+
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'usuarios.pdf';
+    document.body.appendChild(a);
+    a.click();
+
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error(error);
+    setErrorMessage(
+      error instanceof Error ? error.message : 'Error al exportar PDF'
+    );
+    setOpenError(true);
+  }
+};
     return (
         <PageLayout
             title="Usuarios"
@@ -558,6 +594,7 @@ const ListUsers: React.FC = () => {
                         pagesize={10}
                         onDelete={askDelete}
                         onCreateSave={handleCreateSave}
+                        onExport={handleExportPdf}
                         constraints={userConstraints}
                         createEntity="user"
                         createFields={userFormFields}

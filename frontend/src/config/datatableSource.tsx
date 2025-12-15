@@ -13,7 +13,6 @@ export const apprenticeColumns: GridColDef[] = [
     { field: 'age', headerName: 'Edad', width: 90 },
     // {field: 'agencyName', headerName: 'Agencia', width: 150},
     { field: 'trainingLv', headerName: 'Nivel de Entrenamiento', width: 180 },
-    { field: 'status', headerName: 'Estado', width: 120 },
 ]
 
 export const userColumns: GridColDef[] = [
@@ -283,4 +282,11 @@ export const evaluationColumns: GridColDef[] = [
     { field: 'score', headerName: 'Puntuación', width: 120 },
     { field: 'evaluationDate', headerName: 'Fecha Evaluación', width: 150 },
     { field: 'comments', headerName: 'Comentarios', width: 250 },
+]
+export const apprenticeScout: GridColDef[] = [
+    { field: 'name', headerName: 'Nombre Completo', width: 150 },
+    { field: 'dateOfBirth', headerName: 'Fecha de Nacimiento', width: 250 },
+    { field: 'age', headerName: 'Edad', width: 90 },
+    { field: 'trainingLv', headerName: 'Nivel de Entrenamiento', width: 180 },
+    { field: 'status', headerName: 'Estado', width: 120 },
 ]
