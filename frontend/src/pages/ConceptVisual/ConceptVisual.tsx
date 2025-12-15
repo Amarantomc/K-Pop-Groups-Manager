@@ -30,10 +30,7 @@ const ConceptVisual: React.FC = () => {
     setOpenConfirm(true);
   };
 
-  const handleEditClick = (row: any) => {
-    setEditRow(row);
-    setShowEditModal(true);
-  };
+
 
   const handleDeleteClick = (id: number) => {
     askDelete(id);
@@ -229,7 +226,6 @@ const ConceptVisual: React.FC = () => {
             return (
               <Carousel
                 slides={slides}
-                onEdit={handleEditClick}
                 onDelete={handleDeleteClick}
               />
             );

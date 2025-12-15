@@ -147,12 +147,14 @@ const Modal : React.FC<ModalProps> = ({ isOpen, onClose, title, data, constraint
                 </div>
               )
             }
+            // Permitir tanto 'string' como 'text' para campos de texto
+            const isTextType = rule.type === "string" || rule.type === "text";
             return (
               <div key={key} className={`form-group ${errorMessage ? "form-group-error" : ""}`}>
                 <label htmlFor={key}>{rule.label}</label>
                 <input
                   id={key}
-                  type={rule.type === "date" ? "date" : rule.type === "number" ? "number" : "text"}
+                  type={rule.type === "date" ? "date" : rule.type === "number" ? "number" : isTextType ? "text" : "text"}
                   value={value}
                   onChange={(e) => handleFieldChange(key, e.target.value)}
                   placeholder={`Ingresa ${rule.label?.toLowerCase() || key}`}
