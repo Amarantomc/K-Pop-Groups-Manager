@@ -69,7 +69,6 @@ const Types = {
   GetBestAlbumsUseCase:Symbol.for('GetBestAlbumsUseCase'),
   GetIncomeAndSuccesUseCase:Symbol.for('GetIncomeAndSuccesUseCase'),
   GetArtistsWhoChangeAgencyUseCase: Symbol.for('GetArtistsWhoChangeAgencyUseCase'),
-  GetSoloArtistsProfesionalHistoryUseCase: Symbol.for('GetSoloArtistsProfesionalHistory'),
 
 
   CreateConceptUseCase: Symbol.for('CreateConceptUseCase'),
@@ -189,6 +188,7 @@ FindContractByIdUseCase : Symbol.for('FindContractByIdUseCase'),
 GetAllContractsUseCase : Symbol.for('GetAllContractsUseCase'),
 UpdateContractUseCase : Symbol.for('UpdateContractUseCase'),
 DeleteContractUseCase : Symbol.for('DeleteContractUseCase'),
+OfferContractUseCase : Symbol.for('OfferContractUseCase'),
 //#endregion
 
 //#region Song

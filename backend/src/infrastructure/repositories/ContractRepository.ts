@@ -5,6 +5,8 @@ import type { Contract } from "../../domain";
 import { Types } from "../di/Types";
 import type { IUnitOfWork } from "../../application/interfaces/IUnitOfWork";
 import { ContractResponseDto } from "../../application/dtos/contract/ContractResponseDto";
+import type { Artist } from "../../domain/entities/Artist";
+import { ArtistResponseDto } from "../../application/dtos/artist/ArtistResponseDto";
 
 @injectable()
 export class ContractRepository implements IContractRepository{
@@ -14,11 +16,20 @@ export class ContractRepository implements IContractRepository{
     @inject(Types.IUnitOfWork) private unitOfWork: IUnitOfWork
   ) {}
 
-
        private get db() {
     return this.unitOfWork.getTransaction();
   }
     
+
+  async offerContract(): Promise<Artist[]> {
+    const artists = await this.db.artista.findMany({
+      where: {
+        estadoArtista: "Pausa",
+      },
+    });
+  
+    return ArtistResponseDto.toEntities(artists);
+  }
     
 
     async create(data: CreateContractDto): Promise<Contract> {
