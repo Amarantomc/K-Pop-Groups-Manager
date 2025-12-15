@@ -153,7 +153,7 @@ const Artist: React.FC = () => {
     if (apprenticeToDelete === null) return;
     try {
       // DELETE /api/artist/:apprenticeId&:groupId - Requiere rol Staff
-      const response = await fetch(`http://localhost:3000/api/artist/${apprenticeToDelete}/${groupToDelete}`, {
+      const response = await fetch(`http://localhost:3000/api/artist/${apprenticeToDelete}&${groupToDelete}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`

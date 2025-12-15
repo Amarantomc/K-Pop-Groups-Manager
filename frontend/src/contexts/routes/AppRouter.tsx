@@ -24,6 +24,7 @@ import ConceptVisual from '../../pages/ConceptVisual/ConceptVisual';
 import PopularityLists from '../../pages/PopularityLists/PopularityLists';
 import Songs from '../../pages/Songs/Songs';
 import Queries from '../../pages/Queries/Queries';
+import Scout from '../../pages/Scout/Scout';
 
 const AppRouter: React.FC = () => {
   const { user, isLoading } = useAuth();
@@ -242,6 +243,12 @@ const AppRouter: React.FC = () => {
       } />
 
       {/* RUTAS SOLO PARA MANAGER */}
+            <Route path="/manager/captacion" element={
+              <ProtectedRoute allowedRoles={['manager']}>
+                {/* Nueva página para captar aprendices y ofrecer contratos a artistas */}
+                <Scout />
+              </ProtectedRoute>
+            } />
       <Route path="/manager/dashboard" element={
         <ProtectedRoute allowedRoles={['manager']}>
           <Dashboard />

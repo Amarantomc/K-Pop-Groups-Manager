@@ -314,13 +314,13 @@ const ListApprentice: React.FC = () => {
           confirmText="Aceptar" 
           showDeleteButton={false}
         />
-        {/* <ModalCreate
+        <ModalCreate
           isOpen={showCreateModal}
           title="Crear Aprendiz"
           createFields={apprenticeFields}
           onSave={handleFormSubmit}
           onClose={() => setShowCreateModal(false)}
-        /> */}
+        />
         <Modal
           isOpen={showSuccessModal}
           title="Aprendiz creado exitosamente"
