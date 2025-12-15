@@ -37,6 +37,7 @@ const Types = {
   UpdateUserUseCase: Symbol.for('UpdateUserUseCase'),
   DeleteUserUseCase: Symbol.for('DeleteUserUseCase'),
 
+  //#region Apprentice
   CreateApprenticeUseCase: Symbol.for('CreateApprenticeUseCase'),
   DeleteApprenticeUseCase: Symbol.for('DeleteApprenticeUseCase'),
   GetApprenticeUseCase: Symbol.for('GetApprenticeUseCase'),
@@ -45,7 +46,8 @@ const Types = {
   ListByAgencyUseCase :Symbol.for('ListByAgencyUseCase'),
   GetApprenticeByNameUseCase :Symbol.for('GetApprenticeByNameUseCase'),
   AddEvaluationUseCase :Symbol.for('AddEvaluationUseCase'),
-
+  ApprenticeScoutUseCase: Symbol.for("ApprenticeScoutUseCase"),
+//#endregion
 
 
   CreateAgencyUseCase :Symbol.for('CreateAgencyUseCase'),
@@ -69,7 +71,6 @@ const Types = {
   GetBestAlbumsUseCase:Symbol.for('GetBestAlbumsUseCase'),
   GetIncomeAndSuccesUseCase:Symbol.for('GetIncomeAndSuccesUseCase'),
   GetArtistsWhoChangeAgencyUseCase: Symbol.for('GetArtistsWhoChangeAgencyUseCase'),
-  GetSoloArtistsProfesionalHistoryUseCase: Symbol.for('GetSoloArtistsProfesionalHistory'),
 
 
   CreateConceptUseCase: Symbol.for('CreateConceptUseCase'),
@@ -189,6 +190,7 @@ FindContractByIdUseCase : Symbol.for('FindContractByIdUseCase'),
 GetAllContractsUseCase : Symbol.for('GetAllContractsUseCase'),
 UpdateContractUseCase : Symbol.for('UpdateContractUseCase'),
 DeleteContractUseCase : Symbol.for('DeleteContractUseCase'),
+OfferContractUseCase : Symbol.for('OfferContractUseCase'),
 //#endregion
 
 //#region Song

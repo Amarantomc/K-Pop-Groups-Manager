@@ -10,23 +10,41 @@ import type { Request,Response } from "express";
 import type { ListApprenticeUseCase } from "../../application/usesCase/apprentice/ListApprenticeUseCase";
 import type { ListByAgencyUseCase } from "../../application/usesCase/apprentice/ListByAgencyUseCase";
 import type { AddEvaluationUseCase } from "../../application/usesCase/apprentice/AddEvaluationUseCase";
+import type { ApprenticeScoutUseCase } from "../../application/usesCase/apprentice/ApprenticeScoutUseCase";
 
 
 @injectable()
 export class ApprenticeController {
     
-constructor(@inject(Types.CreateApprenticeUseCase)  private createApprenticeUseCase: CreateApprenticeUseCase ,
-            @inject(Types.GetApprenticeUseCase) private getApprenticeUseCase:GetApprenticeUseCase,
-            @inject(Types.DeleteApprenticeUseCase) private deleteApprenticeUseCase:DeleteApprenticeUseCase,
-            @inject(Types.UpdateApprenticeUseCase) private updateApprenticeUseCase:UpdateApprenticeUseCase,
-            @inject(Types.ListApprenticeUseCase) private listApprenticeUseCase:ListApprenticeUseCase,
-            @inject(Types.ListByAgencyUseCase) private listByAgencyUseCase: ListByAgencyUseCase,
-            @inject(Types.GetApprenticeByNameUseCase) private getByNameApprenticeUseCase:GetApprenticeByNameUseCase,
-            @inject(Types.AddEvaluationUseCase) private addEvaluationUseCase: AddEvaluationUseCase,
-          ){}
+  constructor(
+    @inject(Types.CreateApprenticeUseCase)  private createApprenticeUseCase: CreateApprenticeUseCase,
+    @inject(Types.GetApprenticeUseCase) private getApprenticeUseCase: GetApprenticeUseCase,
+    @inject(Types.DeleteApprenticeUseCase) private deleteApprenticeUseCase: DeleteApprenticeUseCase,
+    @inject(Types.UpdateApprenticeUseCase) private updateApprenticeUseCase: UpdateApprenticeUseCase,
+    @inject(Types.ListApprenticeUseCase) private listApprenticeUseCase: ListApprenticeUseCase,
+    @inject(Types.ListByAgencyUseCase) private listByAgencyUseCase: ListByAgencyUseCase,
+    @inject(Types.GetApprenticeByNameUseCase) private getByNameApprenticeUseCase: GetApprenticeByNameUseCase,
+    @inject(Types.AddEvaluationUseCase) private addEvaluationUseCase: AddEvaluationUseCase,
+    @inject(Types.ApprenticeScoutUseCase) private apprenticeScoutUseCase: ApprenticeScoutUseCase
+  ) {}
 
     
-
+  async apprenticeScout(req: Request, res: Response) {
+    try {
+      const apprentices = await this.apprenticeScoutUseCase.execute();
+  
+      res.json({
+        success: true,
+        data: apprentices
+      });
+  
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
+    }
+  }
           
   async createApprentice(req: Request, res: Response) 
       {

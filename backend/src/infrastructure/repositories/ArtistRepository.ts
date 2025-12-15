@@ -45,17 +45,20 @@ private get db() {
     return ArtistResponseDto.toEntity(artist);
   }
 
-    async findById(id:any): Promise<Artist | null> {
-      const artist = await this.db.artista.findUnique({
-        where:{ idAp_idGr:
-          {idAp:id.apprenticeId,
-           idGr:id.groupId,
+  async findById(id: any): Promise<Artist | null> {
+    const artist = await this.db.artista.findUnique({
+      where: {
+        idAp_idGr: {
+          idAp: Number(id.apprenticeId),
+          idGr: Number(id.groupId),
         },
-        // include:{
-        //     HistorialGrupos:true
-        // }
-      }})
-      return artist ? ArtistResponseDto.toEntity(artist) : null;
+      },
+      include: {
+        aprendiz: true  
+      }
+    });
+  
+    return artist ? ArtistResponseDto.toEntity(artist) : null;
   }
 
   async delete(id: any): Promise<void> {
@@ -178,11 +181,20 @@ private get db() {
     return ArtistResponseDto.toEntity(artist);
   }
     
-    async getAll(): Promise<Artist[]> {
-        const artists = await this.db.artista.findMany();
-        
-        return ArtistResponseDto.toEntities(artists)
-    }
+  async getAll(): Promise<Artist[]> {
+    const artists = await this.db.artista.findMany({
+      include: {
+        aprendiz: true   // 👈 TRAE EL APRENDIZ
+      }
+    });
+  
+    return artists.map((artist: { aprendiz: { nombreCompleto: any; }; }) => 
+      ArtistResponseDto.toEntity({
+        ...artist,
+        realName: artist.aprendiz.nombreCompleto
+      })
+    );
+  }
 
     async findByName(name: string): Promise<Artist[]> {
         const artists = await this.db.artista.findMany({
