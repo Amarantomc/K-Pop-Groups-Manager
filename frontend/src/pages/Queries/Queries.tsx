@@ -512,7 +512,7 @@ const Queries: React.FC = () => {
                   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
                   if (token) headers['Authorization'] = `Bearer ${token}`;
                   // Endpoint según imagen: /artist/agencyChanges/
-                  const response = await fetch('http://localhost:3000/api/artist/agencyChanges/', { headers });
+                  const response = await fetch('http://localhost:3000/api/artist/agencyChanges', { headers });
                   const data = await response.json();
                   setAgencyChangeResults(data.data || []);
                 } catch (error) { setErrorMessage('Error al consultar artistas'); setOpenError(true); }
