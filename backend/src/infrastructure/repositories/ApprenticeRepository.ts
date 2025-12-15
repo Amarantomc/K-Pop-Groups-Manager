@@ -62,6 +62,20 @@ export class ApprenticeRepository implements IApprenticeRepository
     return ApprenticeResponseDto.toEntities(apprentices);
   }
 
+  async apprenticeScout(): Promise<Apprentice[]> {
+    const apprentices = await this.db.Aprendiz.findMany({
+      where: {
+        Agencia: {
+          some: {
+            estado: "En proceso de seleccion"
+          }
+        }
+      }
+    });
+  
+    return ApprenticeResponseDto.toEntities(apprentices);
+  }
+
   async findByName(name: string): Promise<Apprentice|null> {
     name=(String)(name)
     const apprentice=await this.db.Aprendiz.findFirst({

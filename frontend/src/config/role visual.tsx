@@ -258,6 +258,12 @@ export const MenuByRole: Record<string, MenuSection[]> = {
             ]
         },
         {
+            title: "MANAGER DE CAPTACIÓN",
+            items: [
+                { label: "Captar Aprendices y Ofrecer Contratos", icon: <PeopleIcon />, path: "/manager/captacion" }
+            ]
+        },
+        {
             title: "APRENDIZ",
             items: [
                 { label: "Mostrar Aprendices", icon: <SchoolIcon />, path: "/manager/apprentice" }
@@ -276,7 +282,7 @@ export const MenuByRole: Record<string, MenuSection[]> = {
                 { label: "Mostrar Grupos", icon: <PeopleIcon />, path: "/manager/group" }
             ]
         },
-         {
+        {
             title: "CONCEPTO",
             items: [
                 { label: "Mostrar Conceptos", icon: <LightbulbIcon />, path: "/manager/concept" }
