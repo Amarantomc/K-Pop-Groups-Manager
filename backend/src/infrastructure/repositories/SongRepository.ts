@@ -10,13 +10,58 @@ import { SongResponseDto } from "../../application/dtos/song/SongResponseDto";
 export class SongRepository implements ISongRepository{
    constructor( @inject(Types.PrismaClient)private prismaClient:any,
                @inject(Types.IUnitOfWork) private unitOfWork:UnitOfWork){}
- 
-   
-    
+  
      private get db() {
     return this.unitOfWork.getTransaction();
   }
-    
+
+
+    private async syncPopularityLists(): Promise<void> {
+    const now = new Date();
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(now.getFullYear() - 1);
+  
+    // 1. Traemos canciones que tengan al menos 1 año
+    const songs = await this.db.cancion.findMany({
+      where: {
+        fechaLanzamiento: {
+          lte: oneYearAgo
+        }
+      },
+      include: {
+        ListaDePopularidad: true
+      }
+    });
+  
+    // 2. Traemos todas las listas de popularidad
+    const lists = await this.db.listaPopularidad.findMany();
+  
+    for (const song of songs) {
+      for (const list of lists) {
+  
+        // 3. Verificamos requisito de reproducciones
+        if (song.reproducciones < list.requisito) continue;
+  
+        // 4. Verificamos que NO esté ya en la lista
+        const alreadyExists = song.ListaDePopularidad.some(
+          (          lp: { idLista: any; }) => lp.idLista === list.id
+        );
+  
+        if (alreadyExists) continue;
+  
+        // 5. Insertamos relación
+        await this.db.cancionEnListaDePopularidad.create({
+          data: {
+            idCa: song.id,
+            idLista: list.id,
+            posicion: 0, // luego puedes recalcular rankings
+            año: now.getFullYear()
+          }
+        });
+      }
+    }
+    }
+
     async create(data: CreateSongDto): Promise<Song> {
         const created = await this.db.cancion.create({
       data: {
@@ -88,6 +133,9 @@ export class SongRepository implements ISongRepository{
     }
 
     async findAll(): Promise<Song[]> {
+
+      await this.syncPopularityLists();
+
      const songs= await this.db.cancion.findMany({
       include: {
         Albums: true,

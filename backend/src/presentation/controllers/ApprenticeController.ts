@@ -53,6 +53,8 @@ export class ApprenticeController {
   }
 
 
+
+
     @inject(Types.ApprenticeScoutUseCase) private apprenticeScoutUseCase: ApprenticeScoutUseCase
   ) {}
 
