@@ -7,6 +7,8 @@ export interface IApprenticeRepository extends IBaseRepository<Apprentice,Create
     listByAgency(id:number): Promise<Apprentice[]>;
     findByName(name:string):Promise<Apprentice|null>;
     addEvaluation(apprenticeId:number,agencyId: number,evaluation: number,date: Date ):Promise<void>;
+    apprenticeScout():Promise<Apprentice[]>;
+    attractApprentice(apprenticeId:number,agencyId: number): Promise<void>;
     apprenticeScout():Promise<Apprentice[]>
 
 

@@ -11,6 +11,7 @@ import type { ListApprenticeUseCase } from "../../application/usesCase/apprentic
 import type { ListByAgencyUseCase } from "../../application/usesCase/apprentice/ListByAgencyUseCase";
 import type { AddEvaluationUseCase } from "../../application/usesCase/apprentice/AddEvaluationUseCase";
 import type { ApprenticeScoutUseCase } from "../../application/usesCase/apprentice/ApprenticeScoutUseCase";
+import type { AttractApprenticesUseCase } from "../../application/usesCase/apprentice/AttractApprenticeUsaCase";
 
 
 @injectable()
@@ -25,6 +26,33 @@ export class ApprenticeController {
     @inject(Types.ListByAgencyUseCase) private listByAgencyUseCase: ListByAgencyUseCase,
     @inject(Types.GetApprenticeByNameUseCase) private getByNameApprenticeUseCase: GetApprenticeByNameUseCase,
     @inject(Types.AddEvaluationUseCase) private addEvaluationUseCase: AddEvaluationUseCase,
+    @inject(Types.ApprenticeScoutUseCase) private apprenticeScoutUseCase: ApprenticeScoutUseCase,
+    @inject(Types.AttractApprenticesUseCase)private attractApprenticesUseCase: AttractApprenticesUseCase
+  ) {}
+
+    
+  async attractApprentice(req: Request, res: Response) {
+    try {
+      const { apprenticeId, agencyId } = req.params;
+  
+      await this.attractApprenticesUseCase.execute(
+        Number(apprenticeId),
+        Number(agencyId)
+      );
+  
+      res.status(200).json({
+        success: true,
+        message: "Apprentice transferred successfully",
+      });
+    } catch (error: any) {
+      res.status(400).json({
+        success: false,
+        error: error.message,
+      });
+    }
+  }
+
+
     @inject(Types.ApprenticeScoutUseCase) private apprenticeScoutUseCase: ApprenticeScoutUseCase
   ) {}
 

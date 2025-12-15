@@ -170,6 +170,7 @@ import { GetSoloArtistsProfesionalHistoryUseCase } from "../../application/usesC
 import { AddEvaluationUseCase } from "../../application/usesCase/apprentice/AddEvaluationUseCase";
 import { OfferContractUseCase } from "../../application/usesCase/contract/OfferContractUseCase";
 import { ApprenticeScoutUseCase } from "../../application/usesCase/apprentice/ApprenticeScoutUseCase";
+import { AttractApprenticesUseCase } from "../../application/usesCase/apprentice/AttractApprenticeUsaCase";
  
 const container=new Container()
  
@@ -437,6 +438,10 @@ container.bind<UpdateUserUseCase>(Types.UpdateUserUseCase)
   container
   .bind<ApprenticeScoutUseCase>(Types.ApprenticeScoutUseCase)
   .to(ApprenticeScoutUseCase);
+
+  container
+  .bind<AttractApprenticesUseCase>(Types.AttractApprenticesUseCase)
+  .to(AttractApprenticesUseCase);
   
  //#endregion
   
