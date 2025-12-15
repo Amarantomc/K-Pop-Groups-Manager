@@ -37,6 +37,7 @@ const Types = {
   UpdateUserUseCase: Symbol.for('UpdateUserUseCase'),
   DeleteUserUseCase: Symbol.for('DeleteUserUseCase'),
 
+  //#region Apprentice
   CreateApprenticeUseCase: Symbol.for('CreateApprenticeUseCase'),
   DeleteApprenticeUseCase: Symbol.for('DeleteApprenticeUseCase'),
   GetApprenticeUseCase: Symbol.for('GetApprenticeUseCase'),
@@ -45,7 +46,8 @@ const Types = {
   ListByAgencyUseCase :Symbol.for('ListByAgencyUseCase'),
   GetApprenticeByNameUseCase :Symbol.for('GetApprenticeByNameUseCase'),
   AddEvaluationUseCase :Symbol.for('AddEvaluationUseCase'),
-
+  ApprenticeScoutUseCase: Symbol.for("ApprenticeScoutUseCase"),
+//#endregion
 
 
   CreateAgencyUseCase :Symbol.for('CreateAgencyUseCase'),

@@ -169,6 +169,7 @@ import { GetArtistsWhoChangeAgencyUseCase } from "../../application/usesCase/art
 import { GetSoloArtistsProfesionalHistoryUseCase } from "../../application/usesCase/artist/GetSoloArtistsProfesionalHistoryUseCase";
 import { AddEvaluationUseCase } from "../../application/usesCase/apprentice/AddEvaluationUseCase";
 import { OfferContractUseCase } from "../../application/usesCase/contract/OfferContractUseCase";
+import { ApprenticeScoutUseCase } from "../../application/usesCase/apprentice/ApprenticeScoutUseCase";
  
 const container=new Container()
  
@@ -432,6 +433,11 @@ container.bind<UpdateUserUseCase>(Types.UpdateUserUseCase)
   container.bind<GetApprenticeByNameUseCase>(Types.GetApprenticeByNameUseCase)
   .to(GetApprenticeByNameUseCase)
   .inTransientScope();
+
+  container
+  .bind<ApprenticeScoutUseCase>(Types.ApprenticeScoutUseCase)
+  .to(ApprenticeScoutUseCase);
+  
  //#endregion
   
 

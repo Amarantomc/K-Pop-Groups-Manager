@@ -19,21 +19,31 @@ export class ApprenticeRepository implements IApprenticeRepository
     @inject(Types.IUnitOfWork) private unitOfWork: UnitOfWork
   ) {}
 
-  async findByName(name: string): Promise<Apprentice|null> {
-        name=(String)(name)
-        const apprentice=await this.db.Aprendiz.findFirst({
-           where:{nombreCompleto:name}
-        })
-        return apprentice ? ApprenticeResponseDto.toEntity(apprentice) : null
-  }
-
-
-
      private get db() {
     return this.unitOfWork.getTransaction();
   }
 
+  async apprenticeScout(): Promise<Apprentice[]> {
+    const apprentices = await this.db.Aprendiz.findMany({
+      where: {
+        Agencia: {
+          some: {
+            estado: "En proceso de seleccion"
+          }
+        }
+      }
+    });
+  
+    return ApprenticeResponseDto.toEntities(apprentices);
+  }
 
+  async findByName(name: string): Promise<Apprentice|null> {
+    name=(String)(name)
+    const apprentice=await this.db.Aprendiz.findFirst({
+       where:{nombreCompleto:name}
+    })
+    return apprentice ? ApprenticeResponseDto.toEntity(apprentice) : null
+}
 
   async addEvaluation(apprenticeId: number,agencyId: number,evaluation: number,date: Date): Promise<void> {
 
