@@ -183,6 +183,12 @@ import { ExportSongsPdfUseCase } from "../../application/usesCase/exports/Export
 import { OfferContractUseCase } from "../../application/usesCase/contract/OfferContractUseCase";
 import { ApprenticeScoutUseCase } from "../../application/usesCase/apprentice/ApprenticeScoutUseCase";
 import { AttractApprenticesUseCase } from "../../application/usesCase/apprentice/AttractApprenticeUsaCase";
+import { ExportAlbumsPdfUseCase } from "../../application/usesCase/exports/ExportAlbumsPdfUseCase";
+import { ExportActivitiesPdfUseCase } from "../../application/usesCase/exports/ExportActivitiesPdfUseCase";
+import { ExportContractsPdfUseCase } from "../../application/usesCase/exports/ExportContractsPdfUseCase";
+import { ExportIncomesPdfUseCase } from "../../application/usesCase/exports/ExportIncomesPdfUseCase";
+import { ExportApplicationsPdfUseCase } from "../../application/usesCase/exports/ExportApplicationsUseCase";
+import { ExportUsersPdfUseCase } from "../../application/usesCase/exports/ExportUsersPdfUseCase";
  
 const container=new Container()
  
@@ -1028,6 +1034,30 @@ container.bind<CreateVisualConceptUseCase>(Types.CreateVisualConceptUseCase)
 
   container.bind<ExportSongsPdfUseCase>(Types.ExportSongsPdfUseCase)
   .to(ExportSongsPdfUseCase)
+  .inTransientScope();
+
+  container.bind<ExportAlbumsPdfUseCase>(Types.ExportAlbumsPdfUseCase)
+  .to(ExportAlbumsPdfUseCase)
+  .inTransientScope();
+
+  container.bind<ExportActivitiesPdfUseCase>(Types.ExportActivitiesPdfUseCase)
+  .to(ExportActivitiesPdfUseCase)
+  .inTransientScope();
+
+  container.bind<ExportContractsPdfUseCase>(Types.ExportContractsPdfUseCase)
+  .to(ExportContractsPdfUseCase)
+  .inTransientScope();
+
+  container.bind<ExportIncomesPdfUseCase>(Types.ExportIncomesPdfUseCase)
+  .to(ExportIncomesPdfUseCase)
+  .inTransientScope();
+
+    container.bind<ExportApplicationsPdfUseCase>(Types.ExportApplicationsPdfUseCase)
+  .to(ExportApplicationsPdfUseCase)
+  .inTransientScope();
+
+    container.bind<ExportUsersPdfUseCase>(Types.ExportUsersPdfUseCase)
+  .to(ExportUsersPdfUseCase)
   .inTransientScope();
 
   

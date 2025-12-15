@@ -10,6 +10,12 @@ import type { ExportGroupsPdfUseCase } from "../../application/usesCase/exports/
 import type { ExportConceptsPdfUseCase } from "../../application/usesCase/exports/ExportConceptsPdfUseCase";
 import type { ExportAwardsPdfUseCase } from "../../application/usesCase/exports/ExportAwardsPdfUseCase";
 import type { ExportSongsPdfUseCase } from "../../application/usesCase/exports/ExportSongsPdfUseCase";
+import type { ExportAlbumsPdfUseCase } from "../../application/usesCase/exports/ExportAlbumsPdfUseCase";
+import type { ExportActivitiesPdfUseCase } from "../../application/usesCase/exports/ExportActivitiesPdfUseCase";
+import type { ExportContractsPdfUseCase } from "../../application/usesCase/exports/ExportContractsPdfUseCase";
+import type { ExportIncomesPdfUseCase } from "../../application/usesCase/exports/ExportIncomesPdfUseCase";
+import type { ExportApplicationsPdfUseCase } from "../../application/usesCase/exports/ExportApplicationsUseCase";
+import type { ExportUsersPdfUseCase } from "../../application/usesCase/exports/ExportUsersPdfUseCase";
 
  
 
@@ -24,7 +30,13 @@ export class ExportController {
         @inject(Types.ExportGroupsPdfUseCase)private exportGroups:ExportGroupsPdfUseCase,
         @inject(Types.ExportConceptsPdfUseCase) private exportConcepts:ExportConceptsPdfUseCase,
         @inject(Types.ExportAwardsPdfUseCase)private exportAwards:ExportAwardsPdfUseCase,
-        @inject(Types.ExportSongsPdfUseCase)private exportSongs:ExportSongsPdfUseCase
+        @inject(Types.ExportSongsPdfUseCase)private exportSongs:ExportSongsPdfUseCase,
+        @inject(Types.ExportAlbumsPdfUseCase)private exportAlbums:ExportAlbumsPdfUseCase,
+        @inject(Types.ExportActivitiesPdfUseCase)private exportActivities:ExportActivitiesPdfUseCase,
+        @inject(Types.ExportContractsPdfUseCase)private exportContracts:ExportContractsPdfUseCase,
+        @inject(Types.ExportIncomesPdfUseCase)private exportIncomes:ExportIncomesPdfUseCase,
+        @inject(Types.ExportApplicationsPdfUseCase)private exportApplications:ExportApplicationsPdfUseCase,
+        @inject(Types.ExportUsersPdfUseCase) private exportUsers:ExportUsersPdfUseCase
     ) {}
 
     async exportArtistsPdf(req: Request, res: Response): Promise<void> {
@@ -50,7 +62,7 @@ export class ExportController {
             const pdfBuffer = await this.exportCalendarToPdf.execute(id!);
 
             res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Disposition', `attachment; filename=artistas_${Date.now()}.pdf`);
+            res.setHeader('Content-Disposition', `attachment; filename=calendar_${Date.now()}.pdf`);
             res.send(pdfBuffer);
         } catch (error) {
             res.status(500).json({ error: 'Error generando PDF' });
@@ -64,7 +76,7 @@ export class ExportController {
             const pdfBuffer = await this.exportArtistsOnDebut.execute(Number(id));
 
             res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Disposition', `attachment; filename=artistas_${Date.now()}.pdf`);
+            res.setHeader('Content-Disposition', `attachment; filename=artistas_debut_${Date.now()}.pdf`);
             res.send(pdfBuffer);
         } catch (error) {
             res.status(500).json({ error: 'Error generando PDF' });
@@ -78,7 +90,7 @@ export class ExportController {
             const pdfBuffer = await this.exportAgencies.execute()
 
             res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Disposition', `attachment; filename=artistas_${Date.now()}.pdf`);
+            res.setHeader('Content-Disposition', `attachment; filename=agency_${Date.now()}.pdf`);
             res.send(pdfBuffer);
         } catch (error) {
             res.status(500).json({ error: 'Error generando PDF' });
@@ -92,7 +104,7 @@ export class ExportController {
             const pdfBuffer = await this.exportApprentices.execute()
 
             res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Disposition', `attachment; filename=artistas_${Date.now()}.pdf`);
+            res.setHeader('Content-Disposition', `attachment; filename=apprentice_${Date.now()}.pdf`);
             res.send(pdfBuffer);
         } catch (error) {
             res.status(500).json({ error: 'Error generando PDF' });
@@ -106,7 +118,7 @@ export class ExportController {
             const pdfBuffer = await this.exportGroups.execute()
 
             res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Disposition', `attachment; filename=artistas_${Date.now()}.pdf`);
+            res.setHeader('Content-Disposition', `attachment; filename=group_${Date.now()}.pdf`);
             res.send(pdfBuffer);
         } catch (error) {
             res.status(500).json({ error: 'Error generando PDF' });
@@ -120,7 +132,7 @@ export class ExportController {
             const pdfBuffer = await this.exportConcepts.execute()
 
             res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Disposition', `attachment; filename=artistas_${Date.now()}.pdf`);
+            res.setHeader('Content-Disposition', `attachment; filename=concept_${Date.now()}.pdf`);
             res.send(pdfBuffer);
         } catch (error) {
             res.status(500).json({ error: 'Error generando PDF' });
@@ -134,7 +146,7 @@ export class ExportController {
             const pdfBuffer = await this.exportAwards.execute()
 
             res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Disposition', `attachment; filename=artistas_${Date.now()}.pdf`);
+            res.setHeader('Content-Disposition', `attachment; filename=award_${Date.now()}.pdf`);
             res.send(pdfBuffer);
         } catch (error) {
             res.status(500).json({ error: 'Error generando PDF' });
@@ -148,7 +160,91 @@ export class ExportController {
             const pdfBuffer = await this.exportSongs.execute()
 
             res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Disposition', `attachment; filename=artistas_${Date.now()}.pdf`);
+            res.setHeader('Content-Disposition', `attachment; filename=song_${Date.now()}.pdf`);
+            res.send(pdfBuffer);
+        } catch (error) {
+            res.status(500).json({ error: 'Error generando PDF' });
+        }
+    }
+
+    async exportAlbumsPdf(req: Request, res: Response): Promise<void> {
+        try {
+            
+            
+            const pdfBuffer = await this.exportAlbums.execute()
+
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', `attachment; filename=album_${Date.now()}.pdf`);
+            res.send(pdfBuffer);
+        } catch (error) {
+            res.status(500).json({ error: 'Error generando PDF' });
+        }
+    }
+
+    async exportActivitiesPdf(req: Request, res: Response): Promise<void> {
+        try {
+            
+            
+            const pdfBuffer = await this.exportActivities.execute()
+
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', `attachment; filename=activity_${Date.now()}.pdf`);
+            res.send(pdfBuffer);
+        } catch (error) {
+            res.status(500).json({ error: 'Error generando PDF' });
+        }
+    }
+
+    async exportContractsPdf(req: Request, res: Response): Promise<void> {
+        try {
+            
+            
+            const pdfBuffer = await this.exportContracts.execute()
+
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', `attachment; filename=contract_${Date.now()}.pdf`);
+            res.send(pdfBuffer);
+        } catch (error) {
+            res.status(500).json({ error: 'Error generando PDF' });
+        }
+    }
+
+    async exportIncomesPdf(req: Request, res: Response): Promise<void> {
+        try {
+            
+            
+            const pdfBuffer = await this.exportIncomes.execute()
+
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', `attachment; filename=income_${Date.now()}.pdf`);
+            res.send(pdfBuffer);
+        } catch (error) {
+            res.status(500).json({ error: 'Error generando PDF' });
+        }
+    }
+
+    async exportApplicationsPdf(req: Request, res: Response): Promise<void> {
+        try {
+            
+            
+            const pdfBuffer = await this.exportApplications.execute()
+
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', `attachment; filename=application_${Date.now()}.pdf`);
+            res.send(pdfBuffer);
+        } catch (error) {
+            res.status(500).json({ error: 'Error generando PDF' });
+        }
+    }
+
+    async exportUsersPdf(req: Request, res: Response): Promise<void> {
+        try {
+            
+            
+            const pdfBuffer = await this.exportUsers.execute()
+
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', `attachment; filename=users_${Date.now()}.pdf`);
             res.send(pdfBuffer);
         } catch (error) {
             res.status(500).json({ error: 'Error generando PDF' });
