@@ -114,7 +114,7 @@ GetAllActivitiesUseCase: Symbol.for('GetAllActivitiesUseCase'),
 FindActivitiesByArtist :Symbol.for('FindActivitiesByArtist'),
 AddArtistToActivityUseCase:Symbol.for('AddArtistToActivityUseCase'),
 FindActivitiesByGroupUseCase:Symbol.for('FindActivitiesByGroupUseCase'),
- 
+AcceptOrRejectActivityUseCase: Symbol.for('AcceptOrRejectActivityUseCase'),
 //#endregion 
 
 

@@ -190,6 +190,7 @@ import { ExportContractsPdfUseCase } from "../../application/usesCase/exports/Ex
 import { ExportIncomesPdfUseCase } from "../../application/usesCase/exports/ExportIncomesPdfUseCase";
 import { ExportApplicationsPdfUseCase } from "../../application/usesCase/exports/ExportApplicationsUseCase";
 import { ExportUsersPdfUseCase } from "../../application/usesCase/exports/ExportUsersPdfUseCase";
+import { AcceptOrRejectActivityUseCase } from "../../application/usesCase/activity/AcceptedOrRejectActivityUseCase";
  
 const container=new Container()
  
@@ -817,6 +818,10 @@ container
 
   container.bind<CreateActivityUseCase>(Types.CreateActivityUseCase)
   .to(CreateActivityUseCase)
+  .inTransientScope();
+
+  container.bind<AcceptOrRejectActivityUseCase>(Types.AcceptOrRejectActivityUseCase)
+  .to(AcceptOrRejectActivityUseCase)
   .inTransientScope();
 
 container.bind<UpdateActivityUseCase>(Types.UpdateActivityUseCase)

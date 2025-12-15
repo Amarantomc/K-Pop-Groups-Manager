@@ -10,6 +10,7 @@ export interface IActivityRepository extends IBaseRepository<Activity, CreateAct
   //Arreglar
   findByArtist(apprenticeId:number,groupId:number):Promise<Activity[]>
   findByGroup(groupId: number): Promise<Activity[] | null>;
+  acceptedActivity(activityId:number,isAccepted: Boolean):Promise<void>
 //   findByType(type: string): Promise<Activity[]>;
 //   findByDate(date: Date): Promise<Activity[]>;
 //   findByResponsible(responsible: string): Promise<Activity[]>;

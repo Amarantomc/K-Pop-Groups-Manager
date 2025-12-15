@@ -1,61 +1,79 @@
-import { Application } from "../../../domain";
+import Application from "../../../domain/entities/Application";
 
-export class ApplicationResponseDto{
-    constructor(
-      public readonly id:number,
-      public readonly groupName:string,
-      public readonly date:Date | string,
-      public readonly idConcept:number,
-      public readonly roles: string[],
-      public readonly idAgency: number,
-      public readonly apprentices?: number[],
-      public readonly artists?:[number,number][],
-      public readonly status?: string,
-    ){}
+export class ApplicationResponseDto {
+  constructor(
+    public readonly id: number,
+    public readonly groupName: string,
+    public readonly date: Date | string,
+    public readonly idConcept: number,
+    public readonly roles: string[],
+    public readonly idAgency: number,
+    public readonly apprentices: {
+      apprenticeId: number;
+      name: string;
+    }[],
+    public readonly artists: {
+      idApprentice: number;
+      groupId: number;
+      realName: string;
+      artisticName: string;
+    }[],
+    public readonly status: string
+  ) {}
 
-    static fromEntity(application: Application): ApplicationResponseDto {
-      //console.log(application);
-      return new ApplicationResponseDto(
-        application.id,
-        application.groupName,
-        application.date,  
-        application.idConcept,      
-        application.roles,           
-        application.idAgency,       
-        application.apprentices,
-        application.artists,
-        application.status
-      );
-    }
+  
+  static fromEntity(application: Application): ApplicationResponseDto {
+    return new ApplicationResponseDto(
+      application.id,
+      application.groupName,
+      application.date,
+      application.idConcept,
+      application.roles,
+      application.idAgency,
+      application.apprentices,
+      application.artists,
+      application.status
+    );
+  }
 
-    static toEntity(application: any): Application {
+  // ===============================
+  // PERSISTENCE → DOMAIN
+  // ===============================
+  static toEntity(application: any): Application {
+    return new Application({
+      id: application.id,
+      groupName: application.nombreGrupo,
+      roles: application.roles,
+      idConcept: application.idConcepto,
+      idAgency: application.idAgencia,
+      date: application.fechaSolicitud,
+      status: application.estado,
 
-      return new Application({
-        id: application.id,
-        groupName: application.nombreGrupo,
-        roles: application.roles,
-        idConcept: application.idConcepto,
-        idAgency: application.idAgencia,
-        date: application.fechaSolicitud,
-        status: application.estado,
-    
-        // AprendizMiembro → array de IDs
-        apprentices: application.AprendizMiembro?.map((a: any) => a.id) ?? [],
-    
-        // ArtistaMiembro → array de tuplas [idAp, idGr]
-        artists: application.ArtistaMiembro?.map((a: any) => [a.idAp, a.idGr]) ?? [],
-    
-        // tu schema NO guarda esto en Solicitud → default a 1
-        idVisualConcept: application.idConceptoVisual ?? 1
-      });
-    }
+      // 🔥 Aprendices → PROTOTIPO
+      apprentices:
+        application.AprendizMiembro?.map((a: any) => ({
+          apprenticeId: a.id,
+          name: a.nombreCompleto
+        })) ?? [],
 
-      static fromEntities(applications: any[]): ApplicationResponseDto[] {
-        //console.log(applications);
-        return applications.map(application => this.fromEntity(application));
-      }
+      // 🔥 Artistas → PROTOTIPO
+      artists:
+        application.ArtistaMiembro?.map((a: any) => ({
+          idApprentice: a.idAp,
+          groupId: a.idGr,
+          realName: a.aprendiz?.nombreCompleto ?? "",
+          artisticName: a.nombreArtistico
+        })) ?? [],
 
-      static toEntities(applications: any[]): Application[] {
-              return applications.map(application => this.toEntity(application));
-            }
+      idVisualConcept: application.idConceptoVisual ?? 1
+    });
+  }
+
+  static fromEntities(applications: Application[]): ApplicationResponseDto[] {
+    return applications.map(app => this.fromEntity(app));
+  }
+
+  static toEntities(applications: any[]): Application[] {
+    return applications.map(app => this.toEntity(app));
+  }
 }

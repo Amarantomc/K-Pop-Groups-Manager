@@ -13,6 +13,7 @@ export class ActivityResponseDto {
     public readonly date: string,
     public readonly place: string,
     public readonly eventType: string,
+    public readonly status:string,
     public readonly artists?: Array<{
       apprenticeId: number;
       groupId: number;
@@ -34,6 +35,7 @@ export class ActivityResponseDto {
       activity.date.toDateString(),
       activity.place,
       activity.eventType,
+      activity.status
     );
   }
 
@@ -56,6 +58,7 @@ export class ActivityResponseDto {
       date: activity.fecha,
       place: activity.lugar,
       eventType: activity.tipoEvento,
+      status: activity.estado,
       artists:artista ? artista : [],
     
     });

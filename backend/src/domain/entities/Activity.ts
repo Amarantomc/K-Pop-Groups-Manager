@@ -10,6 +10,7 @@ export class Activity {
     readonly date: Date ;
     readonly place: string;
     readonly eventType:string;
+    readonly status: string;
     readonly artists: Artist[];
     //readonly groups: Group[];
     //readonly income: Income | null;
@@ -21,6 +22,7 @@ export class Activity {
         date: Date ;
         place: string;
         eventType:string;
+        status: string
         artists: Artist[];
         //groups: Group[];
        // income: Income ;
@@ -32,6 +34,7 @@ export class Activity {
         this.place = attrs.place;
         this.artists = attrs.artists;
         this.eventType=attrs.eventType;
+        this.status = attrs.status
         //this.groups = attrs.groups;
         //this.income = attrs.income;
     }

@@ -104,107 +104,6 @@ export class ApplicationRepository implements IApplicationRepository
   }
  
 
-  // async create(data: CreateApplicationDto): Promise<Application> {
-
-  //   const idAgency = Number(data.idAgency);
-  //   const idConcept = Number(data.idConcept);
-  
-  //   const concept = await this.db.Concepto.findUnique({
-  //     where: { id: idConcept }
-  //   });
-  
-  //   const agency = await this.db.Agencia.findUnique({
-  //     where: { id: idAgency }
-  //   });
-  
-  //   if (!agency || !concept) {
-  //     throw new Error("Agency or Concept not found");
-  //   }
-  
-  //   const application = await this.db.Solicitud.create({
-  //     data: {
-  //       nombreGrupo: data.groupName,
-  //       idAgencia: idAgency,
-  //       idConcepto: idConcept,
-  //       roles: data.roles,
-  //       estado: "Pendiente",
-  
-  //       SolicitudGrupoAprendiz: data.apprentices
-  //         ? {
-  //             create: data.apprentices.map((idAp) => ({
-  //               idAp,
-  //               idAg: idAgency,
-  //               estado: "Pendiente",
-  //             }))
-  //           }
-  //         : undefined,
-  
-  //       SolicitudGrupoArtista: data.artists
-  //         ? {
-  //             create: data.artists.map(([idAp, idGr]) => ({
-  //               idAp,
-  //               idGr,
-  //               idAg: idAgency,
-  //               estado: "Pendiente",
-  //             }))
-  //           }
-  //         : undefined,
-  //     },
-  
-  //     include: {
-  //       SolicitudGrupoAprendiz: true,
-  //       SolicitudGrupoArtista: true,
-  //     }
-  //   });
-  
-  //   return ApplicationResponseDto.toEntity(application);
-  // }
-
-  // async create(data: CreateApplicationDto): Promise<Application> {
-
-  //   const idAgency = Number(data.idAgency);
-  //   const idConcept = Number(data.idConcept);
-  
-  //   const concept = await this.db.Concepto.findUnique({ where: { id: idConcept } });
-  //   const agency = await this.db.Agencia.findUnique({ where: { id: idAgency } });
-  
-  //   if (!agency || !concept) {
-  //     throw new Error("Agency or Concept not found");
-  //   }
-  
-  //   const application = await this.db.Solicitud.create({
-  //     data: {
-  //       nombreGrupo: data.groupName,
-  //       idAgencia: idAgency,
-  //       idConcepto: idConcept,
-  //       roles: data.roles,
-  //       estado: data.status,
-  
-  //       AprendizMiembro: data.apprentices
-  //         ? { connect: data.apprentices.map(id => ({ id })) }
-  //         : undefined,
-  
-  //       ArtistaMiembro: data.artists
-  //         ? {
-  //             connect: data.artists.map(([idAp, idGr]) => ({
-  //               idAp_idGr: { idAp, idGr }
-  //             }))
-  //           }
-  //         : undefined
-  //     },
-  
-  //     include: {
-  //       AprendizMiembro: true,
-  //       ArtistaMiembro: {
-  //         orderBy: {
-  //           idAp: "asc"   
-  //         }
-  //       }
-  //     }
-  //   });
-  
-  //   return ApplicationResponseDto.toEntity(application);
-  // }
 
   
   async create(data: CreateApplicationDto): Promise<Application> {
@@ -266,26 +165,57 @@ export class ApplicationRepository implements IApplicationRepository
   }
 
 
+    // async findById(id: any): Promise<Application | null> {
+    //      id=(Number)(id)
+    //     const application=await this.db.Solicitud.findUnique({
+    //        where:{id},
+    //        include: {
+    //         AprendizMiembro: true,
+    //         ArtistaMiembro: {
+    //           orderBy: {
+    //             idAp: "asc"   
+    //           }
+    //         }
+    //       }
+    //     })
+
+    //     if(!application){
+    //       throw new Error("Application not found");
+    //     }
+    //     return ApplicationResponseDto.toEntity(application)
+    // }
+
     async findById(id: any): Promise<Application | null> {
-         id=(Number)(id)
-        const application=await this.db.Solicitud.findUnique({
-           where:{id},
-           include: {
-            AprendizMiembro: true,
-            ArtistaMiembro: {
-              orderBy: {
-                idAp: "asc"   
+      id = Number(id);
+    
+      const application = await this.db.Solicitud.findUnique({
+        where: { id },
+        include: {
+          AprendizMiembro: {
+            select: {
+              id: true,
+              nombreCompleto: true
+            }
+          },
+          ArtistaMiembro: {
+            orderBy: { idAp: "asc" },
+            include: {
+              aprendiz: {
+                select: {
+                  nombreCompleto: true
+                }
               }
             }
           }
-        })
-
-        if(!application){
-          throw new Error("Application not found");
         }
-        return ApplicationResponseDto.toEntity(application)
+      });
+    
+      if (!application) {
+        throw new Error("Application not found");
+      }
+    
+      return ApplicationResponseDto.toEntity(application);
     }
-
     
 
     async update(id: string, data: Partial<UpdateApplicationDto>): Promise<Application> {
@@ -320,20 +250,29 @@ export class ApplicationRepository implements IApplicationRepository
       }
 
     async findAll(): Promise<Application[]> {
-      const applications = await this.db.Solicitud.findMany({
+  const applications = await this.db.Solicitud.findMany({
+    include: {
+      AprendizMiembro: {
+        select: {
+          id: true,
+          nombreCompleto: true
+        }
+      },
+      ArtistaMiembro: {
+        orderBy: { idAp: "asc" },
         include: {
-          AprendizMiembro: true,
-          ArtistaMiembro: {
-            orderBy: {
-              idAp: "asc"   
+          aprendiz: {
+            select: {
+              nombreCompleto: true
             }
           }
         }
-     });
+      }
+    }
+  });
 
-      //console.log(applications);
-      return ApplicationResponseDto.toEntities(applications);
-  }
+  return ApplicationResponseDto.toEntities(applications);
+}
 
 
   

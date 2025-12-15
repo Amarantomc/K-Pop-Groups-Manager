@@ -15,6 +15,7 @@ export class ActivityRepository implements IActivityRepository {
 
   constructor(@inject(Types.PrismaClient) private prisma: any,
     @inject(Types.IUnitOfWork) private unitOfWork: IUnitOfWork) { }
+ 
 
 
 
@@ -24,6 +25,52 @@ export class ActivityRepository implements IActivityRepository {
     return this.unitOfWork.getTransaction();
   }
 
+  async acceptedActivity(activityId: number, isAccepted: boolean): Promise<void> {
+
+    if (!isAccepted) {
+  
+      await this.db.ingreso.deleteMany({
+        where: {
+          idAct: activityId
+        }
+      });
+  
+      await this.db.PersonasEnActividad.updateMany({
+        where: {
+          idAct: activityId
+        },
+        data: {
+          aceptado: false
+        }
+      });
+  
+      await this.db.actividad.update({
+        where: { id: activityId },
+        data: {
+          estado: "CANCELADA"
+        }
+      });
+  
+      return;
+    }
+  
+  
+    await this.db.PersonasEnActividad.updateMany({
+      where: {
+        idAct: activityId
+      },
+      data: {
+        aceptado: true
+      }
+    });
+  
+    await this.db.actividad.update({
+      where: { id: activityId },
+      data: {
+        estado: "APROBADA"
+      }
+    });
+  }
 
   async create(data: CreateActivityDto): Promise<Activity> {
     const activity = await this.db.actividad.create({

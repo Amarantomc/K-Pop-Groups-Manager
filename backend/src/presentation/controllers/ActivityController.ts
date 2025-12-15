@@ -14,6 +14,7 @@ import type { FindActivitiesByArtist } from "../../application/usesCase/activity
 import type { AddArtistToActivityUseCase } from "../../application/usesCase/activity/AddArtistToActivityUseCase";
 import { ArtistOnActivityDto } from "../../application/dtos/activity/ArtistOnActivityDto";
 import type { FindActivitiesByGroupUseCase } from "../../application/usesCase/activity/FindActivitiesByGroupUseCase";
+import type { AcceptOrRejectActivityUseCase } from "../../application/usesCase/activity/AcceptedOrRejectActivityUseCase";
 
 @injectable()
 export class ActivityController {
@@ -25,9 +26,38 @@ export class ActivityController {
     @inject(Types.GetAllActivitiesUseCase) private getAllActivitiesUseCase: GetAllActivitiesUseCase,
     @inject(Types.FindActivitiesByArtist) private findActivitiesByArtist: FindActivitiesByArtist,
     @inject(Types.AddArtistToActivityUseCase) private addArtistToActivity: AddArtistToActivityUseCase,
-    @inject(Types.FindActivitiesByGroupUseCase) private findActivitiesByGroup:FindActivitiesByGroupUseCase
+    @inject(Types.FindActivitiesByGroupUseCase) private findActivitiesByGroup:FindActivitiesByGroupUseCase,
+    @inject(Types.AcceptOrRejectActivityUseCase) private acceptOrRejectActivityUseCase : AcceptOrRejectActivityUseCase,
 
   ) {}
+
+  async decideActivity(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const { accepted } = req.body;
+  
+      if (typeof accepted !== "boolean") {
+        return res.status(400).json({
+          success: false,
+          error: "accepted must be a boolean"
+        });
+      }
+  
+      await this.acceptOrRejectActivityUseCase.execute(Number(id), accepted);
+  
+      res.json({
+        success: true,
+        message: accepted
+          ? "Activity approved successfully"
+          : "Activity cancelled successfully"
+      });
+    } catch (error: any) {
+      res.status(400).json({
+        success: false,
+        error: error.message
+      });
+    }
+  }
 
   async createActivity(req: Request, res: Response) {
     try {

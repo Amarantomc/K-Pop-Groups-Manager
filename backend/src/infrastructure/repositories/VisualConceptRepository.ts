@@ -6,6 +6,7 @@ import type { VisualConcept } from "../../domain";
 import { Types } from "../di/Types";
 import type { IVisualConceptRepository } from "../../application/interfaces/repositories/IVisualConcept";
 import type { UnitOfWork } from "../PrismaUnitOfWork";
+import { error } from "console";
 
 
 @injectable()
@@ -41,18 +42,8 @@ export class VisualConceptRepository implements IVisualConceptRepository {
       : null;
   }
 
-  async update(
-    id: string,
-    data: Partial<CreateVisualConceptDto>
-  ): Promise<VisualConcept> {
-    const visualConcept = await this.db.conceptoVisual.update({
-      where: { id: Number(id) },
-      data: {
-        imagen: data.picture,
-      },
-    });
-
-    return VisualConceptResponseDto.toEntity(visualConcept);
+  async update(id: string,data: Partial<CreateVisualConceptDto>): Promise<VisualConcept> {
+    throw new Error('is not implementation');
   }
 
   async delete(id: string): Promise<void> {
@@ -81,8 +72,7 @@ export class VisualConceptRepository implements IVisualConceptRepository {
   async findAll(): Promise<VisualConcept[]> {
     const visualConcepts = await this.db.conceptoVisual.findMany();
 
-    return visualConcepts.map((vc: any) =>
-      VisualConceptResponseDto.toEntity(vc)
-    );
+    return visualConcepts.map((vc: any) =>VisualConceptResponseDto.toEntity(vc));
+    
   }
 }
