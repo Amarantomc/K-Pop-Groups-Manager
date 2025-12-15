@@ -6,13 +6,13 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import './carousel.css';
 
+
 interface VisualConceptCarouselProps {
   slides: { name: string; src: string; id: number }[];
-  onEdit: (slide: any) => void;
   onDelete?: (id: number) => void;
 }
 
-const VisualConceptCarousel: React.FC<VisualConceptCarouselProps> = ({ slides, onEdit, onDelete }) => {
+const VisualConceptCarousel: React.FC<VisualConceptCarouselProps> = ({ slides, onDelete }) => {
   const slidesCount = slides.length;
   const slidesPerView = slidesCount < 3 ? slidesCount : 3;
   const enableLoop = slidesCount >= 3;
@@ -99,13 +99,7 @@ const VisualConceptCarousel: React.FC<VisualConceptCarouselProps> = ({ slides, o
           }}>
             {/* <h2 style={{fontSize: '2rem', fontWeight: 700, marginBottom: 12, letterSpacing: 1}}>{slide.name}</h2> */}
             <div className="concept-slide-actions">
-              <button
-                className="concept-carousel-action-btn edit"
-                title="Editar"
-                onClick={() => onEdit(slide)}
-              >
-                <span role="img" aria-label="Editar">✏️</span>
-              </button>
+              {/* Botón editar eliminado */}
               <button
                 className="concept-carousel-action-btn delete"
                 title="Eliminar"

@@ -33,6 +33,8 @@ const Contracts: React.FC = () => {
   const [openAccept, setOpenAccept] = useState(false);
   const [openError, setOpenError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  // Para aceptar/rechazar contrato (líder de grupo)
+  const [processingId, setProcessingId] = useState<number | null>(null);
 
   // Columnas base del DataTable
   const baseColumns: GridColDef[] = [
@@ -60,8 +62,87 @@ const Contracts: React.FC = () => {
     { field: 'incomeDistribution', headerName: 'Distribución de Ingresos', width: 180 }
   ];
 
-  // Agregar columna de agencia solo para admin
-  const columns = baseColumns;
+  // Lógica para mostrar botones de aceptar/rechazar solo al líder de grupo
+  let columns = baseColumns;
+  if (user && user.role === 'artist' && user.profileData?.groupId) {
+    columns = [
+      ...baseColumns,
+      {
+        field: 'groupLeaderActions',
+        headerName: 'Acción Líder',
+        width: 220,
+        renderCell: (params: any) => {
+          // Solo mostrar si el contrato es de grupo, el usuario es líder y el estado es 'negociacion'
+          const isGroupContract = params.row.type === 'Group';
+          const isNegotiation = params.row.status === 'negociacion';
+          const isUserGroupLeader = user.profileData?.groupId && params.row.entityId === user.profileData.groupId && user.permissions.includes('group_leader');
+          if (isGroupContract && isNegotiation && isUserGroupLeader) {
+            return (
+              <>
+                <button
+                  style={{marginRight: 8, background: '#10b981', color: 'white', border: 'none', borderRadius: 4, padding: '4px 10px', cursor: 'pointer'}}
+                  disabled={processingId === params.row.id}
+                  onClick={() => handleAcceptContract(params.row)}
+                >Aceptar</button>
+                <button
+                  style={{background: '#ef4444', color: 'white', border: 'none', borderRadius: 4, padding: '4px 10px', cursor: 'pointer'}}
+                  disabled={processingId === params.row.id}
+                  onClick={() => handleRejectContract(params.row)}
+                >Rechazar</button>
+              </>
+            );
+          }
+          return null;
+        }
+      }
+    ];
+  }
+
+  // Funciones para aceptar/rechazar contrato
+  const handleAcceptContract = async (row: any) => {
+    setProcessingId(row.id);
+    try {
+      // Llama al endpoint para aprobar el contrato y la solicitud asociada
+      const response = await fetch(`http://localhost:3000/api/contract/${row.id}/approve`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      if (!response.ok) throw new Error('Error al aprobar el contrato');
+      // Actualiza el estado local
+      setContracts(prev => prev.map(c => c.id === row.id ? { ...c, status: 'aprobado' } : c));
+      setOpenAccept(true);
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : 'Error al aprobar contrato');
+      setOpenError(true);
+    } finally {
+      setProcessingId(null);
+    }
+  };
+
+  const handleRejectContract = async (row: any) => {
+    setProcessingId(row.id);
+    try {
+      // Llama al endpoint para rechazar el contrato y la solicitud asociada
+      const response = await fetch(`http://localhost:3000/api/contract/${row.id}/reject`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      if (!response.ok) throw new Error('Error al rechazar el contrato');
+      setContracts(prev => prev.map(c => c.id === row.id ? { ...c, status: 'rechazado' } : c));
+      setOpenAccept(true);
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : 'Error al rechazar contrato');
+      setOpenError(true);
+    } finally {
+      setProcessingId(null);
+    }
+  };
 
   useEffect(() => {
     const fetchContracts = async () => {
@@ -261,7 +342,13 @@ const Contracts: React.FC = () => {
     return <div>Cargando...</div>;
   }
 
-  if (user.role !== 'manager' && user.role !== 'director' && user.role !== 'admin') {
+  // Permitir acceso a artistas (líderes de grupo) para aceptar/rechazar
+  if (
+    user.role !== 'manager' &&
+    user.role !== 'director' &&
+    user.role !== 'admin' &&
+    !(user.role === 'artist' && user.profileData?.groupId && user.permissions.includes('group_leader'))
+  ) {
     return (
       <PageLayout title="Contratos" description="No tienes permisos para ver esta página">
         <div style={{ textAlign: 'center', padding: '40px' }}>
