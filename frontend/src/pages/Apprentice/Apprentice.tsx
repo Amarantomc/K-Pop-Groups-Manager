@@ -37,7 +37,6 @@ const ListApprentice: React.FC = () => {
     { field: 'age', headerName: 'Edad', width: 90 },
     // {field: 'agencyName', headerName: 'Agencia', width: 150},
     { field: 'trainingLv', headerName: 'Nivel de Entrenamiento', width: 180 },
-    { field: 'status', headerName: 'Estado', width: 120 },
     {   field:'evaluate',
         headerName:'Evaluación',
         width :200,
@@ -267,6 +266,42 @@ const ListApprentice: React.FC = () => {
     }
   };
 
+     const handleExportPdf = async () => {
+  try {
+    const response = await fetch('http://localhost:3000/api/export/apprentices', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al exportar PDF');
+    }
+
+    
+    const blob = await response.blob();
+
+    const url = window.URL.createObjectURL(blob);
+
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'aprendices.pdf';
+    document.body.appendChild(a);
+    a.click();
+
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error(error);
+    setErrorMessage(
+      error instanceof Error ? error.message : 'Error al exportar PDF'
+    );
+    setOpenError(true);
+  }
+};
+
         return (
     <PageLayout 
       title="Aprendices" 
@@ -286,6 +321,7 @@ const ListApprentice: React.FC = () => {
           onDelete={askDelete}
           onEditSave={handleEditSave}
           onCreateSave={handleCreateSave}
+          onExport={handleExportPdf}
           constraints={apprenticeConstraints}
           createEntity="apprentice"
           showEditButton={true}

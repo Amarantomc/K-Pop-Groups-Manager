@@ -229,7 +229,41 @@ const Concept: React.FC = () => {
       setOpenError(true);
     }
   };
+   const handleExportPdf = async () => {
+  try {
+    const response = await fetch('http://localhost:3000/api/export/concepts', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
 
+    if (!response.ok) {
+      throw new Error('Error al exportar PDF');
+    }
+
+    
+    const blob = await response.blob();
+
+    const url = window.URL.createObjectURL(blob);
+
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'conceptos.pdf';
+    document.body.appendChild(a);
+    a.click();
+
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error(error);
+    setErrorMessage(
+      error instanceof Error ? error.message : 'Error al exportar PDF'
+    );
+    setOpenError(true);
+  }
+};
   if (!user || (user.role !== 'manager' && user.role !== 'director' && user.role !== 'admin')) {
     return (
       <PageLayout title="Conceptos" description="No tienes permisos para ver esta página">
@@ -262,6 +296,7 @@ const Concept: React.FC = () => {
             onDelete={askDelete}
             onEditSave={handleEditSave}
             onCreateSave={handleCreateSave}
+            onExport={handleExportPdf}
             showEditButton={true}
             constraints={conceptConstraints}
             createEntity="concept"

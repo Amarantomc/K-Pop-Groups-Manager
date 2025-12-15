@@ -9,18 +9,18 @@ import { useAuth } from '../../contexts/auth/AuthContext';
 import { activityConstraints } from '../../config/modalConstraints';
 import './Activities.css';
 
- interface Activity {
-   id: number;
-   artistName: string;
-   groupName: string;
-   title: string;
-   type: string;
-   date: string;
-   time: string;
-   location: string;
-   status: string;
-   description: string;
- }
+  interface Activity {
+    id: number;
+    artistName: string;
+    groupName: string;
+    title: string;
+    type: string;
+    date: string;
+    time: string;
+    location: string;
+    status: string;
+    description: string;
+}
 
 const Activities: React.FC = () => {
   const { user } = useAuth();
@@ -33,10 +33,6 @@ const Activities: React.FC = () => {
   const [openError, setOpenError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const askDelete = (id: number) => {
-    setActivityToDelete(id);
-    setOpenConfirm(true);
-  };
 
   useEffect(() => {
     const fetchActivities = async () => {
@@ -50,7 +46,7 @@ const Activities: React.FC = () => {
         switch (user.role) {
           case 'artist':
             // Actividades del artista específico
-            endpoint = `/api/activity?artistId=${user.profileData?.artistId || user.id}`;
+            endpoint = `/api/activity/${user.profileData?.IdAp}&${user.profileData?.IdGr}`;
             break;
 
           case 'manager':
@@ -72,7 +68,6 @@ const Activities: React.FC = () => {
         // ============================================
         // SECCIÓN: BACKEND ENDPOINT
         // ============================================
-
         const response = await fetch(`http://localhost:3000${endpoint}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -202,13 +197,13 @@ const Activities: React.FC = () => {
     if (!selectedActivity) return;
 
     try {
-      const response = await fetch(`http://localhost:3000/api/activities/${selectedActivity.id}/validate`, {
+      const response = await fetch(`http://localhost:3000/api/activitie/${selectedActivity.id}/decision`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify({ validated: true })
+        body: JSON.stringify({ accepted: true })
       });
 
       if (!response.ok) {
@@ -314,6 +309,42 @@ const Activities: React.FC = () => {
     //type: activity.activityType
   }));
 
+     const handleExportPdf = async () => {
+  try {
+    const response = await fetch('http://localhost:3000/api/export/activities', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al exportar PDF');
+    }
+
+    
+    const blob = await response.blob();
+
+    const url = window.URL.createObjectURL(blob);
+
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'actividades.pdf';
+    document.body.appendChild(a);
+    a.click();
+
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error(error);
+    setErrorMessage(
+      error instanceof Error ? error.message : 'Error al exportar PDF'
+    );
+    setOpenError(true);
+  }
+};
+
   return (
     <PageLayout
       title="Actividades"
@@ -336,7 +367,9 @@ const Activities: React.FC = () => {
               {/* Calendario a la izquierda */}
               <div className="calendar-section">
                 <Calendar
-                  activitiesTest={calendarEvents}
+                  activitiesTest={activities}
+                  onExport={console.log("Exportando")}
+                  isArtist = {true}
                   //onDateClick={handleDateClick}
                 />
               </div>
@@ -437,6 +470,8 @@ const Activities: React.FC = () => {
                 <div className="calendar-section">
                   <Calendar
                     activitiesTest={activities}
+                    onExport={handleExportPdf}
+                    isArtist={false}
                     //onDateClick={handleDateClick}
                   />
                 </div>

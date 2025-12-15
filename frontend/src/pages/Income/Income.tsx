@@ -278,6 +278,42 @@ const Income: React.FC = () => {
     }
   };
 
+     const handleExportPdf = async () => {
+  try {
+    const response = await fetch('http://localhost:3000/api/export/incomes', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al exportar PDF');
+    }
+
+    
+    const blob = await response.blob();
+
+    const url = window.URL.createObjectURL(blob);
+
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'ingresos.pdf';
+    document.body.appendChild(a);
+    a.click();
+
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error(error);
+    setErrorMessage(
+      error instanceof Error ? error.message : 'Error al exportar PDF'
+    );
+    setOpenError(true);
+  }
+};
+
   if (!user) {
     return <div>Cargando...</div>;
   }
@@ -306,6 +342,7 @@ const Income: React.FC = () => {
             onDelete={askDelete}
             onEditSave={handleEditSave}
             onCreateSave={handleCreateSave}
+            onExport={handleExportPdf}
             showEditButton={user.role === 'manager' || user.role === 'director' || user.role === 'admin'}
             constraints={incomeConstraints}
             createEntity="income"

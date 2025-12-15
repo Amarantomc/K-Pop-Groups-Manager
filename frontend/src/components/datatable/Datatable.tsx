@@ -23,6 +23,7 @@ interface DataTableProps {
   onDelete? : (id : number) => void;
   onEditSave? : (updatedRow : any) => void;
   onCreateSave? : (newRow : any) => void;
+  onExport?
   showEditButton? : boolean,
   constraints? : Record<string, FieldConstraint>;
   createEntity? : string;
@@ -34,7 +35,7 @@ interface DataTableProps {
 }
 
 
-const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , checkboxSelection = false , onDelete, onEditSave, onCreateSave , showEditButton = true , constraints, createEntity, createFields, onFieldChange, showCreateButton=true, userRole, rowHeight = 52}) => {
+const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , checkboxSelection = false , onDelete, onEditSave, onCreateSave ,onExport, showEditButton = true , constraints, createEntity, createFields, onFieldChange, showCreateButton=true, userRole, rowHeight = 52}) => {
   const paginationModel = { page: 0, pageSize: pagesize };
 
    const [editModalOpen, setEditModalOpen] = useState(false);
@@ -95,7 +96,7 @@ const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , c
         <>
         {showCreateButton &&
         (<div className='datatable-header'>
-            <ExportButton onExport={() => console.log("Exportando")}>
+            <ExportButton onExport={onExport}>
             </ExportButton>
             <button className='add-button' onClick={handleCreateOpen}>
                 <svg
