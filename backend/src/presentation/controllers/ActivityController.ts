@@ -34,7 +34,7 @@ export class ActivityController {
   async decideActivity(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const { accepted } = req.body;
+      const { accepted,apprenticeId, groupId } = req.body;
   
       if (typeof accepted !== "boolean") {
         return res.status(400).json({
@@ -43,7 +43,7 @@ export class ActivityController {
         });
       }
   
-      await this.acceptOrRejectActivityUseCase.execute(Number(id), accepted);
+      await this.acceptOrRejectActivityUseCase.execute(Number(id), accepted,apprenticeId,groupId);
   
       res.json({
         success: true,
