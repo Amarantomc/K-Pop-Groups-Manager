@@ -1052,7 +1052,8 @@ async function main() {
         lugar: data.lugar || "Lugar desconocido",
         fecha: new Date(fecha),
         tipoActividad: data.tipoActividad || "Otro",
-        tipoEvento: data.tipoEvento || "Otro"
+        tipoEvento: data.tipoEvento || "Otro",
+        estado: "PENDIENTE" // Valor por defecto según la migración
       }
     }));
   }
