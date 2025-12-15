@@ -1,4 +1,3 @@
-import type { Apprentice } from "../../../domain";
 import type { Artist } from "../../../domain/entities/Artist";
 import type { ActivityResponseDto } from "../../dtos/activity/ActivityResponseDto";
 import type { ArtistOnDebutResponseDto } from "../../dtos/artist/ArtistsOnDebutResponseDto";

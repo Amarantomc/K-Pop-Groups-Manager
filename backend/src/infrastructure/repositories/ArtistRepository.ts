@@ -21,14 +21,124 @@ export class ArtistRepository implements IArtistRepository {
 ){}
 
   
-
-
-  
- 
-
-  
 private get db() {
     return this.unitOfWork.getTransaction();
+  }
+
+
+  async updateInactiveArtists(): Promise<void> {
+
+    const now = new Date();
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(now.getFullYear() - 1);
+  
+    const artists = await this.db.artista.findMany({
+      include: {
+        Contrato: true   // individuales
+      }
+    });
+  
+    for (const artist of artists) {
+  
+      /* =========================
+         CONTRATOS (OR REAL)
+      ========================= */
+  
+      // 🔹 Contratos individuales
+      const hasActiveIndividualContract = artist.Contrato.some(
+        (c: any) => new Date(c.fechaFinalizacion) > now
+      );
+  
+      // 🔹 Contratos grupales
+      const groupContracts = await this.db.contratoGrupo.findMany({
+        where: {
+          IdGr: artist.idGr
+        }
+      });
+  
+      const hasActiveGroupContract = groupContracts.some(
+        (c: any) => new Date(c.fechaFinalizacion) > now
+      );
+  
+      // 👉 OR
+      if (hasActiveIndividualContract || hasActiveGroupContract) {
+        continue; // artista ACTIVO
+      }
+  
+      /* =========================
+         ACTIVIDADES (OR REAL)
+      ========================= */
+  
+      let lastActivityDate: Date | null = null;
+  
+      // 🔹 Individuales
+      const individualActivities = await this.db.personasEnActividad.findMany({
+        where: {
+          idAp: artist.idAp,
+          idGr: artist.idGr
+        },
+        include: {
+          actividad: true
+        }
+      });
+  
+      for (const a of individualActivities) {
+        const d = new Date(a.actividad.fecha);
+        if (!lastActivityDate || d > lastActivityDate) {
+          lastActivityDate = d;
+        }
+      }
+  
+      // 🔹 Grupales
+      const groupActivities = await this.db.personasEnActividad.findMany({
+        where: {
+          idGrupos: artist.idGr
+        },
+        include: {
+          actividad: true
+        }
+      });
+  
+      for (const g of groupActivities) {
+        const d = new Date(g.actividad.fecha);
+        if (!lastActivityDate || d > lastActivityDate) {
+          lastActivityDate = d;
+        }
+      }
+  
+      /* =========================
+         SIN ACTIVIDADES
+      ========================= */
+  
+      if (!lastActivityDate) {
+        await this.db.artista.update({
+          where: {
+            idAp_idGr: {
+              idAp: artist.idAp,
+              idGr: artist.idGr
+            }
+          },
+          data: { estadoArtista: "INACTIVO" }
+        });
+        continue;
+      }
+  
+      /* =========================
+         MÁS DE 1 AÑO
+      ========================= */
+  
+      if (lastActivityDate <= oneYearAgo) {
+        await this.db.artista.update({
+          where: {
+            idAp_idGr: {
+              idAp: artist.idAp,
+              idGr: artist.idGr
+            }
+          },
+          data: { estadoArtista: "INACTIVO" }
+        });
+      }
+    }
   }
 
     async create(data: CreateArtistDto): Promise<Artist> {
@@ -182,9 +292,12 @@ private get db() {
   }
     
   async getAll(): Promise<Artist[]> {
+
+    await this.updateInactiveArtists();
+
     const artists = await this.db.artista.findMany({
       include: {
-        aprendiz: true   // 👈 TRAE EL APRENDIZ
+        aprendiz: true   
       }
     });
   

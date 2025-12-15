@@ -6,4 +6,5 @@ export interface ISongRepository extends IBaseRepository<Song,CreateSongDto,any>
   findAll(): Promise<Song[]>;
   addToAlbum(songId: number, albumId: number): Promise<void>;
   searchByTitle(title: string): Promise<Song[]>;
+
 }
