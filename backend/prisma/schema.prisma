@@ -207,6 +207,7 @@ model ListaPopularidad{
   id Int @id @default(autoincrement())
   nombre String
   tipoLista String
+  requisito Int @default(1000000)
   Canciones CancionEnListaDePopularidad[]
 }
 model Cancion{
@@ -215,6 +216,7 @@ model Cancion{
   genero String
   productor String
   fechaLanzamiento DateTime
+  reproducciones Int @default(0)
   ListaDePopularidad CancionEnListaDePopularidad[]
   Albums Album[]
 }
@@ -222,6 +224,7 @@ model Premio{
   id Int @id @default(autoincrement())
   tituloPremio String
   nombreAcademia String
+  requisito Int @default(1000000)
   Albums  AlbumPremiado[]
 }
 

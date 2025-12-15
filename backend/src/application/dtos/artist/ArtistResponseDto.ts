@@ -11,6 +11,8 @@ export class ArtistResponseDto {
     public readonly DebutDate: string,
     public readonly Status: string,
     public readonly groupHistory?:GroupResponseDTO[],
+    public readonly realName?: string,
+
     // public readonly groupHistory?: Array<{
     //   groupId: number;
     //   role: string;
@@ -29,7 +31,6 @@ export class ArtistResponseDto {
       activityId: number;
       accepted: boolean;
     }>
-    
   ) {}
 
   static fromEntity(artist: Artist): ArtistResponseDto {
@@ -40,27 +41,37 @@ export class ArtistResponseDto {
       artist.ArtistName,
       artist.DebutDate.toDateString(),
       artist.Status.toString(),
-      
-       
+      undefined,
+      artist.realName
       
     );
   }
 
-  static toEntity(artist:any):Artist {
+  static toEntity(artist: any): Artist {
+    return new Artist({
+      ApprenticeId: artist.idAp,
+      GroupId: artist.idGr,
+      ArtistName: artist.nombreArtistico,
+      DebutDate: artist.fechaDebut,
+      Status: artist.estadoArtista,
+      realName: artist.aprendiz?.nombreCompleto,
+    });
+  }
+  // static toEntity(artist:any):Artist {
       
     
-    return new Artist({ 
-      ApprenticeId:artist.idAp,
-      GroupId:artist.idGr,
-      ArtistName:artist.nombreArtistico,
-      DebutDate: artist.fechaDebut,
-      Status:artist.estadoArtista,
-     
+  //   return new Artist({ 
+  //     ApprenticeId:artist.idAp,
+  //     GroupId:artist.idGr,
+  //     ArtistName:artist.nombreArtistico,
+  //     DebutDate: artist.fechaDebut,
+  //     Status:artist.estadoArtista,
+  //     realName: artist.nombreCompleto
  
-      }
+  //     }
      
-    )
-  }
+  //   )
+  // }
 
    static toEntityForManager(artist:any):Artist {
   

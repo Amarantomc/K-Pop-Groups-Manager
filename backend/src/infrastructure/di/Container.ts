@@ -180,6 +180,9 @@ import { ExportGroupsPdfUseCase } from "../../application/usesCase/exports/Expor
 import { ExportConceptsPdfUseCase } from "../../application/usesCase/exports/ExportConceptsPdfUseCase";
 import { ExportAwardsPdfUseCase } from "../../application/usesCase/exports/ExportAwardsPdfUseCase";
 import { ExportSongsPdfUseCase } from "../../application/usesCase/exports/ExportSongsPdfUseCase";
+import { OfferContractUseCase } from "../../application/usesCase/contract/OfferContractUseCase";
+import { ApprenticeScoutUseCase } from "../../application/usesCase/apprentice/ApprenticeScoutUseCase";
+import { AttractApprenticesUseCase } from "../../application/usesCase/apprentice/AttractApprenticeUsaCase";
  
 const container=new Container()
  
@@ -443,6 +446,15 @@ container.bind<UpdateUserUseCase>(Types.UpdateUserUseCase)
   container.bind<GetApprenticeByNameUseCase>(Types.GetApprenticeByNameUseCase)
   .to(GetApprenticeByNameUseCase)
   .inTransientScope();
+
+  container
+  .bind<ApprenticeScoutUseCase>(Types.ApprenticeScoutUseCase)
+  .to(ApprenticeScoutUseCase);
+
+  container
+  .bind<AttractApprenticesUseCase>(Types.AttractApprenticesUseCase)
+  .to(AttractApprenticesUseCase);
+  
  //#endregion
   
 
@@ -915,6 +927,10 @@ container.bind<CreateVisualConceptUseCase>(Types.CreateVisualConceptUseCase)
   //#region Contract
     container.bind<CreateContractUseCase>(Types.CreateContractUseCase)
   .to(CreateContractUseCase)
+  .inTransientScope();
+
+  container.bind<OfferContractUseCase>(Types.OfferContractUseCase)
+  .to(OfferContractUseCase)
   .inTransientScope();
 
   container.bind<DeleteContractUseCase>(Types.DeleteContractUseCase)

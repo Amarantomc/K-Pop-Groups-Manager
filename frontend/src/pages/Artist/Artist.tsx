@@ -31,55 +31,7 @@ const Artist: React.FC = () => {
     setOpenConfirm(true);
   }
   // Columnas del DataTable
-  const baseColumns: GridColDef[] = [
-    { field: 'name', headerName: 'Nombre Real', width: 150 },
-    { field: 'stageName', headerName: 'Nombre Artístico', width: 150 },
-    { field: 'email', headerName: 'Email', width: 200 },
-    { field: 'phone', headerName: 'Teléfono', width: 130 },
-    {
-      field: 'dateOfBirth',
-      headerName: 'Fecha Nacimiento',
-      width: 130,
-      valueFormatter: (params) => {
-        return new Date(params).toLocaleDateString('es-ES');
-      }
-    },
-    { field: 'nationality', headerName: 'Nacionalidad', width: 120 },
-    { field: 'genre', headerName: 'Género', width: 120 },
-    {
-      field: 'status',
-      headerName: 'Estado',
-      width: 120,
-      renderCell: (params) => {
-        const statusColors: Record<string, string> = {
-          'active': '#10b981',
-          'inactive': '#6b7280',
-          'on_tour': '#8b5cf6',
-          'training': '#3b82f6'
-        };
-        return (
-          <span style={{
-            color: statusColors[params.value] || '#6b7280',
-            fontWeight: 600
-          }}>
-            {params.value === 'active' ? 'Activo' :
-              params.value === 'inactive' ? 'Inactivo' :
-                params.value === 'on_tour' ? 'En Gira' :
-                  params.value === 'training' ? 'En Formación' : params.value}
-          </span>
-        );
-      }
-    }
-  ];
 
-  // Agregar columnas adicionales para admin
-  const columns: GridColDef[] = user?.role === 'admin'
-    ? [
-      ...baseColumns,
-      { field: 'agencyName', headerName: 'Agencia', width: 150 },
-      { field: 'groupName', headerName: 'Grupo', width: 130 }
-    ]
-    : baseColumns;
 
   useEffect(() => {
     const fetchArtists = async () => {
@@ -136,7 +88,7 @@ const Artist: React.FC = () => {
           Status: artist.Status,
           ApprenticeId: artist.ApprenticeId,
           GroupId: artist.GroupId,
-          realName: apprenticeMap[artist.ApprenticeId]?.name || '',
+          realName: artist.realName,
           dateOfBirth: apprenticeMap[artist.ApprenticeId]?.dateOfBirth || ''
         }));
         setArtistsRows(formattedData);
@@ -153,7 +105,7 @@ const Artist: React.FC = () => {
     if (apprenticeToDelete === null) return;
     try {
       // DELETE /api/artist/:apprenticeId&:groupId - Requiere rol Staff
-      const response = await fetch(`http://localhost:3000/api/artist/${apprenticeToDelete}/${groupToDelete}`, {
+      const response = await fetch(`http://localhost:3000/api/artist/${apprenticeToDelete}&${groupToDelete}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -279,7 +231,7 @@ const Artist: React.FC = () => {
           />
           <ConfirmDialog 
             title="¡Éxito!"
-            message="El artista ha sido registrado correctamente" 
+            message="Operación realizada correctamente" 
             open={openAccept}
             type="success" 
             onCancel={() => setOpenAccept(false)} 

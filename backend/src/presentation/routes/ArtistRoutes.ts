@@ -18,7 +18,7 @@ import { AuthMiddleware, type AuthenticatedRequest } from "../middlewares/AuthMi
 
   private setupRoutes(): void {
 
-    this.router.use(AuthMiddleware.authenticate());
+    //this.router.use(AuthMiddleware.authenticate());
     this.router.post('/',RoleMiddleware.onlyStaff(), (req, res) => this.artistController.createArtist(req, res))
     this.router.get('/:apprenticeId&:groupId', (req, res) => this.artistController.findById(req,res))
     this.router.put('/:apprenticeId&:groupId',RoleMiddleware.onlyStaff(), (req, res) => this.artistController.updateArtist(req, res))

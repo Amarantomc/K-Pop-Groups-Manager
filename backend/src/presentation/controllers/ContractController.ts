@@ -7,6 +7,7 @@ import type { UpdateContractUseCase } from "../../application/usesCase/contract/
 import type { DeleteContractUseCase } from "../../application/usesCase/contract/DeleteContractUseCase";
 import type { FindContractByIdUseCase } from "../../application/usesCase/contract/FindContractByIdUseCase";
 import type { GetAllContractUseCase } from "../../application/usesCase/contract/GetAllContractUseCase";
+import type { OfferContractUseCase } from "../../application/usesCase/contract/OfferContractUseCase";
 
 @injectable()
 export class ContractController{
@@ -14,8 +15,26 @@ export class ContractController{
                 @inject(Types.DeleteContractUseCase) private deleteContractUseCase: DeleteContractUseCase,
                  @inject(Types.UpdateContractUseCase) private updateContractUseCase: UpdateContractUseCase,
                  @inject(Types.FindContractByIdUseCase) private findContractByIdUseCase: FindContractByIdUseCase,
-                  @inject(Types.GetAllContractsUseCase) private getAllContractsUseCase:GetAllContractUseCase){}
+                  @inject(Types.GetAllContractsUseCase) private getAllContractsUseCase:GetAllContractUseCase,
+                  @inject(Types.OfferContractUseCase) private offerContractUseCase: OfferContractUseCase){}
 
+
+    async offerContract(req: Request, res: Response) {
+                  try {
+                    const artists = await this.offerContractUseCase.execute();
+                
+                    res.status(200).json({
+                      success: true,
+                      data: artists,
+                    });
+                  } catch (error: any) {
+                    res.status(400).json({
+                      success: false,
+                      error: error.message,
+                    });
+                  }
+    }
+    
     async createContract(req:Request,res:Response){
         try {
             const dto=CreateContractDto.Create(req.body)

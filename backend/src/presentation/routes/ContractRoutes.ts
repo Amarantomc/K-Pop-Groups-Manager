@@ -22,6 +22,8 @@ export class ContractRoutes{
     this.router.put('/', (req, res) => this.contractController.update(req, res))
     this.router.delete('/',(req, res) => this.contractController.delete(req, res))
     this.router.get('/find',(req, res) => this.contractController.findById(req, res))
+    this.router.get('/offer', (req, res) => this.contractController.offerContract(req,res))
+
   }
 
   public getRouter(): Router {

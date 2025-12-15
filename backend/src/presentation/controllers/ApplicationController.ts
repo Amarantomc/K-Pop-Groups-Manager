@@ -8,6 +8,7 @@ import type { ListApplicationUseCase } from "../../application/usesCase/applicat
 import { CreateApplicationDto } from "../../application/dtos/application(solicitud)/CreateApplicationDto";
 import type { UpdateApplicationUseCase } from "../../application/usesCase/application(solicitud)/UpdateApplicationUseCase";
 import type { CreateGroupToApplicationUseCase } from "../../application/usesCase/application(solicitud)/CreateGroupToApplicationUseCase";
+import type { AttractApprenticesUseCase } from "../../application/usesCase/apprentice/AttractApprenticeUsaCase";
 
 
 @injectable()
@@ -18,8 +19,24 @@ export class ApplicationController{
                 @inject(Types.UpdateApplicationUseCase) private updateApplicationUseCase:UpdateApplicationUseCase,
                 @inject(Types.ListApplicationUseCase) private listApplicationUseCase: ListApplicationUseCase,
                 @inject(Types.CreateGroupToApplicationUseCase) private createGroupToApplicationUseCase: CreateGroupToApplicationUseCase,
+                @inject(Types.AttractApprenticesUseCase)private attractApprenticesUseCase: AttractApprenticesUseCase
               ){}
 
+
+
+     async attractApprentice(req: Request, res: Response) {
+                const { apprenticeId, agencyId } = req.body;
+              
+                await this.attractApprenticesUseCase.execute(
+                  Number(apprenticeId),
+                  Number(agencyId)
+                );
+              
+                res.status(200).json({
+                  success: true,
+                  message: "Apprentice transferred successfully",
+                });
+     }
     async createApplication(req: Request, res: Response) 
           {
         try {

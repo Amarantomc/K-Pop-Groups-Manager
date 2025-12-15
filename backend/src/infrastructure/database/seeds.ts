@@ -654,51 +654,59 @@ async function main() {
   // 12. CREAR CANCIONES
   console.log('🎵 Creando canciones...')
   const cancionesNCT = await Promise.all([
-    prisma.cancion.create({ data: { titulo: "Kick It", genero: "K-Pop/Hip-Hop", productor: "Dem Jointz", fechaLanzamiento: new Date("2020-03-06") } }),
-    prisma.cancion.create({ data: { titulo: "Cherry Bomb", genero: "K-Pop/EDM", productor: "Kenzie", fechaLanzamiento: new Date("2017-06-14") } }),
-    prisma.cancion.create({ data: { titulo: "Sticker", genero: "K-Pop/Experimental", productor: "Yoo Young-jin", fechaLanzamiento: new Date("2021-09-17") } })
+    prisma.cancion.create({ data: { titulo: "Kick It", genero: "K-Pop/Hip-Hop", productor: "Dem Jointz", fechaLanzamiento: new Date("2020-03-06"), reproducciones: 120000000 } }),
+    prisma.cancion.create({ data: { titulo: "Cherry Bomb", genero: "K-Pop/EDM", productor: "Kenzie", fechaLanzamiento: new Date("2017-06-14"), reproducciones: 95000000 } }),
+    prisma.cancion.create({ data: { titulo: "Sticker", genero: "K-Pop/Experimental", productor: "Yoo Young-jin", fechaLanzamiento: new Date("2021-09-17"), reproducciones: 67000000 } }),
+    prisma.cancion.create({ data: { titulo: "Limitless", genero: "K-Pop", productor: "Kenzie", fechaLanzamiento: new Date("2017-01-06"), reproducciones: 41000000 } })
   ])
 
   const cancionesBlackpink = await Promise.all([
-    prisma.cancion.create({ data: { titulo: "Lovesick Girls", genero: "K-Pop/Pop", productor: "Teddy Park", fechaLanzamiento: new Date("2020-10-02") } }),
-    prisma.cancion.create({ data: { titulo: "How You Like That", genero: "K-Pop/EDM", productor: "Teddy Park", fechaLanzamiento: new Date("2020-06-26") } }),
-    prisma.cancion.create({ data: { titulo: "DDU-DU DDU-DU", genero: "K-Pop/Hip-Hop", productor: "Teddy Park", fechaLanzamiento: new Date("2018-06-15") } })
+    prisma.cancion.create({ data: { titulo: "Lovesick Girls", genero: "K-Pop/Pop", productor: "Teddy Park", fechaLanzamiento: new Date("2020-10-02"), reproducciones: 200000000 } }),
+    prisma.cancion.create({ data: { titulo: "How You Like That", genero: "K-Pop/EDM", productor: "Teddy Park", fechaLanzamiento: new Date("2020-06-26"), reproducciones: 180000000 } }),
+    prisma.cancion.create({ data: { titulo: "DDU-DU DDU-DU", genero: "K-Pop/Hip-Hop", productor: "Teddy Park", fechaLanzamiento: new Date("2018-06-15"), reproducciones: 250000000 } }),
+    prisma.cancion.create({ data: { titulo: "Kill This Love", genero: "K-Pop", productor: "Teddy Park", fechaLanzamiento: new Date("2019-04-05"), reproducciones: 210000000 } })
   ])
 
   const cancionesTwice = await Promise.all([
-    prisma.cancion.create({ data: { titulo: "Scientist", genero: "K-Pop/Disco", productor: "J.Y. Park", fechaLanzamiento: new Date("2021-11-12") } }),
-    prisma.cancion.create({ data: { titulo: "Feel Special", genero: "K-Pop/R&B", productor: "Park Jin-young", fechaLanzamiento: new Date("2019-09-23") } }),
-    prisma.cancion.create({ data: { titulo: "TT", genero: "K-Pop/Pop", productor: "Black Eyed Pilseung", fechaLanzamiento: new Date("2016-10-24") } })
+    prisma.cancion.create({ data: { titulo: "Scientist", genero: "K-Pop/Disco", productor: "J.Y. Park", fechaLanzamiento: new Date("2021-11-12"), reproducciones: 80000000 } }),
+    prisma.cancion.create({ data: { titulo: "Feel Special", genero: "K-Pop/R&B", productor: "Park Jin-young", fechaLanzamiento: new Date("2019-09-23"), reproducciones: 120000000 } }),
+    prisma.cancion.create({ data: { titulo: "TT", genero: "K-Pop/Pop", productor: "Black Eyed Pilseung", fechaLanzamiento: new Date("2016-10-24"), reproducciones: 150000000 } }),
+    prisma.cancion.create({ data: { titulo: "Fancy", genero: "K-Pop", productor: "Black Eyed Pilseung", fechaLanzamiento: new Date("2019-04-22"), reproducciones: 110000000 } })
   ])
 
   const cancionesBTS = await Promise.all([
-    prisma.cancion.create({ data: { titulo: "Dynamite", genero: "Disco-Pop", productor: "David Stewart", fechaLanzamiento: new Date("2020-08-21") } }),
-    prisma.cancion.create({ data: { titulo: "Butter", genero: "Dance-Pop", productor: "Rob Grimaldi", fechaLanzamiento: new Date("2021-05-21") } }),
-    prisma.cancion.create({ data: { titulo: "Spring Day", genero: "K-Pop/Ballad", productor: "Pdogg", fechaLanzamiento: new Date("2017-02-13") } })
+    prisma.cancion.create({ data: { titulo: "Dynamite", genero: "Disco-Pop", productor: "David Stewart", fechaLanzamiento: new Date("2020-08-21"), reproducciones: 300000000 } }),
+    prisma.cancion.create({ data: { titulo: "Butter", genero: "Dance-Pop", productor: "Rob Grimaldi", fechaLanzamiento: new Date("2021-05-21"), reproducciones: 250000000 } }),
+    prisma.cancion.create({ data: { titulo: "Spring Day", genero: "K-Pop/Ballad", productor: "Pdogg", fechaLanzamiento: new Date("2017-02-13"), reproducciones: 180000000 } }),
+    prisma.cancion.create({ data: { titulo: "Boy With Luv", genero: "K-Pop/Pop", productor: "Pdogg", fechaLanzamiento: new Date("2019-04-12"), reproducciones: 220000000 } })
   ])
 
   const cancionesITZY = await Promise.all([
-    prisma.cancion.create({ data: { titulo: "WANNABE", genero: "K-Pop/Dance", productor: "Galactika", fechaLanzamiento: new Date("2020-03-09") } }),
-    prisma.cancion.create({ data: { titulo: "DALLA DALLA", genero: "K-Pop/Pop", productor: "Galactika", fechaLanzamiento: new Date("2019-02-12") } }),
-    prisma.cancion.create({ data: { titulo: "LOCO", genero: "K-Pop/Hip-Hop", productor: "earattack", fechaLanzamiento: new Date("2021-09-24") } })
+    prisma.cancion.create({ data: { titulo: "WANNABE", genero: "K-Pop/Dance", productor: "Galactika", fechaLanzamiento: new Date("2020-03-09"), reproducciones: 90000000 } }),
+    prisma.cancion.create({ data: { titulo: "DALLA DALLA", genero: "K-Pop/Pop", productor: "Galactika", fechaLanzamiento: new Date("2019-02-12"), reproducciones: 85000000 } }),
+    prisma.cancion.create({ data: { titulo: "LOCO", genero: "K-Pop/Hip-Hop", productor: "earattack", fechaLanzamiento: new Date("2021-09-24"), reproducciones: 70000000 } }),
+    prisma.cancion.create({ data: { titulo: "Not Shy", genero: "K-Pop", productor: "Kass", fechaLanzamiento: new Date("2020-08-17"), reproducciones: 65000000 } })
   ])
 
   const cancionesAespa = await Promise.all([
-    prisma.cancion.create({ data: { titulo: "Next Level", genero: "K-Pop/EDM", productor: "Yoo Young-jin", fechaLanzamiento: new Date("2021-05-17") } }),
-    prisma.cancion.create({ data: { titulo: "Savage", genero: "K-Pop/Experimental", productor: "Yoo Young-jin", fechaLanzamiento: new Date("2021-10-05") } }),
-    prisma.cancion.create({ data: { titulo: "Black Mamba", genero: "K-Pop/Trap", productor: "Yoo Young-jin", fechaLanzamiento: new Date("2020-11-17") } })
+    prisma.cancion.create({ data: { titulo: "Next Level", genero: "K-Pop/EDM", productor: "Yoo Young-jin", fechaLanzamiento: new Date("2021-05-17"), reproducciones: 120000000 } }),
+    prisma.cancion.create({ data: { titulo: "Savage", genero: "K-Pop/Experimental", productor: "Yoo Young-jin", fechaLanzamiento: new Date("2021-10-05"), reproducciones: 95000000 } }),
+    prisma.cancion.create({ data: { titulo: "Black Mamba", genero: "K-Pop/Trap", productor: "Yoo Young-jin", fechaLanzamiento: new Date("2020-11-17"), reproducciones: 80000000 } }),
+    prisma.cancion.create({ data: { titulo: "Girls", genero: "K-Pop", productor: "Yoo Young-jin", fechaLanzamiento: new Date("2022-07-08"), reproducciones: 60000000 } })
   ])
 
   const cancionesRedVelvet = await Promise.all([
-    prisma.cancion.create({ data: { titulo: "Psycho", genero: "K-Pop/R&B", productor: "Andrew Scott", fechaLanzamiento: new Date("2019-12-23") } }),
-    prisma.cancion.create({ data: { titulo: "Red Flavor", genero: "K-Pop/Dance", productor: "Kenzie", fechaLanzamiento: new Date("2017-07-09") } }),
-    prisma.cancion.create({ data: { titulo: "Bad Boy", genero: "K-Pop/R&B", productor: "The Stereotypes", fechaLanzamiento: new Date("2018-01-29") } })
+    prisma.cancion.create({ data: { titulo: "Psycho", genero: "K-Pop/R&B", productor: "Andrew Scott", fechaLanzamiento: new Date("2019-12-23"), reproducciones: 90000000 } }),
+    prisma.cancion.create({ data: { titulo: "Red Flavor", genero: "K-Pop/Dance", productor: "Kenzie", fechaLanzamiento: new Date("2017-07-09"), reproducciones: 85000000 } }),
+    prisma.cancion.create({ data: { titulo: "Bad Boy", genero: "K-Pop/R&B", productor: "The Stereotypes", fechaLanzamiento: new Date("2018-01-29"), reproducciones: 70000000 } }),
+    prisma.cancion.create({ data: { titulo: "Peek-A-Boo", genero: "K-Pop", productor: "Moonshine", fechaLanzamiento: new Date("2017-11-17"), reproducciones: 65000000 } })
   ])
 
   const cancionesSeventeen = await Promise.all([
-    prisma.cancion.create({ data: { titulo: "Don't Wanna Cry", genero: "K-Pop/Dance", productor: "Woozi", fechaLanzamiento: new Date("2017-05-22") } }),
-    prisma.cancion.create({ data: { titulo: "Very Nice", genero: "K-Pop/Funk", productor: "Bumzu", fechaLanzamiento: new Date("2016-07-04") } }),
-    prisma.cancion.create({ data: { titulo: "Left & Right", genero: "K-Pop/Hip-Hop", productor: "Bumzu", fechaLanzamiento: new Date("2020-06-16") } })
+    prisma.cancion.create({ data: { titulo: "Don't Wanna Cry", genero: "K-Pop/Dance", productor: "Woozi", fechaLanzamiento: new Date("2017-05-22"), reproducciones: 100000000 } }),
+    prisma.cancion.create({ data: { titulo: "Very Nice", genero: "K-Pop/Funk", productor: "Bumzu", fechaLanzamiento: new Date("2016-07-04"), reproducciones: 90000000 } }),
+    prisma.cancion.create({ data: { titulo: "Left & Right", genero: "K-Pop/Hip-Hop", productor: "Bumzu", fechaLanzamiento: new Date("2020-06-16"), reproducciones: 80000000 } }),
+    prisma.cancion.create({ data: { titulo: "Home;Run", genero: "K-Pop", productor: "Woozi", fechaLanzamiento: new Date("2020-10-19"), reproducciones: 75000000 } })
   ])
   console.log('✅ 24 Canciones creadas')
 
@@ -912,16 +920,16 @@ async function main() {
   // 16. CREAR PREMIOS
   console.log('🏆 Creando premios...')
   const premioMAMA = await prisma.premio.create({
-    data: { tituloPremio: "Album of the Year", nombreAcademia: "Mnet Asian Music Awards" }
+    data: { tituloPremio: "Album of the Year", nombreAcademia: "Mnet Asian Music Awards", requisito: 1000000 }
   })
   const premioGoldenDisc = await prisma.premio.create({
-    data: { tituloPremio: "Album Daesang", nombreAcademia: "Golden Disc Awards" }
+    data: { tituloPremio: "Album Daesang", nombreAcademia: "Golden Disc Awards", requisito: 500000 }
   })
   const premioSeoul = await prisma.premio.create({
-    data: { tituloPremio: "Album Bonsang", nombreAcademia: "Seoul Music Awards" }
+    data: { tituloPremio: "Album Bonsang", nombreAcademia: "Seoul Music Awards", requisito: 300000 }
   })
   const premioGaon = await prisma.premio.create({
-    data: { tituloPremio: "Album of the Year", nombreAcademia: "Gaon Chart Music Awards" }
+    data: { tituloPremio: "Album of the Year", nombreAcademia: "Gaon Chart Music Awards", requisito: 200000 }
   })
   console.log('✅ 4 Premios creados')
 
@@ -973,16 +981,16 @@ async function main() {
   // 18. CREAR LISTAS DE POPULARIDAD
   console.log('📊 Creando listas de popularidad...')
   const melonChart = await prisma.listaPopularidad.create({
-    data: { nombre: "Melon Top 100", tipoLista: "Digital" }
+    data: { nombre: "Melon Top 100", tipoLista: "Digital", requisito: 100000 }
   })
   const genieChart = await prisma.listaPopularidad.create({
-    data: { nombre: "Genie Chart", tipoLista: "Digital" }
+    data: { nombre: "Genie Chart", tipoLista: "Digital", requisito: 80000 }
   })
   const bugsChart = await prisma.listaPopularidad.create({
-    data: { nombre: "Bugs Chart", tipoLista: "Streaming" }
+    data: { nombre: "Bugs Chart", tipoLista: "Streaming", requisito: 60000 }
   })
   const billboardKpop = await prisma.listaPopularidad.create({
-    data: { nombre: "Billboard K-Pop Hot 100", tipoLista: "Internacional" }
+    data: { nombre: "Billboard K-Pop Hot 100", tipoLista: "Internacional", requisito: 200000 }
   })
   console.log('✅ 4 Listas de popularidad creadas')
 

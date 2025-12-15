@@ -22,7 +22,7 @@ export class CreateContractUseCase {
       await this.unitOfWork.commit();
       return ContractResponseDto.fromEntity(contract);
     } catch (error) {
-      console.log(error)
+      //console.log(error)
       await this.unitOfWork.rollback();
       throw error;
     }

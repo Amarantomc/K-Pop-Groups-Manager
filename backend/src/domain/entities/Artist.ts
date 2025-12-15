@@ -10,12 +10,13 @@ export class Artist{
     readonly DebutDate:Date
     readonly Status:ArtistStatus
     readonly GroupHistory?:Group[] | undefined
+    readonly realName?: string | undefined
     
     
      
 
 
-    constructor(attrs:{ ApprenticeId:number, GroupId:number,ArtistName:string, DebutDate:Date, Status:ArtistStatus,GroupHistory?:Group[]})
+    constructor(attrs:{ ApprenticeId:number, GroupId:number,ArtistName:string, DebutDate:Date, Status:ArtistStatus,GroupHistory?:Group[],realName?: string})
     {
         this.ApprenticeId=attrs.ApprenticeId
         this.GroupId=attrs.GroupId
@@ -23,7 +24,7 @@ export class Artist{
         this.DebutDate=attrs.DebutDate
         this.Status=attrs.Status
         this.GroupHistory=attrs.GroupHistory
- 
+        this.realName = attrs.realName
         
     }
 
