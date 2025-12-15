@@ -61,7 +61,8 @@ export class ArtistResponseDto {
   }
 
    static toEntityForManager(artist:any):Artist {
-   const agency=AgencyResponseDTO.toEntity(artist.aprendiz.Agencia[0].agencia)
+  
+    const agency=AgencyResponseDTO.toEntity(artist.aprendiz.Agencia[0].agencia)
     const groups=GroupResponseDTO.toEntitiesSimple(artist.HistorialGrupos,agency)
     
     
@@ -91,7 +92,8 @@ export class ArtistResponseDto {
   }
 
   static fromEntityForManager(artist: Artist): ArtistResponseDto {
-      const group=GroupResponseDTO.fromEntities(artist.GroupHistory!)
+    
+    const group=GroupResponseDTO.fromEntities(artist.GroupHistory!)
     return new ArtistResponseDto(
       artist.ApprenticeId,
       artist.GroupId,
