@@ -25,6 +25,13 @@ export class ExportRoutes{
     this.router.get('/concepts/', (req, res) => this.exportController.exportConceptsPdf(req,res))
     this.router.get('/awards/', (req, res) => this.exportController.exportAwardsPdf(req,res))
     this.router.get('/songs/', (req, res) => this.exportController.exportSongsPdf(req,res))
+    this.router.get('/albums/', (req, res) => this.exportController.exportAlbumsPdf(req,res))
+    this.router.get('/activities/', (req, res) => this.exportController.exportActivitiesPdf(req,res))
+    this.router.get('/contracts/', (req, res) => this.exportController.exportContractsPdf(req,res))
+    this.router.get('/incomes/', (req, res) => this.exportController.exportIncomesPdf(req,res))
+    this.router.get('/applications/', (req, res) => this.exportController.exportApplicationsPdf(req,res))
+    this.router.get('/users/', (req, res) => this.exportController.exportUsersPdf(req,res))
+
 
  
   }
