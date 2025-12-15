@@ -1,4 +1,5 @@
 import type { Apprentice } from "../../../domain";
+import type ApprenticeEvaluation from "../../../domain/entities/ApprenticeEvaluation";
 import type { CreateApprenticeDto } from "../../dtos/apprentice/CreateApprenticeDto";
 import type { IBaseRepository } from "./IBaseRepository";
 
@@ -9,8 +10,8 @@ export interface IApprenticeRepository extends IBaseRepository<Apprentice,Create
     addEvaluation(apprenticeId:number,agencyId: number,evaluation: number,date: Date ):Promise<void>;
     apprenticeScout():Promise<Apprentice[]>;
     attractApprentice(apprenticeId:number,agencyId: number): Promise<void>;
-    apprenticeScout():Promise<Apprentice[]>
-
+    apprenticeScout():Promise<Apprentice[]>;
+    getAllEvaluations(apprenticeId:number):Promise<ApprenticeEvaluation[]>;
 
 }
 

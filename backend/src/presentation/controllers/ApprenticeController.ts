@@ -12,6 +12,7 @@ import type { ListByAgencyUseCase } from "../../application/usesCase/apprentice/
 import type { AddEvaluationUseCase } from "../../application/usesCase/apprentice/AddEvaluationUseCase";
 import type { ApprenticeScoutUseCase } from "../../application/usesCase/apprentice/ApprenticeScoutUseCase";
 import type { AttractApprenticesUseCase } from "../../application/usesCase/apprentice/AttractApprenticeUsaCase";
+import type { GetAllEvaluationUseCase } from "../../application/usesCase/apprentice/GetAllEvaluationUseCase";
 
 
 @injectable()
@@ -27,7 +28,8 @@ export class ApprenticeController {
     @inject(Types.GetApprenticeByNameUseCase) private getByNameApprenticeUseCase: GetApprenticeByNameUseCase,
     @inject(Types.AddEvaluationUseCase) private addEvaluationUseCase: AddEvaluationUseCase,
     @inject(Types.ApprenticeScoutUseCase) private apprenticeScoutUseCase: ApprenticeScoutUseCase,
-    @inject(Types.AttractApprenticesUseCase)private attractApprenticesUseCase: AttractApprenticesUseCase
+    @inject(Types.AttractApprenticesUseCase)private attractApprenticesUseCase: AttractApprenticesUseCase,
+    @inject(Types.GetAllEvaluationUseCase)private getAllEvaluationUseCase: GetAllEvaluationUseCase
   ) {}
 
     
@@ -52,6 +54,24 @@ export class ApprenticeController {
     }
   }
 
+  async getAllEvaluations(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const apprenticeId = Number(id);
+
+      const evaluations = await this.getAllEvaluationUseCase.execute(apprenticeId);
+
+      res.status(200).json({
+        success: true,
+        data: evaluations,
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        error: error.message,
+      });
+    }
+}
 
     
   async apprenticeScout(req: Request, res: Response) {

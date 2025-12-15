@@ -183,6 +183,7 @@ import { ExportSongsPdfUseCase } from "../../application/usesCase/exports/Export
 import { OfferContractUseCase } from "../../application/usesCase/contract/OfferContractUseCase";
 import { ApprenticeScoutUseCase } from "../../application/usesCase/apprentice/ApprenticeScoutUseCase";
 import { AttractApprenticesUseCase } from "../../application/usesCase/apprentice/AttractApprenticeUsaCase";
+import { GetAllEvaluationUseCase } from "../../application/usesCase/apprentice/GetAllEvaluationUseCase";
  
 const container=new Container()
  
@@ -437,6 +438,10 @@ container.bind<UpdateUserUseCase>(Types.UpdateUserUseCase)
 
    container.bind<CreateApprenticeUseCase>(Types.CreateApprenticeUseCase)
   .to(CreateApprenticeUseCase)
+  .inTransientScope();
+
+  container.bind<GetAllEvaluationUseCase>(Types.GetAllEvaluationUseCase)
+  .to(GetAllEvaluationUseCase)
   .inTransientScope();
 
   container.bind<ListApprenticeUseCase>(Types.ListApprenticeUseCase)

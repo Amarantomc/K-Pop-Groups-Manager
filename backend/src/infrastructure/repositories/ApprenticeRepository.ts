@@ -5,6 +5,7 @@ import { Apprentice } from "../../domain";
 import type { UnitOfWork } from "../PrismaUnitOfWork";
 import { inject, injectable } from "inversify";
 import { Types } from "../di/Types";
+import ApprenticeEvaluation from "../../domain/entities/ApprenticeEvaluation";
 
 @injectable()
 export class ApprenticeRepository implements IApprenticeRepository {   
@@ -12,10 +13,56 @@ export class ApprenticeRepository implements IApprenticeRepository {
         @inject(Types.PrismaClient) private prisma: any,
         @inject(Types.IUnitOfWork) private unitOfWork: UnitOfWork
     ) {}
-
+    
     private get db() {
         return this.unitOfWork.getTransaction();
     }
+
+    async getAllEvaluations(apprenticeId: number): Promise<ApprenticeEvaluation[]> {
+      const evaluations = await this.db.EvaluacionAprendiz.findMany({
+          where: { idAp: apprenticeId },
+          include: {
+              aprendiz: {
+                  select: {
+                      id: true,
+                      nombreCompleto: true,
+                      edad: true,
+                  },
+              },
+              agencia: {
+                  select: {
+                      id: true,
+                      nombre: true,
+                      ubicacion: true,
+                  },
+              },
+          },
+          orderBy: {
+              fechaEvaluacion: 'desc', 
+          },
+      });
+  
+      return evaluations.map((e: { idAp: any; idAg: any; fechaEvaluacion: any; evaluacion: any; aprendiz: { id: any; nombreCompleto: any; edad: any; }; agencia: { id: any; nombre: any; ubicacion: any; }; }) => new ApprenticeEvaluation({
+          apprenticeId: e.idAp,
+          agencyId: e.idAg,
+          evaluationDate: e.fechaEvaluacion,
+          score: e.evaluacion,
+          apprentice: e.aprendiz
+              ? {
+                  id: e.aprendiz.id,
+                  fullName: e.aprendiz.nombreCompleto,
+                  age: e.aprendiz.edad,
+              }
+              : null,
+          agency: e.agencia
+              ? {
+                  id: e.agencia.id,
+                  name: e.agencia.nombre,
+                  location: e.agencia.ubicacion,
+              }
+              : null,
+      }));
+  }
 
     async attractApprentice(apprenticeId: number, agencyId: number): Promise<void> {
         const now = new Date();

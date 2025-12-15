@@ -21,6 +21,11 @@ export class ApprenticeRoutes{
 
     this.router.use(AuthMiddleware.authenticate())
 
+
+    this.router.get("/:id/evaluations",
+       (req, res) => this.apprenticeController.getAllEvaluations(req, res)
+      );
+
     this.router.put(
       '/attract/:apprenticeId/:agencyId',
       //RoleMiddleware.onlyStaff(),
