@@ -47,6 +47,7 @@ const Types = {
   GetApprenticeByNameUseCase :Symbol.for('GetApprenticeByNameUseCase'),
   AddEvaluationUseCase :Symbol.for('AddEvaluationUseCase'),
   ApprenticeScoutUseCase: Symbol.for("ApprenticeScoutUseCase"),
+  AttractApprenticesUseCase: Symbol.for("AttractApprenticesUseCase"),
 //#endregion
 
 
