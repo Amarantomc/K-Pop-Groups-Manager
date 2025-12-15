@@ -56,7 +56,7 @@ export class GroupRepository implements IGroupRepository {
 					where: { fechaFinalizacion: null },
 					select: { idAp: true },
 				},
-				Album: { select: { id: true } },
+				//Album: { select: { id: true } },
 				Actividades: { select: { idAct: true } },
 			},
 		});
