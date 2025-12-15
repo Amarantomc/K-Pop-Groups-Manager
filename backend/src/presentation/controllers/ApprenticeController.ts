@@ -53,6 +53,12 @@ export class ApprenticeController {
   }
 
 
+
+
+    @inject(Types.ApprenticeScoutUseCase) private apprenticeScoutUseCase: ApprenticeScoutUseCase
+  ) {}
+
+    
   async apprenticeScout(req: Request, res: Response) {
     try {
       const apprentices = await this.apprenticeScoutUseCase.execute();

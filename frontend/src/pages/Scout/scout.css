@@ -1,0 +1,9 @@
+.manager-container {
+  padding: 2rem;
+}
+
+.manager-actions {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}

@@ -18,7 +18,8 @@ export class ApprenticeRoutes{
   
   private setupRoutes(): void {
 
-    //this.router.use(AuthMiddleware.authenticate())
+
+    this.router.use(AuthMiddleware.authenticate())
 
     this.router.put(
       '/attract/:apprenticeId/:agencyId',

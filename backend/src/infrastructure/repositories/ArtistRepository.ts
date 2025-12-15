@@ -298,6 +298,9 @@ private get db() {
     const artists = await this.db.artista.findMany({
       include: {
         aprendiz: true   
+    const artists = await this.db.artista.findMany({
+      include: {
+        aprendiz: true   // 👈 TRAE EL APRENDIZ
       }
     });
   
