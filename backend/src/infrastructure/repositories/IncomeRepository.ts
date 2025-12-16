@@ -20,20 +20,28 @@ export class IncomeRepository implements IIncomeRepository
     return this.unitOfWork.getTransaction();
   }
     
-   async create(data: CreateIncomeDto): Promise<Income> {
-         
-        
-        const income= await this.db.Ingreso.create({
-            data:{
-                idIct: data.idActivity,
-                descripcion: data.description,
-                monto: data.amount
-            }
-        })
-        
-        
-        return IncomeResponseDto.toEntity(Income)
+  async create(data: CreateIncomeDto): Promise<Income> {
+
+    const actividad = await this.db.actividad.findUnique({
+      where: { id: data.idActivity },
+      select: { fecha: true }
+    });
+  
+    if (!actividad) {
+      throw new Error("Actividad asociada no encontrada");
     }
+  
+    const income = await this.db.ingreso.create({
+      data: {
+        idAct: data.idActivity,
+        descripcion: data.description,
+        monto: data.amount,
+        fecha: actividad.fecha
+      }
+    });
+  
+    return IncomeResponseDto.toEntity(income);
+  }
     async findById(id: any): Promise<Income | null> {
         id = Number(id);
       

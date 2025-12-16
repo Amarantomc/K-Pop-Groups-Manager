@@ -1,4 +1,5 @@
 // seeds.ts
+import type { Prisma } from '@prisma/client';
 import { PrismaClient } from '../../generated/prisma'
 import * as bcrypt from 'bcrypt'
 
@@ -1348,15 +1349,20 @@ console.log('🎸 Creando lanzamientos de grupos...')
   const personasEnActividadData = actividades.map((act, idx) => {
     const artista = artistas[idx % artistas.length] || artistas[0];
     const grupo = grupos[idx % grupos.length] || grupos[0];
+  
     return {
-      idAp: artista?.idAp ?? 1,
-      idGr: artista?.idGr ?? 1,
+      idAp: artista?.idAp ?? null,
+      idGr: artista?.idGr ?? null,
       idAct: act.id,
-      idGrupos: grupo?.id ?? 1,
-      aceptado: true
+      idGrupos: grupo?.id ?? null,
+      aceptado: null
     };
+  }) as Prisma.PersonasEnActividadCreateManyInput[];
+  
+  await prisma.personasEnActividad.createMany({
+    data: personasEnActividadData
   });
-  await prisma.personasEnActividad.createMany({ data: personasEnActividadData });
+
   console.log(`✅ ${personasEnActividadData.length} Participantes asignados a actividades`)
 
   // Asociar campos opcionales en PersonasEnActividad para poblar arrays inversos (idAp, idGr, idGrupos)

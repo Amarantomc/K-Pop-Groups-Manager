@@ -7,7 +7,7 @@ import { inject, injectable } from "inversify";
 import { Types } from "../di/Types";
 import ApprenticeEvaluation from "../../domain/entities/ApprenticeEvaluation";
 import { getAge } from "../../plugins/get-age.plugin";
-import { error } from "console";
+
 
 @injectable()
 export class ApprenticeRepository implements IApprenticeRepository {   
@@ -177,61 +177,76 @@ export class ApprenticeRepository implements IApprenticeRepository {
 
     async delete(id: string): Promise<void> {
         const aprendizId = Number(id);
-        // 1. Aprendiz intermedias
+      
+        const perfil = await this.db.perfilAprendiz.findUnique({
+          where: { aprendizId },
+          select: { userId: true }
+        });
+      
         await this.db.aprendizSolicitaGrupo.deleteMany({
-            where: { idAp: aprendizId },
+          where: { idAp: aprendizId },
         });
+      
         await this.db.evaluacionAprendiz.deleteMany({
-            where: { idAp: aprendizId },
+          where: { idAp: aprendizId },
         });
+      
         await this.db.aprendizEnAgencia.deleteMany({
-            where: { idAp: aprendizId },
+          where: { idAp: aprendizId },
         });
-        await this.db.perfilAprendiz.deleteMany({
-            where: { aprendizId },
-        });
-        // 2. Si fue artista
+      
         const artista = await this.db.artista.findFirst({
-            where: { idAp: aprendizId },
+          where: { idAp: aprendizId },
         });
+      
         if (artista) {
-            await this.db.artistaLanzaAlbum.deleteMany({
-                where: {
-                    idAp: artista.idAp,
-                    idGr: artista.idGr,
-                },
-            });
-            await this.db.artistaSolicitaGrupo.deleteMany({
-                where: {
-                    idAp: artista.idAp,
-                    idGr: artista.idGr,
-                },
-            });
-            await this.db.artistaEnGrupo.deleteMany({
-                where: {
-                    idAp: artista.idAp,
-                },
-            });
-            await this.db.contrato.deleteMany({
-                where: {
-                    idAp: artista.idAp,
-                    idGr: artista.idGr,
-                },
-            });
-            await this.db.artista.delete({
-                where: {
-                    idAp_idGr: {
-                        idAp: artista.idAp,
-                        idGr: artista.idGr,
-                    },
-                },
-            });
+          await this.db.artistaLanzaAlbum.deleteMany({
+            where: {
+              idAp: artista.idAp,
+              idGr: artista.idGr,
+            },
+          });
+      
+          await this.db.artistaSolicitaGrupo.deleteMany({
+            where: {
+              idAp: artista.idAp,
+              idGr: artista.idGr,
+            },
+          });
+      
+          await this.db.artistaEnGrupo.deleteMany({
+            where: {
+              idAp: artista.idAp,
+            },
+          });
+      
+          await this.db.contrato.deleteMany({
+            where: {
+              idAp: artista.idAp,
+              idGr: artista.idGr,
+            },
+          });
+      
+          await this.db.artista.delete({
+            where: {
+              idAp_idGr: {
+                idAp: artista.idAp,
+                idGr: artista.idGr,
+              },
+            },
+          });
         }
-        // 3. Borrar aprendiz
+      
+        if (perfil) {
+          await this.db.user.delete({
+            where: { id: perfil.userId }
+          });
+        }
+      
         await this.db.aprendiz.delete({
-            where: { id: aprendizId },
+          where: { id: aprendizId },
         });
-    }
+      }
 
     async findAll(): Promise<Apprentice[]> {
         const apprentices = await this.db.Aprendiz.findMany();

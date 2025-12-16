@@ -22,81 +22,102 @@
       }
     
       async cancelExpiredActivities(): Promise<void> {
-        const today = new Date();
-      
-        const expiredActivities = await this.db.actividad.findMany({
-          where: {
-            estado: { not: "CANCELADA" },
-            fecha: {
-              lte: new Date(today.getTime() - 5 * 24 * 60 * 60 * 1000) 
-            }
-          },
-          select: { id: true }
-        });
+        const expiredActivities = await this.db.$queryRaw<
+          { id: number }[]
+        >`
+          SELECT id
+          FROM "Actividad"
+          WHERE estado != 'CANCELADA'
+            AND fecha <= NOW() - INTERVAL '5 days'
+        `;
       
         if (!expiredActivities.length) return;
       
         const activityIds = expiredActivities.map((a: { id: any; }) => a.id);
       
         await this.db.$transaction([
+          // Rechazar participantes
           this.db.PersonasEnActividad.updateMany({
-            where: { idAct: { in: activityIds } },
-            data: { aceptado: false }
+            where: {
+              idAct: { in: activityIds }
+            },
+            data: {
+              aceptado: false
+            }
           }),
       
           // Eliminar ingresos
           this.db.ingreso.deleteMany({
-            where: { idAct: { in: activityIds } }
+            where: {
+              idAct: { in: activityIds }
+            }
           }),
       
           // Cancelar actividades
           this.db.actividad.updateMany({
-            where: { id: { in: activityIds } },
-            data: { estado: "CANCELADA" }
+            where: {
+              id: { in: activityIds }
+            },
+            data: {
+              estado: "CANCELADA"
+            }
           })
         ]);
       }
 
-      async acceptedActivity(
-        activityId: number,
-        isAccepted: boolean,
-        apprenticeId: number,
-        groupId: number
-    ): Promise<void> {
-        // 1️⃣ Actualizar el registro del aprendiz en la actividad
-        console.log(apprenticeId,groupId)
+      async acceptedActivity(activityId: number,isAccepted: boolean,apprenticeId: number,groupId: number): Promise<void> {
+      
         await this.db.PersonasEnActividad.updateMany({
-            where: {
-                idAct: activityId,
-                idAp: apprenticeId,
-                idGr: groupId
-            },
-            data: {
-                aceptado: isAccepted
-            }
+          where: {
+            idAct: activityId,
+            idAp: apprenticeId,
+            idGr: groupId
+          },
+          data: {
+            aceptado: isAccepted
+          }
         });
-    
-        // 2️⃣ Contar cuántos participantes aceptaron
+      
+        const totalParticipants = await this.db.PersonasEnActividad.count({
+          where: { idAct: activityId }
+        });
+      
         const acceptedCount = await this.db.PersonasEnActividad.count({
-            where: {
-                idAct: activityId,
-                aceptado: true
-            }
+          where: {
+            idAct: activityId,
+            aceptado: true
+          }
         });
-    
-        // 3️⃣ Si nadie aceptó, eliminar ingresos y cancelar la actividad
-        if (acceptedCount === 0) {
-            await this.db.$transaction([
-                this.db.ingreso.deleteMany({
-                    where: { idAct: activityId }
-                }),
-                this.db.actividad.update({
-                    where: { id: activityId },
-                    data: { estado: "CANCELADA" }
-                })
-            ]);
+      
+        const rejectedCount = await this.db.PersonasEnActividad.count({
+          where: {
+            idAct: activityId,
+            aceptado: false
+          }
+        });
+      
+        if (acceptedCount === 0 && rejectedCount > 0) {
+          await this.db.$transaction([
+            this.db.ingreso.deleteMany({
+              where: { idAct: activityId }
+            }),
+            this.db.actividad.update({
+              where: { id: activityId },
+              data: { estado: "CANCELADA" }
+            })
+          ]);
+          return;
         }
-    }
+      
+        if (acceptedCount === totalParticipants) {
+          await this.db.actividad.update({
+            where: { id: activityId },
+            data: { estado: "ACEPTADA" }
+          });
+          return;
+        }
+      
+      }
 
     async create(data: CreateActivityDto): Promise<Activity> {
       const activity = await this.db.actividad.create({
@@ -188,6 +209,9 @@
     }
 
     async findByArtist(apprenticeId: number, groupId: number): Promise<Activity[]> {
+
+      await this.cancelExpiredActivities();
+
       const activities = await this.db.actividad.findMany({
         where: {
           estado: {
