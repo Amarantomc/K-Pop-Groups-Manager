@@ -4,7 +4,7 @@ import React, { use, useState, type JSX } from "react";
 import "./calendar.css"
 import ExportButton from "../exportButton/ExportButton";
 import ModalCreate from "../modal/ModalCreate";
-
+import ConfirmDialog from "../confirmDialog/ConfirmDialog";
 interface CalendarProps {
   title?: string,
   description?: string,
@@ -38,6 +38,8 @@ const Calendar: React.FC<CalendarProps> = ({
   const [showDayMenu, setShowDayMenu] = useState(false)
   const [selectedDay, setSelectedDay] = useState<number | null>(null)
   const [showAddModal, setShowAddModal] = useState(false)
+  const [openSuccesDialog,setOpenSuccesDialog] = useState(false)
+  const [openCancelDialog,setOpenCancelDialog] = useState(false)
   // const [selectedDates, setSelectedDates] = useState<string[]>([])
   // const [isSelectingMultipleDates, setIsSelectingMultipleDates] = useState(false)
   const getActivityIcon = (type: string) => {
@@ -366,7 +368,7 @@ const Calendar: React.FC<CalendarProps> = ({
                         </div>
                         {isArtist && (
                           <div className="activity-actions">
-                            <button className="day-menu-add-button" onClick={() => onAcept(activity.id)}>
+                            <button className="day-menu-add-button" onClick={() => {onAcept(activity.id);setShowDayMenu(false);setOpenSuccesDialog(true)}}>
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="18"
@@ -380,7 +382,7 @@ const Calendar: React.FC<CalendarProps> = ({
                               </svg>
                               Confirmar
                             </button>
-                            <button className="day-menu-add-button" onClick={() => onCancel(activity.id)}>
+                            <button className="day-menu-add-button" onClick={() => {onCancel(activity.id);setShowDayMenu(false);setOpenCancelDialog(true)}}>
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="18"
@@ -397,14 +399,30 @@ const Calendar: React.FC<CalendarProps> = ({
                             </button>
                           </div>
                         )}
+                        
                       </div>
                     ))}
                   </div>
+                  {!isArtist && (<button className="day-menu-add-button" onClick={handleAddFromDayMenu}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <line x1="12" y1="5" x2="12" y2="19" />
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                      Agregar actividad
+                  </button>)}
                 </>
               ) : (
                 <div className="day-menu-empty">
                   <p>No hay actividades programadas para este día</p>
-                  <button className="day-menu-add-button" onClick={handleAddFromDayMenu}>
+                  {!isArtist && (<button className="day-menu-add-button" onClick={handleAddFromDayMenu}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="18"
@@ -418,7 +436,7 @@ const Calendar: React.FC<CalendarProps> = ({
                       <line x1="5" y1="12" x2="19" y2="12" />
                     </svg>
                     Agregar actividad
-                  </button>
+                  </button>)}
                 </div>
               )}
             </div>
@@ -436,6 +454,25 @@ const Calendar: React.FC<CalendarProps> = ({
         >
         </ModalCreate>
       )}
+      <ConfirmDialog
+      type="success"
+      title="Exito"
+      message="Se ha aceptado la actividad"
+      open = {openSuccesDialog} 
+      onCancel={() => setOpenSuccesDialog(false)} 
+      onConfirm={() => setOpenSuccesDialog(false)} 
+      confirmText="Aceptar" 
+      showDeleteButton={false}
+      />
+      <ConfirmDialog
+       title="Error"
+      message="Actividad Rechazada" 
+      type="error"
+      open={openCancelDialog} 
+      onCancel={() => setOpenCancelDialog(false)} 
+      onConfirm={() => setOpenCancelDialog(false)} 
+      confirmText="Aceptar" 
+      showDeleteButton={false}/>
     </div>
   )
 }
