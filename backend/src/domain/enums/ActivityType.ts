@@ -1,4 +1,4 @@
 export enum ActivityTypes{
-    Individual="individual",
-    Groups="groups"
+    INDIVIDUAL="INDIVIDUAL",
+    GROUPS="GROUP"
 }
