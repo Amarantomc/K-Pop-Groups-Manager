@@ -20,7 +20,7 @@ interface Request {
   concept: string;
   members: string[];
   roles: string[];
-  //idAgency: string;
+  agencyId: number | string;
   status: string;
   type: string;
 }
@@ -34,11 +34,16 @@ const Requests: React.FC = () => {
   const [openAccept, setOpenAccept] = useState(false);
   const [openError, setOpenError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [showContractModal, setShowContractModal] = useState(false);
+  const [contractModalData, setContractModalData] = useState<any | null>(null);
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [groupID, setGroupID] = useState<any>('');
 
   // Manejar aprobación de solicitud (Director)
   const handleApprove = async (id: number) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/application/${id}/approve`, {
+      const response = await fetch(`http://localhost:3000/api/application/${id}`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -52,7 +57,7 @@ const Requests: React.FC = () => {
 
       // Actualizar estado local
       setRequests(prev =>
-        prev.map(req => req.id === id ? { ...req, status: 'approved' } : req)
+        prev.map(req => req.id === id ? { ...req, status: 'Aprobado' } : req)
       );
       console.log('Solicitud aprobada exitosamente:', id);
     } catch (error) {
@@ -63,7 +68,7 @@ const Requests: React.FC = () => {
   // Manejar rechazo de solicitud (Director)
   const handleReject = async (id: number) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/application/${id}/reject`, {
+      const response = await fetch(`http://localhost:3000/api/application/${id}`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -77,7 +82,7 @@ const Requests: React.FC = () => {
 
       // Actualizar estado local
       setRequests(prev =>
-        prev.map(req => req.id === id ? { ...req, status: 'rejected' } : req)
+        prev.map(req => req.id === id ? { ...req, status: 'Rechazado' } : req)
       );
       console.log('Solicitud rechazada:', id);
     } catch (error) {
@@ -118,6 +123,64 @@ const Requests: React.FC = () => {
     }
   };
 
+  const handleOpenContractModal = async () => {
+
+    const agencyId = user?.profileData?.agencyId || '';
+    let agencyName = '';
+    if (agencyId) {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`http://localhost:3000/api/agency/${agencyId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          agencyName = data?.name || '';
+        }
+      } catch (error) {
+        console.error('Error al obtener el nombre de la agencia', error);
+      }
+    }
+    setContractModalData({
+      agencyId,
+      agencyName,
+    });
+    setShowContractModal(true);
+  };
+
+  const handleContractSave = async (formData: any) => {
+    try {
+      const token = localStorage.getItem('token');
+      // Adaptar el payload al formato requerido por el backend
+      const payload = {
+        type: 'Group',
+        agencyId: user?.profileData?.agencyId || user?.agencyId,
+        startDate: formData.startDate,
+        initialConditions: formData.terms,
+        incomeDistribution: formData.value,
+        groupId: groupID || formData.groupId || formData.GroupId || '',
+      };
+      const response = await fetch('http://localhost:3000/api/contract', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+      if (!response.ok) throw new Error('Error al ofrecer contrato');
+      setSuccessMessage('Contrato ofrecido exitosamente');
+      setOpenSuccess(true);
+      setShowContractModal(false);
+    } catch (error) {
+      setErrorMessage('Error al ofrecer contrato');
+      setOpenError(true);
+    }
+  };
+
   const fetchAgencyName = async (id: number | string) => {
     if (!id) return '';
     const res = await fetch(`http://localhost:3000/api/agency/${id}`, {
@@ -155,8 +218,8 @@ const Requests: React.FC = () => {
       renderCell: (params) => {
         const members = Array.isArray(params.value)
           ? params.value.map((m: any) =>
-              m.name ? `${m.name}${m.rol ? ` (${m.rol})` : ''}` : ''
-            ).join(', ')
+            m.name ? `${m.name}${m.rol ? ` (${m.rol})` : ''}` : ''
+          ).join(', ')
           : params.value || '';
         return (
           <span style={{ color: '#2563eb', fontWeight: 600 }}>{members}</span>
@@ -351,7 +414,7 @@ const Requests: React.FC = () => {
           if (!conceptName && conceptId) {
             conceptName = await fetchConceptName(conceptId);
           }
-           // Unir artistas y aprendices, asociar roles
+          // Unir artistas y aprendices, asociar roles
           const artists = Array.isArray(req.artists) ? req.artists : [];
           const apprentices = Array.isArray(req.apprentices) ? req.apprentices : [];
           const roles = Array.isArray(req.roles) ? req.roles : [];
@@ -374,7 +437,7 @@ const Requests: React.FC = () => {
             type: req.type || '',
           };
         }));
-        
+
         console.log('Solicitudes obtenidas del backend:', formattedRequests);
         setRequests(formattedRequests);
 
@@ -503,31 +566,31 @@ const Requests: React.FC = () => {
           userRole={user?.role}
         />
       )}
-      <ConfirmDialog 
-        message="¿Está seguro que desea eliminar esta solicitud?" 
-        open={openConfirm} 
-        onCancel={() => setOpenConfirm(false)} 
-        onConfirm={handleDelete} 
+      <ConfirmDialog
+        message="¿Está seguro que desea eliminar esta solicitud?"
+        open={openConfirm}
+        onCancel={() => setOpenConfirm(false)}
+        onConfirm={handleDelete}
         type="confirm"
       />
-      <ConfirmDialog 
+      <ConfirmDialog
         title="¡Éxito!"
-        message="Operación realizada correctamente" 
+        message="Operación realizada correctamente"
         open={openAccept}
-        type="success" 
-        onCancel={() => setOpenAccept(false)} 
-        onConfirm={() => setOpenAccept(false)} 
-        confirmText="Aceptar" 
+        type="success"
+        onCancel={() => setOpenAccept(false)}
+        onConfirm={() => setOpenAccept(false)}
+        confirmText="Aceptar"
         showDeleteButton={false}
       />
-      <ConfirmDialog 
+      <ConfirmDialog
         title="Error"
-        message={errorMessage} 
+        message={errorMessage}
         type="error"
-        open={openError} 
-        onCancel={() => setOpenError(false)} 
-        onConfirm={() => setOpenError(false)} 
-        confirmText="Aceptar" 
+        open={openError}
+        onCancel={() => setOpenError(false)}
+        onConfirm={() => setOpenError(false)}
+        confirmText="Aceptar"
         showDeleteButton={false}
       />
     </PageLayout>

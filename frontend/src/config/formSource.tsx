@@ -61,7 +61,7 @@ export type ActivityTypeEvent = typeof ACTIVITY_TYPES_EVENTS[number];
 export const ROLE_TYPES = ['Admin', 'Manager', 'Director', 'Artista', 'Aprendiz'] as const;
 export type RoleType = typeof ROLE_TYPES[number];
 
-export const INCOME_TYPES = ['ventas', 'concierto', 'publicidad', 'otros'] as const;
+export const INCOME_TYPES = ['Contrato', 'Patrocinio', 'Merchandising', 'Eventos'] as const;
 export type IncomeType = typeof INCOME_TYPES[number];
 
 export const REQUEST_STATUS = ['Aprobado', 'Rechazado', 'En Espera', 'Finalizado'] as const;
@@ -145,24 +145,15 @@ export const popularityListFields: Field[] = [
 export const conceptFields: Field[] = [
     { id: 'name', name: 'name', label: 'Nombre del Concepto', type: 'text', placeholder: 'Ej: Concepto retro años 80', required: true, minLength: 3, maxLength: 100 },
     { id: 'description', name: 'description', label: 'Descripción', type: 'textarea', placeholder: 'Describe el concepto en detalle', required: true, minLength: 10, maxLength: 500 },
-    /*{ id: 'category', name: 'category', label: 'Categoría', type: 'text', placeholder: 'Ej: Retro, Futurista, Romántico', required: true, maxLength: 50 },
-      { id: 'status', name: 'status', label: 'Estado', type: 'select', required: true, options: [
-          { value: 'active', label: 'Activo' },
-          { value: 'inactive', label: 'Inactivo' },
-          { value: 'in_development', label: 'En Desarrollo' },
-          { value: 'archived', label: 'Archivado' }
-      ]},*/
 ];
 
 // Concepto Visual
 export const visualConceptFields: Field[] = [
     { id: 'image', name: 'image', label: 'Imagen', type: 'file' },
-    //{ id: 'description', name: 'description', label: 'Descripción', type: 'textarea' },
 ];
 
 // Actividad
 export const activityFields: Field[] = [
-    { id: 'date', name: 'date', label: 'Fecha', type: 'date', required: true },
     { id: 'place', name: 'place', label: 'Lugar', type: 'text' },
     { id: 'type', name: 'type', label: 'Tipo Actividad', type: 'select', options: enumToOptions(ACTIVITY_TYPES) },
     { id: 'typeEvent', name: 'typeEvent', label: 'Evento', type: 'select', options: enumToOptions(ACTIVITY_TYPES_EVENTS) },
@@ -171,11 +162,8 @@ export const activityFields: Field[] = [
 
 // Ingreso
 export const incomeFields: Field[] = [
-    { id: 'activityName', name: 'activityName', label: 'Nombre de Actividad', type: 'text' },
     { id: 'amount', name: 'amount', label: 'Monto', type: 'number', min: 0 },
-    { id: 'date', name: 'date', label: 'Fecha Ingreso', type: 'date' },
     { id: 'incomeType', name: 'incomeType', label: 'Tipo Ingreso', type: 'select', options: enumToOptions(INCOME_TYPES) },
-    { id: 'responsible', name: 'responsible', label: 'Responsable Ingreso', type: 'text' },
 ]
 // Solicitud
 // Campos para agregar aprendices y artistas al grupo
