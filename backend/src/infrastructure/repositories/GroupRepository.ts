@@ -44,27 +44,57 @@ export class GroupRepository implements IGroupRepository {
 		
 	}
 
-	async findById(id: any): Promise<Group | null> {
-		id = Number(id);
+	async findById(id: string): Promise<Group | null> {
 		const group = await this.db.grupo.findUnique({
-			where: { id },
-			include: {
-				Agencias: true,
-				concepto: true,
-				conceptoVisual: true,
-				HistorialArtistas: {
-					where: { fechaFinalizacion: null },
-					select: { idAp: true },
-				},
-				//Album: { select: { id: true } },
-				Actividades: { select: { idAct: true } },
+		  where: { id: Number(id) },
+		  include: {
+			Agencias: true,
+	  
+			concepto: true,
+			conceptoVisual: true,
+	  
+			HistorialArtistas: {
+			  where: { fechaFinalizacion: null },
+			  include: {
+				artista: {
+				  include: {
+					aprendiz: true
+				  }
+				}
+			  }
 			},
+	  
+			Actividades: {
+			  include: {
+				actividad: true
+			  }
+			},
+	  
+			Lanzamiento: {
+			  include: {
+				album: true
+			  }
+			}
+		  }
 		});
-		
-		return !group
-			? null
-			: GroupResponseDTO.toEntity(group);
-	}
+	  
+		if (!group) return null;
+	  
+		return GroupResponseDTO.toEntity({
+		  ...group,
+	  
+		  members: group.HistorialArtistas.map((h: { idAp: any; idGr: any; artista: { aprendiz: { nombreCompleto: any; }; nombreArtistico: any; }; }) => ({
+			apprenticeId: h.idAp,
+			groupId: h.idGr,
+			realName: h.artista.aprendiz.nombreCompleto,
+			artisticName: h.artista.nombreArtistico
+		  })),
+	  
+		  activities: group.Actividades.map((a: { actividad: any; }) => a.actividad),
+	  
+		  albums: group.Lanzamiento.map((l: { album: any; }) => l.album)
+		});
+	  }
 
 	async update(id: string, data: Partial<CreateGroupDTO>): Promise<Group> {
 		const updateData: any = {};
@@ -355,33 +385,59 @@ export class GroupRepository implements IGroupRepository {
 
 	async findAll(): Promise<Group[]> {
 		const groups = await this.db.grupo.findMany({
-			include: {
-				Agencias: true,
-				concepto: true,
-				// conceptoVisual: true,
-				HistorialArtistas: {
-					where: { fechaFinalizacion: null },
-					select: { idAp: true },
-				},
-				Lanzamiento: { select: { idAlb: true } },
-				Actividades: { select: { idAct: true } },
+		  include: {
+			Agencias: true,
+	  
+			concepto: true,
+			conceptoVisual: true,
+	  
+			HistorialArtistas: {
+			  where: { fechaFinalizacion: null },
+			  include: {
+				artista: {
+				  include: {
+					aprendiz: true
+				  }
+				}
+			  }
 			},
+	  
+			Actividades: {
+			  include: {
+				actividad: true
+			  }
+			},
+	  
+			Lanzamiento: {
+			  include: {
+				album: true
+			  }
+			}
+		  }
 		});
-		return groups.map((group: any) =>
-			GroupResponseDTO.toEntity({
-				...group,
-				agency:
-					group.Agencias && group.Agencias.length > 0
-						? group.Agencias[0]
-						: null,
-				concept: group.concepto,
-				visualConcept: group.conceptoVisual, // group.conceptoVisual,
-				members: group.HistorialArtistas.map((a: any) => a.idAp),
-				albums: group.Lanzamiento.map((l: any) => l.idAlb),
-				activities: group.Actividades.map((a: any) => a.idAct),
-			})
+	  
+		return groups.map((group: { Agencias: string | any[]; concepto: any; conceptoVisual: any; HistorialArtistas: { idAp: any; idGr: any; artista: { aprendiz: { nombreCompleto: any; }; nombreArtistico: any; }; }[]; Actividades: { actividad: any; }[]; Lanzamiento: { album: any; }[]; }) =>
+		  GroupResponseDTO.toEntity({
+			...group,
+	  
+			agency: group.Agencias.length ? group.Agencias[0] : null,
+	  
+			concept: group.concepto,
+			visualConcept: group.conceptoVisual,
+	  
+			members: group.HistorialArtistas.map((h: { idAp: any; idGr: any; artista: { aprendiz: { nombreCompleto: any; }; nombreArtistico: any; }; }) => ({
+			  apprenticeId: h.idAp,
+			  groupId: h.idGr,
+			  realName: h.artista.aprendiz.nombreCompleto,
+			  artisticName: h.artista.nombreArtistico
+			})),
+	  
+			activities: group.Actividades.map((a: { actividad: any; }) => a.actividad),
+	  
+			albums: group.Lanzamiento.map((l: { album: any; }) => l.album)
+		  })
 		);
-	}
+	  }
 
 	async addMembers(
 		groupId: number,

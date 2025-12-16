@@ -191,6 +191,7 @@ import { ExportIncomesPdfUseCase } from "../../application/usesCase/exports/Expo
 import { ExportApplicationsPdfUseCase } from "../../application/usesCase/exports/ExportApplicationsUseCase";
 import { ExportUsersPdfUseCase } from "../../application/usesCase/exports/ExportUsersPdfUseCase";
 import { AcceptOrRejectActivityUseCase } from "../../application/usesCase/activity/AcceptedOrRejectActivityUseCase";
+import { GroupOfferContractUseCase } from "../../application/usesCase/contract/GroupOfferContractUseCase";
  
 const container=new Container()
  
@@ -963,6 +964,10 @@ container.bind<CreateVisualConceptUseCase>(Types.CreateVisualConceptUseCase)
 
   container.bind<FindContractByIdUseCase>(Types.FindContractByIdUseCase)
   .to(FindContractByIdUseCase)
+  .inTransientScope();
+
+  container.bind<GroupOfferContractUseCase>(Types.GroupOfferContractUseCase)
+  .to(GroupOfferContractUseCase)
   .inTransientScope();
   //#endregion
 

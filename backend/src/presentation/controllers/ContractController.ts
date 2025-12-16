@@ -8,16 +8,35 @@ import type { DeleteContractUseCase } from "../../application/usesCase/contract/
 import type { FindContractByIdUseCase } from "../../application/usesCase/contract/FindContractByIdUseCase";
 import type { GetAllContractUseCase } from "../../application/usesCase/contract/GetAllContractUseCase";
 import type { OfferContractUseCase } from "../../application/usesCase/contract/OfferContractUseCase";
+import type { GroupOfferContractUseCase } from "../../application/usesCase/contract/GroupOfferContractUseCase";
 
 @injectable()
 export class ContractController{
     constructor(@inject(Types.CreateContractUseCase) private createContractUseCase:CreateContractUseCase,
                 @inject(Types.DeleteContractUseCase) private deleteContractUseCase: DeleteContractUseCase,
-                 @inject(Types.UpdateContractUseCase) private updateContractUseCase: UpdateContractUseCase,
-                 @inject(Types.FindContractByIdUseCase) private findContractByIdUseCase: FindContractByIdUseCase,
-                  @inject(Types.GetAllContractsUseCase) private getAllContractsUseCase:GetAllContractUseCase,
-                  @inject(Types.OfferContractUseCase) private offerContractUseCase: OfferContractUseCase){}
+                @inject(Types.UpdateContractUseCase) private updateContractUseCase: UpdateContractUseCase,
+                @inject(Types.FindContractByIdUseCase) private findContractByIdUseCase: FindContractByIdUseCase,
+                @inject(Types.GetAllContractsUseCase) private getAllContractsUseCase:GetAllContractUseCase,
+                @inject(Types.OfferContractUseCase) private offerContractUseCase: OfferContractUseCase,
+                @inject(Types.GroupOfferContractUseCase) private groupOfferContractUseCase: GroupOfferContractUseCase,
+                ){}
 
+
+    async groupOfferContract(req: Request, res: Response) {
+                    try {
+                      const groups = await this.groupOfferContractUseCase.execute();
+                  
+                      res.status(200).json({
+                        success: true,
+                        data: groups,
+                      });
+                    } catch (error: any) {
+                      res.status(400).json({
+                        success: false,
+                        error: error.message,
+                      });
+                    }
+    }
 
     async offerContract(req: Request, res: Response) {
                   try {
@@ -52,7 +71,7 @@ export class ContractController{
     }
     }
 
-         async delete(req:Request,res:Response){
+    async delete(req:Request,res:Response){
         try {
               const {id,agencyId,groupId,apprenticeId,startDate}=req.query
               const newId={id:id,agencyId:agencyId,groupId:groupId,apprenticeId:apprenticeId,startDate:startDate}
@@ -70,7 +89,7 @@ export class ContractController{
     }
     }
 
-        async getAll(req:Request,res:Response){
+    async getAll(req:Request,res:Response){
         try {
               
             const contracts=  await this.getAllContractsUseCase.execute()
@@ -87,7 +106,7 @@ export class ContractController{
     }
     }
 
-        async findById(req:Request,res:Response){
+    async findById(req:Request,res:Response){
         try {
               const {id,agencyId,groupId,apprenticeId,startDate}=req.query
               const newId={id:id,agencyId:agencyId,groupId:groupId,apprenticeId:apprenticeId,startDate:startDate}
@@ -106,7 +125,7 @@ export class ContractController{
     }
     }  
       
-        async update(req:Request,res:Response){
+    async update(req:Request,res:Response){
         try {
               const {id,agencyId,groupId,apprenticeId,startDate}=req.query
               const newId={id:id,agencyId:agencyId,groupId:groupId,apprenticeId:apprenticeId,startDate:startDate}

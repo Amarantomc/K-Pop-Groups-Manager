@@ -195,7 +195,14 @@ GetAllContractsUseCase : Symbol.for('GetAllContractsUseCase'),
 UpdateContractUseCase : Symbol.for('UpdateContractUseCase'),
 DeleteContractUseCase : Symbol.for('DeleteContractUseCase'),
 OfferContractUseCase : Symbol.for('OfferContractUseCase'),
+GroupOfferContractUseCase:Symbol.for('GroupOfferContractUseCase'),
 //#endregion
+
+
+
+
+
+
 
 //#region Song
 CreateSongUseCase : Symbol.for('CreateSongUseCase'),
@@ -205,8 +212,27 @@ UpdateSongUseCase : Symbol.for('UpdateSongUseCase'),
 GetAllSongsUseCase : Symbol.for('GetAllSongsUseCase'),
 //#endregion
 
+
+
+
+
+
+
+
+
+
+
 //#region Album
 //#endregion
+
+
+
+
+
+
+
+
+
 
 //#region PDF Export Use Cases
 ExportArtistsToPdfUseCase: Symbol.for('ExportArtistsToPdfUseCase'),

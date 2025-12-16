@@ -16,7 +16,7 @@ export class Group {
 	readonly agency?: Agency|undefined;
 	readonly concept ?: Concept |undefined;
 	readonly visualConcept?: VisualConcept |undefined;
-	readonly members?:Artist[]|undefined
+	readonly members?:{apprenticeId: number, groupId:number, realName: string, artisticName: string}[]|undefined
 	readonly albums?:Album[] |undefined
 	readonly activities?:Activity[] |undefined
 
@@ -29,7 +29,7 @@ export class Group {
 		agency?: Agency|undefined;
 		concept?: Concept;
 		visualConcept?: VisualConcept;
-		members?:Artist[]
+		members?:{apprenticeId: number, groupId:number, realName: string, artisticName: string}[]
 		albums?:Album[]
 		activities?:Activity[]
 		
