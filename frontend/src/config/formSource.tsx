@@ -23,9 +23,10 @@ export type Field = {
     maxLength?: number;
     pattern?: string; // regex string
     accept?: string; // para input file: 'image/*'
-    maxFileSizeMB?: number;
-    // Para type === 'group'
-    fields?: Field[];
+    maxFileSizeMB?: number; // tamaño máximo de archivo en MB
+    fields?: Field[]; // campos anidados para grupos
+    multiple?: boolean; // para selects múltiples
+    dependsOn?: string; // nombre del campo del que depende para cargar opciones dinámicas
 };
 
 // Enums y utilidades para convertirlos a opciones del select
@@ -153,11 +154,23 @@ export const visualConceptFields: Field[] = [
 ];
 
 // Actividad
+// ...existing code...
 export const activityFields: Field[] = [
     { id: 'place', name: 'place', label: 'Lugar', type: 'text' },
-    { id: 'type', name: 'type', label: 'Tipo Actividad', type: 'select', options: enumToOptions(ACTIVITY_TYPES) },
     { id: 'typeEvent', name: 'typeEvent', label: 'Evento', type: 'select', options: enumToOptions(ACTIVITY_TYPES_EVENTS) },
-    { id: 'responsible', name: 'responsible', label: 'Responsable Actividad', type: 'text' },
+    { id: 'type', name: 'type', label: 'Tipo Actividad', type: 'select', options: enumToOptions(ACTIVITY_TYPES) },
+    { id: 'responsible', name: 'responsible', label: 'Agencia Responsable', type: 'select', required: true, optionsEndpoint: '/api/agency' },
+    {
+        id: 'performer',
+        name: 'performer',
+        label: 'Artista(s)/Grupo(s)',
+        type: 'select',
+        required: true,
+        options: [],
+        multiple: false,
+        optionsEndpoint: '',
+        dependsOn: 'responsible',
+    },
 ];
 
 // Ingreso
@@ -184,9 +197,9 @@ export const requestFields: Field[] = [
 // Contrato
 export const contractFields: Field[] = [
     { id: 'startDate', name: 'startDate', label: 'Fecha Inicio', type: 'date', required: true },
-    { id: 'endDate', name: 'endDate', label: 'Fecha Finalización', type: 'date'},
+    { id: 'endDate', name: 'endDate', label: 'Fecha Finalización', type: 'date' },
     { id: 'value', name: 'value', label: 'Valor', type: 'text', required: true, placeholder: 'Monto del contrato' },
-    { id: 'terms', name: 'terms', label: 'Términos', type: 'textarea',required: true , placeholder: 'Condiciones del contrato' },
+    { id: 'terms', name: 'terms', label: 'Términos', type: 'textarea', required: true, placeholder: 'Condiciones del contrato' },
 ];
 
 // Evaluación

@@ -65,12 +65,12 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
 
           // Lógica especial para el campo username de artista: join artistas + aprendices
           if ((f.name === 'username' || f.id === 'username') && (createEntity === 'user' || createEntity === 'User')) {
-                        console.log('[ModalCreate] Cargando opciones para username según rol:', formData['role'] || formData['rol'] || '');
+            console.log('[ModalCreate] Cargando opciones para username según rol:', formData['role'] || formData['rol'] || '');
             // Detectar si el rol seleccionado es artista o aprendiz
             const roleValue = formData['role'] || formData['rol'] || '';
             const roleNorm = String(roleValue).toLowerCase();
             if (roleNorm === 'artist' || roleNorm === 'artista') {
-                            console.log('[ModalCreate] Rol artista detectado, obteniendo artistas para select...');
+              console.log('[ModalCreate] Rol artista detectado, obteniendo artistas para select...');
               // Traer solo artistas y usar realName como value y label
               const resArtist = await fetch('http://localhost:3000/api/artist', { headers });
               const dataArtist = await resArtist.json();
@@ -85,7 +85,7 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
               const resApprentice = await fetch('http://localhost:3000/api/apprentice', { headers });
               const dataApprentice = await resApprentice.json();
               const apprentices = dataApprentice.data || dataApprentice;
-                const options = apprentices
+              const options = apprentices
                 .filter((a: any) => a.name && a.name.trim() !== '')
                 .filter((a: any) => a.id && a.name && a.name.trim() !== '')
                 .map((a: any) => ({ value: a.name, label: a.name }));
@@ -116,6 +116,45 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
       }
     });
   }, [isOpen, createEntity, createFields, formData]);
+
+  // Cargar artistas/grupos según agencia seleccionada
+  useEffect(() => {
+    if (!isOpen || (createEntity !== 'activity' && createEntity !== 'Activity')) return;
+    const agencyId = formData['responsible'];
+    if (!agencyId) return;
+
+    const fetchPerformers = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const res = await fetch(`http://localhost:3000/api/agency/${agencyId}/performers`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const data = await res.json();
+        // data debe ser un array de { type, idAp, idGr, name }
+        const options = (data.data || data).map((item: any) => ({
+          value: item.type === 'artist' ? `${item.idAp}+${item.idGr}` : `${item.idGr}`,
+          label: item.name + (item.type === 'artist' ? ' (Artista)' : ' (Grupo)')
+        }));
+        setDynamicOptions(prev => ({ ...prev, performer: options }));
+      } catch (e) {
+        setDynamicOptions(prev => ({ ...prev, performer: [] }));
+      }
+    };
+
+    fetchPerformers();
+  }, [isOpen, createEntity, formData['responsible']]);
+
+  // Cambiar el modo multiple del campo performer según el tipo de actividad
+  useEffect(() => {
+    if (!isOpen || (createEntity !== 'activity' && createEntity !== 'Activity')) return;
+    const type = formData['type'];
+    // Busca el campo performer en createFields o en formFieldsByEntity
+    const fields = createFields ?? (createEntity ? formFieldsByEntity[createEntity] : []);
+    const performerField = fields.find(f => f.name === 'performer' || f.id === 'performer');
+    if (performerField) {
+      performerField.multiple = type === 'grupal';
+    }
+  }, [isOpen, createEntity, createFields, formData['type']]);
 
   if (!isOpen) return null
 
@@ -327,7 +366,28 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
               )
             }
 
-            if (f.type === 'select') {
+            else if (f.type === 'select' && (f.name === 'performer' || f.id === 'performer')) {
+              const options = dynamicOptions['performer'] || f.options || [];
+              return (
+                <div key={key} className={`form-group ${errorMessage ? "form-group-error" : ""}`}>
+                  <label htmlFor={key}>{f.label}</label>
+                  <select
+                    id={key}
+                    value={value}
+                    onChange={e => handleFieldChange(key, f.multiple ? Array.from(e.target.selectedOptions, opt => opt.value) : e.target.value)}
+                    multiple={!!f.multiple}
+                  >
+                    <option value="">Selecciona una opción</option>
+                    {options.map((opt: any) => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
+                  </select>
+                  {errorMessage && <span className="error-message">{errorMessage}</span>}
+                </div>
+              );
+            }
+
+            else if (f.type === 'select') {
               // Usar opciones dinámicas si existen, si no, las del campo
               const selectOptions = dynamicOptions[f.name || f.id] || f.options || [];
               return (
@@ -351,7 +411,7 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
               )
             }
 
-            if (f.type === 'file') {
+            else if (f.type === 'file') {
               return (
                 <div className={`form-group ${errorMessage ? 'form-group-error' : ''}`} key={key}>
                   <label htmlFor={key}>{f.label}</label>
@@ -366,7 +426,7 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
               )
             }
 
-            if (f.type === 'checkbox') {
+            else if (f.type === 'checkbox') {
               return (
                 <div className={`form-group ${errorMessage ? 'form-group-error' : ''}`} key={key}>
                   <label htmlFor={key}>
