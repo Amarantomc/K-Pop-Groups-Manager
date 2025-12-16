@@ -36,9 +36,10 @@ const Activities: React.FC = () => {
   const [showIncomeModal, setShowIncomeModal] = useState(false);
   const [successContext, setSuccessContext] = useState<string | null>(null);
   const [lastCreatedActivity, setLastCreatedActivity] = useState<any | null>(null);
+
   const updateDate = (date: string) => {
     setClickedDate(date)
-    console.log(clickedDate)
+    //console.log(clickedDate)
   }
 
 
@@ -178,12 +179,13 @@ const Activities: React.FC = () => {
       }
 
       const result = await response.json();
-      setActivities(prev => [...prev, (result.data || result)]);
-      setLastCreatedActivity(result.data || result);
+      const createdActivity = result.data || result; // <-- Guarda la actividad creada aquí
+
+      setActivities(prev => [...prev, createdActivity]);
+      setLastCreatedActivity(createdActivity);
       setSuccessContext('activity');
       setOpenAccept(true);
 
-      handleCreateSaveIncome(result.data || result);
     } catch (error) {
       console.error('Error al crear actividad:', error);
       setErrorMessage(error instanceof Error ? error.message : 'Error al crear actividad');
@@ -214,6 +216,7 @@ const Activities: React.FC = () => {
 
       const result = await response.json();
       setIncomes(prev => [...prev, ...(result.data || result)]);
+      setShowIncomeModal(false);
       setOpenAccept(true);
     } catch (error) {
       console.error('Error al asociarle ingreso a actividad:', error);

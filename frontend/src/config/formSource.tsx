@@ -160,6 +160,7 @@ export const activityFields: Field[] = [
     { id: 'typeEvent', name: 'typeEvent', label: 'Evento', type: 'select', options: enumToOptions(ACTIVITY_TYPES_EVENTS) },
     { id: 'type', name: 'type', label: 'Tipo Actividad', type: 'select', options: enumToOptions(ACTIVITY_TYPES) },
     { id: 'responsible', name: 'responsible', label: 'Agencia Responsable', type: 'select', required: true, optionsEndpoint: '/api/agency' },
+    /*
     {
         id: 'performer',
         name: 'performer',
@@ -171,6 +172,7 @@ export const activityFields: Field[] = [
         optionsEndpoint: '',
         dependsOn: 'responsible',
     },
+    */
 ];
 
 // Ingreso
@@ -186,6 +188,7 @@ const groupMemberFields: Field[] = [
     { id: 'memberType', name: 'memberType', label: 'Tipo de Miembro', type: 'select', options: enumToOptions(['Aprendiz', 'Artista'] as const), required: true },
     { id: 'memberRole', name: 'memberRole', label: 'Rol en el Grupo', type: 'text', placeholder: 'Ej: Vocalista, Bailarín, Productor', required: true },
 ];
+
 export const requestFields: Field[] = [
     { id: 'requestStatus', name: 'requestStatus', label: 'Solicitud', type: 'select', options: enumToOptions(REQUEST_STATUS) },
     //{ id: 'date', name: 'date', label: 'Fecha Solicitud', type: 'date' },
