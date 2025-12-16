@@ -126,15 +126,15 @@ const Albums: React.FC = () => {
         console.log(data)
         const formattedData = data.data.map((album: any, index: number) => ({
           id: album.id ?? index,
-          idGroup : album.idGroup,
+          idGroup: album.idGroup,
           noCopiesSold: album.noCopiesSold,
-          songs : album.songs,
-          producer : album.producer,
-          releaseDate : album.releaseDate,
-          title : album.title,
-          artists : album.artists,
-          groups : album.groups,
-          awards : album.awards
+          songs: album.songs,
+          producer: album.producer,
+          releaseDate: album.releaseDate,
+          title: album.title,
+          artists: album.artists,
+          groups: album.groups,
+          awards: album.awards
         }));
         console.log(formattedData);
         setAlbums(formattedData);
@@ -231,7 +231,7 @@ const Albums: React.FC = () => {
             const txt = await res.text();
             try { const j = JSON.parse(txt); msg = j?.message || j?.error || txt || msg; }
             catch { msg = txt || msg; }
-          } catch (e) {}
+          } catch (e) { }
           setErrorMessage(msg);
           setOpenError(true);
           return;
@@ -278,46 +278,46 @@ const Albums: React.FC = () => {
     }
   };
 
-       const handleExportPdf = async () => {
-  try {
-    const response = await fetch('http://localhost:3000/api/export/albums', {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
+  const handleExportPdf = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/api/export/albums', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al exportar PDF');
       }
-    });
 
-    if (!response.ok) {
-      throw new Error('Error al exportar PDF');
+
+      const blob = await response.blob();
+
+      const url = window.URL.createObjectURL(blob);
+
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'albums.pdf';
+      document.body.appendChild(a);
+      a.click();
+
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error(error);
+      setErrorMessage(
+        error instanceof Error ? error.message : 'Error al exportar PDF'
+      );
+      setOpenError(true);
     }
-
-    
-    const blob = await response.blob();
-
-    const url = window.URL.createObjectURL(blob);
-
-    
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'albums.pdf';
-    document.body.appendChild(a);
-    a.click();
-
-    a.remove();
-    window.URL.revokeObjectURL(url);
-  } catch (error) {
-    console.error(error);
-    setErrorMessage(
-      error instanceof Error ? error.message : 'Error al exportar PDF'
-    );
-    setOpenError(true);
-  }
-};
+  };
   if (!user) {
     return <div>Cargando...</div>;
   }
 
-  if (user.role !== 'manager' && user.role !== 'director' && user.role !== 'admin') {
+  if (user.role !== 'artist' && user.role !== 'manager' && user.role !== 'director' && user.role !== 'admin') {
     return (
       <PageLayout title="Álbumes" description="No tienes permisos para ver esta página">
         <div style={{ textAlign: 'center', padding: '40px' }}>
@@ -334,7 +334,8 @@ const Albums: React.FC = () => {
         user.role === 'manager' ? 'Administra todos los álbumes de los artistas de tu agencia' :
           user.role === 'director' ? 'Supervisa todos los álbumes de la agencia' :
             user.role === 'admin' ? 'Vista global de todos los álbumes del sistema' :
-              'Gestión de álbumes'
+              user.role !== 'artist' ? 'Mis álbumes' :
+                'Gestión de álbumes'
       }
     >
       {isLoading ? (
@@ -355,33 +356,33 @@ const Albums: React.FC = () => {
             constraints={albumConstraints}
             createEntity="album"
             userRole={user?.role}
-            // onCreateClick={() => setShowCreateModal(true)}
+          // onCreateClick={() => setShowCreateModal(true)}
           />
-          <ConfirmDialog 
-            message="¿Está seguro que desea eliminar este álbum?" 
-            open={openConfirm} 
-            onCancel={() => setOpenConfirm(false)} 
-            onConfirm={handleDelete} 
+          <ConfirmDialog
+            message="¿Está seguro que desea eliminar este álbum?"
+            open={openConfirm}
+            onCancel={() => setOpenConfirm(false)}
+            onConfirm={handleDelete}
             type="confirm"
           />
-          <ConfirmDialog 
+          <ConfirmDialog
             title="¡Éxito!"
-            message="El álbum ha sido creado correctamente" 
+            message="El álbum ha sido creado correctamente"
             open={openAccept}
-            type="success" 
-            onCancel={() => setOpenAccept(false)} 
-            onConfirm={() => setOpenAccept(false)} 
-            confirmText="Aceptar" 
+            type="success"
+            onCancel={() => setOpenAccept(false)}
+            onConfirm={() => setOpenAccept(false)}
+            confirmText="Aceptar"
             showDeleteButton={false}
           />
-          <ConfirmDialog 
+          <ConfirmDialog
             title="Error"
-            message={errorMessage} 
+            message={errorMessage}
             type="error"
-            open={openError} 
-            onCancel={() => setOpenError(false)} 
-            onConfirm={() => setOpenError(false)} 
-            confirmText="Aceptar" 
+            open={openError}
+            onCancel={() => setOpenError(false)}
+            onConfirm={() => setOpenError(false)}
+            confirmText="Aceptar"
             showDeleteButton={false}
           />
           <ModalCreate

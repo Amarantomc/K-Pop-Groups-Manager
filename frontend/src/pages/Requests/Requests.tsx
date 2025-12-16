@@ -399,33 +399,32 @@ const Requests: React.FC = () => {
         const data = await response.json();
         const requestsArray = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
 
-        // FILTRO ADICIONAL SEGÚN ROL (por si el backend no filtra bien)
         let filteredRequests = requestsArray;
         if (user.role === 'apprentice') {
           filteredRequests = requestsArray.filter(
             (req: any) =>
               req.apprentices?.some((a: any) => a.id === user.id) ||
-              req.apprentice?.id === user.id
+              req.apprentice?.id === Number(user.profileData?.apprenticeId)
           );
         } else if (user.role === 'artist') {
           filteredRequests = requestsArray.filter(
             (req: any) =>
               req.artists?.some((a: any) => a.id === user.id) ||
-              req.artist?.id === user.id
+              req.artist?.id === Number(user.profileData?.apprenticeId)
           );
         } else if (user.role === 'manager' || user.role === 'director') {
           filteredRequests = requestsArray.filter(
             (req: any) =>
-              req.agencyId === user.agencyId ||
-              req.agency?.id === user.agencyId
+              req.idAgency === Number(user.agencyId) ||
+              req.idAgency === Number(user.profileData?.agencyId)
           );
         }
-        console.log('Fetched requests from backend:', user.agencyId);
-        console.log('Agency ID:', filteredRequests.map(req => req.id));
-        console.log('User role:', user.role);
-        console.log('Filtered requests:', filteredRequests);
+        console.log('agency', user.agencyId)
+        console.log('profile', user.profileData?.agencyId)
+        console.log('solicitudes filtradas:', filteredRequests)
 
         // Obtener nombres de agencia y concepto para cada solicitud
+        //const formattedRequests = await Promise.all(requestsArray.map(async (req: any, index: number) => {
         const formattedRequests = await Promise.all(filteredRequests.map(async (req: any, index: number) => {
           // Obtener nombre de agencia
           let agencyName = req.agency?.name || '';
