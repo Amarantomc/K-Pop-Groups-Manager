@@ -338,7 +338,7 @@ model PersonasEnActividad {
   idAct    Int
   //Nuevo
   idGrupos Int ?
-  aceptado Boolean
+  aceptado Boolean?
 
   artista   Artista ?   @relation(fields: [idAp, idGr], references: [idAp, idGr])
   actividad Actividad  @relation(fields: [idAct], references: [id])
