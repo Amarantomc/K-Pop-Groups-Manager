@@ -113,8 +113,8 @@ const PopularityLists: React.FC = () => {
         const formattedData = data.data.map((popularityList: any, index: number) => ({
           id: popularityList.id ?? index,
           name: popularityList.name,
-          listType : popularityList.listType,
-          songs : popularityList.songs
+          listType: popularityList.listType,
+          songs: popularityList.songs
         }));
         console.log(formattedData);
         setPopularityListsRows(formattedData);
@@ -217,7 +217,7 @@ const PopularityLists: React.FC = () => {
             const txt = await res.text();
             try { const j = JSON.parse(txt); msg = j?.message || j?.error || txt || msg; }
             catch { msg = txt || msg; }
-          } catch (e) {}
+          } catch (e) { }
           console.error('Error al crear lista de popularidad:', msg);
           return;
         }
@@ -261,7 +261,7 @@ const PopularityLists: React.FC = () => {
     }
   };
 
-  if (!user || (user.role !== 'manager' && user.role !== 'director' && user.role !== 'admin')) {
+  if (!user || (user.role !== 'artist' && user.role !== 'manager' && user.role !== 'director' && user.role !== 'admin')) {
     return (
       <PageLayout title="Listas de Popularidad" description="No tienes permisos para ver esta página">
         <div style={{ textAlign: 'center', padding: '40px' }}>
@@ -277,7 +277,9 @@ const PopularityLists: React.FC = () => {
       description={
         user.role === 'admin' ? 'Vista global de todas las listas de popularidad del sistema' :
           user.role === 'director' ? 'Todas las listas de popularidad de tu agencia' :
-            'Gestiona las listas de popularidad de tu agencia'
+            user.role === 'manager' ? 'Gestiona las listas de popularidad de tu agencia' :
+              user.role !== 'artist' ? 'Listas de popularidad' :
+                'Gestiona tus listas de popularidad'
       }
     >
       {isLoading ? (
@@ -315,31 +317,31 @@ const PopularityLists: React.FC = () => {
             onSave={() => setShowSuccessModal(false)}
             onClose={() => setShowSuccessModal(false)}
           />
-          <ConfirmDialog 
-            message="¿Está seguro que desea eliminar este registro de lista de popularidad?" 
-            open={openConfirm} 
-            onCancel={() => setOpenConfirm(false)} 
-            onConfirm={handleDelete} 
+          <ConfirmDialog
+            message="¿Está seguro que desea eliminar este registro de lista de popularidad?"
+            open={openConfirm}
+            onCancel={() => setOpenConfirm(false)}
+            onConfirm={handleDelete}
             type="confirm"
           />
-          <ConfirmDialog 
+          <ConfirmDialog
             title="¡Éxito!"
-            message="Operación realizada correctamente" 
+            message="Operación realizada correctamente"
             open={openAccept}
-            type="success" 
-            onCancel={() => setOpenAccept(false)} 
-            onConfirm={() => setOpenAccept(false)} 
-            confirmText="Aceptar" 
+            type="success"
+            onCancel={() => setOpenAccept(false)}
+            onConfirm={() => setOpenAccept(false)}
+            confirmText="Aceptar"
             showDeleteButton={false}
           />
-          <ConfirmDialog 
+          <ConfirmDialog
             title="Error"
-            message={errorMessage} 
+            message={errorMessage}
             type="error"
-            open={openError} 
-            onCancel={() => setOpenError(false)} 
-            onConfirm={() => setOpenError(false)} 
-            confirmText="Aceptar" 
+            open={openError}
+            onCancel={() => setOpenError(false)}
+            onConfirm={() => setOpenError(false)}
+            confirmText="Aceptar"
             showDeleteButton={false}
           />
         </>

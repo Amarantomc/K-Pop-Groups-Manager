@@ -39,7 +39,7 @@ const Activities: React.FC = () => {
 
   const updateDate = (date: string) => {
     setClickedDate(date)
-    //console.log(clickedDate)
+    console.log(clickedDate)
   }
 
 
@@ -153,8 +153,8 @@ const Activities: React.FC = () => {
   const handleCreateSaveActivity = async (newactivity: any) => {
     try {
       const mapActivityType = (type: string) => {
-        if (type === 'grupal' || type === 'Groups') return 'groups';
-        if (type === 'individual') return 'Individual';
+        if (type === 'grupal' || type === 'Groups') return 'GROUP';
+        if (type === 'individual') return 'INDIVIDUAL'; // <-- mayúscula
         return '';
       };
       const payload = {
@@ -180,7 +180,7 @@ const Activities: React.FC = () => {
 
       const result = await response.json();
       const createdActivity = result.data || result; // <-- Guarda la actividad creada aquí
-
+      console.log('actividad creada',createdActivity)
       setActivities(prev => [...prev, createdActivity]);
       setLastCreatedActivity(createdActivity);
       setSuccessContext('activity');
@@ -196,9 +196,9 @@ const Activities: React.FC = () => {
   const handleCreateSaveIncome = async (newincome: any) => {
     try {
       const payload = {
-        amount: newincome.amount,
+        amount: Number(newincome.amount),
         description: newincome.incomeType,
-        activityId: lastCreatedActivity.id
+        idActivity: lastCreatedActivity.id
       };
       console.log('payload', payload);
       const response = await fetch('http://localhost:3000/api/income', {
@@ -215,7 +215,7 @@ const Activities: React.FC = () => {
       }
 
       const result = await response.json();
-      setIncomes(prev => [...prev, ...(result.data || result)]);
+      setIncomes(prev => [...prev, (result.data || result)]);
       setShowIncomeModal(false);
       setOpenAccept(true);
     } catch (error) {

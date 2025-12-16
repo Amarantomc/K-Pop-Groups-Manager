@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import type { GridColDef } from '@mui/x-data-grid';
 import DataTable from '../../components/datatable/Datatable';
 import PageLayout from '../../components/pageLayout/PageLayout';
@@ -34,9 +34,9 @@ const Songs: React.FC = () => {
     { field: 'albumTitle', headerName: 'Álbum', width: 180 },
     { field: 'artistName', headerName: 'Artista', width: 150 },
     { field: 'groupName', headerName: 'Grupo', width: 150 },
-    { 
-      field: 'duration', 
-      headerName: 'Duración', 
+    {
+      field: 'duration',
+      headerName: 'Duración',
       width: 120,
       renderCell: (params) => {
         const seconds = params.value as number;
@@ -57,8 +57,8 @@ const Songs: React.FC = () => {
   ];
 
   // Agregar columna de agencia según el rol
-  const columns: GridColDef[] = 
-    user?.role === 'admin' 
+  const columns: GridColDef[] =
+    user?.role === 'admin'
       ? [...baseColumns, { field: 'agencyName', headerName: 'Agencia', width: 150 }]
       : baseColumns;
 
@@ -83,10 +83,10 @@ const Songs: React.FC = () => {
         const formattedData = data.data.map((song: any, index: number) => ({
           id: song.id ?? index,
           title: song.title,
-          producer : song.producer,
+          producer: song.producer,
           genre: song.gender,
           releaseDate: song.releaseDate,
-          albums : song.albums
+          albums: song.albums
         }));
         console.log(formattedData);
         setSongRows(formattedData);
@@ -183,7 +183,7 @@ const Songs: React.FC = () => {
             const txt = await res.text();
             try { const j = JSON.parse(txt); msg = j?.message || j?.error || txt || msg; }
             catch { msg = txt || msg; }
-          } catch (e) {}
+          } catch (e) { }
           setErrorMessage(msg);
           setOpenError(true);
           return;
@@ -220,10 +220,10 @@ const Songs: React.FC = () => {
 
       const data = await response.json();
       setSongRows(prev => [...prev, (data.data || data)]);
-      
+
       setShowCreateModal(false);
       setOpenAccept(true);
-      
+
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : 'Error al crear la canción';
       setErrorMessage(errorMsg);
@@ -233,42 +233,42 @@ const Songs: React.FC = () => {
   };
 
   const handleExportPdf = async () => {
-  try {
-    const response = await fetch('http://localhost:3000/api/export/songs', {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
+    try {
+      const response = await fetch('http://localhost:3000/api/export/songs', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al exportar PDF');
       }
-    });
 
-    if (!response.ok) {
-      throw new Error('Error al exportar PDF');
+
+      const blob = await response.blob();
+
+      const url = window.URL.createObjectURL(blob);
+
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'canciones.pdf';
+      document.body.appendChild(a);
+      a.click();
+
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error(error);
+      setErrorMessage(
+        error instanceof Error ? error.message : 'Error al exportar PDF'
+      );
+      setOpenError(true);
     }
+  };
 
-    
-    const blob = await response.blob();
-
-    const url = window.URL.createObjectURL(blob);
-
-    
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'canciones.pdf';
-    document.body.appendChild(a);
-    a.click();
-
-    a.remove();
-    window.URL.revokeObjectURL(url);
-  } catch (error) {
-    console.error(error);
-    setErrorMessage(
-      error instanceof Error ? error.message : 'Error al exportar PDF'
-    );
-    setOpenError(true);
-  }
-};
-
-  if (!user || (user.role !== 'manager' && user.role !== 'director' && user.role !== 'admin')) {
+  if (!user || (user.role !== 'artist' && user.role !== 'manager' && user.role !== 'director' && user.role !== 'admin')) {
     return (
       <PageLayout title="Canciones" description="No tienes permisos para ver esta página">
         <div style={{ textAlign: 'center', padding: '40px' }}>
@@ -277,15 +277,16 @@ const Songs: React.FC = () => {
       </PageLayout>
     );
   }
-  
+
 
   return (
     <PageLayout
       title="Canciones"
       description={
         user.role === 'admin' ? 'Vista global de todas las canciones del sistema' :
-          user.role === 'director' ? 'Todas las canciones de tu agencia' :
-            'Gestiona las canciones de tu agencia'
+          user.role === 'director' || user.role === 'manager' ? 'Todas las canciones de tu agencia' :
+            user.role === 'artist' ? 'Todas mis canciones y las de mi grupo' :
+              'Gestiona las canciones de tu agencia'
       }
     >
       {isLoading ? (
@@ -306,36 +307,36 @@ const Songs: React.FC = () => {
             constraints={songConstraints}
             createEntity="song"
             userRole={user?.role}
-            // onCreateClick={() => setShowCreateModal(true)}
+          // onCreateClick={() => setShowCreateModal(true)}
           />
         </>
       )}
 
-      <ConfirmDialog 
-        message="¿Está seguro que desea eliminar esta canción?" 
-        open={openConfirm} 
-        onCancel={() => setOpenConfirm(false)} 
-        onConfirm={handleDelete} 
+      <ConfirmDialog
+        message="¿Está seguro que desea eliminar esta canción?"
+        open={openConfirm}
+        onCancel={() => setOpenConfirm(false)}
+        onConfirm={handleDelete}
         type="confirm"
       />
-      <ConfirmDialog 
+      <ConfirmDialog
         title="¡Éxito!"
-        message="Operación realizada correctamente" 
-        open={openAccept} 
-        type="success" 
-        onCancel={() => setOpenAccept(false)} 
-        onConfirm={() => setOpenAccept(false)} 
-        confirmText="Aceptar" 
+        message="Operación realizada correctamente"
+        open={openAccept}
+        type="success"
+        onCancel={() => setOpenAccept(false)}
+        onConfirm={() => setOpenAccept(false)}
+        confirmText="Aceptar"
         showDeleteButton={false}
       />
-      <ConfirmDialog 
+      <ConfirmDialog
         title="Error"
-        message={errorMessage} 
+        message={errorMessage}
         type="error"
-        open={openError} 
-        onCancel={() => setOpenError(false)} 
-        onConfirm={() => setOpenError(false)} 
-        confirmText="Aceptar" 
+        open={openError}
+        onCancel={() => setOpenError(false)}
+        onConfirm={() => setOpenError(false)}
+        confirmText="Aceptar"
         showDeleteButton={false}
       />
 

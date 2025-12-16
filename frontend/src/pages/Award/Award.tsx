@@ -265,7 +265,7 @@ const Award: React.FC = () => {
     }
   };
 
-  if (!user || (user.role !== 'manager' && user.role !== 'director' && user.role !== 'admin')) {
+  if (!user || (user.role !== 'artist' && user.role !== 'manager' && user.role !== 'director' && user.role !== 'admin')) {
     return (
       <PageLayout title="Premios" description="No tienes permisos para ver esta página">
         <div style={{ textAlign: 'center', padding: '40px' }}>
@@ -317,7 +317,9 @@ const Award: React.FC = () => {
       description={
         user.role === 'admin' ? 'Vista global de todos los premios del sistema' :
           user.role === 'director' ? 'Todos los premios de tu agencia' :
-            'Gestiona los premios de tu agencia'
+            user.role === 'manager' ? 'Gestiona los premios de tu agencia' :
+              user.role === 'artist' ? 'Gestiona tus premios' :
+              'Gestion de premios'
       }
     >
       {isLoading ? (
