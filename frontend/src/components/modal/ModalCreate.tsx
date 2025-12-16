@@ -286,6 +286,7 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
       const roleValue = dataToSend['role'] || dataToSend['rol'] || '';
       const roleNorm = String(roleValue).toLowerCase();
       console.log('[ModalCreate] handleSubmit - roleValue:', roleValue, 'roleNorm:', roleNorm);
+
       // Solo si existe username y es select
       if (dataToSend['username']) {
         const options = dynamicOptions['username'] || [];
@@ -316,6 +317,16 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
         // Eliminar username del payload
         delete dataToSend['username'];
         console.log('[ModalCreate] handleSubmit - dataToSend después de procesar username:', dataToSend);
+      }
+    }
+
+    // Si el campo responsible existe, busca el label y reemplaza el id por el label
+    if (dataToSend['responsible']) {
+      const options = dynamicOptions['responsible'] || [];
+      const found = options.find((opt: any) => String(opt.value) === String(dataToSend['responsible']));
+      if (found) {
+        dataToSend['responsible'] = found.label;
+        console.log('[ModalCreate] handleSubmit - Reemplazando responsible por label:', found.label);
       }
     }
 
