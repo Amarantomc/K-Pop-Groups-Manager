@@ -9,11 +9,6 @@ import ConfirmDialog from '../../components/confirmDialog/ConfirmDialog';
 import ModalCreate from '../../components/modal/ModalCreate';
 import { contractFields } from '../../config/formSource';
 
-const artistasEnPausa = [
-  { id: 1, nombre: 'Kim Minji', estado: 'Pausa', genero: 'Pop' },
-  { id: 2, nombre: 'Lee Jisoo', estado: 'Pausa', genero: 'R&B' },
-];
-
 const Scout: React.FC = () => {
   const { user } = useAuth();
 
@@ -80,11 +75,25 @@ const Scout: React.FC = () => {
       ),
     },
   ];
+//Aqui luego se ponen las columnas de los datos correspondientes al backend
+  const columnsGroups = [
+    {field:'name',headerName:'Nombre del Grupo' , width:200},
+    {field:'action',
+      headername:'Acción',
+      flex : 1,
+      renderCell: (params: any) => (
+        <Button variant="contained" color="success" onClick={() => handleOpenContractModal(params.row)}>
+          Ofrecer Contrato
+        </Button>
+      ),
+    }
+  ]
 
-  const [vista, setVista] = useState<'aprendices' | 'artistas'>('aprendices');
+  const [vista, setVista] = useState<'aprendices' | 'artistas' | 'grupos'>('aprendices');
   const [showContractModal, setShowContractModal] = useState(false);
   const [contractModalData, setContractModalData] = useState<any | null>(null);
   const [apprenticeScoutRows, setApprenticeScoutRows] = useState<any[]>([]);
+  const [groupScoutRows,setGroupsScoutRows] = useState<any[]>([])
   const [artistsScoutRows, setArtistsScoutRows] = useState<any[]>([]);
   const [apprenticeID, setapprenticeID] = useState<any>('');
   const [groupID, SetgroupId] = useState<any>('');
@@ -229,12 +238,52 @@ const Scout: React.FC = () => {
           >
             Ofrecer Contratos a Artistas
           </Button>
+          <Button
+            variant={vista === 'grupos'? 'contained' : 'outlined'}
+            color='secondary'
+            onClick={() => setVista('grupos')}
+          >
+            Ofrecer Contratos a Grupos
+          </Button>
         </Box>
-        {vista === 'aprendices' ? (
+                  {(() => {
+            switch (vista) {
+              case 'aprendices':
+                return (
+                  <DataTable 
+                    columns={columnsAprendices} 
+                    rows={apprenticeScoutRows} 
+                    pagesize={5} 
+                    showCreateButton={false} 
+                  />
+                );
+              case 'artistas':
+                return (
+                  <DataTable 
+                    columns={columnsArtistas} 
+                    rows={artistsScoutRows} 
+                    pagesize={5} 
+                    showCreateButton={false} 
+                  />
+                );
+              case 'grupos':
+                return (
+                  <DataTable 
+                    columns={columnsGroups} 
+                    rows={groupScoutRows} 
+                    pagesize={5} 
+                    showCreateButton={false} 
+                  />
+                );
+              default:
+                return null;
+            }
+          })()}
+        {/* {vista === 'aprendices' ? (
           <DataTable columns={columnsAprendices} rows={apprenticeScoutRows} pagesize={5} showCreateButton={false} />
         ) : (
           <DataTable columns={columnsArtistas} rows={artistsScoutRows} pagesize={5} showCreateButton={false} />
-        )}
+        )} */}
         {/* Modal para campos del contrato */}
         <ModalCreate
           isOpen={showContractModal}
