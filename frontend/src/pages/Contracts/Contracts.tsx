@@ -419,11 +419,10 @@ const Contracts: React.FC = () => {
             onCreateSave={handleCreateSave}
             showEditButton={true}
             onExport={handleExportPdf}
-            showCreateButton={false}
+            //showCreateButton={false}
             constraints={contractConstraints}
             createEntity="contract"
             userRole={user?.role}
-          // onCreateClick={() => setShowCreateModal(true)}
           />
           <ModalCreate
             isOpen={showCreateModal}

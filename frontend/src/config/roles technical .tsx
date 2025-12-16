@@ -86,6 +86,9 @@ export const ROLE_CONFIG: Record<string, RoleConfig> = {
       'dashboard',
       'calendar',
       'incomes',
+      'awards',
+      'albums',
+      'songs',
       'my_requests',
       'profile'
     ],

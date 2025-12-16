@@ -23,7 +23,7 @@ interface DataTableProps {
   onDelete? : (id : number) => void;
   onEditSave? : (updatedRow : any) => void;
   onCreateSave? : (newRow : any) => void;
-  onExport?
+  onExport?,
   showEditButton? : boolean,
   constraints? : Record<string, FieldConstraint>;
   createEntity? : string;
