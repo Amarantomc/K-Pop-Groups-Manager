@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react';
-import CancelIcon from '@mui/icons-material/Cancel';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Calendar from '../../components/calendar/Calendar';
 import PageLayout from '../../components/pageLayout/PageLayout';
 import ConfirmDialog from '../../components/confirmDialog/ConfirmDialog';
@@ -32,7 +30,6 @@ const Activities: React.FC = () => {
   const [openAccept, setOpenAccept] = useState(false);
   const [openError, setOpenError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [falso, setfalso] = useState(false)
 
 
   useEffect(() => {
@@ -141,33 +138,6 @@ const Activities: React.FC = () => {
     }
   };
 
-  const handleEditSave = async (updatedRow: Activity) => {
-    try {
-      const response = await fetch(`http://localhost:3000/api/activities/${updatedRow.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify(updatedRow)
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al actualizar actividad');
-      }
-
-      const data = await response.json();
-      setActivities(prev =>
-        prev.map(activity => activity.id === updatedRow.id ? (data.data || data) : activity)
-      );
-      setOpenAccept(true);
-    } catch (error) {
-      console.error('Error al actualizar actividad:', error);
-      setErrorMessage(error instanceof Error ? error.message : 'Error al actualizar actividad');
-      setOpenError(true);
-    }
-  };
-
   const handleCreateSave = async (newRow: Omit<Activity, 'id'>) => {
     try {
       const response = await fetch('http://localhost:3000/api/activity', {
@@ -192,15 +162,6 @@ const Activities: React.FC = () => {
       setOpenError(true);
     }
   };
-
-  // Manejar selección de fecha en el calendario
-  const handleDateClick = (date: string) => {
-    const activity = activities.find(a => a.date === date);
-    if (activity) {
-      setSelectedActivity(activity);
-    }
-  };
-
   // Validar actividad (para artistas)
   const handleAcceptActivity = async () => {
     if (!selectedActivity) return;
@@ -233,10 +194,11 @@ const Activities: React.FC = () => {
 
   const handleRejectActivity = async () => {
     if (!selectedActivity) return;
+    console.log(selectedActivity)
 
     try {
       console.log(selectedActivity)
-      const response = await fetch(`http://localhost:3000/api/activity/${selectedActivity.id}/validate`, {
+      const response = await fetch(`http://localhost:3000/api/activity/${selectedActivity}/decision`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -259,67 +221,9 @@ const Activities: React.FC = () => {
     }
   };
 
-  // Obtener color según tipo de actividad
-  const getTypeColor = (type: string) => {
-    const colors: Record<string, string> = {
-      'concert': '#8b5cf6',
-      'rehearsal': '#3b82f6',
-      'recording': '#ef4444',
-      'promotion': '#f59e0b',
-      'meeting': '#10b981'
-    };
-    return colors[type] || '#6b7280';
-  };
-
-  // Obtener color según estado
-  const getStatusColor = (status: string) => {
-    const colors: Record<string, string> = {
-      'pending': '#f59e0b',
-      'confirmed': '#10b981',
-      'cancelled': '#ef4444',
-      'completed': '#6366f1'
-    };
-    return colors[status] || '#6b7280';
-  };
-
-  // Traducir tipo de actividad
-  const translateType = (type: string) => {
-    const translations: Record<string, string> = {
-      'concert': 'Concierto',
-      'rehearsal': 'Ensayo',
-      'recording': 'Grabación',
-      'promotion': 'Promoción',
-      'meeting': 'Reunión'
-    };
-    return translations[type] || type;
-  };
-
-  // Traducir estado
-  const translateStatus = (status: string) => {
-    const translations: Record<string, string> = {
-      'pending': 'Pendiente',
-      'confirmed': 'Confirmada',
-      'cancelled': 'Cancelada',
-      'completed': 'Completada'
-    };
-    return translations[status] || status;
-  };
-
   if (!user) {
     return <div>Cargando...</div>;
   }
-
-  // Convertir actividades a formato del calendario
-  const calendarEvents = activities.map(activity => ({
-    id: activity.id,
-    date: activity.date,
-    title: activity.title,
-    artist: activity.artistName, // <-- Añadido para cumplir con EventItem
-    subtitle: `${activity.time} - ${activity.artistName}`,
-    color: activity.type,
-    time: activity.time,
-    //type: activity.activityType
-  }));
 
   const handleExportPdf = async () => {
     try {
@@ -380,101 +284,12 @@ const Activities: React.FC = () => {
               <div className="calendar-section">
                 <Calendar
                   activitiesTest={activities}
-                  onExport={console.log("Exportando")}
+                  onExport={() => console.log("Exportando")}
                   isArtist={true}
                   onAcept={askConfirm}
                   onCancel={askCancelled}
-                //onDateClick={handleDateClick}
                 />
               </div>
-
-              {/* Panel de detalles a la derecha - solo visible cuando hay selección */}
-              {falso && (
-                <div className="details-section">
-                  <div className="activity-details">
-                    <div className="activity-header">
-                      <h2 className="activity-title">{selectedActivity.title}</h2>
-                      <span
-                        className="activity-type-badge"
-                        style={{ backgroundColor: getTypeColor(selectedActivity.type) }}
-                      >
-                        {translateType(selectedActivity.type)}
-                      </span>
-                    </div>
-
-                    <div className="activity-info-grid">
-                      <div className="info-item">
-                        <span className="info-label">Fecha</span>
-                        <span className="info-value">
-                          {new Date(selectedActivity.date).toLocaleDateString('es-ES', {
-                            weekday: 'long',
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                          })}
-                        </span>
-                      </div>
-
-                      <div className="info-item">
-                        <span className="info-label">Hora</span>
-                        <span className="info-value">{selectedActivity.time}</span>
-                      </div>
-
-                      <div className="info-item">
-                        <span className="info-label">Ubicación</span>
-                        <span className="info-value">{selectedActivity.location}</span>
-                      </div>
-
-                      <div className="info-item">
-                        <span className="info-label">Estado</span>
-                        <span
-                          className="status-badge"
-                          style={{
-                            backgroundColor: getStatusColor(selectedActivity.status),
-                            color: 'white'
-                          }}
-                        >
-                          {translateStatus(selectedActivity.status)}
-                        </span>
-                      </div>
-
-                      {selectedActivity.groupName && (
-                        <div className="info-item">
-                          <span className="info-label">Grupo</span>
-                          <span className="info-value">{selectedActivity.groupName}</span>
-                        </div>
-                      )}
-                    </div>
-
-                    {selectedActivity.description && (
-                      <div className="activity-description">
-                        <h4>Descripción</h4>
-                        <p>{selectedActivity.description}</p>
-                      </div>
-                    )}
-
-                    {/* Botones de validación para artistas */}
-                    {selectedActivity.status === 'pending' && (
-                      <div className="validation-buttons">
-                        <button
-                          className="validation-btn accept-btn"
-                          onClick={handleAcceptActivity}
-                        >
-                          <CheckCircleIcon />
-                          Aceptar Actividad
-                        </button>
-                        <button
-                          className="validation-btn reject-btn"
-                          onClick={handleRejectActivity}
-                        >
-                          <CancelIcon />
-                          Rechazar Actividad
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
             </div>
           )}
           {(user.role === 'manager' || user.role === 'director' || user.role === 'admin') && (
@@ -486,98 +301,8 @@ const Activities: React.FC = () => {
                     activitiesTest={activities}
                     onExport={handleExportPdf}
                     isArtist={false}
-
-                  //onDateClick={handleDateClick}
                   />
                 </div>
-
-                {/* Panel de detalles a la derecha - solo visible cuando hay selección */}
-                {selectedActivity && (
-                  <div className="details-section">
-                    <div className="activity-details">
-                      <div className="activity-header">
-                        <h2 className="activity-title">{selectedActivity.title}</h2>
-                        <span
-                          className="activity-type-badge"
-                          style={{ backgroundColor: getTypeColor(selectedActivity.type) }}
-                        >
-                          {translateType(selectedActivity.type)}
-                        </span>
-                      </div>
-
-                      <div className="activity-info-grid">
-                        <div className="info-item">
-                          <span className="info-label">Artista</span>
-                          <span className="info-value">{selectedActivity.artistName}</span>
-                        </div>
-
-                        <div className="info-item">
-                          <span className="info-label">Grupo</span>
-                          <span className="info-value">{selectedActivity.groupName}</span>
-                        </div>
-
-                        <div className="info-item">
-                          <span className="info-label">Fecha</span>
-                          <span className="info-value">
-                            {new Date(selectedActivity.date).toLocaleDateString('es-ES', {
-                              weekday: 'long',
-                              year: 'numeric',
-                              month: 'long',
-                              day: 'numeric'
-                            })}
-                          </span>
-                        </div>
-
-                        <div className="info-item">
-                          <span className="info-label">Hora</span>
-                          <span className="info-value">{selectedActivity.time}</span>
-                        </div>
-
-                        <div className="info-item">
-                          <span className="info-label">Ubicación</span>
-                          <span className="info-value">{selectedActivity.location}</span>
-                        </div>
-
-                        <div className="info-item">
-                          <span className="info-label">Estado</span>
-                          <span
-                            className="status-badge"
-                            style={{
-                              backgroundColor: getStatusColor(selectedActivity.status),
-                              color: 'white'
-                            }}
-                          >
-                            {translateStatus(selectedActivity.status)}
-                          </span>
-                        </div>
-                      </div>
-
-                      {selectedActivity.description && (
-                        <div className="activity-description">
-                          <h4>Descripción</h4>
-                          <p>{selectedActivity.description}</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Lista de actividades debajo */}
-              <div className="datatable-section">
-                { /* <h3>Lista de Actividades</h3>
-              <DataTable
-                  columns={columns}
-                  rows={activities}
-                  pagesize={10}
-                  onDelete={askDelete}
-                  onEditSave={handleEditSave}
-                  onCreateSave={handleCreateSave}
-                  showEditButton={true}
-                  constraints={activityConstraints}
-                  createEntity="activity"
-                  userRole={user?.role}
-                />*/}
               </div>
             </div>
           )}
