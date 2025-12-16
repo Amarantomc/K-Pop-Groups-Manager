@@ -16,7 +16,7 @@ export class CreateApprenticeDto{
             throw new Error('Missing required fields');
         }
        
-        if(age < 15 && age > 50)
+        if(age < 15 || age > 50)
         {
             throw new Error('su edad debe ser mayor de 15 y menor que 50');
         }

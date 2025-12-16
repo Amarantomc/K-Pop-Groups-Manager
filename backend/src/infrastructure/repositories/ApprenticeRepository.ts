@@ -7,6 +7,7 @@ import { inject, injectable } from "inversify";
 import { Types } from "../di/Types";
 import ApprenticeEvaluation from "../../domain/entities/ApprenticeEvaluation";
 import { getAge } from "../../plugins/get-age.plugin";
+import { error } from "console";
 
 @injectable()
 export class ApprenticeRepository implements IApprenticeRepository {   
@@ -108,16 +109,34 @@ export class ApprenticeRepository implements IApprenticeRepository {
         return apprentice ? ApprenticeResponseDto.toEntity(apprentice) : null;
     }
 
-    async addEvaluation(apprenticeId: number, agencyId: number, evaluation: number, date: Date): Promise<void> {
-        await this.db.evaluacionAprendiz.create({
-            data: {
-                idAp: apprenticeId,
-                idAg: agencyId,
-                evaluacion: evaluation,
-                fechaEvaluacion: date
-            }
+    async addEvaluation(apprenticeId: number,agencyId: number,evaluation: number,date: Date): Promise<void> {
+      
+        if(evaluation < 0 || evaluation > 10){
+            throw new Error("La evaluacion debe ser entre 0 - 10");
+        }
+        await this.db.evaluacionAprendiz.create({data: {
+            idAp: apprenticeId,
+            idAg: agencyId,
+            evaluacion: evaluation,
+            fechaEvaluacion: date,
+          },
         });
-    }
+      
+        let aux = 0;
+        if (evaluation > 5) aux = 1;
+        else if (evaluation < 5) aux = -1;
+      
+        if (aux === 0) return;
+      
+        await this.db.aprendiz.update({
+          where: { id: apprenticeId },
+          data: {
+            nivelEntrenamiento: {
+              increment: aux,
+            },
+          },
+        });
+      }
 
     async create(data: CreateApprenticeDto): Promise<Apprentice> {
         const apprentice = await this.db.Aprendiz.create({

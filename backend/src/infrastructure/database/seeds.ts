@@ -434,17 +434,17 @@ async function main() {
     data: [
       { idAp: aprendiz1.id, idAg: smEntertainment.id, fechaInicio: new Date("2019-01-15"), estado: "En entrenamiento" },
       { idAp: aprendiz2.id, idAg: ygEntertainment.id, fechaInicio: new Date("2018-06-20"), estado: "En entrenamiento" },
-      { idAp: aprendiz3.id, idAg: jypEntertainment.id, fechaInicio: new Date("2017-03-10"), estado: "En entrenamiento" },
+      { idAp: aprendiz3.id, idAg: jypEntertainment.id, fechaInicio: new Date("2017-03-10"), estado: "Artista" },
       { idAp: aprendiz4.id, idAg: hibeEntertainment.id, fechaInicio: new Date("2016-05-01"), fechaFinalizacion: new Date("2019-03-04"), estado: "Artista" },
       { idAp: aprendiz5.id, idAg: jypEntertainment.id, fechaInicio: new Date("2017-08-15"), fechaFinalizacion: new Date("2019-02-12"), estado: "Artista" },
-      { idAp: aprendiz6.id, idAg: smEntertainment.id, fechaInicio: new Date("2016-09-01"), fechaFinalizacion: new Date("2020-11-17"), estado: "En proceso de seleccion"},
+      { idAp: aprendiz6.id, idAg: smEntertainment.id, fechaInicio: new Date("2016-09-01"), fechaFinalizacion: new Date("2020-11-17"), estado: "Artista"},
       { idAp: aprendiz7.id, idAg: starshipEntertainment.id, fechaInicio: new Date("2021-07-10"), estado: "En entrenamiento" },
       { idAp: aprendiz8.id, idAg: hibeEntertainment.id, fechaInicio: new Date("2020-11-05"), estado: "En entrenamiento" },
       { idAp: aprendiz9.id, idAg: smEntertainment.id, fechaInicio: new Date("2009-03-20"), fechaFinalizacion: new Date("2014-08-01"), estado: "Artista" },
       { idAp: aprendiz10.id, idAg: pledisEntertainment.id, fechaInicio: new Date("2010-05-15"), fechaFinalizacion: new Date("2015-05-26"), estado: "Artista" },
       { idAp: aprendiz11.id, idAg: hibeEntertainment.id, fechaInicio: new Date("2011-06-13"), fechaFinalizacion: new Date("2013-06-13"), estado: "Artista" },
       { idAp: aprendiz12.id, idAg: ygEntertainment.id, fechaInicio: new Date("2012-08-08"), fechaFinalizacion: new Date("2016-08-08"), estado: "Artista" },
-      { idAp: aprendiz13.id, idAg: ygEntertainment.id, fechaInicio: new Date("2012-08-08"), fechaFinalizacion: new Date("2016-08-08"), estado: "Artista" },
+      { idAp: aprendiz13.id, idAg: ygEntertainment.id, fechaInicio: new Date("2012-08-08"), fechaFinalizacion: new Date("2016-08-08"), estado: "En proceso de seleccion" },
       { idAp: aprendiz14.id, idAg: ygEntertainment.id, fechaInicio: new Date("2012-08-08"), fechaFinalizacion: new Date("2016-08-08"), estado: "En proceso de seleccion" },
       { idAp: aprendiz15.id, idAg: hibeEntertainment.id, fechaInicio: new Date("2012-08-08"), fechaFinalizacion: new Date("2016-08-08"), estado: "En proceso de seleccion" }, 
       { idAp: aprendiz16.id, idAg: ygEntertainment.id, fechaInicio: new Date("2012-08-08"), fechaFinalizacion: new Date("2016-08-08"), estado: "En entrenamiento" }, 
@@ -533,7 +533,7 @@ async function main() {
       idGr: nct127.id,
       nombreArtistico: "Taeyong",
       fechaDebut: new Date("2016-07-07"),
-      estadoArtista: "Activo"
+      estadoArtista: "Pausa"
     }
   })
   const artista2 = await prisma.artista.create({
@@ -560,7 +560,7 @@ async function main() {
       idGr: bts.id,
       nombreArtistico: "V",
       fechaDebut: new Date("2013-06-13"),
-      estadoArtista: "Activo"
+      estadoArtista: "Pausa"
     }
   })
   const artista5 = await prisma.artista.create({
@@ -596,7 +596,7 @@ async function main() {
       idGr: seventeen.id,
       nombreArtistico: "S.Coups",
       fechaDebut: new Date("2015-05-26"),
-      estadoArtista: "Activo"
+      estadoArtista: "Pausa"
     }
   })
   console.log('✅ 8 Artistas creados')
