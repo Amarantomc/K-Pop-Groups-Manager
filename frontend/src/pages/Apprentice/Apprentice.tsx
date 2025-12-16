@@ -57,104 +57,109 @@ const ListApprentice: React.FC = () => {
     }
   };
 
-      
-    const apprenticeColumns: GridColDef[] = [
+
+  const apprenticeColumns: GridColDef[] = [
     { field: 'name', headerName: 'Nombre Completo', width: 150 },
     { field: 'dateOfBirth', headerName: 'Fecha de Nacimiento', width: 250 },
     { field: 'age', headerName: 'Edad', width: 90 },
     // {field: 'agencyName', headerName: 'Agencia', width: 150},
     { field: 'trainingLv', headerName: 'Nivel de Entrenamiento', width: 180 },
-    {   field:'evaluate',
-        headerName:'Evaluación',
-        width :200,
-        renderCell : (params) => {
-            return (
-                <div className="Evaluation">
-                    <Button startIcon = {<QuizIcon/>} className="evaluate-btn" onClick={() => {setSelectApprenticeToEvaluate(params.row.id);setShowEvaluateModal(true)}}>Evaluar Aprendiz</Button>
-                </div>
-            )
-        }
+    {
+      field: 'evaluate',
+      headerName: 'Evaluación',
+      width: 200,
+      renderCell: (params) => {
+        return (
+          <div className="Evaluation">
+            <Button startIcon={<QuizIcon />} className="evaluate-btn" onClick={() => { setSelectApprenticeToEvaluate(params.row.id); setShowEvaluateModal(true) }}>Evaluar Aprendiz</Button>
+          </div>
+        )
+      }
     }
-]
+  ]
 
-     const askDelete = (id : number) =>{
-      setApprenticeToDelete(id)
-      setOpenConfirm(true)
-     }
-        useEffect(
-                () => {
-                    const fetchApprentices = async () => {
-                        try{
-                            const token = localStorage.getItem('token')
-                        const response = await fetch('http://localhost:3000/api/apprentice', {
-                                    headers: {
-                                                'Authorization': `Bearer ${token}`,
-                                                'Content-Type': 'application/json'
-                                              }
-                                });
-                            if(!response.ok){
-                                throw new Error("Error al obtener los aprendices")
-                            }
-                            const data = await response.json()
-                            console.log(data)
-                            const formattedData = data.data.map((apprentice : any , index : number) => ({
-                                id : apprentice.id?? index,
-                                name : apprentice.name,
-                                age : apprentice.age,
-                                dateOfBirth : apprentice.dateOfBirth,
-                                trainingLv : apprentice.trainingLv
-                            }))
-                            setApprenticeRows(formattedData)
-                        }
-                        catch(error){
-                            console.error(error)
-                        }
-                    }
-                    fetchApprentices()
-                },[]
-            )
-    
-                const handleDelete = async () => {
-                  if(apprenticeToDelete === null) return;
-
+  const askDelete = (id: number) => {
+    setApprenticeToDelete(id)
+    setOpenConfirm(true)
+  }
+  useEffect(
+    () => {
+      const fetchApprentices = async () => {
         try {
-          const response = await fetch(`http://localhost:3000/api/apprentice/${apprenticeToDelete}`, {
-            method: "DELETE",
+          const token = localStorage.getItem('token')
+          const response = await fetch('http://localhost:3000/api/apprentice', {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
           });
-    
-          const result = await response.json();
-          if (result.success) {
-            setApprenticeRows((prev) => prev.filter((apprentice) => apprentice.id !== apprenticeToDelete));
-            setOpenAccept(true);
-          } else {
-            setErrorMessage(result.message || "Error al eliminar el aprendiz");
-            setOpenError(true);
+          if (!response.ok) {
+            throw new Error("Error al obtener los aprendices")
           }
-        } catch (error) {
-          console.error("Error al eliminar:", error);
-          setErrorMessage(error instanceof Error ? error.message : "Error al eliminar el aprendiz");
-          setOpenError(true);
-        }finally{
-          setOpenConfirm(false);
-          setApprenticeToDelete(null)
+          const data = await response.json()
+          console.log(data)
+          const formattedData = data.data.map((apprentice: any, index: number) => ({
+            id: apprentice.id ?? index,
+            name: apprentice.name,
+            age: apprentice.age,
+            dateOfBirth: apprentice.dateOfBirth,
+            trainingLv: apprentice.trainingLv
+          }))
+          setApprenticeRows(formattedData)
         }
-      };
+        catch (error) {
+          console.error(error)
+        }
+      }
+      fetchApprentices()
+    }, []
+  )
 
-       const handleEditSave = async (updated: any) => {
-        const token = localStorage.getItem('token')
+  const handleDelete = async () => {
+    if (apprenticeToDelete === null) return;
+
+    try {
+      const response = await fetch(`http://localhost:3000/api/apprentice/${apprenticeToDelete}`, {
+        method: "DELETE",
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        setApprenticeRows((prev) => prev.filter((apprentice) => apprentice.id !== apprenticeToDelete));
+        setOpenAccept(true);
+      } else {
+        setErrorMessage(result.message || "Error al eliminar el aprendiz");
+        setOpenError(true);
+      }
+    } catch (error) {
+      console.error("Error al eliminar:", error);
+      setErrorMessage(error instanceof Error ? error.message : "Error al eliminar el aprendiz");
+      setOpenError(true);
+    } finally {
+      setOpenConfirm(false);
+      setApprenticeToDelete(null)
+    }
+  };
+
+  const handleEditSave = async (updated: any) => {
+    const token = localStorage.getItem('token')
     try {
       await fetch(`http://localhost:3000/api/apprentice/${updated.id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${token}`
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(
           {
-              name: updated.name,
-              dateOfBirth: updated.dateOfBirth,
-              age: Number(updated.age),
-              trainingLv: Number(updated.trainingLv),
-              id: updated.id
+            name: updated.name,
+            dateOfBirth: updated.dateOfBirth,
+            age: Number(updated.age),
+            trainingLv: Number(updated.trainingLv),
+            id: updated.id
           }
         ),
       });
@@ -213,7 +218,7 @@ const ListApprentice: React.FC = () => {
             const txt = await res.text();
             try { const j = JSON.parse(txt); msg = j?.message || j?.error || txt || msg; }
             catch { msg = txt || msg; }
-          } catch (e) {}
+          } catch (e) { }
           setErrorMessage(msg);
           setOpenError(true);
           return;
@@ -276,45 +281,45 @@ const ListApprentice: React.FC = () => {
     }
   };
 
-     const handleExportPdf = async () => {
-  try {
-    const response = await fetch('http://localhost:3000/api/export/apprentices', {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
+  const handleExportPdf = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/api/export/apprentices', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al exportar PDF');
       }
-    });
 
-    if (!response.ok) {
-      throw new Error('Error al exportar PDF');
+
+      const blob = await response.blob();
+
+      const url = window.URL.createObjectURL(blob);
+
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'aprendices.pdf';
+      document.body.appendChild(a);
+      a.click();
+
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error(error);
+      setErrorMessage(
+        error instanceof Error ? error.message : 'Error al exportar PDF'
+      );
+      setOpenError(true);
     }
+  };
 
-    
-    const blob = await response.blob();
-
-    const url = window.URL.createObjectURL(blob);
-
-    
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'aprendices.pdf';
-    document.body.appendChild(a);
-    a.click();
-
-    a.remove();
-    window.URL.revokeObjectURL(url);
-  } catch (error) {
-    console.error(error);
-    setErrorMessage(
-      error instanceof Error ? error.message : 'Error al exportar PDF'
-    );
-    setOpenError(true);
-  }
-};
-
-        return (
-    <PageLayout 
-      title="Aprendices" 
+  return (
+    <PageLayout
+      title="Aprendices"
       description={
         "Listado y gestión de aprendices."
       }
@@ -336,28 +341,28 @@ const ListApprentice: React.FC = () => {
           createEntity="apprentice"
           showEditButton={true}
           userRole={user?.role}
-          // onCreateClick={() => setShowCreateModal(true)}
+        // onCreateClick={() => setShowCreateModal(true)}
         />
         <ConfirmDialog message="¿Está seguro que desea eliminar este aprendiz?" open={openConfirm} onCancel={() => setOpenConfirm(false)} onConfirm={handleDelete} type="confirm">
-          </ConfirmDialog>
-        <ConfirmDialog 
+        </ConfirmDialog>
+        <ConfirmDialog
           title="¡Éxito!"
-          message="El aprendiz ha sido creado correctamente" 
+          message="El aprendiz ha sido creado correctamente"
           open={openAccept}
-          type="success" 
-          onCancel={() => setOpenAccept(false)} 
-          onConfirm={() => setOpenAccept(false)} 
-          confirmText="Aceptar" 
+          type="success"
+          onCancel={() => setOpenAccept(false)}
+          onConfirm={() => setOpenAccept(false)}
+          confirmText="Aceptar"
           showDeleteButton={false}
         />
-        <ConfirmDialog 
+        <ConfirmDialog
           title="Error"
-          message={errorMessage} 
+          message={errorMessage}
           type="error"
-          open={openError} 
-          onCancel={() => setOpenError(false)} 
-          onConfirm={() => setOpenError(false)} 
-          confirmText="Aceptar" 
+          open={openError}
+          onCancel={() => setOpenError(false)}
+          onConfirm={() => setOpenError(false)}
+          confirmText="Aceptar"
           showDeleteButton={false}
         />
         <ModalCreate
@@ -381,7 +386,7 @@ const ListApprentice: React.FC = () => {
           onClose={() => setShowEvaluateModal(false)}
           constraints={evaluationConstraints}
         />
-        </>
+      </>
       )}
     </PageLayout>
   );

@@ -6,6 +6,7 @@ import ConfirmDialog from '../../components/confirmDialog/ConfirmDialog';
 import { useAuth } from '../../contexts/auth/AuthContext';
 import { activityConstraints } from '../../config/modalConstraints';
 import './Activities.css';
+import ModalCreate from '../../components/modal/ModalCreate';
 
 interface Activity {
   id: number;
@@ -23,6 +24,7 @@ interface Activity {
 const Activities: React.FC = () => {
   const { user } = useAuth();
   const [activities, setActivities] = useState<any[]>([]);
+  const [incomes, setIncomes] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedActivity, setSelectedActivity] = useState<any | null>(null);
   const [activityToDelete, setActivityToDelete] = useState<number | null>(null);
@@ -30,6 +32,14 @@ const Activities: React.FC = () => {
   const [openAccept, setOpenAccept] = useState(false);
   const [openError, setOpenError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [clickedDate, setClickedDate] = useState<string | null>(null)
+  const [showIncomeModal, setShowIncomeModal] = useState(false);
+  const [successContext, setSuccessContext] = useState<string | null>(null);
+  const [lastCreatedActivity, setLastCreatedActivity] = useState<any | null>(null);
+  const updateDate = (date: string) => {
+    setClickedDate(date)
+    console.log(clickedDate)
+  }
 
 
   useEffect(() => {
@@ -103,6 +113,7 @@ const Activities: React.FC = () => {
 
     fetchActivities();
   }, [user]);
+
   const askConfirm = (id: number) => {
     setSelectedActivity(id)
     handleAcceptActivity()
@@ -138,30 +149,74 @@ const Activities: React.FC = () => {
     }
   };
 
-  const handleCreateSave = async (newRow: Omit<Activity, 'id'>) => {
+  const handleCreateSaveActivity = async (newactivity: any) => {
     try {
+      const payload = {
+        eventType: newactivity.eventType || newactivity.typeEvent,
+        activityType: newactivity.activityType || newactivity.type,
+        date: clickedDate,
+        place: newactivity.place,
+        responsible: newactivity.responsible
+      }
+      console.log('payload', payload);
       const response = await fetch('http://localhost:3000/api/activity', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify(newRow)
+        body: JSON.stringify(payload)
       });
-
+      console.log(response)
       if (!response.ok) {
         throw new Error('Error al crear actividad');
       }
 
-      const data = await response.json();
-      setActivities(prev => [...prev, (data.data || data)]);
+      const result = await response.json();
+      setActivities(prev => [...prev, (result.data || result)]);
+      setLastCreatedActivity(result.data || result);
+      setSuccessContext('activity');
       setOpenAccept(true);
+
+      handleCreateSaveIncome(result.data || result);
     } catch (error) {
       console.error('Error al crear actividad:', error);
       setErrorMessage(error instanceof Error ? error.message : 'Error al crear actividad');
       setOpenError(true);
     }
   };
+
+  const handleCreateSaveIncome = async (newincome: any) => {
+    try {
+      const payload = {
+        amount: newincome.amount,
+        description: newincome.incomeType,
+        activityId: lastCreatedActivity.id
+      };
+      console.log('payload', payload);
+      const response = await fetch('http://localhost:3000/api/income', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(payload)
+      });
+      console.log(response)
+      if (!response.ok) {
+        throw new Error('Error al crear ingreso asociado a esta actividad');
+      }
+
+      const result = await response.json();
+      setIncomes(prev => [...prev, ...(result.data || result)]);
+      setOpenAccept(true);
+    } catch (error) {
+      console.error('Error al asociarle ingreso a actividad:', error);
+      setErrorMessage(error instanceof Error ? error.message : 'Error al asociarle ingreso a actividad');
+      setOpenError(true);
+    }
+  };
+
   // Validar actividad (para artistas)
   const handleAcceptActivity = async () => {
     if (!selectedActivity) return;
@@ -301,6 +356,8 @@ const Activities: React.FC = () => {
                     activitiesTest={activities}
                     onExport={handleExportPdf}
                     isArtist={false}
+                    onUpdateDate={updateDate}
+                    onCreateActivity={handleCreateSaveActivity}
                   />
                 </div>
               </div>
@@ -318,8 +375,20 @@ const Activities: React.FC = () => {
             message="La actividad ha sido registrada correctamente"
             open={openAccept}
             type="success"
-            onCancel={() => setOpenAccept(false)}
-            onConfirm={() => setOpenAccept(false)}
+            onCancel={() => {
+              setOpenAccept(false);
+              if (successContext === 'activity') {
+                setShowIncomeModal(true);
+                setSuccessContext(null);
+              }
+            }}
+            onConfirm={() => {
+              setOpenAccept(false);
+              if (successContext === 'activity') {
+                setShowIncomeModal(true);
+                setSuccessContext(null);
+              }
+            }}
             confirmText="Aceptar"
             showDeleteButton={false}
           />
@@ -334,6 +403,15 @@ const Activities: React.FC = () => {
             showDeleteButton={false}
           />
         </>
+      )}
+      {showIncomeModal && (
+        <ModalCreate
+          isOpen={showIncomeModal}
+          onClose={() => setShowIncomeModal(false)}
+          title="Registrar ingreso"
+          createEntity="income"
+          onSave={handleCreateSaveIncome}
+        />
       )}
     </PageLayout>
   );
