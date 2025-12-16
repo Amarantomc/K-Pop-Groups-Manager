@@ -125,7 +125,6 @@ export class ApprenticeRepository implements IApprenticeRepository {
                 fechaNacimiento: new Date(data.dateOfBirth),
                 edad: data.age,
                 nivelEntrenamiento: data.trainingLv,
-                estadoAprendiz: data.status
             }
         });
         //Se registra en Tabla de Relacion
@@ -155,7 +154,6 @@ export class ApprenticeRepository implements IApprenticeRepository {
                 fechaNacimiento: data.dateOfBirth,
                 edad: data.age,
                 nivelEntrenamiento: data.trainingLv,
-                estadoAprendiz: data.status
             },
         });
         return ApprenticeResponseDto.toEntity(apprentice);

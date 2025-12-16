@@ -9,7 +9,6 @@ export class ApprenticeResponseDto{
         public readonly dateOfBirth:Date,
         public readonly age: number,
         public readonly trainingLv: number,
-        public readonly status: string | Status,
         
     ){}
 
@@ -20,18 +19,19 @@ export class ApprenticeResponseDto{
             apprentice.dateOfBirth,
             apprentice.age,
             apprentice.trainingLv,
-            apprentice.status
         );
       }
 
       static toEntity(apprentice: any): Apprentice {
         return new Apprentice(
-            {id:apprentice.id,
-            name:apprentice.nombreCompleto,
-            dateOfBirth:apprentice.fechaNacimiento,
-            age:apprentice.edad,
-            trainingLv:apprentice.nivelEntrenamiento,
-            status:apprentice.estadoAprendiz,}
+            {
+                id: apprentice.id,
+                name: apprentice.nombreCompleto,
+                dateOfBirth: apprentice.fechaNacimiento,
+                age: apprentice.edad,
+                trainingLv: apprentice.nivelEntrenamiento,
+                status: apprentice.status // Asegúrate de que 'apprentice' tenga la propiedad 'status'
+            }
         );
       }
 

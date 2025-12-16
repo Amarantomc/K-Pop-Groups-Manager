@@ -424,6 +424,7 @@ const Groups: React.FC = () => {
             onEditSave={handleEditSave}
             onCreateSave={handleCreateSave}
             onExport={handleExportPdf}
+            showCreateButton={false}
             showEditButton={true}
             constraints={groupConstraints}
             createEntity="group"

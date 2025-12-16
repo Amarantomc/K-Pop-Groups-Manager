@@ -10,7 +10,9 @@ interface CalendarProps {
   description?: string,
   activitiesTest: any[],
   onExport? : any,
-  isArtist? : boolean
+  isArtist? : boolean,
+  onAcept? : any,
+  onCancel? : any
 }
 
 export const transformDate = (dateStr: string) => {
@@ -27,7 +29,10 @@ const Calendar: React.FC<CalendarProps> = ({
   description = "",
   activitiesTest = [],
   onExport,
-  isArtist
+  isArtist,
+  onAcept,
+  onCancel
+
 }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [showDayMenu, setShowDayMenu] = useState(false)
@@ -359,54 +364,42 @@ const Calendar: React.FC<CalendarProps> = ({
                           </p>
                           <p className="activity-datetime">{activity.time}</p>
                         </div>
+                        {isArtist && (
+                          <div className="activity-actions">
+                            <button className="day-menu-add-button" onClick={() => onAcept(activity.id)}>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="18"
+                                height="18"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                              >
+                                <polyline points="20 6 9 17 4 12" />
+                              </svg>
+                              Confirmar
+                            </button>
+                            <button className="day-menu-add-button" onClick={() => onCancel(activity.id)}>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="18"
+                                height="18"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                              >
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                              </svg>
+                              Rechazar
+                            </button>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
-                  {!isArtist && (<button className="day-menu-add-button" onClick={handleAddFromDayMenu}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <line x1="12" y1="5" x2="12" y2="19" />
-                      <line x1="5" y1="12" x2="19" y2="12" />
-                    </svg>
-                    Agregar actividad
-                  </button>)}
-                    {isArtist && (<button className="day-menu-add-button" onClick={handleAddFromDayMenu}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <line x1="12" y1="5" x2="12" y2="19" />
-                      <line x1="5" y1="12" x2="19" y2="12" />
-                    </svg>
-                    Confirmar
-                  </button>)}
-                  {isArtist && (<button className="day-menu-add-button" onClick={handleAddFromDayMenu}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <line x1="12" y1="5" x2="12" y2="19" />
-                      <line x1="5" y1="12" x2="19" y2="12" />
-                    </svg>
-                    Rechazar
-                  </button>)}
                 </>
               ) : (
                 <div className="day-menu-empty">
