@@ -22,37 +22,45 @@
       }
     
       async cancelExpiredActivities(): Promise<void> {
-        const today = new Date();
-      
-        const expiredActivities = await this.db.actividad.findMany({
-          where: {
-            estado: { not: "CANCELADA" },
-            fecha: {
-              lte: new Date(today.getTime() - 5 * 24 * 60 * 60 * 1000) 
-            }
-          },
-          select: { id: true }
-        });
+        const expiredActivities = await this.db.$queryRaw<
+          { id: number }[]
+        >`
+          SELECT id
+          FROM "Actividad"
+          WHERE estado != 'CANCELADA'
+            AND fecha <= NOW() - INTERVAL '5 days'
+        `;
       
         if (!expiredActivities.length) return;
       
         const activityIds = expiredActivities.map((a: { id: any; }) => a.id);
       
         await this.db.$transaction([
+          // Rechazar participantes
           this.db.PersonasEnActividad.updateMany({
-            where: { idAct: { in: activityIds } },
-            data: { aceptado: false }
+            where: {
+              idAct: { in: activityIds }
+            },
+            data: {
+              aceptado: false
+            }
           }),
       
           // Eliminar ingresos
           this.db.ingreso.deleteMany({
-            where: { idAct: { in: activityIds } }
+            where: {
+              idAct: { in: activityIds }
+            }
           }),
       
           // Cancelar actividades
           this.db.actividad.updateMany({
-            where: { id: { in: activityIds } },
-            data: { estado: "CANCELADA" }
+            where: {
+              id: { in: activityIds }
+            },
+            data: {
+              estado: "CANCELADA"
+            }
           })
         ]);
       }
