@@ -151,9 +151,14 @@ const Activities: React.FC = () => {
 
   const handleCreateSaveActivity = async (newactivity: any) => {
     try {
+      const mapActivityType = (type: string) => {
+        if (type === 'grupal' || type === 'Groups') return 'groups';
+        if (type === 'individual') return 'Individual';
+        return '';
+      };
       const payload = {
         eventType: newactivity.eventType || newactivity.typeEvent,
-        activityType: newactivity.activityType || newactivity.type,
+        activityType: mapActivityType(newactivity.activityType || newactivity.type),
         date: clickedDate,
         place: newactivity.place,
         responsible: newactivity.responsible

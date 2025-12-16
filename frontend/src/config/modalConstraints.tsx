@@ -2,7 +2,7 @@
 export interface FieldConstraint {
   editable: boolean;              // Si el campo se puede modificar
   required?: boolean;             // Si es obligatorio
-  type?: "string" | "number" | "date" | "boolean"|"select"|"file"; // Tipo de dato esperado
+  type?:  "text" | "string" | "number" | "date" | "boolean"|"select"|"file"; // Tipo de dato esperado
   label?: string;
   options? : string[];                 // Nombre visible en el modal
   validate?: (value: any) => string | null; // Función de validación personalizada
