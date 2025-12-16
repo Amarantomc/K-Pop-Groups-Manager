@@ -76,10 +76,10 @@ export const enumToOptions = (list: readonly string[]): FieldOption[] => {
 
 // Usuario (auth)
 export const userFields: Field[] = [
+    { id: 'role', name: 'role', label: 'Rol de usuario', type: 'select', options: enumToOptions(ROLE_TYPES), required: true },
     { id: 'username', name: 'name', label: 'Nombre de usuario', type: 'text', placeholder: 'usuario', required: true },
     { id: 'email', name: 'email', label: 'Correo electrónico', type: 'email', placeholder: 'correo@gmail.com', required: true },
-    { id: 'password', name: 'password', label: 'Contraseña', type: 'password', required: true },
-    { id: 'role', name: 'role', label: 'Rol de usuario', type: 'select', options: enumToOptions(ROLE_TYPES), required: true }
+    { id: 'password', name: 'password', label: 'Contraseña', type: 'password', required: true }
 ];
 
 // Agencia
@@ -95,22 +95,14 @@ export const apprenticeFields: Field[] = [
     // Campos alineados con CreateApprenticeDto del backend
     { id: 'name', name: 'name', label: 'Nombre Completo', type: 'text', required: true },
     { id: 'dateOfBirth', name: 'dateOfBirth', label: 'Fecha Nacimiento', type: 'date', required: true },
-    //{ id: 'age', name: 'age', label: 'Edad', type: 'number', min: 15, required: true },
-
-    { id: 'trainingLv', name: 'trainingLv', label: 'Nivel Entrenamiento', type: 'number', min: 0, required: true },
-    //{ id: 'status', name: 'status', label: 'Estado Aprendiz', type: 'select', options: APPRENTICE_STATUS_OPTIONS, required: true },
-    { id: 'agencyName', name: 'agencyName', label: 'Nombre de Agencia', type: 'text', required: true },
-];
-
-// Artista
-export const artistFields: Field[] = [
-    { id: 'fullName', name: 'fullName', label: 'Nombre Completo', type: 'text', required: true, minLength: 2 },
-    //{ id: 'stageName', name: 'stageName', label: 'Nombre Artístico', type: 'text', maxLength: 100 },
-    //{ id: 'birthdate', name: 'birthdate', label: 'Fecha Nacimiento', type: 'date' },
-    //{ id: 'debutDate', name: 'debutDate', label: 'Fecha Debut', type: 'date' },
-    //{ id: 'status', name: 'status', label: 'Estado Artista', type: 'select', options: enumToOptions(ARTIST_STATUS) },
-    //{ id: 'photo', name: 'photo', label: 'Foto', type: 'file', accept: 'image/*', maxFileSizeMB: 5 },
-    //{ id: 'bio', name: 'bio', label: 'Biografía', type: 'textarea', maxLength: 2000 },
+    {
+        id: 'agencyId',
+        name: 'agencyId',
+        label: 'Nombre de Agencia',
+        type: 'select',
+        required: true,
+        optionsEndpoint: '/api/agency'
+    },
 ];
 
 // Grupo
@@ -203,16 +195,10 @@ export const requestFields: Field[] = [
 
 // Contrato
 export const contractFields: Field[] = [
-    {
-        id: 'contractType', name: 'contractType', label: 'Tipo de Contrato', type: 'select', required: true, options: [
-            { value: 'group', label: 'Grupo' },
-            { value: 'artist', label: 'Artista' },
-        ]
-    },
     { id: 'startDate', name: 'startDate', label: 'Fecha Inicio', type: 'date', required: true },
-    { id: 'endDate', name: 'endDate', label: 'Fecha Finalización', type: 'date', required: true },
+    { id: 'endDate', name: 'endDate', label: 'Fecha Finalización', type: 'date'},
     { id: 'value', name: 'value', label: 'Valor', type: 'text', required: true, placeholder: 'Monto del contrato' },
-    { id: 'terms', name: 'terms', label: 'Términos', type: 'textarea', placeholder: 'Condiciones del contrato' },
+    { id: 'terms', name: 'terms', label: 'Términos', type: 'textarea',required: true , placeholder: 'Condiciones del contrato' },
 ];
 
 // Evaluación
@@ -275,7 +261,6 @@ export const formFieldsByEntity: Record<string, Field[]> = {
     user: userFields,
     agency: agencyFields,
     apprentice: apprenticeFields,
-    artist: artistFields,
     group: groupFields,
     album: albumFields,
     song: songFields,

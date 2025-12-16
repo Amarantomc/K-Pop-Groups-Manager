@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, {useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/auth/AuthContext';
 import DataTable from '../../components/datatable/Datatable';
 import PageLayout from '../../components/pageLayout/PageLayout';
 import './scout.css';
-import { Button, Box} from '@mui/material';
+import { Button, Box } from '@mui/material';
 import ConfirmDialog from '../../components/confirmDialog/ConfirmDialog';
 import ModalCreate from '../../components/modal/ModalCreate';
 import { contractFields } from '../../config/formSource';
@@ -14,7 +14,7 @@ const artistasEnPausa = [
   { id: 2, nombre: 'Lee Jisoo', estado: 'Pausa', genero: 'R&B' },
 ];
 
-const Scout : React.FC = () => {
+const Scout: React.FC = () => {
   const { user } = useAuth();
 
   // ConfirmDialog states
@@ -65,44 +65,50 @@ const Scout : React.FC = () => {
     },
   ];
 
-const columnsArtistas = [
-   { field: 'ArtistName', headerName: 'Nombre Artístico', width: 200 },
-    {field: 'DebutDate',headerName: 'Fecha Debut',width: 150},
-    {field: 'Status',headerName: 'Estado',width:120},
-  {
-    field: 'accion',
-    headerName: 'Acción',
-    flex: 1,
-    renderCell: (params: any) => (
-      <Button variant="contained" color="success" onClick={() => handleOpenContractModal(params.row)}>
-        Ofrecer Contrato
-      </Button>
-    ),
-  },
-];
+  const columnsArtistas = [
+    { field: 'ArtistName', headerName: 'Nombre Artístico', width: 200 },
+    { field: 'DebutDate', headerName: 'Fecha Debut', width: 150 },
+    { field: 'Status', headerName: 'Estado', width: 120 },
+    {
+      field: 'accion',
+      headerName: 'Acción',
+      flex: 1,
+      renderCell: (params: any) => (
+        <Button variant="contained" color="success" onClick={() => handleOpenContractModal(params.row)}>
+          Ofrecer Contrato
+        </Button>
+      ),
+    },
+  ];
+
   const [vista, setVista] = useState<'aprendices' | 'artistas'>('aprendices');
   const [showContractModal, setShowContractModal] = useState(false);
   const [contractModalData, setContractModalData] = useState<any | null>(null);
   const [apprenticeScoutRows, setApprenticeScoutRows] = useState<any[]>([]);
   const [artistsScoutRows, setArtistsScoutRows] = useState<any[]>([]);
+  const [apprenticeID, setapprenticeID] = useState<any>('');
+  const [groupID, SetgroupId] = useState<any>('');
+
   const handleOpenContractModal = async (artistRow: any) => {
     const agencyId = user?.profileData?.agencyId || '';
+    setapprenticeID(artistRow.ApprenticeId || '');
+    SetgroupId(artistRow.GroupId || '');
     let agencyName = '';
     if (agencyId) {
       try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3000/api/agency/${agencyId}`, {
-        headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        const token = localStorage.getItem('token');
+        const response = await fetch(`http://localhost:3000/api/agency/${agencyId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          agencyName = data?.name || '';
         }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        agencyName = data?.name || '';
-      }
       } catch (error) {
-      console.error('Error al obtener el nombre de la agencia', error);
+        console.error('Error al obtener el nombre de la agencia', error);
       }
     }
     setContractModalData({
@@ -116,16 +122,18 @@ const columnsArtistas = [
 
   const handleContractSave = async (formData: any) => {
     try {
+      console.log(apprenticeID);
+      console.log(groupID);
       const token = localStorage.getItem('token');
       // Adaptar el payload al formato requerido por el backend
       const payload = {
-        type: formData.contractType || 'Artist',
+        type: 'Artist',
         agencyId: user?.profileData?.agencyId || user?.agencyId,
         startDate: formData.startDate,
         initialConditions: formData.terms,
         incomeDistribution: formData.value,
-        apprenticeId: formData.apprenticeId || formData.ApprenticeId || '',
-        groupId: formData.groupId || formData.GroupId || '',
+        apprenticeId: apprenticeID || formData.apprenticeId || '',
+        groupId: groupID || formData.groupId || formData.GroupId || '',
       };
       const response = await fetch('http://localhost:3000/api/contract', {
         method: 'POST',
@@ -146,58 +154,58 @@ const columnsArtistas = [
   };
 
   useEffect(
-                  () => {
-                      const fetchScout = async () => {
-                          try{
-                              const token = localStorage.getItem('token')
-                            const response = await fetch('http://localhost:3000/api/apprentice/scout', {
-                                      headers: {
-                                                  'Authorization': `Bearer ${token}`,
-                                                  'Content-Type': 'application/json'
-                                                }
-                                  });
-                              if(!response.ok){
-                                  throw new Error("Error al obtener los aprendices")
-                              }
-                              const data = await response.json()
-                              console.log(data)
-                              const formattedData = data.data.map((apprentice : any , index : number) => ({
-                                  id : apprentice.id?? index,
-                                  name : apprentice.name,
-                                  age : apprentice.age,
-                                  dateOfBirth : apprentice.dateOfBirth,
-                                  trainingLv : apprentice.trainingLv
-                              }))
-                              setApprenticeScoutRows(formattedData)
+    () => {
+      const fetchScout = async () => {
+        try {
+          const token = localStorage.getItem('token')
+          const response = await fetch('http://localhost:3000/api/apprentice/scout', {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          });
+          if (!response.ok) {
+            throw new Error("Error al obtener los aprendices")
+          }
+          const data = await response.json()
+          console.log(data)
+          const formattedData = data.data.map((apprentice: any, index: number) => ({
+            id: apprentice.id ?? index,
+            name: apprentice.name,
+            age: apprentice.age,
+            dateOfBirth: apprentice.dateOfBirth,
+            trainingLv: apprentice.trainingLv
+          }))
+          setApprenticeScoutRows(formattedData)
 
-                              const artist_response = await fetch('http://localhost:3000/api/contract/offer', {
-                                      headers: {
-                                                  'Authorization': `Bearer ${token}`,
-                                                  'Content-Type': 'application/json'
-                                                }
-                                  });
-                              if(!artist_response.ok){
-                                  throw new Error("Error al obtener los artistas")
-                              }
-                              const artist_data = await artist_response.json()
-                              console.log(artist_data)
-                              const formattedArtistData = artist_data.data.map((artist: any) => ({
-                                id: `${artist.ApprenticeId}:${artist.GroupId}`,
-                                ArtistName: artist.ArtistName,
-                                DebutDate: artist.DebutDate,
-                                Status: artist.Status,
-                                ApprenticeId: artist.ApprenticeId,
-                                GroupId: artist.GroupId,
-                              }));
-                              setArtistsScoutRows(formattedArtistData)
-                          }
-                          catch(error){
-                              console.error(error)
-                          }
-                      }
-                      fetchScout()
-                  },[]
-              )
+          const artist_response = await fetch('http://localhost:3000/api/contract/offer', {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          });
+          if (!artist_response.ok) {
+            throw new Error("Error al obtener los artistas")
+          }
+          const artist_data = await artist_response.json()
+          console.log(artist_data)
+          const formattedArtistData = artist_data.data.map((artist: any) => ({
+            id: `${artist.ApprenticeId}:${artist.GroupId}`,
+            ArtistName: artist.ArtistName,
+            DebutDate: artist.DebutDate,
+            Status: artist.Status,
+            ApprenticeId: artist.ApprenticeId,
+            GroupId: artist.GroupId,
+          }));
+          setArtistsScoutRows(formattedArtistData)
+        }
+        catch (error) {
+          console.error(error)
+        }
+      }
+      fetchScout()
+    }, []
+  )
 
   return (
     <PageLayout
