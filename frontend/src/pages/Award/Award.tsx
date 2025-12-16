@@ -338,6 +338,7 @@ const Award: React.FC = () => {
             constraints={awardConstraints}
             createEntity="award"
             userRole={user?.role}
+            showCreateButton={user?.role === 'admin'}
             // onCreateClick={() => setShowCreateModal(true)}
           />
         </>

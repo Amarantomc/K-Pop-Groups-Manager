@@ -6,7 +6,7 @@ import type { UpdateActivityUseCase } from "../../application/usesCase/activity/
 import type { DeleteActivityUseCase } from "../../application/usesCase/activity/DeleteActivityUseCase";
 import type { FindActivityByIdUseCase } from "../../application/usesCase/activity/FindActivityByIdUseCase";
 import type { GetAllActivitiesUseCase } from "../../application/usesCase/activity/GetAllActivitiesUseCase";
- 
+
 import { CreateActivityDto } from "../../application/dtos/activity/CreateActivityDto";
 import type { Request, Response } from 'express';
 import { UpdateActivityDto } from "../../application/dtos/activity/UpdateActivityDto";
@@ -26,16 +26,16 @@ export class ActivityController {
     @inject(Types.GetAllActivitiesUseCase) private getAllActivitiesUseCase: GetAllActivitiesUseCase,
     @inject(Types.FindActivitiesByArtist) private findActivitiesByArtist: FindActivitiesByArtist,
     @inject(Types.AddArtistToActivityUseCase) private addArtistToActivity: AddArtistToActivityUseCase,
-    @inject(Types.FindActivitiesByGroupUseCase) private findActivitiesByGroup:FindActivitiesByGroupUseCase,
-    @inject(Types.AcceptOrRejectActivityUseCase) private acceptOrRejectActivityUseCase : AcceptOrRejectActivityUseCase,
+    @inject(Types.FindActivitiesByGroupUseCase) private findActivitiesByGroup: FindActivitiesByGroupUseCase,
+    @inject(Types.AcceptOrRejectActivityUseCase) private acceptOrRejectActivityUseCase: AcceptOrRejectActivityUseCase,
 
-  ) {}
+  ) { }
 
   async decideActivity(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const { accepted,apprenticeId, groupId } = req.body;
-  
+      const { accepted, apprenticeId, groupId } = req.body;
+
       if (typeof accepted !== "boolean") {
         return res.status(400).json({
           success: false,
@@ -62,9 +62,9 @@ export class ActivityController {
   async createActivity(req: Request, res: Response) {
     try {
       const activityDto = CreateActivityDto.Create(req.body);
-      
+
       const activity = await this.createActivityUseCase.execute(activityDto);
-      
+
       res.status(201).json({
         success: true,
         data: activity
@@ -81,7 +81,7 @@ export class ActivityController {
     try {
       const { id } = req.params;
       const activity = await this.findActivityByIdUseCase.execute(id!);
-      
+
       res.json({
         success: true,
         data: activity
@@ -98,7 +98,7 @@ export class ActivityController {
     try {
       const { id } = req.params;
       await this.deleteActivityUseCase.execute(id!);
-      
+
       res.json({
         success: true,
         message: 'Activity deleted successfully'
@@ -116,7 +116,7 @@ export class ActivityController {
       const { id } = req.params;
       const updateDto = UpdateActivityDto.Create(req.body);
       const activity = await this.updateActivityUseCase.execute(id!, updateDto);
-      
+
       res.json({
         success: true,
         data: activity
@@ -132,7 +132,7 @@ export class ActivityController {
   async getAll(req: Request, res: Response) {
     try {
       const activities = await this.getAllActivitiesUseCase.execute();
-      
+
       res.json({
         success: true,
         data: activities
@@ -144,13 +144,13 @@ export class ActivityController {
       });
     }
   }
-  
+
   async findByArtist(req: Request, res: Response) {
     try {
-      
-      const { apprenticeId,groupId } = req.params;
-      const activities = await this.findActivitiesByArtist.execute({apprenticeId: Number(apprenticeId), groupId: Number(groupId)})
-      
+
+      const { apprenticeId, groupId } = req.params;
+      const activities = await this.findActivitiesByArtist.execute({ apprenticeId: Number(apprenticeId), groupId: Number(groupId) })
+
       res.json({
         success: true,
         data: activities
@@ -165,10 +165,10 @@ export class ActivityController {
 
   async addArtist(req: Request, res: Response) {
     try {
-      
-      const dto=ArtistOnActivityDto.createToAdd(req.body)
+
+      const dto = ArtistOnActivityDto.createToAdd(req.body)
       await this.addArtistToActivity.execute(dto)
-      
+
       res.json({
         success: true,
         data: "Artist Linked to Activity"
@@ -183,11 +183,11 @@ export class ActivityController {
 
   async findByGroup(req: Request, res: Response) {
     try {
-      
+
       const { groupId } = req.params;
-     
+
       const activities = await this.findActivitiesByGroup.execute(groupId!)
-      
+
       res.json({
         success: true,
         data: activities

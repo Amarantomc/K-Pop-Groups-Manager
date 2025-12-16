@@ -203,28 +203,15 @@ export const requestFields: Field[] = [
 
 // Contrato
 export const contractFields: Field[] = [
-    { id: 'artistName', name: 'artistName', label: 'Artista', type: 'text', required: true, placeholder: 'Nombre del artista' },
-    { id: 'groupName', name: 'groupName', label: 'Grupo', type: 'text', placeholder: 'Nombre del grupo (opcional)' },
     {
         id: 'contractType', name: 'contractType', label: 'Tipo de Contrato', type: 'select', required: true, options: [
-            { value: 'exclusive', label: 'Exclusivo' },
-            { value: 'non_exclusive', label: 'No Exclusivo' },
-            { value: 'production', label: 'Producción' },
-            { value: 'distribution', label: 'Distribución' },
+            { value: 'group', label: 'Grupo' },
+            { value: 'artist', label: 'Artista' },
         ]
     },
     { id: 'startDate', name: 'startDate', label: 'Fecha Inicio', type: 'date', required: true },
     { id: 'endDate', name: 'endDate', label: 'Fecha Finalización', type: 'date', required: true },
-    { id: 'value', name: 'value', label: 'Valor', type: 'number', required: true, placeholder: 'Monto del contrato' },
-    {
-        id: 'status', name: 'status', label: 'Estado', type: 'select', required: true, options: [
-            { value: 'active', label: 'Activo' },
-            { value: 'expired', label: 'Expirado' },
-            { value: 'terminated', label: 'Terminado' },
-            { value: 'pending', label: 'Pendiente' },
-        ]
-    },
-    { id: 'agencyName', name: 'agencyName', label: 'Agencia', type: 'text', required: true, placeholder: 'Nombre de la agencia' },
+    { id: 'value', name: 'value', label: 'Valor', type: 'text', required: true, placeholder: 'Monto del contrato' },
     { id: 'terms', name: 'terms', label: 'Términos', type: 'textarea', placeholder: 'Condiciones del contrato' },
 ];
 
