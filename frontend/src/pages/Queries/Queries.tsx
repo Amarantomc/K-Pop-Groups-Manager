@@ -4,6 +4,7 @@ import PageLayout from '../../components/pageLayout/PageLayout';
 import { useAuth } from '../../contexts/auth/AuthContext';
 import ConfirmDialog from '../../components/confirmDialog/ConfirmDialog';
 import './Queries.css';
+import ExportButton from '../../components/exportButton/ExportButton';
 
 interface Activity {
   id: number;
@@ -34,7 +35,7 @@ const Queries: React.FC = () => {
   const { user } = useAuth();
   const [selectedQuery, setSelectedQuery] = useState<number>(1);
 
-    // Estados para Query 1: Actividades por grupo
+  // Estados para Query 1: Actividades por grupo
   const [activities, setActivities] = useState<Activity[]>([]);
   const [groups, setGroups] = useState<any[]>([]);
   const [selectedGroupId, setSelectedGroupId] = useState('');
@@ -43,7 +44,7 @@ const Queries: React.FC = () => {
   const [artistInfo, setArtistInfo] = useState<Artist[]>([]);
   const [agencies, setAgencies] = useState<any[]>([]);
   const [selectedAgencyId, setSelectedAgencyId] = useState('');
-  
+
 
 
   // Estados para Query 4: Artistas con debut y contrato activo
@@ -112,7 +113,7 @@ const Queries: React.FC = () => {
         const res = await fetch('http://localhost:3000/api/group');
         const data = await res.json();
         setGroups(data.data || []);
-      } catch {}
+      } catch { }
     };
     const fetchAgencies = async () => {
       try {
@@ -122,7 +123,7 @@ const Queries: React.FC = () => {
         const res = await fetch('http://localhost:3000/api/agency', { headers });
         const data = await res.json();
         setAgencies(data.data || []);
-      } catch {}
+      } catch { }
     };
     fetchGroups();
     fetchAgencies();
@@ -214,7 +215,7 @@ const Queries: React.FC = () => {
           </button>
         </div>
 
-        
+
         {/* Contenido de Query 1: Artistas activos por agencia */}
         {selectedQuery === 1 && (
           <div className="query-content">
@@ -250,7 +251,6 @@ const Queries: React.FC = () => {
                   <table>
                     <thead>
                       <tr>
-                        <th>ID</th>
                         <th>Nombre</th>
                         <th>Grupo</th>
                         <th>Debut</th>
@@ -260,7 +260,6 @@ const Queries: React.FC = () => {
                     <tbody>
                       {artistInfo.filter((artist: any) => artist.Status === 'Activo').map((artist: any) => (
                         <tr key={artist.ApprenticeId || artist.id}>
-                          <td>{artist.ApprenticeId || artist.id}</td>
                           <td>{artist.ArtistName}</td>
                           <td>{artist.groupHistory?.map((g: { id: number; name: string; debut: string; status: string; memberCount: number; IdAgency: number }) => g.name).join(', ')}</td>
                           <td>{artist.DebutDate}</td>
@@ -277,7 +276,7 @@ const Queries: React.FC = () => {
             )}
           </div>
         )}
-        
+
         {/* Contenido de Query 2: Calendario de actividades por grupo */}
         {selectedQuery === 2 && (
           <div className="query-content">
@@ -304,7 +303,6 @@ const Queries: React.FC = () => {
                   <table>
                     <thead>
                       <tr>
-                        <th>ID</th>
                         <th>Responsable</th>
                         <th>Tipo de Actividad</th>
                         <th>Fecha</th>
@@ -315,7 +313,6 @@ const Queries: React.FC = () => {
                     <tbody>
                       {activities.map((activity) => (
                         <tr key={activity.id}>
-                          <td>{activity.id}</td>
                           <td>{activity.responsible}</td>
                           <td>{activity.activityType}</td>
                           <td>{new Date(activity.date).toLocaleDateString()}</td>
@@ -341,7 +338,7 @@ const Queries: React.FC = () => {
             <p className="query-description">
               Identifica artistas que han participado en al menos un debut y tienen contratos activos, mostrando datos del grupo y contrato.
             </p>
-            <div className="query-form">
+            <div className="query-form"> 
               <label>Agencia:</label>
               <select value={selectedAgencyId} onChange={e => {
                 setSelectedAgencyId(e.target.value);
@@ -456,8 +453,8 @@ const Queries: React.FC = () => {
                   const data = await response.json();
                   console.log('Respuesta de ingresos:', data);
                   setIncomeResults(data.data ? [data.data] : []);
-                } catch (error) { 
-                  setErrorMessage('Error al consultar ingresos'); setOpenError(true); 
+                } catch (error) {
+                  setErrorMessage('Error al consultar ingresos'); setOpenError(true);
                   console.log('Error en consulta de ingresos:', error);
                 }
                 finally { setIsLoading(false); }
@@ -619,14 +616,14 @@ const Queries: React.FC = () => {
 
       </div>
 
-      <ConfirmDialog 
+      <ConfirmDialog
         title="Error"
-        message={errorMessage} 
+        message={errorMessage}
         type="error"
-        open={openError} 
-        onCancel={() => setOpenError(false)} 
-        onConfirm={() => setOpenError(false)} 
-        confirmText="Aceptar" 
+        open={openError}
+        onCancel={() => setOpenError(false)}
+        onConfirm={() => setOpenError(false)}
+        confirmText="Aceptar"
         showDeleteButton={false}
       />
     </PageLayout>
