@@ -9,6 +9,7 @@
   import type { Prisma } from "@prisma/client";
   import type { PrismaClient } from "../../generated/prisma";
   import type { ArtistOnActivityDto } from "../../application/dtos/activity/ArtistOnActivityDto";
+ 
 
   @injectable()
   export class ActivityRepository implements IActivityRepository {
@@ -63,6 +64,7 @@
         groupId: number
     ): Promise<void> {
         // 1️⃣ Actualizar el registro del aprendiz en la actividad
+        console.log(apprenticeId,groupId)
         await this.db.PersonasEnActividad.updateMany({
             where: {
                 idAct: activityId,

@@ -55,7 +55,9 @@ async function main() {
   //await cleanDatabase(prisma);
   console.log('✅ Base de datos limpia')
 
-  // 0. CREAR USUARIO ADMINISTRADOR
+
+
+  //#region  CREAR USUARIO ADMINISTRADOR
   console.log('👤 Creando usuario administrador...')
   const hashedPassword = await bcrypt.hash('admin123', 10)
   const adminUser = await prisma.user.create({
@@ -67,8 +69,15 @@ async function main() {
     }
   })
   console.log('✅ Usuario administrador creado')
+//#endregion
 
-  // 1. CREAR AGENCIAS
+
+
+
+
+
+
+  //#region  CREAR AGENCIAS
   console.log('🏢 Creando agencias...')
   const smEntertainment = await prisma.agencia.create({
     data: { nombre: "SM Entertainment", ubicacion: "Seúl, Gangnam-gu", fechaFundacion: new Date("1995-02-14") }
@@ -92,8 +101,15 @@ async function main() {
     data: { nombre: "Pledis Entertainment", ubicacion: "Seúl, Gangnam-gu", fechaFundacion: new Date("2007-05-18") }
   })
   console.log('✅ 7 Agencias creadas')
+//#endregion
 
-  // 2. CREAR CONCEPTOS
+
+
+
+
+
+
+  //#region  CREAR CONCEPTOS
   console.log('🎨 Creando conceptos...')
   const conceptoFuturista = await prisma.concepto.create({
     data: { nombre: "Futurista", descripcion: "Concepto futurista y tecnológico con elementos cyberpunk" }
@@ -117,8 +133,15 @@ async function main() {
     data: { nombre: "Fantasía", descripcion: "Concepto fantástico con elementos mágicos" }
   })
   console.log('✅ 7 Conceptos creados')
+//#endregion
 
-  // 3. CREAR CONCEPTOS VISUALES
+
+
+
+
+
+
+  //#region  CREAR CONCEPTOS VISUALES
   console.log('🖼️ Creando conceptos visuales...')
   const visualFuturista = await prisma.conceptoVisual.create({
     data: { imagen: "visual-concepts/1765435157607.jpeg" }
@@ -143,13 +166,34 @@ async function main() {
   })
   console.log('✅ 7 Conceptos visuales creados')
 
-  // 4. CREAR GRUPOS
+//#endregion
+
+
+
+
+
+
+
+
+  //#region  CREAR GRUPOS
   console.log('👥 Creando grupos...')
+  const bts2 = await prisma.grupo.create({
+    data: {
+      nombreCompleto: "Los Malditos de la cibernetica",
+      fechaDebut: new Date("2020-07-07"),
+      estadoGrupo: "INACTIVO",
+      idConcepto: conceptoFuturista.id,
+      idConceptoVisual: visualFuturista.id,
+      Nomiembros: 9,
+      Agencias: { connect: [{ id: smEntertainment.id }] }
+    }
+  })
+
   const nct127 = await prisma.grupo.create({
     data: {
       nombreCompleto: "NCT 127",
       fechaDebut: new Date("2016-07-07"),
-      estadoGrupo: "Activo",
+      estadoGrupo: "ACTIVO",
       idConcepto: conceptoFuturista.id,
       idConceptoVisual: visualFuturista.id,
       Nomiembros: 9,
@@ -160,7 +204,7 @@ async function main() {
     data: {
       nombreCompleto: "BLACKPINK",
       fechaDebut: new Date("2016-08-08"),
-      estadoGrupo: "Activo",
+      estadoGrupo: "ACTIVO",
       idConcepto: conceptoUrbano.id,
       idConceptoVisual: visualUrbano.id,
       Nomiembros: 4,
@@ -171,7 +215,7 @@ async function main() {
     data: {
       nombreCompleto: "TWICE",
       fechaDebut: new Date("2015-10-20"),
-      estadoGrupo: "Activo",
+      estadoGrupo: "ACTIVO",
       idConcepto: conceptoElegante.id,
       idConceptoVisual: visualElegante.id,
       Nomiembros: 9,
@@ -182,7 +226,7 @@ async function main() {
     data: {
       nombreCompleto: "BTS",
       fechaDebut: new Date("2013-06-13"),
-      estadoGrupo: "Activo",
+      estadoGrupo: "ACTIVO",
       idConcepto: conceptoUrbano.id,
       idConceptoVisual: visualUrbano.id,
       Nomiembros: 7,
@@ -193,7 +237,7 @@ async function main() {
     data: {
       nombreCompleto: "ITZY",
       fechaDebut: new Date("2019-02-12"),
-      estadoGrupo: "Activo",
+      estadoGrupo: "ACTIVO",
       idConcepto: conceptoCute.id,
       idConceptoVisual: visualCute.id,
       Nomiembros: 5,
@@ -204,7 +248,7 @@ async function main() {
     data: {
       nombreCompleto: "aespa",
       fechaDebut: new Date("2020-11-17"),
-      estadoGrupo: "Activo",
+      estadoGrupo: "ACTIVO",
       idConcepto: conceptoFuturista.id,
       idConceptoVisual: visualFuturista.id,
       Nomiembros: 4,
@@ -215,7 +259,7 @@ async function main() {
     data: {
       nombreCompleto: "Red Velvet",
       fechaDebut: new Date("2014-08-01"),
-      estadoGrupo: "Activo",
+      estadoGrupo: "ACTIVO",
       idConcepto: conceptoDark.id,
       idConceptoVisual: visualDark.id,
       Nomiembros: 5,
@@ -226,16 +270,24 @@ async function main() {
     data: {
       nombreCompleto: "SEVENTEEN",
       fechaDebut: new Date("2015-05-26"),
-      estadoGrupo: "Activo",
+      estadoGrupo: "ACTIVO",
       idConcepto: conceptoRetro.id,
       idConceptoVisual: visualRetro.id,
       Nomiembros: 13,
       Agencias: { connect: [{ id: pledisEntertainment.id }] }
     }
   })
-  console.log('✅ 8 Grupos creados')
+  console.log('✅ 9 Grupos creados')
+//#endregion
 
-  // 5. CREAR APRENDICES
+
+
+
+
+
+
+
+  //#region  CREAR APRENDICES
   console.log('🎓 Creando aprendices...')
   const aprendiz1 = await prisma.aprendiz.create({
     data: {
@@ -333,24 +385,70 @@ async function main() {
       nivelEntrenamiento: 5
     }
   })
-  console.log('✅ 12 Aprendices creados')
+  const aprendiz13 = await prisma.aprendiz.create({
+    data: {
+      nombreCompleto: "Heug Min Son",
+      fechaNacimiento: new Date("1997-02-11"),
+      edad: 27,
+      nivelEntrenamiento: 5
+    }
+  })
+  const aprendiz14 = await prisma.aprendiz.create({
+    data: {
+      nombreCompleto: "Agustin",
+      fechaNacimiento: new Date("1997-02-11"),
+      edad: 27,
+      nivelEntrenamiento: 7
+    }
+  })
+  const aprendiz15 = await prisma.aprendiz.create({
+    data: {
+      nombreCompleto: "Ronald",
+      fechaNacimiento: new Date("1997-02-11"),
+      edad: 27,
+      nivelEntrenamiento: 6
+    }
+  })
+  const aprendiz16 = await prisma.aprendiz.create({
+    data: {
+      nombreCompleto: "Dylan",
+      fechaNacimiento: new Date("1997-02-11"),
+      edad: 27,
+      nivelEntrenamiento: 9
+    }
+  })
+  console.log('✅ 15 Aprendices creados')
+//#endregion
 
-  // 6. APRENDICES EN AGENCIA
+
+
+
+
+
+
+
+
+  //#region  APRENDICES EN AGENCIA
   console.log('🏢 Asignando aprendices a agencias...')
   await prisma.aprendizEnAgencia.createMany({
     data: [
       { idAp: aprendiz1.id, idAg: smEntertainment.id, fechaInicio: new Date("2019-01-15"), estado: "En entrenamiento" },
       { idAp: aprendiz2.id, idAg: ygEntertainment.id, fechaInicio: new Date("2018-06-20"), estado: "En entrenamiento" },
       { idAp: aprendiz3.id, idAg: jypEntertainment.id, fechaInicio: new Date("2017-03-10"), estado: "En entrenamiento" },
-      { idAp: aprendiz4.id, idAg: hibeEntertainment.id, fechaInicio: new Date("2016-05-01"), fechaFinalizacion: new Date("2019-03-04"), estado: "Debutado" },
-      { idAp: aprendiz5.id, idAg: jypEntertainment.id, fechaInicio: new Date("2017-08-15"), fechaFinalizacion: new Date("2019-02-12"), estado: "Debutado" },
-      { idAp: aprendiz6.id, idAg: smEntertainment.id, fechaInicio: new Date("2016-09-01"), fechaFinalizacion: new Date("2020-11-17"), estado: "Debutado" },
+      { idAp: aprendiz4.id, idAg: hibeEntertainment.id, fechaInicio: new Date("2016-05-01"), fechaFinalizacion: new Date("2019-03-04"), estado: "Artista" },
+      { idAp: aprendiz5.id, idAg: jypEntertainment.id, fechaInicio: new Date("2017-08-15"), fechaFinalizacion: new Date("2019-02-12"), estado: "Artista" },
+      { idAp: aprendiz6.id, idAg: smEntertainment.id, fechaInicio: new Date("2016-09-01"), fechaFinalizacion: new Date("2020-11-17"), estado: "En proceso de seleccion"},
       { idAp: aprendiz7.id, idAg: starshipEntertainment.id, fechaInicio: new Date("2021-07-10"), estado: "En entrenamiento" },
       { idAp: aprendiz8.id, idAg: hibeEntertainment.id, fechaInicio: new Date("2020-11-05"), estado: "En entrenamiento" },
-      { idAp: aprendiz9.id, idAg: smEntertainment.id, fechaInicio: new Date("2009-03-20"), fechaFinalizacion: new Date("2014-08-01"), estado: "Debutado" },
-      { idAp: aprendiz10.id, idAg: pledisEntertainment.id, fechaInicio: new Date("2010-05-15"), fechaFinalizacion: new Date("2015-05-26"), estado: "Debutado" },
-      { idAp: aprendiz11.id, idAg: hibeEntertainment.id, fechaInicio: new Date("2011-06-13"), fechaFinalizacion: new Date("2013-06-13"), estado: "Debutado" },
-      { idAp: aprendiz12.id, idAg: ygEntertainment.id, fechaInicio: new Date("2012-08-08"), fechaFinalizacion: new Date("2016-08-08"), estado: "Debutado" }
+      { idAp: aprendiz9.id, idAg: smEntertainment.id, fechaInicio: new Date("2009-03-20"), fechaFinalizacion: new Date("2014-08-01"), estado: "Artista" },
+      { idAp: aprendiz10.id, idAg: pledisEntertainment.id, fechaInicio: new Date("2010-05-15"), fechaFinalizacion: new Date("2015-05-26"), estado: "Artista" },
+      { idAp: aprendiz11.id, idAg: hibeEntertainment.id, fechaInicio: new Date("2011-06-13"), fechaFinalizacion: new Date("2013-06-13"), estado: "Artista" },
+      { idAp: aprendiz12.id, idAg: ygEntertainment.id, fechaInicio: new Date("2012-08-08"), fechaFinalizacion: new Date("2016-08-08"), estado: "Artista" },
+      { idAp: aprendiz13.id, idAg: ygEntertainment.id, fechaInicio: new Date("2012-08-08"), fechaFinalizacion: new Date("2016-08-08"), estado: "Artista" },
+      { idAp: aprendiz14.id, idAg: ygEntertainment.id, fechaInicio: new Date("2012-08-08"), fechaFinalizacion: new Date("2016-08-08"), estado: "En proceso de seleccion" },
+      { idAp: aprendiz15.id, idAg: hibeEntertainment.id, fechaInicio: new Date("2012-08-08"), fechaFinalizacion: new Date("2016-08-08"), estado: "En proceso de seleccion" }, 
+      { idAp: aprendiz16.id, idAg: ygEntertainment.id, fechaInicio: new Date("2012-08-08"), fechaFinalizacion: new Date("2016-08-08"), estado: "En entrenamiento" }, 
+
     ]
   })
   console.log('✅ Aprendices asignados a agencias')
@@ -389,7 +487,17 @@ async function main() {
     });
   }
 
-  // 7. EVALUACIONES DE APRENDICES
+  //#endregion
+
+
+
+
+
+
+
+
+
+  //#region  EVALUACIONES DE APRENDICES
   console.log('📊 Creando evaluaciones de aprendices...')
   await prisma.evaluacionAprendiz.createMany({
     data: [
@@ -407,7 +515,17 @@ async function main() {
   })
   console.log('✅ Evaluaciones de aprendices creadas')
 
-  // 8. CREAR ARTISTAS
+//#endregion
+
+
+
+
+
+
+
+
+
+  //#region  CREAR ARTISTAS
   console.log('🌟 Creando artistas...')
   const artista1 = await prisma.artista.create({
     data: {
@@ -482,8 +600,17 @@ async function main() {
     }
   })
   console.log('✅ 8 Artistas creados')
+//#endregion
 
-  // 9. CONTRATOS INDIVIDUALES
+
+
+
+
+
+
+
+
+  //#region  CONTRATOS INDIVIDUALES
   console.log('📝 Creando contratos individuales...')
   await prisma.contrato.createMany({
     data: [
@@ -562,8 +689,18 @@ async function main() {
     ]
   })
   console.log('✅ Contratos individuales creados')
+//#endregion
 
-  // 10. CONTRATOS DE GRUPO
+
+
+
+
+
+
+
+
+
+  //#region  CONTRATOS DE GRUPO
   console.log('📋 Creando contratos de grupo...')
   await prisma.contratoGrupo.createMany({
     data: [
@@ -634,8 +771,17 @@ async function main() {
     ]
   })
   console.log('✅ Contratos de grupo creados')
+//#endregion
 
-  // 11. HISTORIAL DE ARTISTAS EN GRUPOS
+
+
+
+
+
+
+
+
+  //#region  HISTORIAL DE ARTISTAS EN GRUPOS
   console.log('📚 Creando historial de artistas en grupos...')
   await prisma.artistaEnGrupo.createMany({
     data: [
@@ -650,8 +796,17 @@ async function main() {
     ]
   })
   console.log('✅ Historial de artistas creado')
+//#endregion
 
-  // 12. CREAR CANCIONES
+
+
+
+
+
+
+
+
+  //#region  Canciones
   console.log('🎵 Creando canciones...')
   const cancionesNCT = await Promise.all([
     prisma.cancion.create({ data: { titulo: "Kick It", genero: "K-Pop/Hip-Hop", productor: "Dem Jointz", fechaLanzamiento: new Date("2020-03-06"), reproducciones: 120000000 } }),
@@ -709,8 +864,17 @@ async function main() {
     prisma.cancion.create({ data: { titulo: "Home;Run", genero: "K-Pop", productor: "Woozi", fechaLanzamiento: new Date("2020-10-19"), reproducciones: 75000000 } })
   ])
   console.log('✅ 24 Canciones creadas')
+//#endregion
 
-  // 13. CREAR ÁLBUMES
+
+
+
+
+
+
+
+
+//#region Album
   console.log('💿 Creando álbumes...')
   const albumNCT = await prisma.album.create({
     data: {
@@ -718,7 +882,7 @@ async function main() {
       titulo: "Neo Zone",
       fechaLanzamiento: new Date("2020-03-06"),
       productor: "SM Entertainment",
-      NoCanciones: 13,
+      NoCanciones: 4,
       NoCopiasVendidas: 1500000,
       Canciones: {
         connect: cancionesNCT.map(c => ({ id: c.id }))
@@ -824,8 +988,18 @@ async function main() {
     }
   })
   console.log('✅ 8 Álbumes creados')
+//#endregion
 
-  // 14. LANZAMIENTOS DE ÁLBUMES POR ARTISTAS
+
+
+
+
+
+
+
+
+
+//#region Artista
   console.log('🎤 Creando lanzamientos de artistas...')
   await prisma.artistaLanzaAlbum.createMany({
     data: [
@@ -870,9 +1044,18 @@ async function main() {
       }
     });
   }
+//#endregion
 
-  // 15. LANZAMIENTOS DE ÁLBUMES POR GRUPOS
-  console.log('🎸 Creando lanzamientos de grupos...')
+
+
+
+
+
+
+
+
+//#region Grupo
+console.log('🎸 Creando lanzamientos de grupos...')
   await prisma.grupoLanzaAlbum.createMany({
     data: [
       { idGr: nct127.id, idAlb: albumNCT.id },
@@ -916,8 +1099,16 @@ async function main() {
       }
     });
   }
+//#endregion
 
-  // 16. CREAR PREMIOS
+
+
+
+
+
+
+
+//#region Premios
   console.log('🏆 Creando premios...')
   const premioMAMA = await prisma.premio.create({
     data: { tituloPremio: "Album of the Year", nombreAcademia: "Mnet Asian Music Awards", requisito: 1000000 }
@@ -932,8 +1123,18 @@ async function main() {
     data: { tituloPremio: "Album of the Year", nombreAcademia: "Gaon Chart Music Awards", requisito: 200000 }
   })
   console.log('✅ 4 Premios creados')
+//#endregion
 
-  // 17. ÁLBUMES PREMIADOS
+
+
+
+
+
+
+
+
+
+  //#region  ÁLBUMES PREMIADOS
   console.log('🎖️ Asignando premios a álbumes...')
   await prisma.albumPremiado.createMany({
     data: [
@@ -977,8 +1178,17 @@ async function main() {
       }
     });
   }
+//#endregion
+ 
 
-  // 18. CREAR LISTAS DE POPULARIDAD
+
+
+
+
+
+
+
+  //#region  CREAR LISTAS DE POPULARIDAD
   console.log('📊 Creando listas de popularidad...')
   const melonChart = await prisma.listaPopularidad.create({
     data: { nombre: "Melon Top 100", tipoLista: "Digital", requisito: 100000 }
@@ -993,8 +1203,18 @@ async function main() {
     data: { nombre: "Billboard K-Pop Hot 100", tipoLista: "Internacional", requisito: 200000 }
   })
   console.log('✅ 4 Listas de popularidad creadas')
+//#endregion
 
-  // 19. CANCIONES EN LISTAS DE POPULARIDAD
+
+
+
+
+
+
+
+
+
+  //#region  CANCIONES EN LISTAS DE POPULARIDAD
   console.log('📈 Asignando canciones a listas de popularidad...')
   await prisma.cancionEnListaDePopularidad.createMany({
     data: [
@@ -1013,8 +1233,18 @@ async function main() {
     ]
   })
   console.log('✅ Canciones asignadas a listas de popularidad')
+//#endregion
 
-  // 20. CREAR ACTIVIDADES
+
+
+
+
+
+
+
+
+
+  //#region  CREAR ACTIVIDADES
   console.log('🎭 Creando actividades...')
   // Fechas recientes y próximas (diciembre 2025 y enero 2026)
   const fechas: string[] = [
@@ -1058,8 +1288,18 @@ async function main() {
     }));
   }
   console.log(`✅ ${actividades.length} Actividades creadas`)
+//#endregion
 
-  // 21. INGRESOS DE ACTIVIDADES
+
+
+
+
+
+
+
+
+
+  //#region  INGRESOS DE ACTIVIDADES
   console.log('💰 Creando registros de ingresos...')
   const ingresosData = actividades.map((act, idx) => [
     {
@@ -1091,8 +1331,17 @@ async function main() {
       }
     });
   }
+//#endregion
 
-  // 22. PERSONAS EN ACTIVIDADES
+
+
+
+
+
+
+
+
+  //#region  PERSONAS EN ACTIVIDADES
   console.log('👤 Asignando participantes a actividades...')
   const artistas = [artista1, artista2, artista3, artista4, artista5, artista6, artista7, artista8];
   const grupos = [nct127, blackpink, twice, bts, itzy, aespa, redVelvet, seventeen];
@@ -1134,8 +1383,17 @@ async function main() {
       });
     }
   }
+//#endregion
 
-  // 23. CREAR SOLICITUDES DE GRUPO
+
+
+
+
+
+
+
+
+  //#region  CREAR SOLICITUDES DE GRUPO
   console.log('📝 Creando solicitudes de formación de grupos...')
   const solicitud1 = await prisma.solicitud.create({
     data: {
@@ -1168,8 +1426,19 @@ async function main() {
     }
   })
   console.log('✅ 3 Solicitudes de grupo creadas')
+//#endregion
 
-  // 24. APRENDICES SOLICITANDO GRUPOS
+
+
+
+
+
+
+
+
+
+
+  //#region  APRENDICES SOLICITANDO GRUPOS
   console.log('🎯 Creando solicitudes de aprendices para grupos...')
   await prisma.aprendizSolicitaGrupo.createMany({
     data: [
@@ -1212,8 +1481,19 @@ async function main() {
       }
     });
   }
+//#endregion
 
-  // 25. ARTISTAS SOLICITANDO GRUPOS
+
+
+
+
+
+
+
+
+  //#region  ARTISTAS SOLICITANDO GRUPOS
+
+
   console.log('⭐ Creando solicitudes de artistas para nuevos grupos...')
   await prisma.artistaSolicitaGrupo.createMany({
     data: [
@@ -1275,7 +1555,11 @@ async function main() {
     }
   });
   console.log('Solicitudes con aprendices y artistas asociados:', JSON.stringify(solicitudesIncl, null, 2));
+  //#endregion
 }
+
+
+
 
 main()
   .then(() => {

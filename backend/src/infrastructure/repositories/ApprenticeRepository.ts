@@ -6,6 +6,7 @@ import type { UnitOfWork } from "../PrismaUnitOfWork";
 import { inject, injectable } from "inversify";
 import { Types } from "../di/Types";
 import ApprenticeEvaluation from "../../domain/entities/ApprenticeEvaluation";
+import { getAge } from "../../plugins/get-age.plugin";
 
 @injectable()
 export class ApprenticeRepository implements IApprenticeRepository {   
@@ -123,12 +124,10 @@ export class ApprenticeRepository implements IApprenticeRepository {
             data: {
                 nombreCompleto: data.name,
                 fechaNacimiento: new Date(data.dateOfBirth),
-                edad: data.age,
-                nivelEntrenamiento: data.trainingLv,
-                estadoAprendiz: data.status
+                edad: getAge(data.dateOfBirth),
+                nivelEntrenamiento: 1,
             }
         });
-        //Se registra en Tabla de Relacion
         await this.db.AprendizEnAgencia.create({
             data: {
                 idAp: apprentice.id,
@@ -152,10 +151,6 @@ export class ApprenticeRepository implements IApprenticeRepository {
             where: { id: Number(id) },
             data: {
                 nombreCompleto: data.name,
-                fechaNacimiento: data.dateOfBirth,
-                edad: data.age,
-                nivelEntrenamiento: data.trainingLv,
-                estadoAprendiz: data.status
             },
         });
         return ApprenticeResponseDto.toEntity(apprentice);
