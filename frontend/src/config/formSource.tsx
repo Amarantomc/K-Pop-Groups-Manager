@@ -95,22 +95,14 @@ export const apprenticeFields: Field[] = [
     // Campos alineados con CreateApprenticeDto del backend
     { id: 'name', name: 'name', label: 'Nombre Completo', type: 'text', required: true },
     { id: 'dateOfBirth', name: 'dateOfBirth', label: 'Fecha Nacimiento', type: 'date', required: true },
-    //{ id: 'age', name: 'age', label: 'Edad', type: 'number', min: 15, required: true },
-
-    { id: 'trainingLv', name: 'trainingLv', label: 'Nivel Entrenamiento', type: 'number', min: 0, required: true },
-    //{ id: 'status', name: 'status', label: 'Estado Aprendiz', type: 'select', options: APPRENTICE_STATUS_OPTIONS, required: true },
-    { id: 'agencyName', name: 'agencyName', label: 'Nombre de Agencia', type: 'text', required: true },
-];
-
-// Artista
-export const artistFields: Field[] = [
-    { id: 'fullName', name: 'fullName', label: 'Nombre Completo', type: 'text', required: true, minLength: 2 },
-    //{ id: 'stageName', name: 'stageName', label: 'Nombre Artístico', type: 'text', maxLength: 100 },
-    //{ id: 'birthdate', name: 'birthdate', label: 'Fecha Nacimiento', type: 'date' },
-    //{ id: 'debutDate', name: 'debutDate', label: 'Fecha Debut', type: 'date' },
-    //{ id: 'status', name: 'status', label: 'Estado Artista', type: 'select', options: enumToOptions(ARTIST_STATUS) },
-    //{ id: 'photo', name: 'photo', label: 'Foto', type: 'file', accept: 'image/*', maxFileSizeMB: 5 },
-    //{ id: 'bio', name: 'bio', label: 'Biografía', type: 'textarea', maxLength: 2000 },
+    {
+        id: 'agencyId',
+        name: 'agencyId',
+        label: 'Nombre de Agencia',
+        type: 'select',
+        required: true,
+        optionsEndpoint: '/api/agency'
+    },
 ];
 
 // Grupo
@@ -275,7 +267,6 @@ export const formFieldsByEntity: Record<string, Field[]> = {
     user: userFields,
     agency: agencyFields,
     apprentice: apprenticeFields,
-    artist: artistFields,
     group: groupFields,
     album: albumFields,
     song: songFields,

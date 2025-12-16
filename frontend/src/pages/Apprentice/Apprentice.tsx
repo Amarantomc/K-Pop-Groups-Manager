@@ -179,10 +179,10 @@ const ListApprentice: React.FC = () => {
         // Normalizaciones
         if (!payload.name && payload.fullName) payload.name = payload.fullName;
         if (!payload.dateOfBirth && payload.birthdate) payload.dateOfBirth = payload.birthdate;
-        if (!payload.trainingLv && payload.trainingLevel) payload.trainingLv = payload.trainingLevel;
+        //if (!payload.trainingLv && payload.trainingLevel) payload.trainingLv = payload.trainingLevel;
 
-        if (payload.age != null) payload.age = Number(payload.age);
-        if (payload.trainingLv != null) payload.trainingLv = Number(payload.trainingLv);
+        //if (payload.age != null) payload.age = Number(payload.age);
+        //if (payload.trainingLv != null) payload.trainingLv = Number(payload.trainingLv);
 
         // Asegurar fecha ISO
         if (payload.dateOfBirth) {
@@ -191,6 +191,7 @@ const ListApprentice: React.FC = () => {
             if (!isNaN(d.getTime())) payload.dateOfBirth = d.toISOString();
           } catch (e) { /* ignore */ }
         }
+        if (payload.agencyId) payload.agencyId = Number(payload.agencyId);
 
 
         const token = localStorage.getItem('token');
@@ -199,7 +200,7 @@ const ListApprentice: React.FC = () => {
 
         // POST /api/apprentice/:id - Requiere autenticación y rol Staff
         // El :id es el agencyId
-        const agencyId = user?.agencyId || 1; // Usar agencyId del usuario autenticado
+        const agencyId = payload.agencyId;
         const res = await fetch(`${API_BASE}/api/apprentice/${agencyId}`, {
           method: 'POST',
           headers,
