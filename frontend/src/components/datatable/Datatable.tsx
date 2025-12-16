@@ -94,10 +94,10 @@ const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , c
 
   return (
         <>
-        {showCreateButton &&
-        (<div className='datatable-header'>
+        <div className='datatable-header'>
             <ExportButton onExport={onExport}>
             </ExportButton>
+            {showCreateButton &&
             <button className='add-button' onClick={handleCreateOpen}>
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -113,7 +113,8 @@ const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , c
                 </svg>
                 Agregar
             </button>
-        </div>)}
+            }
+        </div>
         <div className="datatable">
         <DataGrid
           rows={rows || []}

@@ -9,19 +9,17 @@ import { useAuth } from '../../contexts/auth/AuthContext';
 import { evaluationFields } from '../../config/formSource';
 import { evaluationConstraints } from '../../config/modalConstraints';
 
-interface Evaluation {
-  id: number;
-  apprenticeName: string;
-  evaluatorName: string;
-  score: number;
-  category: string;
-  comments: string;
+interface EvaluationRow {
+  id: string;
+  apprentice: string;
+  agency: string;
   evaluationDate: string;
+  score: number;
 }
 
 const Evaluations: React.FC = () => {
   const { user } = useAuth();
-  const [evaluations, setEvaluations] = useState<Evaluation[]>([]);
+  const [evaluations, setEvaluations] = useState<EvaluationRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -33,13 +31,8 @@ const Evaluations: React.FC = () => {
 
   // Columnas del DataTable
   const columns: GridColDef[] = [
-    { field: 'apprenticeName', headerName: 'Aprendiz', width: 180 },
-    { field: 'evaluatorName', headerName: 'Evaluador', width: 180 },
-    {
-      field: 'category',
-      headerName: 'Categoría',
-      width: 150
-    },
+    { field: 'apprentice', headerName: 'Aprendiz', width: 180 },
+    { field: 'agency', headerName: 'Agencia', width: 180 },
     {
       field: 'score',
       headerName: 'Puntuación',
@@ -59,25 +52,11 @@ const Evaluations: React.FC = () => {
       }
     },
     {
-      field: 'comments',
-      headerName: 'Comentarios',
-      width: 250,
-      renderCell: (params) => (
-        <div style={{
-          whiteSpace: 'normal',
-          lineHeight: '1.4',
-          padding: '8px 0'
-        }}>
-          {params.value}
-        </div>
-      )
-    },
-    {
       field: 'evaluationDate',
       headerName: 'Fecha de Evaluación',
       width: 150,
-      valueFormatter: (params) => {
-        return new Date(params).toLocaleDateString('es-ES');
+      valueFormatter: (params: { value: string }) => {
+        return new Date(params.value).toLocaleDateString('es-ES');
       }
     }
   ];
@@ -93,9 +72,8 @@ const Evaluations: React.FC = () => {
 
         // ============================================
         // SECCIÓN: BACKEND ENDPOINT
-        // Descomenta esta sección para usar el backend real
         // ============================================
-        const response = await fetch(`http://localhost:3000/api/evaluations?apprenticeId=${apprenticeId}`, {
+        const response = await fetch(`http://localhost:3000/api/apprentice/${apprenticeId}/evaluations`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
@@ -106,7 +84,15 @@ const Evaluations: React.FC = () => {
         }
 
         const data = await response.json();
-        setEvaluations(data.data || data);
+        // Mapear los datos del backend al formato de la tabla
+        const rows = (data.data || data).map((item: any) => ({
+          id: `${item.apprenticeId}-${item.agencyId}-${item.evaluationDate}`,
+          apprentice: item.apprentice?.fullName || item.apprenticeId,
+          agency: item.agency?.name || item.agencyId,
+          evaluationDate: item.evaluationDate,
+          score: item.score
+        }));
+        setEvaluations(rows);
         // ============================================
         // FIN SECCIÓN: BACKEND ENDPOINT
         // ============================================
@@ -190,7 +176,7 @@ const Evaluations: React.FC = () => {
         throw new Error('Error al eliminar evaluación');
       }
 
-      setEvaluations(prev => prev.filter(evaluation => evaluation.id !== evaluationToDelete));
+      setEvaluations(prev => prev.filter(evaluation => evaluation.id !== String(evaluationToDelete)));
       setOpenAccept(true);
     } catch (error) {
       console.error('Error al eliminar evaluación:', error);
@@ -202,7 +188,7 @@ const Evaluations: React.FC = () => {
     }
   };
 
-  const handleEditSave = async (updatedRow: Evaluation) => {
+  const handleEditSave = async (updatedRow: EvaluationRow) => {
     try {
       const response = await fetch(`http://localhost:3000/api/evaluations/${updatedRow.id}`, {
         method: 'PUT',
@@ -229,31 +215,14 @@ const Evaluations: React.FC = () => {
     }
   };
 
-  const handleCreateSave = async (newRow: Omit<Evaluation, 'id'>) => {
+  // Maneja el guardado del formulario de creación de evaluación
+  const handleCreateSave = async (formData: Record<string, any>) => {
     try {
-      const response = await fetch('http://localhost:3000/api/evaluations', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify(newRow)
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al crear evaluación');
+      if (!user) {
+        throw new Error('Usuario no autenticado');
       }
-
-      const data = await response.json();
-      setEvaluations(prev => [...prev, (data.data || data)]);
-    } catch (error) {
-      console.error('Error al crear evaluación:', error);
-    }
-  };
-
-  const handleFormSubmit = async (formData: Record<string, any>) => {
-    try {
-      const response = await fetch('http://localhost:3000/api/evaluations', {
+      const apprenticeId = user.profileData?.apprenticeId || user.id;
+      const response = await fetch(`http://localhost:3000/api/apprentice/${apprenticeId}/evaluations`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -269,7 +238,7 @@ const Evaluations: React.FC = () => {
       const data = await response.json();
       setEvaluations(prev => [...prev, (data.data || data)]);
       setShowCreateModal(false);
-      setOpenAccept(true);
+      setShowSuccessModal(true); // Mostrar modal de éxito al crear
     } catch (error) {
       console.error('Error al crear evaluación:', error);
       const errorMsg = error instanceof Error ? error.message : 'Error al crear evaluación';
@@ -294,20 +263,6 @@ const Evaluations: React.FC = () => {
         </div>
       ) : (
         <>
-          <button
-            onClick={() => setShowCreateModal(true)}
-            style={{
-              marginBottom: '20px',
-              padding: '10px 20px',
-              backgroundColor: '#4CAF50',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer'
-            }}
-          >
-            + Añadir Evaluación
-          </button>
           <DataTable
             columns={columns}
             rows={evaluations}
@@ -323,7 +278,7 @@ const Evaluations: React.FC = () => {
             isOpen={showCreateModal}
             title="Crear Evaluación"
             createFields={evaluationFields}
-            onSave={handleFormSubmit}
+            onSave={handleCreateSave}
             onClose={() => setShowCreateModal(false)}
           />
           <Modal
@@ -332,31 +287,31 @@ const Evaluations: React.FC = () => {
             onSave={() => setShowSuccessModal(false)}
             onClose={() => setShowSuccessModal(false)}
           />
-          <ConfirmDialog 
-            message="¿Está seguro que desea eliminar esta evaluación?" 
-            open={openConfirm} 
-            onCancel={() => setOpenConfirm(false)} 
-            onConfirm={handleDelete} 
+          <ConfirmDialog
+            message="¿Está seguro que desea eliminar esta evaluación?"
+            open={openConfirm}
+            onCancel={() => setOpenConfirm(false)}
+            onConfirm={handleDelete}
             type="confirm"
           />
-          <ConfirmDialog 
+          <ConfirmDialog
             title="¡Éxito!"
-            message="La evaluación ha sido registrada correctamente" 
+            message="La evaluación ha sido registrada correctamente"
             open={openAccept}
-            type="success" 
-            onCancel={() => setOpenAccept(false)} 
-            onConfirm={() => setOpenAccept(false)} 
-            confirmText="Aceptar" 
+            type="success"
+            onCancel={() => setOpenAccept(false)}
+            onConfirm={() => setOpenAccept(false)}
+            confirmText="Aceptar"
             showDeleteButton={false}
           />
-          <ConfirmDialog 
+          <ConfirmDialog
             title="Error"
-            message={errorMessage} 
+            message={errorMessage}
             type="error"
-            open={openError} 
-            onCancel={() => setOpenError(false)} 
-            onConfirm={() => setOpenError(false)} 
-            confirmText="Aceptar" 
+            open={openError}
+            onCancel={() => setOpenError(false)}
+            onConfirm={() => setOpenError(false)}
+            confirmText="Aceptar"
             showDeleteButton={false}
           />
         </>

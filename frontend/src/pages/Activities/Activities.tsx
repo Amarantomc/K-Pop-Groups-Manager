@@ -9,17 +9,17 @@ import { useAuth } from '../../contexts/auth/AuthContext';
 import { activityConstraints } from '../../config/modalConstraints';
 import './Activities.css';
 
-  interface Activity {
-    id: number;
-    artistName: string;
-    groupName: string;
-    title: string;
-    type: string;
-    date: string;
-    time: string;
-    location: string;
-    status: string;
-    description: string;
+interface Activity {
+  id: number;
+  artistName: string;
+  groupName: string;
+  title: string;
+  type: string;
+  date: string;
+  time: string;
+  location: string;
+  status: string;
+  description: string;
 }
 
 const Activities: React.FC = () => {
@@ -32,6 +32,7 @@ const Activities: React.FC = () => {
   const [openAccept, setOpenAccept] = useState(false);
   const [openError, setOpenError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [falso, setfalso] = useState(false)
 
 
   useEffect(() => {
@@ -80,14 +81,14 @@ const Activities: React.FC = () => {
 
         const data = await response.json();
         console.log(data.data)
-        const formattedData = data.data.map((activity : any , index : number) => ({
-                        id : activity.id?? index,
-                        eventType : activity.eventType,
-                        activityType : activity.activityType,
-                        date : activity.date,
-                        place : activity.place,
-                        responsible : activity.responsible
-                    }))
+        const formattedData = data.data.map((activity: any, index: number) => ({
+          id: activity.id ?? index,
+          eventType: activity.eventType,
+          activityType: activity.activityType,
+          date: activity.date,
+          place: activity.place,
+          responsible: activity.responsible
+        }))
         setActivities(formattedData);
         console.log(formattedData)
 
@@ -95,7 +96,7 @@ const Activities: React.FC = () => {
         // FIN SECCIÓN: BACKEND ENDPOINT
         // ============================================
 
- 
+
       } catch (error) {
         console.error('Error al cargar actividades:', error);
       } finally {
@@ -105,6 +106,14 @@ const Activities: React.FC = () => {
 
     fetchActivities();
   }, [user]);
+  const askConfirm = (id: number) => {
+    setSelectedActivity(id)
+    handleAcceptActivity()
+  }
+  const askCancelled = (id: number) => {
+    setSelectedActivity(id)
+    handleRejectActivity()
+  }
 
   const handleDelete = async () => {
     if (activityToDelete === null) return;
@@ -197,15 +206,17 @@ const Activities: React.FC = () => {
     if (!selectedActivity) return;
 
     try {
-      const response = await fetch(`http://localhost:3000/api/activitie/${selectedActivity.id}/decision`, {
-        method: 'PATCH',
+      console.log(user)
+      const response = await fetch(`http://localhost:3000/api/activity/${selectedActivity}/decision`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify({ accepted: true })
-      });
+        body: JSON.stringify({ accepted: true, apprenticeId: user.profileData.IdAp, groupId: user.profileData.IdGr }),
 
+      });
+      console.log(response)
       if (!response.ok) {
         throw new Error('Error al aceptar actividad');
       }
@@ -224,13 +235,14 @@ const Activities: React.FC = () => {
     if (!selectedActivity) return;
 
     try {
-      const response = await fetch(`http://localhost:3000/api/activities/${selectedActivity.id}/validate`, {
-        method: 'PATCH',
+      console.log(selectedActivity)
+      const response = await fetch(`http://localhost:3000/api/activity/${selectedActivity.id}/validate`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify({ validated: false })
+        body: JSON.stringify({ accepted: false, apprenticeId: user.profileData.IdAp, groupId: user.profileData.IdGr }),
       });
 
       if (!response.ok) {
@@ -309,41 +321,41 @@ const Activities: React.FC = () => {
     //type: activity.activityType
   }));
 
-     const handleExportPdf = async () => {
-  try {
-    const response = await fetch('http://localhost:3000/api/export/activities', {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
+  const handleExportPdf = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/api/export/activities', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al exportar PDF');
       }
-    });
 
-    if (!response.ok) {
-      throw new Error('Error al exportar PDF');
+
+      const blob = await response.blob();
+
+      const url = window.URL.createObjectURL(blob);
+
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'actividades.pdf';
+      document.body.appendChild(a);
+      a.click();
+
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error(error);
+      setErrorMessage(
+        error instanceof Error ? error.message : 'Error al exportar PDF'
+      );
+      setOpenError(true);
     }
-
-    
-    const blob = await response.blob();
-
-    const url = window.URL.createObjectURL(blob);
-
-    
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'actividades.pdf';
-    document.body.appendChild(a);
-    a.click();
-
-    a.remove();
-    window.URL.revokeObjectURL(url);
-  } catch (error) {
-    console.error(error);
-    setErrorMessage(
-      error instanceof Error ? error.message : 'Error al exportar PDF'
-    );
-    setOpenError(true);
-  }
-};
+  };
 
   return (
     <PageLayout
@@ -369,13 +381,15 @@ const Activities: React.FC = () => {
                 <Calendar
                   activitiesTest={activities}
                   onExport={console.log("Exportando")}
-                  isArtist = {true}
-                  //onDateClick={handleDateClick}
+                  isArtist={true}
+                  onAcept={askConfirm}
+                  onCancel={askCancelled}
+                //onDateClick={handleDateClick}
                 />
               </div>
 
               {/* Panel de detalles a la derecha - solo visible cuando hay selección */}
-              {selectedActivity && (
+              {falso && (
                 <div className="details-section">
                   <div className="activity-details">
                     <div className="activity-header">
@@ -472,7 +486,8 @@ const Activities: React.FC = () => {
                     activitiesTest={activities}
                     onExport={handleExportPdf}
                     isArtist={false}
-                    //onDateClick={handleDateClick}
+
+                  //onDateClick={handleDateClick}
                   />
                 </div>
 
@@ -566,31 +581,31 @@ const Activities: React.FC = () => {
               </div>
             </div>
           )}
-          <ConfirmDialog 
-            message="¿Está seguro que desea eliminar esta actividad?" 
-            open={openConfirm} 
-            onCancel={() => setOpenConfirm(false)} 
-            onConfirm={handleDelete} 
+          <ConfirmDialog
+            message="¿Está seguro que desea eliminar esta actividad?"
+            open={openConfirm}
+            onCancel={() => setOpenConfirm(false)}
+            onConfirm={handleDelete}
             type="confirm"
           />
-          <ConfirmDialog 
+          <ConfirmDialog
             title="¡Éxito!"
-            message="La actividad ha sido registrada correctamente" 
+            message="La actividad ha sido registrada correctamente"
             open={openAccept}
-            type="success" 
-            onCancel={() => setOpenAccept(false)} 
-            onConfirm={() => setOpenAccept(false)} 
-            confirmText="Aceptar" 
+            type="success"
+            onCancel={() => setOpenAccept(false)}
+            onConfirm={() => setOpenAccept(false)}
+            confirmText="Aceptar"
             showDeleteButton={false}
           />
-          <ConfirmDialog 
+          <ConfirmDialog
             title="Error"
-            message={errorMessage} 
+            message={errorMessage}
             type="error"
-            open={openError} 
-            onCancel={() => setOpenError(false)} 
-            onConfirm={() => setOpenError(false)} 
-            confirmText="Aceptar" 
+            open={openError}
+            onCancel={() => setOpenError(false)}
+            onConfirm={() => setOpenError(false)}
+            confirmText="Aceptar"
             showDeleteButton={false}
           />
         </>

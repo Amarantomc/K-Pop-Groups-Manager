@@ -10,18 +10,17 @@ import PageLayout from '../../components/pageLayout/PageLayout';
 import { useAuth } from '../../contexts/auth/AuthContext';
 import { requestConstraints } from '../../config/modalConstraints';
 import { transformDate } from '../../components/calendar/Calendar';
-import Modal from '../../components/modal/Modal';
 
 interface Request {
   id: number;
   entityName: string;
   groupName: string;
   agency: string;
-  idAgency?: string; // <-- para lógica de agencia
   date: string;
   concept: string;
   members: string[];
   roles: string[];
+  //idAgency: string;
   status: string;
   type: string;
 }
@@ -35,22 +34,10 @@ const Requests: React.FC = () => {
   const [openAccept, setOpenAccept] = useState(false);
   const [openError, setOpenError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [openContractModal, setOpenContractModal] = useState(false);
-  const [currentRequestId, setCurrentRequestId] = useState<number | null>(null);
-
-  // Constraints para el contrato (ajusta según tus campos reales)
-  const contractConstraints = {
-    groupName: { editable: true, required: true, type: 'string' as 'string', label: 'Nombre del Grupo' },
-    startDate: { editable: true, required: true, type: 'date' as 'date', label: 'Fecha de Inicio' },
-    endDate: { editable: true, required: true, type: 'date' as 'date', label: 'Fecha de Fin' },
-    salary: { editable: true, required: true, type: 'number' as 'number', label: 'Salario' },
-    // Agrega más campos según tu modelo de contrato
-  };
 
   // Manejar aprobación de solicitud (Director)
   const handleApprove = async (id: number) => {
     try {
-      // 1. Cambiar estado a 'aprobado'
       const response = await fetch(`http://localhost:3000/api/application/${id}/approve`, {
         method: 'PATCH',
         headers: {
@@ -67,9 +54,7 @@ const Requests: React.FC = () => {
       setRequests(prev =>
         prev.map(req => req.id === id ? { ...req, status: 'approved' } : req)
       );
-      // 2. Abrir modal de contrato
-      setCurrentRequestId(id);
-      setOpenContractModal(true);
+      console.log('Solicitud aprobada exitosamente:', id);
     } catch (error) {
       console.error('Error al aprobar solicitud:', error);
     }
@@ -152,58 +137,10 @@ const Requests: React.FC = () => {
     return data?.data?.name || id;
   };
 
-  // Guardar contrato (envía al backend y cambia estado a 'negociacion')
-  const handleSaveContract = async (formData: any) => {
-    if (!currentRequestId) return;
-    try {
-      // 1. Crear contrato
-      const contractRes = await fetch('http://localhost:3000/api/contract', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ ...formData, requestId: currentRequestId })
-      });
-      if (!contractRes.ok) throw new Error('Error al crear contrato');
-      // 2. Cambiar estado de solicitud a 'negociacion'
-      const updateRes = await fetch(`http://localhost:3000/api/application/${currentRequestId}/negotiation`, {
-        method: 'PATCH',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      if (!updateRes.ok) throw new Error('Error al actualizar solicitud a negociacion');
-      setRequests(prev => prev.map(req => req.id === currentRequestId ? { ...req, status: 'negociacion' } : req));
-      setOpenContractModal(false);
-      setCurrentRequestId(null);
-    } catch (error) {
-      console.error('Error al crear contrato o actualizar solicitud:', error);
-    }
-  };
-
   // Columnas del DataTable
   const baseColumns: GridColDef[] = [
     //{ field: 'id', headerName: 'ID', width: 70 },
     { field: 'groupName', headerName: 'Nombre de Grupo', width: 150 },
-    {
-      field: 'entityName',
-      headerName: 'Aprendiz/Artista',
-      width: 150,
-      renderCell: (params) => {
-        const tipo = params.row.type === 'Artist' ? 'Artista' : params.row.type === 'Apprentice' ? 'Aprendiz' : '';
-        const color = params.row.type === 'Artist' ? '#2563eb' : params.row.type === 'Apprentice' ? '#10b981' : '#6b7280';
-        return (
-          <span>
-            <span style={{ color, fontWeight: 600 }}>{params.value || ''}</span>
-            {tipo && (
-              <span style={{ color: '#6b7280', fontSize: '13px', fontWeight: 500, marginLeft: 8 }}>[{tipo}]</span>
-            )}
-          </span>
-        );
-      }
-    },
     {
       field: 'date',
       headerName: 'Fecha de Solicitud',
@@ -225,6 +162,32 @@ const Requests: React.FC = () => {
           <span style={{ color: '#2563eb', fontWeight: 600 }}>{members}</span>
         );
       }
+      /*
+       renderCell: (params) => {
+        const albums = params.value || [];
+          if (albums.length === 0) {
+        return (
+          <Typography variant="body2" color="text.secondary" sx={{ width: '100%', py: 1 }}>
+            Sin álbumes
+          </Typography>
+        );
+      }
+        return (
+            <Select
+            value=""
+            displayEmpty
+            sx={{ width: '100%', height: 40 }}
+            renderValue={() => `${albums.length} álbum${albums.length !== 1 ? 'es' : ''}`}
+            >
+            {albums.map((album: any) => (
+                <MenuItem key={album.id} value={album.id}>
+                {album.title}
+                </MenuItem>
+            ))}
+        </Select>
+        );
+    },
+    */
     },
     {
       field: 'roles',
@@ -251,73 +214,60 @@ const Requests: React.FC = () => {
     renderCell: (params) => {
       const request = params.row as Request;
 
-
-      // Verificar si la solicitud pertenece a la agencia del usuario
-      const userAgencyId = user?.agencyId;
-      // Puede venir como request.agency (nombre) o request.idAgency (id)
-      // Usamos idAgency para la lógica
-      const requestAgencyId = request.idAgency;
-      const isSameAgency = userAgencyId && requestAgencyId && String(userAgencyId) === String(requestAgencyId);
-
-      // Director: botones de aprobar/rechazar SOLO si es su agencia y estado pendiente
+      // Director: botones de aprobar/rechazar
       if (user?.role === 'director') {
-        const isPending = request.status === 'pending';
         return (
           <div style={{ display: 'flex', gap: '8px' }}>
-            <Tooltip title={isSameAgency && isPending ? 'Aprobar solicitud' : 'Solo solicitudes pendientes de tu agencia'}>
-              <span>
-                <IconButton
-                  size="small"
-                  onClick={() => handleApprove(request.id)}
-                  disabled={!(isSameAgency && isPending)}
-                  sx={{
-                    color: '#10b981',
-                    '&:hover': { backgroundColor: '#d1fae5' },
-                    '&:disabled': { color: '#d1d5db' }
-                  }}
-                >
-                  <CheckCircleIcon />
-                </IconButton>
-              </span>
+            <Tooltip title="Aprobar solicitud">
+              <IconButton
+                size="small"
+                onClick={() => handleApprove(request.id)}
+                disabled={request.status !== 'pending'}
+                sx={{
+                  color: '#10b981',
+                  '&:hover': { backgroundColor: '#d1fae5' },
+                  '&:disabled': { color: '#d1d5db' }
+                }}
+              >
+                <CheckCircleIcon />
+              </IconButton>
             </Tooltip>
-            <Tooltip title={isSameAgency && isPending ? 'Rechazar solicitud' : 'Solo solicitudes pendientes de tu agencia'}>
-              <span>
-                <IconButton
-                  size="small"
-                  onClick={() => handleReject(request.id)}
-                  disabled={!(isSameAgency && isPending)}
-                  sx={{
-                    color: '#ef4444',
-                    '&:hover': { backgroundColor: '#fee2e2' },
-                    '&:disabled': { color: '#d1d5db' }
-                  }}
-                >
-                  <CancelIcon />
-                </IconButton>
-              </span>
+            <Tooltip title="Rechazar solicitud">
+              <IconButton
+                size="small"
+                onClick={() => handleReject(request.id)}
+                disabled={request.status !== 'pending'}
+                sx={{
+                  color: '#ef4444',
+                  '&:hover': { backgroundColor: '#fee2e2' },
+                  '&:disabled': { color: '#d1d5db' }
+                }}
+              >
+                <CancelIcon />
+              </IconButton>
             </Tooltip>
           </div>
         );
       }
 
-      // Manager: botón de crear grupo SOLO si es su agencia y estado aprobado
+      // Manager: botón de crear grupo
       if (user?.role === 'manager') {
         const isCompleted = request.status === 'completed';
         const isApproved = request.status === 'approved';
+
         return (
           <Tooltip title={
-            !isSameAgency ? 'Solo solicitudes de tu agencia' :
             isCompleted ? 'Grupo ya creado' :
-            isApproved ? 'Crear grupo' :
-            'Solo disponible para solicitudes aprobadas'
+              isApproved ? 'Crear grupo' :
+                'Solo disponible para solicitudes aprobadas'
           }>
             <span>
               <IconButton
                 size="small"
                 onClick={() => handleCreateGroup(request.id, request.groupName)}
-                disabled={!(isSameAgency && isApproved)}
+                disabled={!isApproved}
                 sx={{
-                  color: isSameAgency && isApproved ? '#4f46e5' : '#d1d5db',
+                  color: isApproved ? '#4f46e5' : '#d1d5db',
                   '&:hover': { backgroundColor: '#eef2ff' },
                   '&:disabled': { color: '#d1d5db', cursor: 'not-allowed' }
                 }}
@@ -426,17 +376,7 @@ const Requests: React.FC = () => {
         }));
         
         console.log('Solicitudes obtenidas del backend:', formattedRequests);
-        // Filtrado según el rol
-        let filteredRequests = formattedRequests;
-        if (user.role === 'director' || user.role === 'manager') {
-          filteredRequests = formattedRequests.filter(req => String(req.idAgency) === String(user.agencyId));
-        } else if (user.role === 'artist') {
-          filteredRequests = formattedRequests.filter(req => req.members.some((m: { id: string | number }) => String(m.id) === String(user.id)));
-        } else if (user.role === 'apprentice') {
-          filteredRequests = formattedRequests.filter(req => req.members.some((m: { id: string | number }) => String(m.id) === String(user.id)));
-        }
-        // admin ve todas
-        setRequests(filteredRequests);
+        setRequests(formattedRequests);
 
         //setRequests(formattedData);
       } catch (error) {
@@ -589,14 +529,6 @@ const Requests: React.FC = () => {
         onConfirm={() => setOpenError(false)} 
         confirmText="Aceptar" 
         showDeleteButton={false}
-      />
-      {/* Modal para crear contrato al aprobar solicitud */}
-      <Modal
-        isOpen={openContractModal}
-        onClose={() => setOpenContractModal(false)}
-        title="Crear Contrato"
-        constraints={contractConstraints}
-        onSave={handleSaveContract}
       />
     </PageLayout>
   );

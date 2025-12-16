@@ -50,7 +50,7 @@ const Contracts: React.FC = () => {
         return (
           <span>
             <span style={{ color, fontWeight: 600 }}>{params.value}</span>
-            <span style={{color: '#6b7280', fontSize: '13px', fontWeight: 500, marginLeft: 8}}>[{tipo}]</span>
+            <span style={{ color: '#6b7280', fontSize: '13px', fontWeight: 500, marginLeft: 8 }}>[{tipo}]</span>
           </span>
         );
       }
@@ -80,12 +80,12 @@ const Contracts: React.FC = () => {
             return (
               <>
                 <button
-                  style={{marginRight: 8, background: '#10b981', color: 'white', border: 'none', borderRadius: 4, padding: '4px 10px', cursor: 'pointer'}}
+                  style={{ marginRight: 8, background: '#10b981', color: 'white', border: 'none', borderRadius: 4, padding: '4px 10px', cursor: 'pointer' }}
                   disabled={processingId === params.row.id}
                   onClick={() => handleAcceptContract(params.row)}
                 >Aceptar</button>
                 <button
-                  style={{background: '#ef4444', color: 'white', border: 'none', borderRadius: 4, padding: '4px 10px', cursor: 'pointer'}}
+                  style={{ background: '#ef4444', color: 'white', border: 'none', borderRadius: 4, padding: '4px 10px', cursor: 'pointer' }}
                   disabled={processingId === params.row.id}
                   onClick={() => handleRejectContract(params.row)}
                 >Rechazar</button>
@@ -112,7 +112,7 @@ const Contracts: React.FC = () => {
       });
       if (!response.ok) throw new Error('Error al aprobar el contrato');
       // Actualiza el estado local
-      setContracts(prev => prev.map(c => c.id === row.id ? { ...c, status: 'aprobado' } : c));
+      setContracts(prev => prev.map(c => c.id === row.id ? { ...c, status: 'active' } : c));
       setOpenAccept(true);
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : 'Error al aprobar contrato');
@@ -134,7 +134,7 @@ const Contracts: React.FC = () => {
         }
       });
       if (!response.ok) throw new Error('Error al rechazar el contrato');
-      setContracts(prev => prev.map(c => c.id === row.id ? { ...c, status: 'rechazado' } : c));
+      setContracts(prev => prev.map(c => c.id === row.id ? { ...c, status: 'terminated' } : c));
       setOpenAccept(true);
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : 'Error al rechazar contrato');
@@ -294,7 +294,7 @@ const Contracts: React.FC = () => {
             const txt = await res.text();
             try { const j = JSON.parse(txt); msg = j?.message || j?.error || txt || msg; }
             catch { msg = txt || msg; }
-          } catch (e) {}
+          } catch (e) { }
           console.error('Error al crear contrato:', msg);
           return;
         }
@@ -334,6 +334,42 @@ const Contracts: React.FC = () => {
       const errorMsg = error instanceof Error ? error.message : 'Error al crear contrato';
       setErrorMessage(errorMsg);
       setShowCreateModal(false);
+      setOpenError(true);
+    }
+  };
+
+  const handleExportPdf = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/api/export/contracts', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al exportar PDF');
+      }
+
+
+      const blob = await response.blob();
+
+      const url = window.URL.createObjectURL(blob);
+
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'contratos.pdf';
+      document.body.appendChild(a);
+      a.click();
+
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error(error);
+      setErrorMessage(
+        error instanceof Error ? error.message : 'Error al exportar PDF'
+      );
       setOpenError(true);
     }
   };
@@ -382,10 +418,12 @@ const Contracts: React.FC = () => {
             onEditSave={handleEditSave}
             onCreateSave={handleCreateSave}
             showEditButton={true}
+            onExport={handleExportPdf}
+            showCreateButton={false}
             constraints={contractConstraints}
             createEntity="contract"
             userRole={user?.role}
-            // onCreateClick={() => setShowCreateModal(true)}
+          // onCreateClick={() => setShowCreateModal(true)}
           />
           <ModalCreate
             isOpen={showCreateModal}
@@ -400,31 +438,31 @@ const Contracts: React.FC = () => {
             onSave={() => setShowSuccessModal(false)}
             onClose={() => setShowSuccessModal(false)}
           />
-          <ConfirmDialog 
-            message="¿Está seguro que desea eliminar este contrato?" 
-            open={openConfirm} 
-            onCancel={() => setOpenConfirm(false)} 
-            onConfirm={handleDelete} 
+          <ConfirmDialog
+            message="¿Está seguro que desea eliminar este contrato?"
+            open={openConfirm}
+            onCancel={() => setOpenConfirm(false)}
+            onConfirm={handleDelete}
             type="confirm"
           />
-          <ConfirmDialog 
+          <ConfirmDialog
             title="¡Éxito!"
-            message="El contrato ha sido registrado correctamente" 
+            message="El contrato ha sido registrado correctamente"
             open={openAccept}
-            type="success" 
-            onCancel={() => setOpenAccept(false)} 
-            onConfirm={() => setOpenAccept(false)} 
-            confirmText="Aceptar" 
+            type="success"
+            onCancel={() => setOpenAccept(false)}
+            onConfirm={() => setOpenAccept(false)}
+            confirmText="Aceptar"
             showDeleteButton={false}
           />
-          <ConfirmDialog 
+          <ConfirmDialog
             title="Error"
-            message={errorMessage} 
+            message={errorMessage}
             type="error"
-            open={openError} 
-            onCancel={() => setOpenError(false)} 
-            onConfirm={() => setOpenError(false)} 
-            confirmText="Aceptar" 
+            open={openError}
+            onCancel={() => setOpenError(false)}
+            onConfirm={() => setOpenError(false)}
+            confirmText="Aceptar"
             showDeleteButton={false}
           />
         </>

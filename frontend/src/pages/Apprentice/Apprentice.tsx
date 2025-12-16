@@ -1,12 +1,9 @@
-/* eslint-disable no-empty */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import React from "react"
+import { useEffect, useState } from "react"
 import "./apprentice.css"
 import Datatable from "../../components/datatable/Datatable"
-import React from "react"
-import { useEffect , useState  } from "react"
 import { apprenticeConstraints, evaluationConstraints } from "../../config/modalConstraints"
-import { APPRENTICE_STATUS, APPRENTICE_STATUS_OPTIONS, apprenticeFields } from '../../config/formSource'
+import { apprenticeFields } from '../../config/formSource'
 import ConfirmDialog from "../../components/confirmDialog/ConfirmDialog"
 import PageLayout from "../../components/pageLayout/PageLayout"
 import { useAuth } from "../../contexts/auth/AuthContext"
@@ -16,20 +13,50 @@ import QuizIcon from '@mui/icons-material/Quiz';
 import type { GridColDef } from "@mui/x-data-grid";
 import { Button } from "@mui/material"
 
-
 const ListApprentice: React.FC = () => {
-      const { user } = useAuth();
-      const [apprenticeRows, setApprenticeRows] = useState<any[]>([])
-      const [apprenticeToDelete,setApprenticeToDelete] = useState<number | null>(null)
-      const [openConfirm,setOpenConfirm] = useState(false)
-      const [openAccept,setOpenAccept] = useState(false)
-      const [openError, setOpenError] = useState(false);
-      const [errorMessage, setErrorMessage] = useState('');
-      const [isLoading,setIsLoading] = useState(false)
-      const [showCreateModal, setShowCreateModal] = useState(false);
-      const [showSuccessModal, setShowSuccessModal] = useState(false);
-      const [showEvaluateModal,setShowEvaluateModal] = useState(false);
-      const [selectApprenticeToEvaluate,setSelectApprenticeToEvaluate] = useState<any|null>(null)
+  const { user } = useAuth();
+  const [apprenticeRows, setApprenticeRows] = useState<any[]>([])
+  const [apprenticeToDelete, setApprenticeToDelete] = useState<number | null>(null)
+  const [openConfirm, setOpenConfirm] = useState(false)
+  const [openAccept, setOpenAccept] = useState(false)
+  const [openError, setOpenError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false)
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showEvaluateModal, setShowEvaluateModal] = useState(false);
+  const [selectApprenticeToEvaluate, setSelectApprenticeToEvaluate] = useState<any | null>(null)
+
+  // Enviar evaluación al backend
+  const handleEvaluateSubmit = async (formData: Record<string, any>) => {
+    try {
+      if (!user) throw new Error('Usuario no autenticado');
+      // El campo correcto es score, según constraints y backend
+      const payload = {
+        apprenticeId: selectApprenticeToEvaluate,
+        agencyId: user.profileData?.agencyId || user.agencyId,
+        evaluation: Number(formData.score)
+      };
+      const response = await fetch(`http://localhost:3000/api/apprentice/evaluation`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(payload)
+      });
+      if (!response.ok) {
+        throw new Error('Error al crear evaluación');
+      }
+      setShowEvaluateModal(false);
+      setOpenAccept(true);
+    } catch (error) {
+      console.error('Error al crear evaluación:', error);
+      setShowEvaluateModal(false);
+      setOpenError(true);
+    }
+  };
+
       
     const apprenticeColumns: GridColDef[] = [
     { field: 'name', headerName: 'Nombre Completo', width: 150 },
@@ -75,7 +102,6 @@ const ListApprentice: React.FC = () => {
                                 name : apprentice.name,
                                 age : apprentice.age,
                                 dateOfBirth : apprentice.dateOfBirth,
-                                status : apprentice.status,
                                 trainingLv : apprentice.trainingLv
                             }))
                             setApprenticeRows(formattedData)
@@ -127,7 +153,6 @@ const ListApprentice: React.FC = () => {
               name: updated.name,
               dateOfBirth: updated.dateOfBirth,
               age: Number(updated.age),
-              status: updated.status,
               trainingLv: Number(updated.trainingLv),
               id: updated.id
           }
@@ -159,13 +184,6 @@ const ListApprentice: React.FC = () => {
         if (payload.age != null) payload.age = Number(payload.age);
         if (payload.trainingLv != null) payload.trainingLv = Number(payload.trainingLv);
 
-        // mapear status
-        const statusRaw = payload.status;
-        if (statusRaw) {
-          const found = APPRENTICE_STATUS_OPTIONS.find((o:any) => o.value === statusRaw || o.label === statusRaw || String(o.value) === String(statusRaw));
-          if (found) payload.status = found.value;
-        }
-
         // Asegurar fecha ISO
         if (payload.dateOfBirth) {
           try {
@@ -174,13 +192,6 @@ const ListApprentice: React.FC = () => {
           } catch (e) { /* ignore */ }
         }
 
-        // Validación básica de status
-        const allowed = (APPRENTICE_STATUS as readonly string[]).map(s => String(s));
-        if (!payload.status || !allowed.includes(String(payload.status))) {
-          setErrorMessage(`Estado inválido: "${payload.status}". Opciones válidas: ${allowed.join(', ')}`);
-          setOpenError(true);
-          return;
-        }
 
         const token = localStorage.getItem('token');
         const headers: Record<string, string> = { 'Content-Type': 'application/json' };
@@ -214,7 +225,6 @@ const ListApprentice: React.FC = () => {
             name: result.data.name,
             age: result.data.age,
             dateOfBirth: result.data.dateOfBirth,
-            status: result.data.status,
             trainingLv: result.data.trainingLv,
           };
           setApprenticeRows(prev => [...prev, created]);
@@ -251,7 +261,6 @@ const ListApprentice: React.FC = () => {
         name: data.data.name,
         age: data.data.age,
         dateOfBirth: data.data.dateOfBirth,
-        status: data.data.status,
         trainingLv: data.data.trainingLv,
       };
       setApprenticeRows(prev => [...prev, created]);
@@ -367,7 +376,7 @@ const ListApprentice: React.FC = () => {
         <Modal
           isOpen={showEvaluateModal}
           title="Evaluar Aprendiz"
-          onSave={() => setShowEvaluateModal(false)}
+          onSave={handleEvaluateSubmit}
           onClose={() => setShowEvaluateModal(false)}
           constraints={evaluationConstraints}
         />
