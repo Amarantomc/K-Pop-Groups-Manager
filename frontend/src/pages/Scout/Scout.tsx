@@ -75,12 +75,13 @@ const Scout: React.FC = () => {
       ),
     },
   ];
-//Aqui luego se ponen las columnas de los datos correspondientes al backend
+  //Aqui luego se ponen las columnas de los datos correspondientes al backend
   const columnsGroups = [
-    {field:'name',headerName:'Nombre del Grupo' , width:200},
-    {field:'action',
-      headername:'Acción',
-      flex : 1,
+    { field: 'name', headerName: 'Nombre del Grupo', width: 200 },
+    {
+      field: 'action',
+      headername: 'Acción',
+      flex: 1,
       renderCell: (params: any) => (
         <Button variant="contained" color="success" onClick={() => handleOpenContractModal(params.row)}>
           Ofrecer Contrato
@@ -93,10 +94,11 @@ const Scout: React.FC = () => {
   const [showContractModal, setShowContractModal] = useState(false);
   const [contractModalData, setContractModalData] = useState<any | null>(null);
   const [apprenticeScoutRows, setApprenticeScoutRows] = useState<any[]>([]);
-  const [groupScoutRows,setGroupsScoutRows] = useState<any[]>([])
+  const [groupScoutRows, setGroupsScoutRows] = useState<any[]>([])
   const [artistsScoutRows, setArtistsScoutRows] = useState<any[]>([]);
   const [apprenticeID, setapprenticeID] = useState<any>('');
   const [groupID, SetgroupId] = useState<any>('');
+  const [isArtist, SetisArtist] = useState(Boolean);
 
   const handleOpenContractModal = async (artistRow: any) => {
     const agencyId = user?.profileData?.agencyId || '';
@@ -136,15 +138,16 @@ const Scout: React.FC = () => {
       const token = localStorage.getItem('token');
       // Adaptar el payload al formato requerido por el backend
       const payload = {
-        type: 'Artist',
+        type: isArtist ? 'Artist' : 'Group',
         agencyId: user?.profileData?.agencyId || user?.agencyId,
         startDate: formData.startDate,
         initialConditions: formData.terms,
         incomeDistribution: formData.value,
-        apprenticeId: apprenticeID || formData.apprenticeId || '',
+        apprenticeId: isArtist ? (apprenticeID || formData.apprenticeId || '') : '',
         groupId: groupID || formData.groupId || formData.GroupId || '',
       };
-      const response = await fetch('http://localhost:3000/api/contract', {
+      const url = (isArtist) ? 'http://localhost:3000/api/contract/artist' : 'http://localhost:3000/api/contract/group'
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -239,46 +242,46 @@ const Scout: React.FC = () => {
             Ofrecer Contratos a Artistas
           </Button>
           <Button
-            variant={vista === 'grupos'? 'contained' : 'outlined'}
+            variant={vista === 'grupos' ? 'contained' : 'outlined'}
             color='secondary'
             onClick={() => setVista('grupos')}
           >
             Ofrecer Contratos a Grupos
           </Button>
         </Box>
-                  {(() => {
-            switch (vista) {
-              case 'aprendices':
-                return (
-                  <DataTable 
-                    columns={columnsAprendices} 
-                    rows={apprenticeScoutRows} 
-                    pagesize={5} 
-                    showCreateButton={false} 
-                  />
-                );
-              case 'artistas':
-                return (
-                  <DataTable 
-                    columns={columnsArtistas} 
-                    rows={artistsScoutRows} 
-                    pagesize={5} 
-                    showCreateButton={false} 
-                  />
-                );
-              case 'grupos':
-                return (
-                  <DataTable 
-                    columns={columnsGroups} 
-                    rows={groupScoutRows} 
-                    pagesize={5} 
-                    showCreateButton={false} 
-                  />
-                );
-              default:
-                return null;
-            }
-          })()}
+        {(() => {
+          switch (vista) {
+            case 'aprendices':
+              return (
+                <DataTable
+                  columns={columnsAprendices}
+                  rows={apprenticeScoutRows}
+                  pagesize={5}
+                  showCreateButton={false}
+                />
+              );
+            case 'artistas':
+              return (
+                <DataTable
+                  columns={columnsArtistas}
+                  rows={artistsScoutRows}
+                  pagesize={5}
+                  showCreateButton={false}
+                />
+              );
+            case 'grupos':
+              return (
+                <DataTable
+                  columns={columnsGroups}
+                  rows={groupScoutRows}
+                  pagesize={5}
+                  showCreateButton={false}
+                />
+              );
+            default:
+              return null;
+          }
+        })()}
         {/* {vista === 'aprendices' ? (
           <DataTable columns={columnsAprendices} rows={apprenticeScoutRows} pagesize={5} showCreateButton={false} />
         ) : (

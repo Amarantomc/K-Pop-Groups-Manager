@@ -27,6 +27,7 @@ export type Field = {
     fields?: Field[]; // campos anidados para grupos
     multiple?: boolean; // para selects múltiples
     dependsOn?: string; // nombre del campo del que depende para cargar opciones dinámicas
+    addButtonLabel?: string; // etiqueta para el botón de agregar en campos de tipo 'group'
 };
 
 // Enums y utilidades para convertirlos a opciones del select
@@ -52,6 +53,9 @@ export type GroupStatus = typeof GROUP_STATUS[number];
 
 export const CONTRACT_STATUS = ['activo', 'en_renovacion', 'finalizado', 'rescindido'] as const;
 export type ContractStatus = typeof CONTRACT_STATUS[number];
+
+export const ROLES_GROUPS = ['Lider', 'Vocalista', 'Bailarín', 'Rapper', 'Productor', 'Compositor', 'Visual'] as const;
+export type Role = typeof ROLES_GROUPS[number];
 
 export const ACTIVITY_TYPES = ['individual', 'grupal'] as const;
 export type ActivityType = typeof ACTIVITY_TYPES[number];
@@ -154,25 +158,38 @@ export const visualConceptFields: Field[] = [
 ];
 
 // Actividad
-// ...existing code...
 export const activityFields: Field[] = [
     { id: 'place', name: 'place', label: 'Lugar', type: 'text' },
     { id: 'typeEvent', name: 'typeEvent', label: 'Evento', type: 'select', options: enumToOptions(ACTIVITY_TYPES_EVENTS) },
     { id: 'type', name: 'type', label: 'Tipo Actividad', type: 'select', options: enumToOptions(ACTIVITY_TYPES) },
-    { id: 'responsible', name: 'responsible', label: 'Agencia Responsable', type: 'select', required: true, optionsEndpoint: '/api/agency' },
-    /*
     {
         id: 'performer',
         name: 'performer',
         label: 'Artista(s)/Grupo(s)',
-        type: 'select',
-        required: true,
-        options: [],
-        multiple: false,
-        optionsEndpoint: '',
-        dependsOn: 'responsible',
+        type: 'group',
+        fields: [
+            {
+                id: 'type',
+                name: 'type',
+                label: 'Tipo',
+                type: 'select',
+                options: [
+                    { value: 'group', label: 'Grupo' },
+                    { value: 'artist', label: 'Artista' }
+                ],
+                required: true
+            },
+            {
+                id: 'memberId',
+                name: 'memberId',
+                label: 'Miembro',
+                type: 'select',
+                options: [], // Se cargan dinámicamente según tipo
+                required: true
+            }
+        ],
+        addButtonLabel: 'Agregar performer'
     },
-    */
 ];
 
 // Ingreso
@@ -181,20 +198,37 @@ export const incomeFields: Field[] = [
     { id: 'incomeType', name: 'incomeType', label: 'Tipo Ingreso', type: 'select', options: enumToOptions(INCOME_TYPES) },
 ]
 // Solicitud
-// Campos para agregar aprendices y artistas al grupo
-const groupMemberFields: Field[] = [
-    { id: 'memberName', name: 'memberName', label: 'Nombre del Miembro', type: 'text', required: true },
-    { id: 'stageName', name: 'stageName', label: 'Nombre Artístico', type: 'text', maxLength: 100 },
-    { id: 'memberType', name: 'memberType', label: 'Tipo de Miembro', type: 'select', options: enumToOptions(['Aprendiz', 'Artista'] as const), required: true },
-    { id: 'memberRole', name: 'memberRole', label: 'Rol en el Grupo', type: 'text', placeholder: 'Ej: Vocalista, Bailarín, Productor', required: true },
+export const groupMemberFields: Field[] = [
+    { id: 'member', name: 'member', label: 'Miembro', type: 'text', required: true },
+    {
+        id: 'role',
+        name: 'role',
+        label: 'Rol',
+        type: 'select',
+        options: Object.values(ROLES_GROUPS).map(role => ({ label: role, value: role })),
+        required: true
+    }
 ];
 
 export const requestFields: Field[] = [
-    { id: 'requestStatus', name: 'requestStatus', label: 'Solicitud', type: 'select', options: enumToOptions(REQUEST_STATUS) },
-    //{ id: 'date', name: 'date', label: 'Fecha Solicitud', type: 'date' },
-    { id: 'members', name: 'members', label: 'Miembros', type: 'group', fields: groupMemberFields },
-    { id: 'status', name: 'status', label: 'Estado Grupo', type: 'select', options: enumToOptions(GROUP_STATUS) },
     { id: 'name', name: 'name', label: 'Nombre Grupo', type: 'text', required: true },
+    {
+        id: 'members',
+        name: 'members',
+        label: 'Miembros',
+        type: 'group',
+        fields: groupMemberFields,
+        addButtonLabel: 'Agregar miembro'
+    },
+    {
+        id: 'concept',
+        name: 'concept',
+        label: 'Concepto',
+        type: 'select',
+        required: true,
+        optionsEndpoint: '/api/concept',
+        placeholder: 'Selecciona un concepto'
+    },
 ];
 
 // Contrato
