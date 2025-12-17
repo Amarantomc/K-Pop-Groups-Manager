@@ -26,8 +26,7 @@ export class ExportArtistsToPdfUseCase {
             filename: `artistas_${Date.now()}.pdf`,
             orientation: 'landscape',
             columns: [
-                { header:'ID Aprendiz', dataKey: 'ApprenticeId' },
-                { header:'ID Grupo', dataKey: 'GroupId' },
+                
                 { header:'Nombre Artístico', dataKey: 'ArtistName' },
                 { header:'Fecha Debut', dataKey: 'DebutDate' },
                 { header:'Estado', dataKey: 'Status' },

@@ -20,7 +20,7 @@ export class ExportUsersPdfUseCase {
             filename: `users_${Date.now()}.pdf`,
             orientation: 'landscape',
             columns: [
-                { header: 'Id', dataKey: 'id' },
+                 
                 { header: 'Nombre', dataKey: 'name' },
                 { header: 'Email', dataKey: 'email' },
                 { header: 'Rol', dataKey: 'role' },

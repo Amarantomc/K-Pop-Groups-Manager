@@ -3,13 +3,13 @@ export class CreateSongDto {
     public readonly title: string,
     public readonly gender: string,
     public readonly producer: string,
-    public readonly releaseDate: string,
-    public readonly albumIds?: number[]
+    public releaseDate: string|Date,
+    public readonly albumIds: number[]
   ) {}
 
   static Create(body: any): CreateSongDto {
     
-    if(!body.title || !body.gender || !body.producer || !body.releaseDate){
+    if(!body.title || !body.gender || !body.producer){
             throw new Error("Missing required fields");
         }
      

@@ -20,7 +20,7 @@ export class ExportApplicationsPdfUseCase {
             filename: `applications_${Date.now()}.pdf`,
             orientation: 'landscape',
             columns: [
-                { header: 'Id', dataKey: 'id' },
+                
                 { header: 'Nombre Grupo', dataKey: 'groupName' },
                 { header: 'Estado', dataKey: 'status' },
                 { header: 'Fecha Solicitud', dataKey: 'date' },

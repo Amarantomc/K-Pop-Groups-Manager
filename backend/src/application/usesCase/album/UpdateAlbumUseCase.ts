@@ -58,18 +58,6 @@ export class UpdateAlbumUseCase {
 
     const updated = await this.albumRepository.update(albumId, data);
 
-    return new AlbumResponseDto(
-      updated.id,
-      updated.idGroup,
-      updated.title,  
-      updated.releaseDate,      
-      updated.producer,           
-      updated.noSongs,       
-      updated.noCopiesSold,
-      updated.songs ?? [],
-      updated.artists,
-      updated.awards,
-      updated.groups
-    );
+    return AlbumResponseDto.fromEntity(updated)
   }
 }

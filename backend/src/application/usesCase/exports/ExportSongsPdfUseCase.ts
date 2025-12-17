@@ -20,7 +20,7 @@ export class ExportSongsPdfUseCase {
             filename: `songs_${Date.now()}.pdf`,
             orientation: 'landscape',
             columns: [
-                { header: 'Id', dataKey: 'id' },
+                 
                 { header: 'Título', dataKey: 'title' },
                 { header: 'Productor', dataKey: 'producer' },
                 { header: 'Fecha Lanzamiento', dataKey: 'releaseDate' },

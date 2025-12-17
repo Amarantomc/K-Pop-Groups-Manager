@@ -20,7 +20,7 @@ export class ExportConceptsPdfUseCase {
             filename: `concepts_${Date.now()}.pdf`,
             orientation: 'landscape',
             columns: [
-                { header: 'Id', dataKey: 'id' },
+                
                 { header: 'Nombre', dataKey: 'name' },
                 { header: 'Descripción', dataKey: 'description' }
             ]

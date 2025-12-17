@@ -15,19 +15,7 @@ export class GetAlbumUseCase{
                 throw new Error('Album not found');
             }
 
-         return new AlbumResponseDto(
-                        album.id,
-                        album.idGroup,
-                        album.title,  
-                        album.releaseDate,      
-                        album.producer,           
-                        album.noSongs,       
-                        album.noCopiesSold,
-                        !album.songs? [] : album.songs,
-                        album.artists,
-                        album.awards,
-                        album.groups
-                      );
+         return AlbumResponseDto.fromEntity(album)
         
     }
 }
