@@ -88,15 +88,17 @@ export class ApprenticeRepository implements IApprenticeRepository {
     }
 
     async apprenticeScout(): Promise<Apprentice[]> {
-        const apprentices = await this.db.AprendizEnAgencia.findMany({
-          where: {
-            estado: "EN PROCESO DE SELECCION",
+      const apprentices = await this.db.Aprendiz.findMany({
+        where: {
+          Agencia: {
+            some: {
+              estado: "EN PROCESO DE SELECCION",
+            },
           },
-          include: {
-            aprendiz: true,
-          },
-        });
-        return ApprenticeResponseDto.toEntities(apprentices);
+        },
+      });
+    
+      return ApprenticeResponseDto.toEntities(apprentices);
     }
 
     async findByName(name: string): Promise<Apprentice | null> {
