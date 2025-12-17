@@ -18,73 +18,23 @@ export class AlbumRepository implements IAlbumRepository
 
 
 
+
+
      private get db() {
     return this.unitOfWork.getTransaction();
   }
     
   async create(data: CreateAlbumDto): Promise<Album> {
 
-    // 1. Traer los artistas del grupo automáticamente
-    const groupArtists = await this.db.Artista.findMany({
-      where: { idGr: data.idGroup },
-      select: { idAp: true }
-    });
-  
-    // 2. Convertirlos al formato [[idAp, idGroup]]
-    const autoArtists = groupArtists.map((a: { idAp: number; }) => [a.idAp, data.idGroup] as [number, number]);
-  
-    // 3. Unir artistas que vengan del body + los del grupo
-    const finalArtists = [
-      ...(data.artists ?? []),
-      ...autoArtists
-    ];
-  
-    // 4. Crear álbum con TODAS las relaciones
-    const album = await this.db.Album.create({
-      data: {
-        idGrupo: data.idGroup,
-        productor: data.producer,
-        titulo: data.title,
-        fechaLanzamiento: new Date(data.releaseDate),
-        NoCanciones: data.songs.length,
-        NoCopiasVendidas: data.noCopiesSold,
-  
-        // Canciones M-M
-        Canciones: {
-          connect: data.songs.map(id => ({ id }))
-        },
-  
-        // Premios M-M con tabla intermedia AlbúmPremiado
-        Premios: {
-          create: data.awards?.map(idPremio => ({
-            idPremio,
-            año: new Date().getFullYear()
-          })) ?? []
-        },
-  
-        // Lista de artistas involucrados → incluye los auto-detectados
-        LanzamientoArtista: {
-          create: finalArtists.map(([idAp, idGr]) => ({
-            idAp,
-            idGr
-          }))
-        },
-  
-        // Registro de lanzamiento del grupo
-        LanzamientoGrupo: {
-          create: [{
-            idGr: data.idGroup
-          }]
-        }
-      },
-  
-      include: {
-        Canciones: true,
-        Premios: true,
-        LanzamientoArtista: true,
-        LanzamientoGrupo: true
-      }
-    });
+    const album = await this.db.album.create({
+       data:{
+          titulo:data.title,
+          fechaLanzamiento: new Date(data.releaseDate),
+          productor:data.producer,
+          NoCanciones:0,
+          NoCopiasVendidas:0
+       }
+    })
   
     return AlbumResponseDto.toEntity(album);
   }
@@ -286,5 +236,24 @@ export class AlbumRepository implements IAlbumRepository
       })
         
       return albums? await Promise.all(albums.map( async (album:any)=> await this.findById(album.idAlb))):null
+  }
+
+  async addGroupAlbum(groupId: number,albumId:number): Promise<void> {
+     await this.db.GrupoLanzaAlbum.create({
+      data:{
+        idGr:groupId,
+        idAlb:albumId
+      }
+     })
+  }
+
+   async addSoloArtistAlbum(apprenticeId: number, groupId: number,albumId:number): Promise<void> {
+     await this.db.ArtistaLanzaAlbum.create({
+      data:{
+        idAp:apprenticeId,
+        idGr:groupId,
+        idAlb:albumId
+      }
+     })
   }
 }

@@ -20,7 +20,7 @@ export class ExportActivitiesPdfUseCase {
             filename: `activities_${Date.now()}.pdf`,
             orientation: 'landscape',
             columns: [
-                { header: 'Id', dataKey: 'id' },
+                
                 { header: 'Responsable', dataKey: 'responsible' },
                 { header: 'Tipo', dataKey: 'activityType' },
                 { header: 'Fecha', dataKey: 'date' },

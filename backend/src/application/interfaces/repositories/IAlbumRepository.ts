@@ -6,6 +6,8 @@ export interface IAlbumRepository extends IBaseRepository<Album,CreateAlbumDto,a
     findAll(): Promise<Album[]>;
     getByGroup(groupId:number):Promise<Album[]|null>
     getByArtist(apprenticeId:number,groupId:number):Promise<Album[]|null>
+    addGroupAlbum(groupId:number,albumId:number):Promise<void>
+    addSoloArtistAlbum(apprenticeId:number,groupId:number,albumId:number):Promise<void>
     
     
 }

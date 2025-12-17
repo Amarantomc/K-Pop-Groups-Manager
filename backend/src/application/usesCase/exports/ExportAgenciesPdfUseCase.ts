@@ -25,7 +25,7 @@ export class ExportAgenciesPdfUseCase {
             filename: `agencies_${Date.now()}.pdf`,
             orientation: 'landscape',
             columns: [
-                { header:'Id', dataKey: 'id' },
+                
                 { header:'Nombre', dataKey: 'name' },
                 { header:'Direccion', dataKey: 'address' },
                 { header:'Fecha de Fundacion', dataKey: 'foundation' },
