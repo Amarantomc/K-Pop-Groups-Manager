@@ -44,11 +44,14 @@ const Requests: React.FC = () => {
   const handleApprove = async (id: number) => {
     try {
       const response = await fetch(`http://localhost:3000/api/application/${id}`, {
-        method: 'PATCH',
+        method: 'PUT',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json'
-        }
+        },
+        body: JSON.stringify({
+          status : 'APROBADA',
+        })
       });
 
       if (!response.ok) {
@@ -69,11 +72,15 @@ const Requests: React.FC = () => {
   const handleReject = async (id: number) => {
     try {
       const response = await fetch(`http://localhost:3000/api/application/${id}`, {
-        method: 'PATCH',
+        method: 'PUT',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json'
-        }
+        },
+
+        body: JSON.stringify({
+          status : 'RECHAZADA',
+        })
       });
 
       if (!response.ok) {
@@ -93,8 +100,8 @@ const Requests: React.FC = () => {
   // Crear grupo (Manager)
   const handleCreateGroup = async (requestId: number, groupName: string) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/group`, {
-        method: 'POST',
+      const response = await fetch(`http://localhost:3000/api/createGroup/`, {
+        method: 'GET',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json'
@@ -183,18 +190,20 @@ const Requests: React.FC = () => {
   // Lógica para aceptar/rechazar solicitud como aprendiz o artista
   const handleAccept = async (requestId: number) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/application/${requestId}/decision`, {
-        method: 'PUT',
+      console.log(requestId);
+      const response = await fetch(`http://localhost:3000/api/application/${requestId}/apprentice-decision`, {
+        method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          requestId,
-          //apprenticeId
+          apprenticeId : user?.profileData?.apprenticeId || user?.profileData?.IdAp,
+          decision : true,
           //role: user.role
         })
       });
+      console.log(response);
       if (!response.ok) throw new Error('Error al aceptar solicitud');
       // Opcional: actualizar estado local o mostrar feedback
     } catch (error) {
@@ -202,17 +211,22 @@ const Requests: React.FC = () => {
     }
   };
   const handleDeny = async (requestId: number) => {
+    const url =
+  user?.role === 'artist'
+    ? `http://localhost:3000/api/application/${requestId}/artist-decision`
+    : `http://localhost:3000/api/application/${requestId}/apprentice-decision`;
+
     try {
-      const response = await fetch(`http://localhost:3000/api/application/decision`, {
-        method: 'POST',
+      const response = await fetch(url, {
+        method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          requestId,
-          userId: user?.id,
-          role: user?.role
+          apprenticeId : user?.profileData?.apprenticeId || user?.profileData?.IdAp,
+          groupId : user?.profileData?.IdGr || user?.profileData?.groupId, 
+          decision : false,
         })
       });
       if (!response.ok) throw new Error('Error al negar solicitud');

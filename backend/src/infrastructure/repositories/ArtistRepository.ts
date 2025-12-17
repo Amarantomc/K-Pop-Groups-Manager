@@ -164,11 +164,26 @@ private get db() {
         },
       },
       include: {
-        aprendiz: true  
-      }
+        Contrato: {
+          where: {
+            fechaFinalizacion: null,
+          },
+          include: {
+            Agencia: true,
+          },
+        },
+        HistorialGrupos: {
+          include: {
+            grupo: true,
+          },
+        },
+        aprendiz: true,
+      },
     });
-  
-    return artist ? ArtistResponseDto.toEntity(artist) : null;
+    
+
+    console.log(artist);
+    return ArtistResponseDto.toEntityForManager(artist);
   }
 
   async delete(id: any): Promise<void> {

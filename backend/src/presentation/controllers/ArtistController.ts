@@ -17,6 +17,7 @@ import type { GetBestAlbumsUseCase } from "../../application/usesCase/artist/Get
 import type { GetIncomeAndSuccesUseCase } from "../../application/usesCase/artist/GetIncomeAndSuccesUseCase";
 import type { GetArtistsWhoChangeAgencyUseCase } from "../../application/usesCase/artist/GetArtistsWhoChangeAgencyUseCase";
 import type { GetSoloArtistsProfesionalHistoryUseCase } from "../../application/usesCase/artist/GetSoloArtistsProfesionalHistoryUseCase";
+import { Param } from "@prisma/client/runtime/library";
 
 @injectable()
 export class ArtistController {
@@ -60,6 +61,7 @@ export class ArtistController {
         
         try {
             const {apprenticeId,groupId}=req.params
+            //console.log(req.params);
             const artist= await this.findArtistByIdUseCase.execute({apprenticeId: Number(apprenticeId), groupId: Number(groupId)})
             res.json({
                 success: true,

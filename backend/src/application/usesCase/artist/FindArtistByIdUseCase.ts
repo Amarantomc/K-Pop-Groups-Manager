@@ -9,6 +9,7 @@ export class FindArtistByIdUseCase {
     constructor(@inject(Types.IArtistRepository) private artistRepository: IArtistRepository){}
 
     async execute(Id:any): Promise<ArtistResponseDto> {
+      console.log(Id);
         const artist = await this.artistRepository.findById(Id!);
         if (!artist) {
           throw new Error('Artist not found');

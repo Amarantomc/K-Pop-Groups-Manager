@@ -226,8 +226,8 @@ export class ApplicationRepository implements IApplicationRepository
     return ArtistResponseDto.toEntities(artists);
   }
 
-  async createFromApplication(dto: ApplicationCreateGroupDTO, applicationId: number):Promise<Group> {
-    // Crear el grupo
+  async createFromApplication(dto: ApplicationCreateGroupDTO, applicationId: number): Promise<Group> {
+    // 1️⃣ Crear el grupo
     const group = await this.db.Grupo.create({
       data: {
         nombreCompleto: dto.groupName,
@@ -241,22 +241,14 @@ export class ApplicationRepository implements IApplicationRepository
     });
   
     const apprentices: number[] = Array.isArray(dto.apprentices) ? dto.apprentices : [];
-    const artists: [number, number][] = Array.isArray(dto.artists) ? dto.artists : [];
+    const artists: [number, number][] = Array.isArray(dto.artists) ? dto.artists : []; // [idAp, oldGroupId]
   
-    // Crear Aprendices como Artistas y sus relaciones
+    // 2️⃣ Convertir Aprendices en Artistas
     for (let i = 0; i < apprentices.length; i++) {
       const apprenticeId = apprentices[i];
       const role = dto.roles?.[i] ?? "Miembro";
   
-      const existingArtist = await this.db.Artista.findFirst({
-        where: { idAp: apprenticeId },
-      });
-  
-      if (existingArtist) {
-        throw new Error(`El aprendiz ${apprenticeId} ya debutó como artista.`);
-      }
-  
-      // Crear el Artista
+      // Crear Artista
       await this.db.Artista.create({
         data: {
           idAp: apprenticeId,
@@ -275,11 +267,11 @@ export class ApplicationRepository implements IApplicationRepository
           idGrupoDebut: group.id,
           idGr: group.id,
           fechaInicio: dto.debut,
-          rol: role,
+          rol,
         },
       });
   
-      // Registrar en SolicitudGrupoAprendiz
+      // Registrar en AprendizSolicitaGrupo
       await this.db.AprendizSolicitaGrupo.create({
         data: {
           idAp: apprenticeId,
@@ -290,28 +282,32 @@ export class ApplicationRepository implements IApplicationRepository
       });
     }
   
+    // 3️⃣ Mover artistas existentes al nuevo grupo
     for (let j = 0; j < artists.length; j++) {
       const tuple = artists[j];
-      if (!tuple) continue; // <-- evita destructuring de undefined
-    
+      if (!tuple) continue;
+  
       const [idAp, oldGroupId] = tuple;
-    
-      if (!idAp || !oldGroupId) continue;
-    
       const role = dto.roles?.[apprentices.length + j] ?? "Miembro";
-    
-      // Registrar en ArtistaEnGrupo
+  
+      // Actualizar Artista a nuevo grupo
+      await this.db.Artista.update({
+        where: { idAp_idGr: { idAp, idGr: oldGroupId } },
+        data: { idGr: group.id },
+      });
+  
+      // Registrar en ArtistaEnGrupo (historial)
       await this.db.ArtistaEnGrupo.create({
         data: {
           idAp,
           idGrupoDebut: oldGroupId,
           idGr: group.id,
           fechaInicio: dto.debut,
-          rol: role,
+          rol,
         },
       });
-    
-      // Registrar en SolicitudGrupoArtista
+  
+      // Registrar en ArtistaSolicitaGrupo
       await this.db.ArtistaSolicitaGrupo.create({
         data: {
           idAp,
@@ -323,16 +319,29 @@ export class ApplicationRepository implements IApplicationRepository
       });
     }
   
-    // Actualizar estado de la solicitud
+    // 4️⃣ Actualizar estado de la solicitud
     await this.db.Solicitud.update({
       where: { id: applicationId },
       data: { estado: "TERMINADA" },
     });
   
-    return GroupResponseDTO.toEntity(group);
+    // 5️⃣ Traer grupo actualizado con relaciones
+    const groupWithRelations = await this.db.Grupo.findUnique({
+      where: { id: group.id },
+      include: {
+        concepto: true,
+        conceptoVisual: true,
+        Agencias: true,
+        Artista: { include: { aprendiz: true } },
+        HistorialArtistas: true,
+        Lanzamiento: true,
+        Actividades: true,
+      },
+    });
+  
+    return GroupResponseDTO.toEntity(groupWithRelations);
   }
  
-
   async createRol(data: CreateRolApplicationDto): Promise<Application> {
     try {
       const idAgency = Number(data.idAgency);
