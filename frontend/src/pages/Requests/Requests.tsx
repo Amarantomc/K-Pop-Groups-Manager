@@ -403,14 +403,18 @@ const Requests: React.FC = () => {
         if (user.role === 'apprentice') {
           filteredRequests = requestsArray.filter(
             (req: any) =>
-              req.apprentices?.some((a: any) => a.id === user.id) ||
-              req.apprentice?.id === Number(user.profileData?.apprenticeId)
+              Array.isArray(req.apprentices) &&
+              req.apprentices.some((a: any) => a.id === Number(user.profileData?.apprenticeId))
           );
         } else if (user.role === 'artist') {
           filteredRequests = requestsArray.filter(
             (req: any) =>
-              req.artists?.some((a: any) => a.id === user.id) ||
-              req.artist?.id === Number(user.profileData?.apprenticeId)
+              Array.isArray(req.artists) &&
+              req.artists.some(
+                (a: any) =>
+                  a.idApprentice === Number(user.profileData?.IdAp) &&
+                  a.groupId === Number(user.profileData?.IdGr)
+              )
           );
         } else if (user.role === 'manager' || user.role === 'director') {
           filteredRequests = requestsArray.filter(
@@ -419,8 +423,12 @@ const Requests: React.FC = () => {
               req.idAgency === Number(user.profileData?.agencyId)
           );
         }
-        console.log('agency', user.agencyId)
-        console.log('profile', user.profileData?.agencyId)
+        console.log('user', user)
+        console.log('group', user.profileData?.groupId)
+        console.log('group', user.profileData?.IdGr)
+        console.log('user', user)
+        console.log('apprentice', user.profileData?.apprenticeId)
+        console.log('apprentice', user.profileData?.IdAp)
         console.log('solicitudes filtradas:', filteredRequests)
 
         // Obtener nombres de agencia y concepto para cada solicitud
