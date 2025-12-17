@@ -141,6 +141,9 @@ ListApplicationUseCase : Symbol.for('ListApplicationUseCase'),
 CreateGroupToApplicationUseCase : Symbol.for('CreateGroupToApplicationUseCase'),
 CreateRolApplicationUseCase: Symbol.for('CreateRolApplicationUseCase'),
 SoloistsArtistWhithoutApplicationUseCase: Symbol.for('SoloistsArtistWhithoutApplicationUseCase'),
+ApprenticeDecisionByApplicationUseCase: Symbol.for('ApprenticeDecisionByApplicationUseCase'),
+ArtistDecisionByApplicationUseCase: Symbol.for('ArtistDecisionByApplicationUseCase'),
+GetApprenticesWhithoutApplicationUseCase: Symbol.for('GetApprenticesWhithoutApplicationUseCase'),
 //#endregion
 
 //#region Income

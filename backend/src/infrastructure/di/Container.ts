@@ -195,7 +195,10 @@ import { GroupOfferContractUseCase } from "../../application/usesCase/contract/G
 import { GroupsWithActiveContractsUseCase } from "../../application/usesCase/agency/GroupsWithActiveContractsUseCase";
 import { ArtistsWithActiveContractsUseCase } from "../../application/usesCase/agency/ArtistsWithActiveContractsUseCases";
 import { CreateRolApplicationUseCase } from "../../application/usesCase/application(solicitud)/CreateRolApplicationUseCase";
-import { SoloistsArtistWhithoutApplicationUseCase } from "../../application/usesCase/application(solicitud)/soloistsArtistWhithoutApplicationUseCase";
+import { ArtistDecisionByApplicationUseCase } from "../../application/usesCase/apprentice/ArtistDecisionByApplicationUseCase";
+import { ApprenticeDecisionByApplicationUseCase } from "../../application/usesCase/apprentice/ApprenticeDecisionByApplicationUseCase";
+import { GetApprenticesWhithoutApplicationUseCase } from "../../application/usesCase/apprentice/getApprenticesWhithoutApplicationUseCase";
+import { SoloistsArtistWhithoutApplicationUseCase } from "../../application/usesCase/application(solicitud)/SoloistsArtistWhithoutApplicationUseCase";
  
 const container=new Container()
  
@@ -754,9 +757,20 @@ container.bind<UpdatePopularityListUseCase>(Types.UpdatePopularityListUseCase)
   .to(CreateGroupToApplicationUseCase)
   .inTransientScope();
 
-
   container.bind<SoloistsArtistWhithoutApplicationUseCase>(Types.SoloistsArtistWhithoutApplicationUseCase)
   .to(SoloistsArtistWhithoutApplicationUseCase)
+  .inTransientScope();
+
+  container.bind<GetApprenticesWhithoutApplicationUseCase>(Types.GetApprenticesWhithoutApplicationUseCase)
+  .to(GetApprenticesWhithoutApplicationUseCase)
+  .inTransientScope();
+
+  container.bind<ApprenticeDecisionByApplicationUseCase>(Types.ApprenticeDecisionByApplicationUseCase)
+  .to(ApprenticeDecisionByApplicationUseCase)
+  .inTransientScope();
+
+  container.bind<ArtistDecisionByApplicationUseCase>(Types.ArtistDecisionByApplicationUseCase)
+  .to(ArtistDecisionByApplicationUseCase)
   .inTransientScope();
   //#endregion
 

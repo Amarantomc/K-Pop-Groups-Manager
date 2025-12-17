@@ -21,7 +21,9 @@ export class ActivityRoutes {
 
     this.router.put("/:id/decision",(req, res) => this.activityController.decideActivity(req, res));
     
-    this.router.post('/', RoleMiddleware.onlyStaff(), (req, res) => this.activityController.createActivity(req, res));
+    this.router.post('/'
+      //,RoleMiddleware.onlyStaff()
+       , (req, res) => this.activityController.createActivity(req, res));
     
     this.router.get('/', (req, res) => this.activityController.getAll(req, res));
     
