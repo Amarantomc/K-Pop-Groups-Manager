@@ -559,6 +559,7 @@ async removeMembers(groupId: number, artistIds: number[]): Promise<void> {
 	}
 
 	async getLastGroup(apprenticeId: number, groupId: number): Promise<Group> {
+		 
 		 const groups= await this.db.$queryRaw`
 		       SELECT 
         aeg."idAp",
@@ -577,6 +578,7 @@ async removeMembers(groupId: number, artistIds: number[]): Promise<void> {
       ORDER BY aeg."fechaInicio" DESC
       LIMIT 1
 		 `
+	   
 	   return GroupResponseDTO.toEntitySimple(groups[0])
 	}
 }

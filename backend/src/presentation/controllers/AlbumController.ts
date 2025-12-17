@@ -23,7 +23,7 @@ export class AlbumController{
         try {
               
           const albumDto=CreateAlbumDto.create(req.body)
-          //console.log(albumDto);
+          
           const album = await this.createAlbumUseCase.execute(albumDto);
     
           

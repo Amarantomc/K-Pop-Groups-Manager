@@ -20,7 +20,7 @@ export class ExportAwardsPdfUseCase {
             filename: `awards_${Date.now()}.pdf`,
             orientation: 'landscape',
             columns: [
-                { header: 'Id', dataKey: 'id' },
+                
                 { header: 'Nombre', dataKey: 'awardTitle' },
                 { header: 'Academia', dataKey: 'academyName' },
                 

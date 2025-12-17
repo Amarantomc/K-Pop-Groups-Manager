@@ -1,85 +1,41 @@
  import type { IUnitOfWork } from "../../interfaces/IUnitOfWork";
  import { inject, injectable } from "inversify";
  import { Types } from "../../../infrastructure/di/Types";
-// import type { IAlbumRepository } from "../../interfaces/repositories/IAlbumRepository";
-// import type { CreateAlbumDto } from "../../dtos/album/CreateAlbumDto";
-// import { AlbumResponseDto } from "../../dtos/album/AlbumResponseDto";
-
-import { AlbumResponseDto } from "../../dtos/album/AlbumResponseDto";
+ import { AlbumResponseDto } from "../../dtos/album/AlbumResponseDto";
 import type { CreateAlbumDto } from "../../dtos/album/CreateAlbumDto";
 import type { IAlbumRepository } from "../../interfaces/repositories/IAlbumRepository";
-
-
-// @injectable()
-// export class CreateAlbumUseCase{
-
-//     constructor(
-//     @inject(Types.IAlbumRepository) private albumRepository: IAlbumRepository,
-//     @inject(Types.IUnitOfWork)  private unitOfWork: IUnitOfWork
-//   ) {}
-
-//     async execute(command:CreateAlbumDto):Promise<AlbumResponseDto>{
-//         try
-//         {
-         
-//             await this.unitOfWork.beginTransaction();
-//             const album = await this.albumRepository.create(command);
-//             console.log(album);
-//             await this.unitOfWork.commit();
-            
-//             return new AlbumResponseDto(
-//                 album.id,
-//                 album.idGroup,
-//                 album.title,  
-//                 album.releaseDate,      
-//                 album.producer,           
-//                 //album.noSongs,       
-//                 album.noCopiesSold,
-//                 !album.songs? [] : album.songs,
-//                 album.artists,
-//                 album.awards,
-//               );
-//         }
-//         catch(error){
-//             //console.log(error);
-//             await this.unitOfWork.rollback();
-//             throw error;
-//         }
-//       }
-// }
+import type { IArtistRepository } from "../../interfaces/repositories/IArtistRepository";
+import type { IGroupRepository } from "../../interfaces/repositories/IGroupRepository";
+ 
 
 @injectable()
 export class CreateAlbumUseCase {
 
     constructor(
         @inject(Types.IAlbumRepository) private albumRepository: IAlbumRepository,
+        @inject(Types.IArtistRepository)private artistRepository:IArtistRepository,
+        @inject(Types.IGroupRepository) private groupRepository:IGroupRepository,
         @inject(Types.IUnitOfWork) private unitOfWork: IUnitOfWork
     ) {}
 
     async execute(command: CreateAlbumDto): Promise<AlbumResponseDto> {
         try {
             await this.unitOfWork.beginTransaction();
-
             const album = await this.albumRepository.create(command);
-
-            await this.unitOfWork.commit();
-
-            // 🔥🔥 Construcción CORRECTA del DTO
-            return new AlbumResponseDto(
-                album.id,                     // <-- OK
+            
+            const soloArtist= await this.artistRepository.getSoloArtists()
+            const isSoloArtist= soloArtist? soloArtist.find(x=>x.ApprenticeId==command.apprenticeId && x.GroupId==command.groupId):false
+            if(!isSoloArtist){
+                const actualGroup= await this.groupRepository.getLastGroup(command.apprenticeId,command.groupId)
+                await this.albumRepository.addGroupAlbum(actualGroup.id,album.id)
                 
-                album.idGroup,                // OJO: idGroup NO existe en prisma
-                album.title,                // title NO existe en prisma
-                album.releaseDate,       // releaseDate tampoco
-                album.producer,              // OK
-                album.noSongs,            // <-- LO TENÍAS COMENTADO
-                album.noCopiesSold,       // OK
+            }else{
+                await this.albumRepository.addSoloArtistAlbum(isSoloArtist.ApprenticeId,isSoloArtist.GroupId,album.id)
+            }
+            await this.unitOfWork.commit();
+            return AlbumResponseDto.fromEntity(album)
 
-                album.songs ?? [],        // songs
-                album.artists?? [],         // artists
-                album.awards ?? [],
-                album.groups             // awards
-            );
+             
 
         } catch (error) {
           console.log(error);

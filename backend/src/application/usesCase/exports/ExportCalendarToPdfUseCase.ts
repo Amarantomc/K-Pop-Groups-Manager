@@ -20,7 +20,7 @@ export class ExportCalendarToPdfUseCase {
             filename: `actividades_${Date.now()}.pdf`,
             orientation: 'landscape',
             columns: [
-                { header:'ID Actividad', dataKey: 'id' },
+                 
                 { header:'Responsable', dataKey: 'responsible' },
                 { header:'Tipo', dataKey: 'activityType' },
                 { header:'Fecha', dataKey: 'date' },

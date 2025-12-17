@@ -20,7 +20,7 @@ export class ExportIncomesPdfUseCase {
             filename: `incomes_${Date.now()}.pdf`,
             orientation: 'landscape',
             columns: [
-                { header: 'Id', dataKey: 'idIncome' },
+                
                 
                 { header: 'Monto', dataKey: 'amount' },
                 { header: 'Fecha', dataKey: 'date' },

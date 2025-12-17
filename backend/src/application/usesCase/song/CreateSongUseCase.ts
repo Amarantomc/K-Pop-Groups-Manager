@@ -4,18 +4,22 @@ import type { ISongRepository } from "../../interfaces/repositories/ISongReposit
 import type { IUnitOfWork } from "../../interfaces/IUnitOfWork";
 import { CreateSongDto } from "../../dtos/song/CreateSongDto";
 import { SongResponseDto } from "../../dtos/song/SongResponseDto";
+import type { IAlbumRepository } from "../../interfaces/repositories/IAlbumRepository";
 
 @injectable()
 export class CreateSongUseCase {
   constructor(
     @inject(Types.ISongRepository) private songRepository: ISongRepository,
+    @inject(Types.IAlbumRepository)private albumRepository:IAlbumRepository,
     @inject(Types.IUnitOfWork) private unitOfWork: IUnitOfWork
   ) {}
 
   async execute(command: CreateSongDto): Promise<SongResponseDto> {
     try {
       await this.unitOfWork.beginTransaction();
-
+      const id= command.albumIds[0]
+      const album = await this.albumRepository.findById(id?.toString()!)
+      command.releaseDate= album ? album.releaseDate:command.releaseDate
       const song = await this.songRepository.create(command);
 
       await this.unitOfWork.commit();
