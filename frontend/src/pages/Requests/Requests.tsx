@@ -180,6 +180,47 @@ const Requests: React.FC = () => {
       setOpenError(true);
     }
   };
+  // Lógica para aceptar/rechazar solicitud como aprendiz o artista
+  const handleAccept = async (requestId: number) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/application/${requestId}/decision`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          requestId,
+          //apprenticeId
+          //role: user.role
+        })
+      });
+      if (!response.ok) throw new Error('Error al aceptar solicitud');
+      // Opcional: actualizar estado local o mostrar feedback
+    } catch (error) {
+      console.error('Error al aceptar solicitud:', error);
+    }
+  };
+  const handleDeny = async (requestId: number) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/application/decision`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          requestId,
+          userId: user?.id,
+          role: user?.role
+        })
+      });
+      if (!response.ok) throw new Error('Error al negar solicitud');
+      // Opcional: actualizar estado local o mostrar feedback
+    } catch (error) {
+      console.error('Error al negar solicitud:', error);
+    }
+  };
 
   const fetchAgencyName = async (id: number | string) => {
     if (!id) return '';
@@ -279,13 +320,14 @@ const Requests: React.FC = () => {
 
       // Director: botones de aprobar/rechazar
       if (user?.role === 'director') {
+        const isValidate = request.status === 'VALIDADA';
         return (
           <div style={{ display: 'flex', gap: '8px' }}>
             <Tooltip title="Aprobar solicitud">
               <IconButton
                 size="small"
                 onClick={() => handleApprove(request.id)}
-                disabled={request.status !== 'pending'}
+                disabled={!isValidate}
                 sx={{
                   color: '#10b981',
                   '&:hover': { backgroundColor: '#d1fae5' },
@@ -299,7 +341,7 @@ const Requests: React.FC = () => {
               <IconButton
                 size="small"
                 onClick={() => handleReject(request.id)}
-                disabled={request.status !== 'pending'}
+                disabled={!isValidate}
                 sx={{
                   color: '#ef4444',
                   '&:hover': { backgroundColor: '#fee2e2' },
@@ -315,8 +357,8 @@ const Requests: React.FC = () => {
 
       // Manager: botón de crear grupo
       if (user?.role === 'manager') {
-        const isCompleted = request.status === 'completed';
-        const isApproved = request.status === 'approved';
+        const isCompleted = request.status === 'COMPLETADA';
+        const isApproved = request.status === 'APROBADA';
 
         return (
           <Tooltip title={
@@ -342,12 +384,45 @@ const Requests: React.FC = () => {
         );
       }
 
+      // Aprendiz y Artista: boton para que los miembros acepten la solicitud
+      if (user?.role === 'apprentice' || user?.role === 'artist') {
+        const isPending = params.row.status === 'PENDIENTE';
+
+        return (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-start' }}>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <Tooltip title="Aceptar solicitud">
+                <IconButton
+                  size="small"
+                  sx={{ color: '#10b981', '&:hover': { backgroundColor: '#d1fae5' } }}
+                  onClick={() => handleAccept(params.row.id)}
+                  disabled={!isPending}
+                >
+                  <CheckCircleIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Negar solicitud">
+                <IconButton
+                  size="small"
+                  sx={{ color: '#ef4444', '&:hover': { backgroundColor: '#fee2e2' } }}
+                  onClick={() => handleDeny(params.row.id)}
+                  disabled={!isPending}
+                >
+                  <CancelIcon />
+                </IconButton>
+              </Tooltip>
+            </div>
+            {/* ...botones extra... */}
+          </div>
+        );
+      }
+
       return null;
     }
   };
 
   // Agregar columna de acciones solo para director y manager
-  const columns = user?.role === 'director' || user?.role === 'manager'
+  const columns = user?.role === 'director' || user?.role === 'manager' || user?.role === 'apprentice' || user?.role === 'artist'
     ? [...baseColumns, actionsColumn]
     : baseColumns;
 
@@ -399,12 +474,15 @@ const Requests: React.FC = () => {
         const data = await response.json();
         const requestsArray = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
 
+        console.log('array de solicitudes', requestsArray)
+
         let filteredRequests = requestsArray;
+        // Filtrar solicitudes según rol y datos del usuario
         if (user.role === 'apprentice') {
           filteredRequests = requestsArray.filter(
             (req: any) =>
               Array.isArray(req.apprentices) &&
-              req.apprentices.some((a: any) => a.id === Number(user.profileData?.apprenticeId))
+              req.apprentices.some((a: any) => a.apprenticeId === Number(user.profileData?.apprenticeId))
           );
         } else if (user.role === 'artist') {
           filteredRequests = requestsArray.filter(
@@ -412,6 +490,7 @@ const Requests: React.FC = () => {
               Array.isArray(req.artists) &&
               req.artists.some(
                 (a: any) =>
+                  //console.log(a.idApprentice, user.profileData?.IdAp, a.groupId, user.profileData?.IdGr)
                   a.idApprentice === Number(user.profileData?.IdAp) &&
                   a.groupId === Number(user.profileData?.IdGr)
               )
@@ -423,12 +502,7 @@ const Requests: React.FC = () => {
               req.idAgency === Number(user.profileData?.agencyId)
           );
         }
-        console.log('user', user)
-        console.log('group', user.profileData?.groupId)
-        console.log('group', user.profileData?.IdGr)
-        console.log('user', user)
-        console.log('apprentice', user.profileData?.apprenticeId)
-        console.log('apprentice', user.profileData?.IdAp)
+
         console.log('solicitudes filtradas:', filteredRequests)
 
         // Obtener nombres de agencia y concepto para cada solicitud
@@ -493,7 +567,7 @@ const Requests: React.FC = () => {
     if (requestToDelete === null) return;
 
     try {
-      const response = await fetch(`http://localhost:3000/api//${requestToDelete}`, {
+      const response = await fetch(`http://localhost:3000/api/application/${requestToDelete}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -518,7 +592,7 @@ const Requests: React.FC = () => {
 
   const handleEditSave = async (updatedRow: Request) => {
     try {
-      const response = await fetch(`http://localhost:3000/api//${updatedRow.id}`, {
+      const response = await fetch(`http://localhost:3000/api/application/${updatedRow.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -543,15 +617,32 @@ const Requests: React.FC = () => {
     }
   };
 
-  const handleCreateSave = async (newRow: Omit<Request, 'id'>) => {
+  const handleCreateSave = async (newrequest: any) => {
     try {
-      const response = await fetch('http://localhost:3000/api/', {
+      // Adaptar el payload según la estructura requerida
+      const payload = {
+        groupName: newrequest.groupName,
+        idAgency: newrequest.agencyId || newrequest.idAgency,
+        roles: Array.isArray(newrequest.roles) ? newrequest.roles : [],
+        idConcept: newrequest.concept?.id || newrequest.idConcept || newrequest.concept,
+        // Suponiendo que members contiene tanto aprendices como artistas
+        apprentices: Array.isArray(newrequest.members)
+          ? newrequest.members.filter((m: any) => m.type === 'apprentice').map((m: any) => m.id)
+          : [],
+        artists: Array.isArray(newrequest.members)
+          ? newrequest.members.filter((m: any) => m.type === 'artist').map((m: any) => [m.idApprentice, m.groupId])
+          : [],
+        idApprentice: newrequest.idApprentice || undefined,
+        idGroup: newrequest.idGroup || undefined
+      };
+      const url= user?.role === 'admin' ? 'http://localhost:3000/api/application' : 'http://localhost:3000/api/application/create'
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify(newRow)
+        body: JSON.stringify(payload)
       });
 
       if (!response.ok) {
@@ -560,8 +651,11 @@ const Requests: React.FC = () => {
 
       const data = await response.json();
       setRequests(prev => [...prev, (data.data || data)]);
+      setOpenAccept(true);
     } catch (error) {
       console.error('Error al crear solicitud:', error);
+      setErrorMessage(error instanceof Error ? error.message : 'Error al crear solicitud');
+      setOpenError(true);
     }
   };
 
@@ -592,6 +686,7 @@ const Requests: React.FC = () => {
           onDelete={askDelete}
           onEditSave={handleEditSave}
           onCreateSave={handleCreateSave}
+          showCreateButton={user.role === 'admin' || user.role === 'apprentice' || user.role === 'artist'}
           showEditButton={user.role === 'manager' || user.role === 'director' || user.role === 'admin'}
           constraints={requestConstraints}
           createEntity="request"

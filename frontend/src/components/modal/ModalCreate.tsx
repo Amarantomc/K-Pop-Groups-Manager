@@ -4,7 +4,7 @@
 import type React from "react"
 import { useState, useEffect } from "react"
 import type { Field } from "../../config/formSource"
-import { formFieldsByEntity } from "../../config/formSource"
+import { formFieldsByEntity, ROLES_GROUPS } from "../../config/formSource"
 import "./modal.css"
 
 interface ModalCreateProps {
@@ -15,12 +15,16 @@ interface ModalCreateProps {
   createFields?: Field[]
   onSave?: (data: any) => void
   onFieldChange?: (fieldName: string, value: any) => void
+  user?: { agencyId: string } // Add user prop with agencyId
 }
 
-const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, createEntity, createFields, onSave, onFieldChange }) => {
+const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, createEntity, createFields, onSave, onFieldChange, user }) => {
   const [formData, setFormData] = useState<any>({})
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
   const [dynamicOptions, setDynamicOptions] = useState<Record<string, any[]>>({})
+  const [memberTypes, setMemberTypes] = useState<string[]>([]);
+  const [memberOptions, setMemberOptions] = useState<any[][]>([]);
+
 
   useEffect(() => {
     if (!isOpen) return
@@ -116,45 +120,6 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
       }
     });
   }, [isOpen, createEntity, createFields, formData]);
-
-  // Cargar artistas/grupos según agencia seleccionada
-  useEffect(() => {
-    if (!isOpen || (createEntity !== 'activity' && createEntity !== 'Activity')) return;
-    const agencyId = formData['responsible'];
-    if (!agencyId) return;
-
-    const fetchPerformers = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`http://localhost:3000/api/agency/${agencyId}/performers`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        const data = await res.json();
-        // data debe ser un array de { type, idAp, idGr, name }
-        const options = (data.data || data).map((item: any) => ({
-          value: item.type === 'artist' ? `${item.idAp}+${item.idGr}` : `${item.idGr}`,
-          label: item.name + (item.type === 'artist' ? ' (Artista)' : ' (Grupo)')
-        }));
-        setDynamicOptions(prev => ({ ...prev, performer: options }));
-      } catch (e) {
-        setDynamicOptions(prev => ({ ...prev, performer: [] }));
-      }
-    };
-
-    fetchPerformers();
-  }, [isOpen, createEntity, formData['responsible']]);
-
-  // Cambiar el modo multiple del campo performer según el tipo de actividad
-  useEffect(() => {
-    if (!isOpen || (createEntity !== 'activity' && createEntity !== 'Activity')) return;
-    const type = formData['type'];
-    // Busca el campo performer en createFields o en formFieldsByEntity
-    const fields = createFields ?? (createEntity ? formFieldsByEntity[createEntity] : []);
-    const performerField = fields.find(f => f.name === 'performer' || f.id === 'performer');
-    if (performerField) {
-      performerField.multiple = type === 'grupal';
-    }
-  }, [isOpen, createEntity, createFields, formData['type']]);
 
   if (!isOpen) return null
 
@@ -333,6 +298,66 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
     console.log('[ModalCreate] handleSubmit - payload final a enviar:', dataToSend);
     onSave?.(dataToSend);
   }
+
+
+  const handleAddMember = () => {
+    const members = Array.isArray(formData.members) ? formData.members : [];
+    const newMembers = [...members, { type: 'apprentice', memberId: '', role: '' }];
+    setFormData({ ...formData, members: newMembers });
+    setMemberTypes(prev => [...prev, 'apprentice']);
+    setMemberOptions(prev => [...prev, []]);
+  };
+
+  const handleRemoveMember = (idx: number) => {
+    const members = Array.isArray(formData.members) ? formData.members : [];
+    const newMembers = members.filter((_: any, i: number) => i !== idx);
+    setFormData({ ...formData, members: newMembers });
+    setMemberTypes(prev => prev.filter((_, i) => i !== idx));
+    setMemberOptions(prev => prev.filter((_, i) => i !== idx));
+  };
+
+
+  const handleTypeChange = (idx: number, type: string) => {
+    setMemberTypes(prev => {
+      const copy = [...prev];
+      copy[idx] = type;
+      return copy;
+    });
+    fetchMembers(type, idx);
+    // Limpiar el miembro seleccionado al cambiar tipo y actualizar el tipo en el objeto miembro
+    const members = Array.isArray(formData.members) ? formData.members : [];
+    const newMembers = [...members];
+    newMembers[idx].memberId = '';
+    newMembers[idx].type = type;
+    setFormData({ ...formData, members: newMembers });
+  };
+
+  const handleMemberFieldChange = (idx: number, field: string, val: string) => {
+    const members = Array.isArray(formData.members) ? formData.members : [];
+    const newMembers = [...members];
+    newMembers[idx][field] = val;
+    setFormData({ ...formData, members: newMembers });
+  };
+
+  const fetchMembers = async (type: string, idx: number) => {
+    const endpoint = type === 'apprentice' ? '/api/application/apprentice' : '/api/application/soloistArtist';
+    const token = localStorage.getItem('token');
+    const res = await fetch(`http://localhost:3000${endpoint}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {}
+    });
+    const data = await res.json();
+    const arr = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
+    const opts = arr.map((item: any) => ({
+      value: item.id,
+      label: item.name || item.realName || item.nombre || item.label || item.id
+    }));
+    setMemberOptions(prev => {
+      const copy = [...prev];
+      copy[idx] = opts;
+      return copy;
+    });
+  };
+
   const fields = createFields ?? (createEntity ? formFieldsByEntity[createEntity] : [])
 
   return (
@@ -362,6 +387,187 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
             const value = formData[key]
             const errorMessage = errors[key] || ''
 
+
+            // Lógica para campo members en solicitud (request): aprendiz/artista + miembro + rol
+            if (f.type === 'group' && f.name === 'members' && (createEntity === 'request' || createEntity === 'Request')) {
+              const members = Array.isArray(formData.members) ? formData.members : [];
+              return (
+                <div className={`form-group ${errors.members ? 'form-group-error' : ''}`} key={f.name}>
+                  <label htmlFor={f.name} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    {f.label}
+                    <button
+                      type="button"
+                      onClick={handleAddMember}
+                      style={{ marginLeft: 8, fontWeight: 'bold', fontSize: 18, cursor: 'pointer', background: 'none', border: 'none', color: '#2563eb', padding: 0 }}
+                      title="Agregar miembro"
+                    >
+                      +
+                    </button>
+                  </label>
+                  {members.map((member: any, idx: number) => (
+                    <div key={idx} style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'center' }}>
+                      {/* Tipo de miembro */}
+                      <select
+                        value={member.type || memberTypes[idx] || 'apprentice'}
+                        onChange={e => handleTypeChange(idx, e.target.value)}
+                        style={{ minWidth: 110 }}
+                      >
+                        <option value="apprentice">Aprendiz</option>
+                        <option value="artist">Artista</option>
+                      </select>
+                      {/* Nombre del miembro */}
+                      <select
+                        value={member.memberId}
+                        onChange={e => handleMemberFieldChange(idx, 'memberId', e.target.value)}
+                        style={{ minWidth: 160 }}
+                      >
+                        <option value="">Selecciona miembro</option>
+                        {(memberOptions[idx] || []).map(opt => (
+                          <option key={opt.value} value={opt.value}>{opt.label}</option>
+                        ))}
+                      </select>
+                      {/* Rol */}
+                      <select
+                        value={member.role}
+                        onChange={e => handleMemberFieldChange(idx, 'role', e.target.value)}
+                        style={{ minWidth: 120 }}
+                      >
+                        <option value="">Selecciona rol</option>
+                        {Object.values(ROLES_GROUPS).map(role => (
+                          <option key={role} value={role}>{role}</option>
+                        ))}
+                      </select>
+                      {/* Botón eliminar */}
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveMember(idx)}
+                        style={{ marginLeft: 4, fontWeight: 'bold', fontSize: 18, cursor: 'pointer', background: 'none', border: 'none', color: '#ef4444', padding: 0 }}
+                        title="Eliminar miembro"
+                      >
+                        –
+                      </button>
+                    </div>
+                  ))}
+                  {errors.members && <span className="error-message">{errors.members}</span>}
+                </div>
+              );
+            }
+
+            // Lógica para campo performer en actividad: grupo/artista + miembro
+            if (f.type === 'group' && f.name === 'performer' && (createEntity === 'activity' || createEntity === 'Activity')) {
+              const performers = Array.isArray(formData.performer) ? formData.performer : [];
+              const activityType = formData.type || '';
+              const isIndividual = activityType === 'individual';
+              const canAdd = !isIndividual || performers.length === 0;
+
+              // Efecto: reiniciar performers al cambiar el tipo de actividad
+              useEffect(() => {
+                if (!isOpen || (createEntity !== 'activity' && createEntity !== 'Activity')) return;
+                setFormData((prev: any) => ({ ...prev, performer: [] }));
+                setMemberTypes([]);
+                setMemberOptions([]);
+              }, [formData.type]);
+
+              return (
+                <div className={`form-group ${errors.performer ? 'form-group-error' : ''}`} key={f.name}>
+                  <label htmlFor={f.name} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    {f.label}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!canAdd) return;
+                        const newPerformers = [...performers, { type: 'group', memberId: '' }];
+                        setFormData({ ...formData, performer: newPerformers });
+                        setMemberTypes(prev => [...prev, 'group']);
+                        setMemberOptions(prev => [...prev, []]);
+                      }}
+                      style={{ marginLeft: 8, fontWeight: 'bold', fontSize: 18, cursor: canAdd ? 'pointer' : 'not-allowed', background: 'none', border: 'none', color: canAdd ? '#2563eb' : '#aaa', padding: 0, opacity: canAdd ? 1 : 0.5 }}
+                      title={canAdd ? 'Agregar performer' : 'Solo se permite un performer en actividades individuales'}
+                      disabled={!canAdd}
+                    >
+                      +
+                    </button>
+                  </label>
+                  {performers.map((performer: any, idx: number) => (
+                    <div key={idx} style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'center' }}>
+                      {/* Tipo: Grupo o Artista */}
+                      <select
+                        value={performer.type || memberTypes[idx] || 'group'}
+                        onChange={e => {
+                          setMemberTypes(prev => {
+                            const copy = [...prev];
+                            copy[idx] = e.target.value;
+                            return copy;
+                          });
+                          // Limpiar el miembro seleccionado al cambiar tipo
+                          const newPerformers = [...performers];
+                          newPerformers[idx].memberId = '';
+                          newPerformers[idx].type = e.target.value;
+                          setFormData({ ...formData, performer: newPerformers });
+                          // Cargar opciones
+                          const agencyId = user?.agencyId;
+                          //if (!agencyId) return; // Prevent error if user or agencyId is missing
+                          const endpoint = e.target.value === 'group' ? `/api/${agencyId}/groups` : `/api/${agencyId}/artists`;
+                          const token = localStorage.getItem('token');
+                          fetch(`http://localhost:3000${endpoint}`, {
+                            method: 'POST',
+                            headers: token ? { Authorization: `Bearer ${token}` } : {}
+                          })
+                            .then(res => res.json())
+                            .then(data => {
+                              const arr = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
+                              const opts = arr.map((item: any) => ({
+                                value: item.id,
+                                label: item.name || item.realName || item.nombre || item.label || item.id
+                              }));
+                              setMemberOptions(prev => {
+                                const copy = [...prev];
+                                copy[idx] = opts;
+                                return copy;
+                              });
+                            });
+                        }}
+                        style={{ minWidth: 110 }}
+                      >
+                        <option value="group">Grupo</option>
+                        <option value="artist">Artista</option>
+                      </select>
+                      {/* Miembro */}
+                      <select
+                        value={performer.memberId}
+                        onChange={e => {
+                          const newPerformers = [...performers];
+                          newPerformers[idx].memberId = e.target.value;
+                          setFormData({ ...formData, performer: newPerformers });
+                        }}
+                        style={{ minWidth: 160 }}
+                      >
+                        <option value="">Selecciona miembro</option>
+                        {(memberOptions[idx] || []).map(opt => (
+                          <option key={opt.value} value={opt.value}>{opt.label}</option>
+                        ))}
+                      </select>
+                      {/* Botón eliminar */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newPerformers = performers.filter((_: any, i: number) => i !== idx);
+                          setFormData({ ...formData, performer: newPerformers });
+                          setMemberTypes(prev => prev.filter((_, i) => i !== idx));
+                          setMemberOptions(prev => prev.filter((_, i) => i !== idx));
+                        }}
+                        style={{ marginLeft: 4, fontWeight: 'bold', fontSize: 18, cursor: 'pointer', background: 'none', border: 'none', color: '#ef4444', padding: 0 }}
+                        title="Eliminar performer"
+                      >
+                        –
+                      </button>
+                    </div>
+                  ))}
+                  {errors.performer && <span className="error-message">{errors.performer}</span>}
+                </div>
+              );
+            }
+
             if (f.type === 'textarea') {
               return (
                 <div className={`form-group ${errorMessage ? 'form-group-error' : ''}`} key={key}>
@@ -375,27 +581,6 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
                   {errorMessage && <span className="error-message">{errorMessage}</span>}
                 </div>
               )
-            }
-
-            else if (f.type === 'select' && (f.name === 'performer' || f.id === 'performer')) {
-              const options = dynamicOptions['performer'] || f.options || [];
-              return (
-                <div key={key} className={`form-group ${errorMessage ? "form-group-error" : ""}`}>
-                  <label htmlFor={key}>{f.label}</label>
-                  <select
-                    id={key}
-                    value={value}
-                    onChange={e => handleFieldChange(key, f.multiple ? Array.from(e.target.selectedOptions, opt => opt.value) : e.target.value)}
-                    multiple={!!f.multiple}
-                  >
-                    <option value="">Selecciona una opción</option>
-                    {options.map((opt: any) => (
-                      <option key={opt.value} value={opt.value}>{opt.label}</option>
-                    ))}
-                  </select>
-                  {errorMessage && <span className="error-message">{errorMessage}</span>}
-                </div>
-              );
             }
 
             else if (f.type === 'select') {
