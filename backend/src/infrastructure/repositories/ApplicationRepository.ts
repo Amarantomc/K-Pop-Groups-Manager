@@ -9,6 +9,8 @@ import type { UpdateApplicationDto } from "../../application/dtos/application(so
 import { CreateGroupUseCase } from '../../application/usesCase/group/CreateGroupUseCase';
 import type { ApplicationCreateGroupDTO } from "../../application/dtos/application(solicitud)/ApplicationCreateGroupDTO";
 import type { CreateRolApplicationDto } from "../../application/dtos/application(solicitud)/CreateRolApplicationDto";
+import type { Artist } from "../../domain/entities/Artist";
+import { ArtistResponseDto } from "../../application/dtos/artist/ArtistResponseDto";
 
 
 
@@ -18,12 +20,48 @@ export class ApplicationRepository implements IApplicationRepository
     constructor(
     @inject(Types.PrismaClient) private prisma: any,
     @inject(Types.IUnitOfWork) private unitOfWork: UnitOfWork,
-    @inject(Types.CreateGroupUseCase) private createGroupUseCase: CreateGroupUseCase
   ) {}
+
  
 
   private get db() {
     return this.unitOfWork.getTransaction();
+  }
+
+  async soloistsArtistWhithoutApplication(): Promise<Artist[]> {
+
+    const artists = await this.db.artista.findMany({
+      where: {
+        HistorialGrupos: {
+          every: {
+            fechaFinalizacion: { not: null },
+          },
+        },
+        SolicitudGrupo: {
+          none: {
+            estado: "ACEPTADO",
+          },
+        },
+      },
+      include: {
+        HistorialGrupos: {
+          include: {
+            grupo: true,
+          },
+        },
+        aprendiz: {
+          include: {
+            Agencia: {
+              include: {
+                agencia: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  
+    return ArtistResponseDto.toEntities(artists);
   }
 
   async createFromApplication(dto: ApplicationCreateGroupDTO, applicationId: number) {

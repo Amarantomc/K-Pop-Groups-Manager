@@ -11,6 +11,7 @@ import type { CreateGroupToApplicationUseCase } from "../../application/usesCase
 import type { AttractApprenticesUseCase } from "../../application/usesCase/apprentice/AttractApprenticeUsaCase";
 import type { CreateRolApplicationUseCase } from "../../application/usesCase/application(solicitud)/CreateRolApplicationUseCase";
 import { CreateRolApplicationDto } from "../../application/dtos/application(solicitud)/CreateRolApplicationDto";
+import type { SoloistsArtistWhithoutApplicationUseCase } from "../../application/usesCase/application(solicitud)/soloistsArtistWhithoutApplicationUseCase";
 
 
 @injectable()
@@ -22,10 +23,28 @@ export class ApplicationController{
                 @inject(Types.ListApplicationUseCase) private listApplicationUseCase: ListApplicationUseCase,
                 @inject(Types.CreateRolApplicationUseCase)  private createRolApplicationUseCase: CreateRolApplicationUseCase,
                 @inject(Types.CreateGroupToApplicationUseCase) private createGroupToApplicationUseCase: CreateGroupToApplicationUseCase,
-                @inject(Types.AttractApprenticesUseCase)private attractApprenticesUseCase: AttractApprenticesUseCase
+                @inject(Types.AttractApprenticesUseCase)private attractApprenticesUseCase: AttractApprenticesUseCase,
+                @inject(Types.SoloistsArtistWhithoutApplicationUseCase)private soloistsArtistWhithoutApplication: SoloistsArtistWhithoutApplicationUseCase,
               ){}
 
 
+
+     async soloistsArtist(req: Request, res: Response) {
+                try {
+                  const artists = await this.soloistsArtistWhithoutApplication.execute();
+              
+                  return res.status(200).json({
+                    success: true,
+                    data: artists,
+                  });
+              
+                } catch (error: any) {
+                  return res.status(500).json({
+                    success: false,
+                    error: error.message,
+                  });
+                }
+     }
 
      async attractApprentice(req: Request, res: Response) {
                 const { apprenticeId, agencyId } = req.body;

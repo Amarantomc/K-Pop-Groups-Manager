@@ -18,12 +18,13 @@ export class ApprenticeScoutUseCase {
       await this.unitOfWork.beginTransaction();
 
       const apprentices = await this.apprenticeRepository.apprenticeScout();
+      console.log(apprentices);
 
       await this.unitOfWork.commit();
 
       return ApprenticeResponseDto.fromEntities(apprentices);
     } catch (error) {
-        console.log(error);
+        //console.log(error);
       await this.unitOfWork.rollback();
       throw error;
     }
