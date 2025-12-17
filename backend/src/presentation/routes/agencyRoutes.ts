@@ -16,7 +16,7 @@ export class AgencyRoutes {
 	}
 
 	private setupRoutes(): void {
-		this.router.use(AuthMiddleware.authenticate())
+		//this.router.use(AuthMiddleware.authenticate())
 		this.router.post("/", RoleMiddleware.onlyStaff(), (req, res) =>this.agencyController.createAgency(req, res));
 		this.router.get("/", (req, res) =>this.agencyController.listAgencies(req, res));
 		this.router.get("/:id", (req, res) =>this.agencyController.getAgency(req, res));
