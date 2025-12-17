@@ -195,6 +195,7 @@ import { GroupOfferContractUseCase } from "../../application/usesCase/contract/G
 import { GroupsWithActiveContractsUseCase } from "../../application/usesCase/agency/GroupsWithActiveContractsUseCase";
 import { ArtistsWithActiveContractsUseCase } from "../../application/usesCase/agency/ArtistsWithActiveContractsUseCases";
 import { CreateRolApplicationUseCase } from "../../application/usesCase/application(solicitud)/CreateRolApplicationUseCase";
+import { SoloistsArtistWhithoutApplicationUseCase } from "../../application/usesCase/application(solicitud)/soloistsArtistWhithoutApplicationUseCase";
  
 const container=new Container()
  
@@ -753,6 +754,10 @@ container.bind<UpdatePopularityListUseCase>(Types.UpdatePopularityListUseCase)
   .to(CreateGroupToApplicationUseCase)
   .inTransientScope();
 
+
+  container.bind<SoloistsArtistWhithoutApplicationUseCase>(Types.SoloistsArtistWhithoutApplicationUseCase)
+  .to(SoloistsArtistWhithoutApplicationUseCase)
+  .inTransientScope();
   //#endregion
 
 

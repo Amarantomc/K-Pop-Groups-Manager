@@ -17,7 +17,9 @@ export class ApplicationRoutes{
   }
 
   private setupRoutes(): void {
-     
+
+    
+    this.router.get('/soloistArtist',(req, res) => this.applicationController.soloistsArtist(req, res))
     this.router.post('/create', (req, res) => this.applicationController.createRolApplication(req, res))
     this.router.get('/:id', (req, res) => this.applicationController.getApplication(req,res))
     this.router.put('/:id', (req, res) => this.applicationController.updateApplication(req, res))

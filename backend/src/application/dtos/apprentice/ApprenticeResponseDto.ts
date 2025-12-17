@@ -30,16 +30,17 @@ export class ApprenticeResponseDto{
                 dateOfBirth: apprentice.fechaNacimiento,
                 age: apprentice.edad,
                 trainingLv: apprentice.nivelEntrenamiento,
-                status: apprentice.status // Asegúrate de que 'apprentice' tenga la propiedad 'status'
+                status: apprentice.status 
             }
         );
       }
 
-      static fromEntities(apprentices: any[]): ApprenticeResponseDto[] {
+      static fromEntities(apprentices: Apprentice[]): ApprenticeResponseDto[] {
         return apprentices.map(apprentice => this.fromEntity(apprentice));
       }
 
       static toEntities(apprentices: any[]): Apprentice[] {
+        //console.log(apprentices);
         return apprentices.map(apprentice => this.toEntity(apprentice));
       }
 }

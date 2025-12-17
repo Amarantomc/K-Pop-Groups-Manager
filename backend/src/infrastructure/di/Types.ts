@@ -140,6 +140,7 @@ UpdateApplicationUseCase : Symbol.for('UpdateApplicationUseCase'),
 ListApplicationUseCase : Symbol.for('ListApplicationUseCase'),
 CreateGroupToApplicationUseCase : Symbol.for('CreateGroupToApplicationUseCase'),
 CreateRolApplicationUseCase: Symbol.for('CreateRolApplicationUseCase'),
+SoloistsArtistWhithoutApplicationUseCase: Symbol.for('SoloistsArtistWhithoutApplicationUseCase'),
 //#endregion
 
 //#region Income
