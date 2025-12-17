@@ -9,6 +9,7 @@ import type { Artist } from "../../domain/entities/Artist";
 import type { Group } from "../../domain/entities/Group";
 import { ArtistResponseDto } from "../../application/dtos/artist/ArtistResponseDto";
 import { GroupResponseDTO } from '../../application/dtos/group/GroupResponseDTO';
+import type { Apprentice, Song, Album, Activity, Contract, Income, Concept } from "../../domain";
 
 // Note: Prisma model is 'Agencia' (in schema.prisma). The generated client exposes
 // `prisma.agencia`. The DB fields are named (nombre, ubicacion, fechaFundacion),
@@ -18,6 +19,7 @@ import { GroupResponseDTO } from '../../application/dtos/group/GroupResponseDTO'
 export class AgencyRepository implements IAgencyRepository {
 	constructor(@inject(Types.PrismaClient) private prisma: any, 
 	@inject(Types.IUnitOfWork) private unitOfWork: UnitOfWork) {}
+	
 
 	private get db() {
 		return this.unitOfWork.getTransaction();
@@ -69,7 +71,6 @@ export class AgencyRepository implements IAgencyRepository {
 	  
 		return ArtistResponseDto.toEntities(Array.from(artistMap.values()));
 	  }
-
 	  async groupsWithActiveContracts(agencyId: number,date: Date | string): Promise<Group[]> {
 	  
 		const targetDate = new Date(date);
@@ -107,7 +108,6 @@ export class AgencyRepository implements IAgencyRepository {
 	  
 		return GroupResponseDTO.toEntities(Array.from(groupMap.values()));
 	  }
-
 	async create(data: CreateAgencyDTO): Promise<Agency> {
 		const agency = await this.db.agencia.create({
 			data: {
@@ -119,37 +119,31 @@ export class AgencyRepository implements IAgencyRepository {
 
 		return AgencyResponseDTO.toEntity(agency);
 	}
-
 	async findById(id: any): Promise<Agency | null> {
 		id = Number(id);
 		const agency = await this.db.agencia.findUnique({ where: { id } });
 		return agency ? AgencyResponseDTO.toEntity(agency) : null;
 	}
-
 	async findByName(name: string): Promise<Agency[]> {
 		const list = await this.db.agencia.findMany({ where: { nombre: name } });
 		return list.map((r: any) => AgencyResponseDTO.toEntity(r));
 	}
-
 	async findByAddress(address: string): Promise<Agency[]> {
 		const list = await this.db.agencia.findMany({
 			where: { ubicacion: address },
 		});
 		return list.map((r: any) => AgencyResponseDTO.toEntity(r));
 	}
-
 	async findByFoundation(foundation: Date): Promise<Agency[]> {
 		const list = await this.db.agencia.findMany({
 			where: { fechaFundacion: foundation },
 		});
 		return list.map((r: any) => AgencyResponseDTO.toEntity(r));
 	}
-
 	async findAll(): Promise<Agency[]> {
 		const list = await this.db.agencia.findMany();
 		return list.map((r: any) => AgencyResponseDTO.toEntity(r));
 	}
-
 	async update(id: string, data: any): Promise<Agency> {
 		const numericId = Number(id);
 		const payload: any = {};
@@ -164,7 +158,6 @@ export class AgencyRepository implements IAgencyRepository {
 
 		return AgencyResponseDTO.toEntity(updated);
 	}
-
 	async delete(id: string): Promise<void> {
 		const numericId = Number(id);
 	
@@ -212,6 +205,33 @@ export class AgencyRepository implements IAgencyRepository {
 		await this.db.contratoGrupo.deleteMany({ where: { idAg: numericId } });
 	
 		await this.db.agencia.delete({ where: { id: numericId } });
+	}
+	groupByAgency(AgencyId: number): Promise<Group[]> {
+		throw new Error("Method not implemented.");
+	}
+	apprenticeByAgency(AgencyId: number): Promise<Apprentice[]> {
+		throw new Error("Method not implemented.");
+	}
+	artistByAgency(AgencyId: number): Promise<Artist[]> {
+		throw new Error("Method not implemented.");
+	}
+	conceptByAgency(AgencyId: number): Promise<Concept[]> {
+		throw new Error("Method not implemented.");
+	}
+	songByAgency(AgencyId: number): Promise<Song[]> {
+		throw new Error("Method not implemented.");
+	}
+	albumByAgency(AgencyId: number): Promise<Album[]> {
+		throw new Error("Method not implemented.");
+	}
+	activityByAgency(AgencyId: number): Promise<Activity[]> {
+		throw new Error("Method not implemented.");
+	}
+	contractByAgency(AgencyId: number): Promise<Contract[]> {
+		throw new Error("Method not implemented.");
+	}
+	incomeByAgency(AgencyId: number): Promise<Income> {
+		throw new Error("Method not implemented.");
 	}
 
 }
