@@ -8,6 +8,7 @@ import { Button, Box } from '@mui/material';
 import ConfirmDialog from '../../components/confirmDialog/ConfirmDialog';
 import ModalCreate from '../../components/modal/ModalCreate';
 import { contractFields } from '../../config/formSource';
+import { Select, MenuItem, Typography } from '@mui/material';
 
 const Scout: React.FC = () => {
   const { user } = useAuth();
@@ -17,6 +18,7 @@ const Scout: React.FC = () => {
   const [openError, setOpenError] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isArtist,setIsArtist] = useState(true)
 
   const handleAttract = async (apprenticeId: number) => {
     if (!user) {
@@ -28,7 +30,7 @@ const Scout: React.FC = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await fetch(`http://localhost:3000/api/apprentice/attract/${apprenticeId}/${agencyId}`, {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -69,21 +71,50 @@ const Scout: React.FC = () => {
       headerName: 'Acción',
       flex: 1,
       renderCell: (params: any) => (
-        <Button variant="contained" color="success" onClick={() => handleOpenContractModal(params.row)}>
+        <Button variant="contained" color="success" onClick={() => {setIsArtist(true); handleOpenContractModal(params.row)}}>
           Ofrecer Contrato
         </Button>
       ),
     },
   ];
-  //Aqui luego se ponen las columnas de los datos correspondientes al backend
+//Aqui luego se ponen las columnas de los datos correspondientes al backend
   const columnsGroups = [
-    { field: 'name', headerName: 'Nombre del Grupo', width: 200 },
-    {
-      field: 'action',
-      headername: 'Acción',
-      flex: 1,
+    {field:'name',headerName:'Nombre del Grupo' , width:200},
+    { field: 'debut', headerName: 'Fecha Debut', width: 150 },
+    { field: 'status', headerName: 'Estado', width: 120 },
+    {field:'members',
+        headerName:'Miembros',
+        width:200,
+        renderCell:(params) => {
+            const members = params.value || []
+            if (members.length === 0) {
+        return (
+          <Typography variant="body2" color="text.secondary" sx={{ width: '100%', py: 1 }}>
+            Sin miembros
+          </Typography>
+        );
+      }
+            return(
+                    <Select
+                    value=""
+                    displayEmpty
+                    sx={{ width: '100%', height: 40 }}
+                renderValue={() => `${members.length} Miembro${members.length !== 1 ? 's' : ''}`}
+            >
+            {members.map((artist: any) => (
+                <MenuItem key={members.id} value={artist.id}>
+                {members.id}
+                </MenuItem>
+            ))}
+        </Select>
+            )
+        }
+    },
+    {field:'action',
+      headerName:'Acción',
+      flex : 1,
       renderCell: (params: any) => (
-        <Button variant="contained" color="success" onClick={() => handleOpenContractModal(params.row)}>
+        <Button variant="contained" color="success" onClick={() => {setIsArtist(false);handleOpenContractModal(params.row)}}>
           Ofrecer Contrato
         </Button>
       ),
@@ -94,16 +125,20 @@ const Scout: React.FC = () => {
   const [showContractModal, setShowContractModal] = useState(false);
   const [contractModalData, setContractModalData] = useState<any | null>(null);
   const [apprenticeScoutRows, setApprenticeScoutRows] = useState<any[]>([]);
-  const [groupScoutRows, setGroupsScoutRows] = useState<any[]>([])
+  const [groupScoutRows,setGroupsScoutRows] = useState<any[]>([])
   const [artistsScoutRows, setArtistsScoutRows] = useState<any[]>([]);
   const [apprenticeID, setapprenticeID] = useState<any>('');
   const [groupID, SetgroupId] = useState<any>('');
-  const [isArtist, SetisArtist] = useState(Boolean);
 
   const handleOpenContractModal = async (artistRow: any) => {
     const agencyId = user?.profileData?.agencyId || '';
     setapprenticeID(artistRow.ApprenticeId || '');
-    SetgroupId(artistRow.GroupId || '');
+    if(isArtist)
+      {
+        SetgroupId(artistRow.id || '')
+      } else{
+        SetgroupId(artistRow.GroupId);
+      }
     let agencyName = '';
     if (agencyId) {
       try {
@@ -137,6 +172,7 @@ const Scout: React.FC = () => {
       console.log(groupID);
       const token = localStorage.getItem('token');
       // Adaptar el payload al formato requerido por el backend
+      console.log(isArtist)
       const payload = {
         type: isArtist ? 'Artist' : 'Group',
         agencyId: user?.profileData?.agencyId || user?.agencyId,
@@ -146,7 +182,9 @@ const Scout: React.FC = () => {
         apprenticeId: isArtist ? (apprenticeID || formData.apprenticeId || '') : '',
         groupId: groupID || formData.groupId || formData.GroupId || '',
       };
-      const url = (isArtist) ? 'http://localhost:3000/api/contract/artist' : 'http://localhost:3000/api/contract/group'
+      console.log(payload)
+      
+      const url = 'http://localhost:3000/api/contract'
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -160,6 +198,7 @@ const Scout: React.FC = () => {
       setOpenSuccess(true);
       setShowContractModal(false);
     } catch (error) {
+      setShowContractModal(false)
       setErrorMessage('Error al ofrecer contrato');
       setOpenError(true);
     }
@@ -190,7 +229,7 @@ const Scout: React.FC = () => {
           }))
           setApprenticeScoutRows(formattedData)
 
-          const artist_response = await fetch('http://localhost:3000/api/contract/offer', {
+          const artist_response = await fetch('http://localhost:3000/api/contract/offer/artist', {
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'
@@ -210,6 +249,26 @@ const Scout: React.FC = () => {
             GroupId: artist.GroupId,
           }));
           setArtistsScoutRows(formattedArtistData)
+
+          const group_response =  await fetch('http://localhost:3000/api/contract/offer/group', {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          });
+          if(!group_response.ok){
+            throw new Error("Error al obtener los grupos en pausa")
+          }
+          const group_data = await group_response.json()
+          console.log(group_data)
+          //Aqui hay que cambiar esto por los datos que manda agustin
+          const formattedGroupData = group_data.data.map((group: any) => ({
+            id: group.id,
+            name: group.name,
+            debut: group.debut,
+            status: group.status,
+          }));
+          setGroupsScoutRows(formattedGroupData)
         }
         catch (error) {
           console.error(error)
@@ -242,46 +301,46 @@ const Scout: React.FC = () => {
             Ofrecer Contratos a Artistas
           </Button>
           <Button
-            variant={vista === 'grupos' ? 'contained' : 'outlined'}
+            variant={vista === 'grupos'? 'contained' : 'outlined'}
             color='secondary'
             onClick={() => setVista('grupos')}
           >
             Ofrecer Contratos a Grupos
           </Button>
         </Box>
-        {(() => {
-          switch (vista) {
-            case 'aprendices':
-              return (
-                <DataTable
-                  columns={columnsAprendices}
-                  rows={apprenticeScoutRows}
-                  pagesize={5}
-                  showCreateButton={false}
-                />
-              );
-            case 'artistas':
-              return (
-                <DataTable
-                  columns={columnsArtistas}
-                  rows={artistsScoutRows}
-                  pagesize={5}
-                  showCreateButton={false}
-                />
-              );
-            case 'grupos':
-              return (
-                <DataTable
-                  columns={columnsGroups}
-                  rows={groupScoutRows}
-                  pagesize={5}
-                  showCreateButton={false}
-                />
-              );
-            default:
-              return null;
-          }
-        })()}
+                  {(() => {
+            switch (vista) {
+              case 'aprendices':
+                return (
+                  <DataTable 
+                    columns={columnsAprendices} 
+                    rows={apprenticeScoutRows} 
+                    pagesize={5} 
+                    showCreateButton={false} 
+                  />
+                );
+              case 'artistas':
+                return (
+                  <DataTable 
+                    columns={columnsArtistas} 
+                    rows={artistsScoutRows} 
+                    pagesize={5} 
+                    showCreateButton={false} 
+                  />
+                );
+              case 'grupos':
+                return (
+                  <DataTable 
+                    columns={columnsGroups} 
+                    rows={groupScoutRows} 
+                    pagesize={5} 
+                    showCreateButton={false} 
+                  />
+                );
+              default:
+                return null;
+            }
+          })()}
         {/* {vista === 'aprendices' ? (
           <DataTable columns={columnsAprendices} rows={apprenticeScoutRows} pagesize={5} showCreateButton={false} />
         ) : (
