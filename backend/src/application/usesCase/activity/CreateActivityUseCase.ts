@@ -22,6 +22,7 @@ export class CreateActivityUseCase {
       await this.unitOfWork.commit();
       return ActivityResponseDto.fromEntity(activity);
     } catch (error) {
+      //console.log(error);
       await this.unitOfWork.rollback();
       throw error;
     }

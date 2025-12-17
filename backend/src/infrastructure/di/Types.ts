@@ -63,7 +63,7 @@ const Types = {
   UpdateAgencyUseCase :Symbol.for('UpdateAgencyUseCase'),
   ListAgenciesUseCase :Symbol.for('ListAgenciesUseCase'),
 
-  
+  //#region Agency
   CreateArtistUseCase :Symbol.for('CreateArtistUseCase'),
   DeleteArtistUseCase :Symbol.for('DeleteArtistUseCase'),
   UpdateArtistUseCase :Symbol.for('UpdateArtistUseCase'),
@@ -76,6 +76,13 @@ const Types = {
   GetIncomeAndSuccesUseCase:Symbol.for('GetIncomeAndSuccesUseCase'),
   GetArtistsWhoChangeAgencyUseCase: Symbol.for('GetArtistsWhoChangeAgencyUseCase'),
   GetSoloArtistsProfesionalHistoryUseCase:Symbol.for('GetSoloArtistsProfesionalHistoryUseCase'),
+  GroupsWithActiveContractsUseCase: Symbol.for('GroupsWithActiveContractsUseCase'),
+  ArtistsWithActiveContractsUseCase: Symbol.for('ArtistsWithActiveContractsUseCase'),
+
+//#endregion
+
+
+
 
   CreateConceptUseCase: Symbol.for('CreateConceptUseCase'),
   DeleteConceptUseCase: Symbol.for('DeleteConceptUseCase'),
@@ -132,6 +139,7 @@ DeleteApplicationUseCase : Symbol.for('DeleteApplicationUseCase'),
 UpdateApplicationUseCase : Symbol.for('UpdateApplicationUseCase'),
 ListApplicationUseCase : Symbol.for('ListApplicationUseCase'),
 CreateGroupToApplicationUseCase : Symbol.for('CreateGroupToApplicationUseCase'),
+CreateRolApplicationUseCase: Symbol.for('CreateRolApplicationUseCase'),
 //#endregion
 
 //#region Income

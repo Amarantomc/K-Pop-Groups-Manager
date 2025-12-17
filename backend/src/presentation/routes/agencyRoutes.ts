@@ -25,6 +25,9 @@ export class AgencyRoutes {
 		this.router.get("/search/agency_name", (req, res) =>this.agencyController.findAgenciesByName(req, res));
 		this.router.get("/search/agency_address", (req, res) =>this.agencyController.findAgenciesByAddress(req, res));
 		this.router.get("/search/agency_foundation", (req, res) =>this.agencyController.findAgenciesByFoundation(req, res));
+		this.router.post('/:idAgency/artists', (req, res) => this.agencyController.artistsWithActiveContracts(req, res));
+		this.router.post('/:idAgency/groups', (req, res) => this.agencyController.groupsWithActiveContracts(req, res));
+
 	}
 
 	public getRouter(): Router {

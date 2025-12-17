@@ -5,6 +5,10 @@ import { UnitOfWork } from "../PrismaUnitOfWork";
 import type { IAgencyRepository } from "../../application/interfaces/repositories/IAgencyRepository";
 import { inject, injectable } from "inversify";
 import { Types } from "../di/Types";
+import type { Artist } from "../../domain/entities/Artist";
+import type { Group } from "../../domain/entities/Group";
+import { ArtistResponseDto } from "../../application/dtos/artist/ArtistResponseDto";
+import { GroupResponseDTO } from '../../application/dtos/group/GroupResponseDTO';
 
 // Note: Prisma model is 'Agencia' (in schema.prisma). The generated client exposes
 // `prisma.agencia`. The DB fields are named (nombre, ubicacion, fechaFundacion),
@@ -19,7 +23,90 @@ export class AgencyRepository implements IAgencyRepository {
 		return this.unitOfWork.getTransaction();
 	}
 
- 
+
+
+	async artistsWithActiveContracts(agencyId: number,date: Date | string): Promise<Artist[]> {
+	  
+		const targetDate = new Date(date);
+	  
+		const contratos = await this.db.contrato.findMany({
+		  where: {
+			idAg: agencyId,
+			estado: "ACTIVO",
+			fechaInicio: {
+			  lte: targetDate,
+			},
+			OR: [
+			  {
+				fechaFinalizacion: null,
+			  },
+			  {
+				fechaFinalizacion: {
+				  gte: targetDate,
+				},
+			  },
+			],
+		  },
+		  include: {
+			Artista: {
+			  include: {
+				aprendiz: true,
+				grupo: true,
+			  },
+			},
+		  },
+		});
+	  
+		// Evitar duplicados (un artista puede tener varios contratos activos)
+		const artistMap = new Map<string, any>();
+	  
+		for (const contrato of contratos) {
+		  if (contrato.Artista) {
+			const key = `${contrato.Artista.idAp}-${contrato.Artista.idGr}`;
+			artistMap.set(key, contrato.Artista);
+		  }
+		}
+	  
+		return ArtistResponseDto.toEntities(Array.from(artistMap.values()));
+	  }
+
+	  async groupsWithActiveContracts(agencyId: number,date: Date | string): Promise<Group[]> {
+	  
+		const targetDate = new Date(date);
+	  
+		const contratos = await this.db.contratoGrupo.findMany({
+		  where: {
+			idAg: agencyId,
+			estado: "ACTIVO",
+			fechaInicio: {
+			  lte: targetDate,
+			},
+			OR: [
+			  {
+				fechaFinalizacion: null,
+			  },
+			  {
+				fechaFinalizacion: {
+				  gte: targetDate,
+				},
+			  },
+			],
+		  },
+		  include: {
+			Grupo: true,
+		  },
+		});
+	  
+		const groupMap = new Map<number, any>();
+	  
+		for (const contrato of contratos) {
+		  if (contrato.Grupo) {
+			groupMap.set(contrato.Grupo.id, contrato.Grupo);
+		  }
+		}
+	  
+		return GroupResponseDTO.toEntities(Array.from(groupMap.values()));
+	  }
 
 	async create(data: CreateAgencyDTO): Promise<Agency> {
 		const agency = await this.db.agencia.create({

@@ -620,7 +620,8 @@ async function main() {
         idAp: artista1.idAp,
         idGr: artista1.idGr,
         fechaInicio: new Date("2016-07-01"),
-        estado: "Activo",
+        fechaFinalizacion: new Date("2027-09-02"),
+        estado: "ACTIVO",
         condicionesIniciales: "Contrato estándar por 7 años con cláusulas de renovación",
         distribucionIngresos: "70% agencia, 30% artista"
       },
@@ -629,7 +630,8 @@ async function main() {
         idAp: artista2.idAp,
         idGr: artista2.idGr,
         fechaInicio: new Date("2016-08-01"),
-        estado: "Activo",
+        fechaFinalizacion: new Date("2024-01-13"),
+        estado: "FINALIZADO",
         condicionesIniciales: "Contrato exclusivo por 5 años con opción de extensión",
         distribucionIngresos: "60% agencia, 40% artista"
       },
@@ -638,7 +640,8 @@ async function main() {
         idAp: artista3.idAp,
         idGr: artista3.idGr,
         fechaInicio: new Date("2015-10-01"),
-        estado: "Activo",
+        fechaFinalizacion: new Date("2024-08-21"),
+        estado: "FINALIZADO",
         condicionesIniciales: "Contrato por 7 años con opción de renovación",
         distribucionIngresos: "65% agencia, 35% artista"
       },
@@ -647,7 +650,8 @@ async function main() {
         idAp: artista4.idAp,
         idGr: artista4.idGr,
         fechaInicio: new Date("2013-06-01"),
-        estado: "Activo",
+        fechaFinalizacion: new Date("2030-08-21"),
+        estado: "ACTIVO",
         condicionesIniciales: "Contrato por 7 años con distribución equitativa",
         distribucionIngresos: "50% agencia, 50% artista"
       },
@@ -656,7 +660,8 @@ async function main() {
         idAp: artista5.idAp,
         idGr: artista5.idGr,
         fechaInicio: new Date("2019-02-01"),
-        estado: "Activo",
+        fechaFinalizacion: new Date("2021-09-02"),
+        estado: "FINALIZADO",
         condicionesIniciales: "Contrato por 7 años estándar",
         distribucionIngresos: "70% agencia, 30% artista"
       },
@@ -665,7 +670,8 @@ async function main() {
         idAp: artista6.idAp,
         idGr: artista6.idGr,
         fechaInicio: new Date("2020-11-01"),
-        estado: "Activo",
+        fechaFinalizacion: new Date("2022-09-02"),
+        estado: "FINALIZADO",
         condicionesIniciales: "Contrato por 7 años con cláusulas especiales",
         distribucionIngresos: "70% agencia, 30% artista"
       },
@@ -674,7 +680,8 @@ async function main() {
         idAp: artista7.idAp,
         idGr: artista7.idGr,
         fechaInicio: new Date("2014-08-01"),
-        estado: "Activo",
+        fechaFinalizacion: new Date("2029-08-30"),
+        estado: "ACTIVO",
         condicionesIniciales: "Contrato por 7 años renovado en 2021",
         distribucionIngresos: "60% agencia, 40% artista"
       },
@@ -709,7 +716,9 @@ async function main() {
         idAg: smEntertainment.id,
         IdGr: nct127.id,
         fechaInicio: new Date("2016-07-01"),
-        estado: "Activo",
+        fechaFinalizacion: new Date("2029-12-17"),
+
+        estado: "FINALIZADO",
         condicionesIniciales: "Contrato de grupo por 7 años con actividades conjuntas",
         distribucionIngresos: "50% agencia, 50% grupo"
       },
@@ -717,7 +726,9 @@ async function main() {
         idAg: ygEntertainment.id,
         IdGr: blackpink.id,
         fechaInicio: new Date("2016-08-01"),
-        estado: "Activo",
+        fechaFinalizacion: new Date("2025-12-18"),
+
+        estado: "ACTIVO",
         condicionesIniciales: "Contrato de grupo por 5 años renovado en 2021",
         distribucionIngresos: "45% agencia, 55% grupo"
       },
@@ -725,7 +736,9 @@ async function main() {
         idAg: jypEntertainment.id,
         IdGr: twice.id,
         fechaInicio: new Date("2015-10-01"),
-        estado: "Activo",
+        fechaFinalizacion: new Date("2029-12-30"),
+        
+        estado: "ACTIVO",
         condicionesIniciales: "Contrato de grupo por 7 años con extensión",
         distribucionIngresos: "50% agencia, 50% grupo"
       },
@@ -733,7 +746,9 @@ async function main() {
         idAg: hibeEntertainment.id,
         IdGr: bts.id,
         fechaInicio: new Date("2013-06-01"),
-        estado: "Activo",
+        fechaFinalizacion: new Date("2029-11-03"),
+
+        estado: "ACTIVO",
         condicionesIniciales: "Contrato de grupo por 7 años con términos favorables",
         distribucionIngresos: "40% agencia, 60% grupo"
       },
@@ -741,7 +756,9 @@ async function main() {
         idAg: jypEntertainment.id,
         IdGr: itzy.id,
         fechaInicio: new Date("2019-02-01"),
-        estado: "Activo",
+        fechaFinalizacion: new Date("2034-08-30"),
+
+        estado: "ACTIVO",
         condicionesIniciales: "Contrato de grupo por 7 años inicial",
         distribucionIngresos: "50% agencia, 50% grupo"
       },
@@ -749,7 +766,9 @@ async function main() {
         idAg: smEntertainment.id,
         IdGr: aespa.id,
         fechaInicio: new Date("2020-11-01"),
-        estado: "Activo",
+        fechaFinalizacion: new Date("2021-08-30"),
+
+        estado: "FINALIZADO",
         condicionesIniciales: "Contrato de grupo por 7 años con tecnología AI",
         distribucionIngresos: "50% agencia, 50% grupo"
       },

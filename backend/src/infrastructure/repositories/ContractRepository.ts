@@ -19,11 +19,11 @@ export class ContractRepository implements IContractRepository{
   ) {}
 
 
-       private get db() {
+    private get db() {
     return this.unitOfWork.getTransaction();
-  }
+    }
 
-  async groupsOfferContract(): Promise<Group[]> {
+    async groupsOfferContract(): Promise<Group[]> {
     const groups = await this.db.grupo.findMany({
       where: {
         estadoGrupo: "EN PAUSA",
@@ -31,9 +31,10 @@ export class ContractRepository implements IContractRepository{
     });
   
     return GroupResponseDTO.toEntities(groups);
-  }
+    } 
 
-  async offerContract(): Promise<Artist[]> {
+    
+    async offerContract(): Promise<Artist[]> {
     const artists = await this.db.artista.findMany({
       where: {
         estadoArtista: "EN PAUSA",
@@ -41,9 +42,8 @@ export class ContractRepository implements IContractRepository{
     });
   
     return ArtistResponseDto.toEntities(artists);
-  }
+    }
     
-
     async create(data: CreateContractDto): Promise<Contract> {
         let contract;
         if (data.type === 'Artist') {
@@ -86,9 +86,9 @@ export class ContractRepository implements IContractRepository{
     }
        
     return ContractResponseDto.toEntity(contract,data.type)
-  }
+    }
 
-  async findById(idC: any): Promise<Contract | null> {
+    async findById(idC: any): Promise<Contract | null> {
         let {agencyId,apprenticeId,groupId,startDate,id}=idC
         
         
@@ -120,8 +120,9 @@ export class ContractRepository implements IContractRepository{
       
        return contract? ContractResponseDto.toEntity(contract,!apprenticeId? "Group":"Artist") :null
 
-  }
-  async  update(idC: any, data: Partial<Contract>): Promise<Contract> {
+    }
+
+    async  update(idC: any, data: Partial<Contract>): Promise<Contract> {
         let {agencyId,apprenticeId,groupId,startDate,id}=idC
         let contract
         if(!apprenticeId){
@@ -165,6 +166,7 @@ export class ContractRepository implements IContractRepository{
      } 
        return ContractResponseDto.toEntity(contract,!apprenticeId? "Group":"Artist")
     }
+
     async delete(idC: any): Promise<void> {
       let {agencyId,apprenticeId,groupId,startDate,id}=idC
          
@@ -217,5 +219,6 @@ export class ContractRepository implements IContractRepository{
   })  
       return ContractResponseDto.toEntities(contracts);
 
-}
+    }
+
 }

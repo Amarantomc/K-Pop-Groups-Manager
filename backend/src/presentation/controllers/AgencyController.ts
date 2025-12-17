@@ -13,6 +13,8 @@ import type { Request, Response } from "express";
 import { CreateAgencyDTO } from "../../application/dtos/agency/CreateAgencyDTO";
 import { inject, injectable } from "inversify";
 import { Types } from "../../infrastructure/di/Types";
+import type { GroupsWithActiveContractsUseCase } from "../../application/usesCase/agency/GroupsWithActiveContractsUseCase";
+import type { ArtistsWithActiveContractsUseCase } from "../../application/usesCase/agency/ArtistsWithActiveContractsUseCases";
 
 @injectable()
 export class AgencyController {
@@ -24,10 +26,46 @@ constructor(@inject(Types.CreateAgencyUseCase)  private createAgencyUseCase: Cre
 			@inject(Types.FindAgenciesByNameUseCase)  private findAgenciesByNameUseCase: FindAgenciesByNameUseCase,
 			@inject(Types.GetAgencyUseCase)  private getAgencyUseCase: GetAgencyUseCase,
 			@inject(Types.ListAgenciesUseCase)  private listAgenciesUseCase: ListAgenciesUseCase,
-			@inject(Types.UpdateAgencyUseCase)  private updateAgencyUseCase: UpdateAgencyUseCase,) {}
+			@inject(Types.UpdateAgencyUseCase)  private updateAgencyUseCase: UpdateAgencyUseCase,
+			@inject(Types.GroupsWithActiveContractsUseCase)  private groupsWithActiveContractsUseCase: GroupsWithActiveContractsUseCase,
+			@inject(Types.ArtistsWithActiveContractsUseCase)  private artistsWithActiveContractsUseCase: ArtistsWithActiveContractsUseCase,
+		
+		) {}
 		
 			
-		
+	async groupsWithActiveContracts(req: Request, res: Response) {
+			try {
+				const { idAgency } = req.params;
+				const { date} = req.body;
+				  
+				if (!idAgency) {
+				  throw new Error("agencyId is required");
+				}
+			
+				const groups = await this.groupsWithActiveContractsUseCase.execute(Number(idAgency),date);
+		  
+			  res.json({ success: true, data: groups });
+			} catch (error: any) {
+			  res.status(400).json({ success: false, error: error.message });
+			}
+	}
+
+	async artistsWithActiveContracts(req: Request, res: Response) {
+			try {
+			  const { idAgency } = req.params;
+			  const { date} = req.body;
+				
+			  if (!idAgency) {
+				throw new Error("agencyId is required");
+			  }
+		  
+			  const artists = await this.artistsWithActiveContractsUseCase.execute(Number(idAgency),date);
+		  
+			  res.json({ success: true, data: artists });
+			} catch (error: any) {
+			  res.status(400).json({ success: false, error: error.message });
+			}
+	}
 
 	async createAgency(req: Request, res: Response) {
 		try {
@@ -122,4 +160,6 @@ constructor(@inject(Types.CreateAgencyUseCase)  private createAgencyUseCase: Cre
 			res.status(400).json({ success: false, error: error.message });
 		}
 	}
+
+
 }

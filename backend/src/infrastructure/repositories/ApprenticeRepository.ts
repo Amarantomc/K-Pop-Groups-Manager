@@ -71,11 +71,10 @@ export class ApprenticeRepository implements IApprenticeRepository {
         await this.db.AprendizEnAgencia.updateMany({
             where: {
                 idAp: apprenticeId,
-                fechaFinalizacion: null,
+                estado: "EN PROCESO DE SELECCION"
             },
             data: {
-                fechaFinalizacion: now,
-                estado: "Transferido",
+                estado: "TRANSFERIDO",
             },
         });
         await this.db.AprendizEnAgencia.create({
@@ -83,20 +82,19 @@ export class ApprenticeRepository implements IApprenticeRepository {
                 idAp: apprenticeId,
                 idAg: agencyId,
                 fechaInicio: now,
-                estado: "En entrenamiento",
+                estado: "EN ENTRENAMIENTO",
             },
         });
     }
 
     async apprenticeScout(): Promise<Apprentice[]> {
-        const apprentices = await this.db.Aprendiz.findMany({
-            where: {
-                Agencia: {
-                    some: {
-                        estado: "En proceso de seleccion"
-                    }
-                }
-            }
+        const apprentices = await this.db.AprendizEnAgencia.findMany({
+          where: {
+            estado: "EN PROCESO DE SELECCION",
+          },
+          include: {
+            aprendiz: true,
+          },
         });
         return ApprenticeResponseDto.toEntities(apprentices);
     }
@@ -122,6 +120,18 @@ export class ApprenticeRepository implements IApprenticeRepository {
           },
         });
       
+        await this.db.AprendizEnAgencia.updateMany({
+          where: {
+              idAp: apprenticeId,
+              idAg: agencyId,
+              estado: "EN ENTRENAMIENTO"
+          },
+          data: {
+            estado: "EN PROCESO DE SELECCION",
+            fechaFinalizacion: date
+          },
+        });
+        
         let aux = 0;
         if (evaluation > 5) aux = 1;
         else if (evaluation < 5) aux = -1;

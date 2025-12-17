@@ -9,6 +9,8 @@ import { CreateApplicationDto } from "../../application/dtos/application(solicit
 import type { UpdateApplicationUseCase } from "../../application/usesCase/application(solicitud)/UpdateApplicationUseCase";
 import type { CreateGroupToApplicationUseCase } from "../../application/usesCase/application(solicitud)/CreateGroupToApplicationUseCase";
 import type { AttractApprenticesUseCase } from "../../application/usesCase/apprentice/AttractApprenticeUsaCase";
+import type { CreateRolApplicationUseCase } from "../../application/usesCase/application(solicitud)/CreateRolApplicationUseCase";
+import { CreateRolApplicationDto } from "../../application/dtos/application(solicitud)/CreateRolApplicationDto";
 
 
 @injectable()
@@ -18,6 +20,7 @@ export class ApplicationController{
                 @inject(Types.DeleteApplicationUseCase) private deleteApplicationUseCase:DeleteApplicationUseCase,
                 @inject(Types.UpdateApplicationUseCase) private updateApplicationUseCase:UpdateApplicationUseCase,
                 @inject(Types.ListApplicationUseCase) private listApplicationUseCase: ListApplicationUseCase,
+                @inject(Types.CreateRolApplicationUseCase)  private createRolApplicationUseCase: CreateRolApplicationUseCase,
                 @inject(Types.CreateGroupToApplicationUseCase) private createGroupToApplicationUseCase: CreateGroupToApplicationUseCase,
                 @inject(Types.AttractApprenticesUseCase)private attractApprenticesUseCase: AttractApprenticesUseCase
               ){}
@@ -37,13 +40,36 @@ export class ApplicationController{
                   message: "Apprentice transferred successfully",
                 });
      }
-    async createApplication(req: Request, res: Response) 
+
+     async createApplication(req: Request, res: Response) 
+     {
+   try {
+         
+     const applicationDto=CreateApplicationDto.create(req.body)
+     //console.log(applicationDto);
+     const application = await this.createApplicationUseCase.execute(applicationDto);
+
+     
+
+     res.status(201).json({
+       success: true,
+       data: application
+     });
+
+   } catch (error: any) {
+     res.status(400).json({
+       success: false,
+       error: error.message
+     });
+   }
+     }
+
+    async createRolApplication(req: Request, res: Response) 
           {
         try {
               
-          const applicationDto=CreateApplicationDto.create(req.body)
-          //console.log(applicationDto);
-          const application = await this.createApplicationUseCase.execute(applicationDto);
+          const applicationDto=CreateRolApplicationDto.create(req.body)
+          const application = await this.createRolApplicationUseCase.execute(applicationDto);
     
           
     
@@ -58,7 +84,7 @@ export class ApplicationController{
             error: error.message
           });
         }
-          }
+    }
 
 
 async getApplication(req: Request, res: Response) 

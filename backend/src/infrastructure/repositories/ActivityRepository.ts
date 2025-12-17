@@ -119,19 +119,37 @@
       
       }
 
-    async create(data: CreateActivityDto): Promise<Activity> {
-      const activity = await this.db.actividad.create({
-        data: {
-          responsable: data.responsible,
-          tipoActividad: data.activityType,
-          fecha: new Date(data.date),
-          lugar: data.place,
-          tipoEvento: data.eventType
-        }
-      });
+      async create(data: CreateActivityDto): Promise<Activity> {
 
-      return ActivityResponseDto.toEntity(activity);
-    }
+        const activity = await this.db.actividad.create({
+          data: {
+            responsable: data.responsible,
+            tipoActividad: data.activityType,
+            tipoEvento: data.eventType,
+            fecha: new Date(data.date),
+            lugar: data.place,
+      
+            Personas: { create: [
+                ...data.artists!.map(([idAp, idGr]) => ({
+                  idAp,
+                  idGr,
+                  aceptado: null, 
+                })),
+
+                ...data.groups!.map((idGrupos) => ({
+                  idGrupos,
+                  aceptado: null, 
+                })),
+              ],
+            },
+          },
+          include: {
+            Personas: true,
+          },
+        });
+      
+        return ActivityResponseDto.toEntity(activity);
+      }
 
     async findById(id: string): Promise<Activity | null> {
       const activity = await this.db.actividad.findUnique({

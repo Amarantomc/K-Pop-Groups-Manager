@@ -8,6 +8,7 @@ import type { CreateApplicationDto } from "../../application/dtos/application(so
 import type { UpdateApplicationDto } from "../../application/dtos/application(solicitud)/UpdateApplicationDto";
 import { CreateGroupUseCase } from '../../application/usesCase/group/CreateGroupUseCase';
 import type { ApplicationCreateGroupDTO } from "../../application/dtos/application(solicitud)/ApplicationCreateGroupDTO";
+import type { CreateRolApplicationDto } from "../../application/dtos/application(solicitud)/CreateRolApplicationDto";
 
 
 
@@ -19,6 +20,7 @@ export class ApplicationRepository implements IApplicationRepository
     @inject(Types.IUnitOfWork) private unitOfWork: UnitOfWork,
     @inject(Types.CreateGroupUseCase) private createGroupUseCase: CreateGroupUseCase
   ) {}
+ 
 
   private get db() {
     return this.unitOfWork.getTransaction();
@@ -104,6 +106,84 @@ export class ApplicationRepository implements IApplicationRepository
   }
  
 
+  async createRol(data: CreateRolApplicationDto): Promise<Application> {
+    try {
+      const idAgency = Number(data.idAgency);
+      const idConcept = Number(data.idConcept);
+      const idAp = Number(data.idApprentice);
+      const idGr = data.idGroup ? Number(data.idGroup) : null;
+  
+      const concept = await this.db.Concepto.findUnique({
+        where: { id: idConcept },
+      });
+  
+      const agency = await this.db.Agencia.findUnique({
+        where: { id: idAgency },
+      });
+  
+      if (!agency || !concept) {
+        throw new Error("Agency or Concept not found");
+      }
+  
+      const roles = data.roles.includes("LIDER")
+        ? data.roles
+        : [...data.roles, "LIDER"];
+  
+      const application = await this.db.Solicitud.create({
+        data: {
+          nombreGrupo: data.groupName,
+          idAgencia: idAgency,
+          idConcepto: idConcept,
+          roles,
+          estado: data.status ?? "PENDIENTE",
+  
+          
+          ...(idGr === null && {
+            AprendizMiembro: {
+              connect: { id: idAp },
+            },
+            SolicitudGrupoAprendiz: {
+              create: {
+                idAp,
+                idAg: idAgency,
+                estado: "PENDIENTE",
+              },
+            },
+          }),
+  
+         
+          ...(idGr !== null && {
+            ArtistaMiembro: {
+              connect: {
+                idAp_idGr: { idAp, idGr },
+              },
+            },
+            SolicitudGrupoArtista: {
+              create: {
+                idAp,
+                idGr,
+                idAg: idAgency,
+                estado: "PENDIENTE",
+              },
+            },
+          }),
+        },
+  
+        include: {
+          AprendizMiembro: true,
+          ArtistaMiembro: true,
+          SolicitudGrupoAprendiz: true,
+          SolicitudGrupoArtista: true,
+        },
+      });
+  
+      return ApplicationResponseDto.toEntity(application);
+  
+    } catch (error: any) {
+      console.error("Error creating role application:", error);
+      throw new Error(error?.message || "Error creating role application");
+    }
+  }
 
   
   async create(data: CreateApplicationDto): Promise<Application> {
@@ -123,7 +203,7 @@ export class ApplicationRepository implements IApplicationRepository
         idAgencia: idAgency,
         idConcepto: idConcept,
         roles: data.roles,
-        estado: "Pendiente",
+        estado: "PENDIENTE",
   
         AprendizMiembro: {
           connect: data.apprentices.map(idAp => ({ id: idAp })),
@@ -139,7 +219,7 @@ export class ApplicationRepository implements IApplicationRepository
           create: data.apprentices.map(idAp => ({
             idAp,
             idAg: idAgency,
-            estado: "Pendiente",
+            estado: "PENDIENTE",
           })),
         },
   
@@ -148,7 +228,7 @@ export class ApplicationRepository implements IApplicationRepository
             idAp,
             idGr,
             idAg: idAgency,
-            estado: "Pendiente",
+            estado: "PENDIENTE",
           })),
         },
       },
@@ -165,25 +245,6 @@ export class ApplicationRepository implements IApplicationRepository
   }
 
 
-    // async findById(id: any): Promise<Application | null> {
-    //      id=(Number)(id)
-    //     const application=await this.db.Solicitud.findUnique({
-    //        where:{id},
-    //        include: {
-    //         AprendizMiembro: true,
-    //         ArtistaMiembro: {
-    //           orderBy: {
-    //             idAp: "asc"   
-    //           }
-    //         }
-    //       }
-    //     })
-
-    //     if(!application){
-    //       throw new Error("Application not found");
-    //     }
-    //     return ApplicationResponseDto.toEntity(application)
-    // }
 
     async findById(id: any): Promise<Application | null> {
       id = Number(id);

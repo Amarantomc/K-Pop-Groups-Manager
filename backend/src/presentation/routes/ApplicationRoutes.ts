@@ -18,12 +18,13 @@ export class ApplicationRoutes{
 
   private setupRoutes(): void {
      
-    this.router.post('/', (req, res) => this.applicationController.createApplication(req, res))
+    this.router.post('/create', (req, res) => this.applicationController.createRolApplication(req, res))
     this.router.get('/:id', (req, res) => this.applicationController.getApplication(req,res))
     this.router.put('/:id', (req, res) => this.applicationController.updateApplication(req, res))
     this.router.delete('/:id',(req, res) => this.applicationController.deleteApplication(req, res))
     this.router.get('/',(req, res) => this.applicationController.listApplication(req, res))
     this.router.get('/createGroup/:id', (req, res) => this.applicationController.createGroupToApplication(req,res))
+    this.router.post('/', (req, res) => this.applicationController.createApplication(req, res))
     
   }
 

@@ -192,6 +192,9 @@ import { ExportApplicationsPdfUseCase } from "../../application/usesCase/exports
 import { ExportUsersPdfUseCase } from "../../application/usesCase/exports/ExportUsersPdfUseCase";
 import { AcceptOrRejectActivityUseCase } from "../../application/usesCase/activity/AcceptedOrRejectActivityUseCase";
 import { GroupOfferContractUseCase } from "../../application/usesCase/contract/GroupOfferContractUseCase";
+import { GroupsWithActiveContractsUseCase } from "../../application/usesCase/agency/GroupsWithActiveContractsUseCase";
+import { ArtistsWithActiveContractsUseCase } from "../../application/usesCase/agency/ArtistsWithActiveContractsUseCases";
+import { CreateRolApplicationUseCase } from "../../application/usesCase/application(solicitud)/CreateRolApplicationUseCase";
  
 const container=new Container()
  
@@ -515,6 +518,14 @@ container.bind<UpdateUserUseCase>(Types.UpdateUserUseCase)
   container.bind<UpdateAgencyUseCase>(Types.UpdateAgencyUseCase)
   .to(UpdateAgencyUseCase)
   .inTransientScope();
+
+  container.bind<GroupsWithActiveContractsUseCase>(Types.GroupsWithActiveContractsUseCase)
+  .to(GroupsWithActiveContractsUseCase)
+  .inTransientScope();
+
+  container.bind<ArtistsWithActiveContractsUseCase>(Types.ArtistsWithActiveContractsUseCase)
+  .to(ArtistsWithActiveContractsUseCase)
+  .inTransientScope();
   //#endregion
 
 
@@ -728,6 +739,10 @@ container.bind<UpdatePopularityListUseCase>(Types.UpdatePopularityListUseCase)
 
    container.bind<CreateApplicationUseCase>(Types.CreateApplicationUseCase)
   .to(CreateApplicationUseCase)
+  .inTransientScope();
+
+  container.bind<CreateRolApplicationUseCase>(Types.CreateRolApplicationUseCase)
+  .to(CreateRolApplicationUseCase)
   .inTransientScope();
 
   container.bind<ListApplicationUseCase>(Types.ListApplicationUseCase)
