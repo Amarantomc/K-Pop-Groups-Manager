@@ -152,6 +152,7 @@ const Activities: React.FC = () => {
 
   const handleCreateSaveActivity = async (newactivity: any) => {
     try {
+      console.log('newactivity',newactivity)
       const mapActivityType = (type: string) => {
         if (type === 'grupal' || type === 'Groups') return 'GROUP';
         if (type === 'individual') return 'INDIVIDUAL'; // <-- mayúscula
@@ -162,7 +163,7 @@ const Activities: React.FC = () => {
         activityType: mapActivityType(newactivity.activityType || newactivity.type),
         date: clickedDate,
         place: newactivity.place,
-        responsible: newactivity.responsible
+        responsible: user?.agencyId
       }
       console.log('payload', payload);
       const response = await fetch('http://localhost:3000/api/activity', {

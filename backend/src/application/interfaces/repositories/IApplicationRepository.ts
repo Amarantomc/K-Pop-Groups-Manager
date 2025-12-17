@@ -1,4 +1,4 @@
-import type { Application } from "../../../domain";
+import type { Application, Apprentice } from "../../../domain";
 import type { CreateApplicationDto } from "../../dtos/application(solicitud)/CreateApplicationDto";
 import type { IBaseRepository } from "./IBaseRepository";
 import type { Group } from "../../../domain/entities/Group";
@@ -11,5 +11,7 @@ export interface IApplicationRepository extends IBaseRepository<Application,Crea
     createFromApplication(application:ApplicationCreateGroupDTO,idApplication:number): Promise<Group>;
     createRol(data:CreateRolApplicationDto):Promise<Application>;
     soloistsArtistWhithoutApplication():Promise<Artist[]>;
-
+    getApprenticesWhithoutApplication(): Promise<Apprentice[]>;
+    apprenticeDecisionByApplication(idApplication: number,idApprentice: number,decision:boolean):Promise<void>;
+    artistDecisionByApplication(idApplication: number,idApprentice: number, idGroup:number,decision:boolean):Promise<void>;
 }

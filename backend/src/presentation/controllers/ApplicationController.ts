@@ -11,7 +11,10 @@ import type { CreateGroupToApplicationUseCase } from "../../application/usesCase
 import type { AttractApprenticesUseCase } from "../../application/usesCase/apprentice/AttractApprenticeUsaCase";
 import type { CreateRolApplicationUseCase } from "../../application/usesCase/application(solicitud)/CreateRolApplicationUseCase";
 import { CreateRolApplicationDto } from "../../application/dtos/application(solicitud)/CreateRolApplicationDto";
-import type { SoloistsArtistWhithoutApplicationUseCase } from "../../application/usesCase/application(solicitud)/soloistsArtistWhithoutApplicationUseCase";
+import type { GetApprenticesWhithoutApplicationUseCase } from "../../application/usesCase/apprentice/getApprenticesWhithoutApplicationUseCase";
+import type { ApprenticeDecisionByApplicationUseCase } from "../../application/usesCase/apprentice/ApprenticeDecisionByApplicationUseCase";
+import type { ArtistDecisionByApplicationUseCase } from "../../application/usesCase/apprentice/ArtistDecisionByApplicationUseCase";
+import type { SoloistsArtistWhithoutApplicationUseCase } from "../../application/usesCase/application(solicitud)/SoloistsArtistWhithoutApplicationUseCase";
 
 
 @injectable()
@@ -25,9 +28,76 @@ export class ApplicationController{
                 @inject(Types.CreateGroupToApplicationUseCase) private createGroupToApplicationUseCase: CreateGroupToApplicationUseCase,
                 @inject(Types.AttractApprenticesUseCase)private attractApprenticesUseCase: AttractApprenticesUseCase,
                 @inject(Types.SoloistsArtistWhithoutApplicationUseCase)private soloistsArtistWhithoutApplication: SoloistsArtistWhithoutApplicationUseCase,
+                @inject(Types.GetApprenticesWhithoutApplicationUseCase)private getApprenticesWhithoutApplicationUseCase: GetApprenticesWhithoutApplicationUseCase,
+                @inject(Types.ApprenticeDecisionByApplicationUseCase)private apprenticeDecisionByApplicationUseCase: ApprenticeDecisionByApplicationUseCase,
+                @inject(Types.ArtistDecisionByApplicationUseCase)private artistDecisionByApplicationUseCase: ArtistDecisionByApplicationUseCase,
               ){}
 
 
+     // PATCH /applications/:id/artist-decision
+async artistDecisionByApplication(req: Request, res: Response) {
+  try {
+    const { id } = req.params; // idSolicitud
+    const { apprenticeId, groupId, decision } = req.body;
+
+    await this.artistDecisionByApplicationUseCase.execute(
+      Number(id),
+      Number(apprenticeId),
+      Number(groupId),
+      Boolean(decision)
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Artist decision updated successfully",
+    });
+  } catch (error: any) {
+    return res.status(400).json({
+      success: false,
+      error: error.message,
+    });
+  }
+}         
+// PATCH /applications/:id/apprentice-decision
+async apprenticeDecisionByApplication(req: Request, res: Response) {
+  try {
+    const { id } = req.params; // idSolicitud
+    const { apprenticeId, decision } = req.body;
+
+    await this.apprenticeDecisionByApplicationUseCase.execute(
+      Number(id),
+      Number(apprenticeId),
+      Boolean(decision)
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Apprentice decision updated successfully",
+    });
+  } catch (error: any) {
+    return res.status(400).json({
+      success: false,
+      error: error.message,
+    });
+  }
+}
+
+async getApprenticesWhithoutApplication(req: Request, res: Response) {
+  try {
+    const apprentices =
+      await this.getApprenticesWhithoutApplicationUseCase.execute();
+
+    return res.status(200).json({
+      success: true,
+      data: apprentices,
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+}
 
      async soloistsArtist(req: Request, res: Response) {
                 try {
