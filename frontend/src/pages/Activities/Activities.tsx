@@ -152,7 +152,32 @@ const Activities: React.FC = () => {
 
   const handleCreateSaveActivity = async (newactivity: any) => {
     try {
-      console.log('newactivity',newactivity)
+      console.log('newactivity', newactivity)
+
+      // Obtener el nombre de la agencia usando el id
+      let agencyName = '';
+      console.log('user', user)
+      if (user?.profileData?.agencyId) {
+        const res = await fetch('http://localhost:3000/api/agency', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        const data = await res.json();
+        const agencies = Array.isArray(data.data) ? data.data : [];
+        const found = agencies.find((a: any) => Number(a.id) === Number(user.profileData?.agencyId));
+        console.log('found',found)
+        agencyName = found ? found.name : '';
+      }
+      console.log('agencyName', agencyName);
+      
+
+      // Separar performers en groups y artists
+      const performers = Array.isArray(newactivity.performer) ? newactivity.performer : [];
+      const groups = performers.filter((p: any) => p.type === 'group' && p.memberId).map((p: any) => Number(p.memberId));
+      const artists = performers.filter((p: any) => p.type === 'artist' && p.memberId).map((p: any) => Number(p.memberId));
+      console.log("performers", performers);
+
       const mapActivityType = (type: string) => {
         if (type === 'grupal' || type === 'Groups') return 'GROUP';
         if (type === 'individual') return 'INDIVIDUAL'; // <-- mayúscula
@@ -163,7 +188,9 @@ const Activities: React.FC = () => {
         activityType: mapActivityType(newactivity.activityType || newactivity.type),
         date: clickedDate,
         place: newactivity.place,
-        responsible: user?.agencyId
+        responsible: agencyName,
+        groups: groups,
+        artists: artists
       }
       console.log('payload', payload);
       const response = await fetch('http://localhost:3000/api/activity', {
@@ -174,14 +201,14 @@ const Activities: React.FC = () => {
         },
         body: JSON.stringify(payload)
       });
-      console.log(response)
+      console.log('response', response)
       if (!response.ok) {
         throw new Error('Error al crear actividad');
       }
 
       const result = await response.json();
       const createdActivity = result.data || result; // <-- Guarda la actividad creada aquí
-      console.log('actividad creada',createdActivity)
+      console.log('actividad creada', createdActivity)
       setActivities(prev => [...prev, createdActivity]);
       setLastCreatedActivity(createdActivity);
       setSuccessContext('activity');
@@ -367,6 +394,7 @@ const Activities: React.FC = () => {
                     isArtist={false}
                     onUpdateDate={updateDate}
                     onCreateActivity={handleCreateSaveActivity}
+                    clickedDate={clickedDate ?? undefined}
                   />
                 </div>
               </div>
