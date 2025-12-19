@@ -50,7 +50,7 @@ const Requests: React.FC = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          status : 'APROBADA',
+          status: 'APROBADA',
         })
       });
 
@@ -79,7 +79,7 @@ const Requests: React.FC = () => {
         },
 
         body: JSON.stringify({
-          status : 'RECHAZADA',
+          status: 'RECHAZADA',
         })
       });
 
@@ -100,17 +100,12 @@ const Requests: React.FC = () => {
   // Crear grupo (Manager)
   const handleCreateGroup = async (requestId: number, groupName: string) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/createGroup/`, {
+      const response = await fetch(`http://localhost:3000/api/createGroup/${requestId}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          requestId,
-          groupName,
-          agencyId: user?.agencyId
-        })
       });
 
       if (!response.ok) {
@@ -198,8 +193,8 @@ const Requests: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          apprenticeId : user?.profileData?.apprenticeId || user?.profileData?.IdAp,
-          decision : true,
+          apprenticeId: user?.profileData?.apprenticeId || user?.profileData?.IdAp,
+          decision: true,
           //role: user.role
         })
       });
@@ -212,9 +207,9 @@ const Requests: React.FC = () => {
   };
   const handleDeny = async (requestId: number) => {
     const url =
-  user?.role === 'artist'
-    ? `http://localhost:3000/api/application/${requestId}/artist-decision`
-    : `http://localhost:3000/api/application/${requestId}/apprentice-decision`;
+      user?.role === 'artist'
+        ? `http://localhost:3000/api/application/${requestId}/artist-decision`
+        : `http://localhost:3000/api/application/${requestId}/apprentice-decision`;
 
     try {
       const response = await fetch(url, {
@@ -224,9 +219,9 @@ const Requests: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          apprenticeId : user?.profileData?.apprenticeId || user?.profileData?.IdAp,
-          groupId : user?.profileData?.IdGr || user?.profileData?.groupId, 
-          decision : false,
+          apprenticeId: user?.profileData?.apprenticeId || user?.profileData?.IdAp,
+          groupId: user?.profileData?.IdGr || user?.profileData?.groupId,
+          decision: false,
         })
       });
       if (!response.ok) throw new Error('Error al negar solicitud');
@@ -633,23 +628,44 @@ const Requests: React.FC = () => {
 
   const handleCreateSave = async (newrequest: any) => {
     try {
+      const appid = user?.profileData?.IdAp || user?.profileData?.apprenticeId
+      const grid = user?.profileData?.IdGr || user?.profileData?.groupId
+      const url1 = user?.role === 'artist' ? `http://localhost:3000/api/artist/${appid}&${grid}` : `http://localhost:3000/api/application?artistId/${appid}`
+      const agency = await fetch(url1, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+
+      console.log('newrequest', newrequest)
+      // Separar miembros en apprentices y artists según el tipo
+      const members = Array.isArray(newrequest.members) ? newrequest.members : [];
+      const apprentices = members
+        .filter((m: any) => m.type === 'apprentice' && m.memberId)
+        .map((m: any) => Number(m.memberId));
+      const artists = members
+        .filter((m: any) => m.type === 'artist' && Array.isArray(m.memberId) && m.memberId.length === 2)
+        .map((m: any) => m.memberId.map((id: any) => Number(id)));
+
+
+
       // Adaptar el payload según la estructura requerida
+
       const payload = {
-        groupName: newrequest.groupName,
-        idAgency: newrequest.agencyId || newrequest.idAgency,
-        roles: Array.isArray(newrequest.roles) ? newrequest.roles : [],
+        groupName: newrequest.groupName || newrequest.name,
+        idAgency: user?.profileData?.agencyId || newrequest.idAgency || agency.agencyId,
+        roles: Array.isArray(newrequest.roles) ? newrequest.roles : members.map((m: any) => m.role),
         idConcept: newrequest.concept?.id || newrequest.idConcept || newrequest.concept,
-        // Suponiendo que members contiene tanto aprendices como artistas
-        apprentices: Array.isArray(newrequest.members)
-          ? newrequest.members.filter((m: any) => m.type === 'apprentice').map((m: any) => m.id)
-          : [],
-        artists: Array.isArray(newrequest.members)
-          ? newrequest.members.filter((m: any) => m.type === 'artist').map((m: any) => [m.idApprentice, m.groupId])
-          : [],
-        idApprentice: newrequest.idApprentice || undefined,
-        idGroup: newrequest.idGroup || undefined
+        apprentices,
+        artists,
+        idApprentice: user?.profileData?.IdAp || user?.profileData?.apprenticeId,
+        idGroup: user?.profileData?.IdGr || user?.profileData?.groupId
       };
-      const url= user?.role === 'admin' ? 'http://localhost:3000/api/application' : 'http://localhost:3000/api/application/create'
+      console.log('payload', payload)
+      console.log('user', user)
+      const url = user?.role === 'admin' ? 'http://localhost:3000/api/application' : 'http://localhost:3000/api/application/create'
       const response = await fetch(url, {
         method: 'POST',
         headers: {

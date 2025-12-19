@@ -17,6 +17,7 @@ interface CalendarProps {
   onCancel?: any,
   onUpdateDate?: any,
   onCreateActivity?: any,
+  clickedDate?: string;
 }
 
 export const transformDate = (dateStr: string) => {
@@ -37,7 +38,8 @@ const Calendar: React.FC<CalendarProps> = ({
   onAcept,
   onCancel,
   onUpdateDate,
-  onCreateActivity
+  onCreateActivity,
+  clickedDate
 
 }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -476,7 +478,7 @@ const Calendar: React.FC<CalendarProps> = ({
           title="Agregar Actividad"
           createEntity="activity"
           onSave={handleCreate}
-          
+          clickedDate={clickedDate} // <-- AGREGA ESTA LÍNEA
         >
         </ModalCreate>
       )}

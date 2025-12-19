@@ -5,6 +5,7 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import type { Field } from "../../config/formSource"
 import { formFieldsByEntity, ROLES_GROUPS } from "../../config/formSource"
+import { useAuth } from '../../contexts/auth/AuthContext';
 import "./modal.css"
 
 interface ModalCreateProps {
@@ -16,9 +17,11 @@ interface ModalCreateProps {
   onSave?: (data: any) => void
   onFieldChange?: (fieldName: string, value: any) => void
   user?: { agencyId: string } // Add user prop with agencyId
+  clickedDate?: string
 }
 
-const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, createEntity, createFields, onSave, onFieldChange, user }) => {
+const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, createEntity, createFields, onSave, onFieldChange, clickedDate }) => {
+  const { user } = useAuth();
   const [formData, setFormData] = useState<any>({})
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
   const [dynamicOptions, setDynamicOptions] = useState<Record<string, any[]>>({})
@@ -340,7 +343,7 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
   };
 
   const fetchMembers = async (type: string, idx: number) => {
-    const endpoint = type === 'apprentice' ? '/api/application/apprentice' : '/api/application/soloistArtist';
+    const endpoint = type === 'apprentice' ? '/api/application/apprentices/without-application' : '/api/application/soloistArtist';
     const token = localStorage.getItem('token');
     const res = await fetch(`http://localhost:3000${endpoint}`, {
       headers: token ? { Authorization: `Bearer ${token}` } : {}
@@ -505,19 +508,27 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
                           newPerformers[idx].type = e.target.value;
                           setFormData({ ...formData, performer: newPerformers });
                           // Cargar opciones
-                          const agencyId = user?.agencyId;
+                          const agencyId = user?.profileData?.agencyId;
+                          console.log('user', user)
+                          console.log('agencyId', agencyId);
+                          console.log('Date', clickedDate)
                           //if (!agencyId) return; // Prevent error if user or agencyId is missing
-                          const endpoint = e.target.value === 'group' ? `/api/${agencyId}/groups` : `/api/${agencyId}/artists`;
+                          const endpoint = e.target.value === 'group' ? `/api/agency/${agencyId}/groups` : `/api/agency/${agencyId}/artists`;
                           const token = localStorage.getItem('token');
-                          fetch(`http://localhost:3000${endpoint}`, {
+                          const res = fetch(`http://localhost:3000${endpoint}`, {
                             method: 'POST',
-                            headers: token ? { Authorization: `Bearer ${token}` } : {}
+                            headers: {
+                              'Content-Type': 'application/json',
+                              ...(token ? { Authorization: `Bearer ${token}` } : {})
+                            },
+                            body: JSON.stringify({ date: clickedDate }) // <-- Aquí pasas clickedDate
                           })
                             .then(res => res.json())
                             .then(data => {
                               const arr = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
                               const opts = arr.map((item: any) => ({
-                                value: item.id,
+                                //value: item.id,
+                                value: { apprenticeId: item.ApprenticeId, groupId: item.GroupId },
                                 label: item.name || item.realName || item.nombre || item.label || item.id
                               }));
                               setMemberOptions(prev => {
@@ -526,12 +537,15 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
                                 return copy;
                               });
                             });
+                          console.log('Fetch response:', res);
                         }}
                         style={{ minWidth: 110 }}
                       >
                         <option value="group">Grupo</option>
                         <option value="artist">Artista</option>
                       </select>
+                      console.log(performer)
+                      console.log(memberOptions)
                       {/* Miembro */}
                       <select
                         value={performer.memberId}
