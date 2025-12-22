@@ -646,9 +646,11 @@ const Requests: React.FC = () => {
         .filter((m: any) => m.type === 'apprentice' && m.memberId)
         .map((m: any) => Number(m.memberId));
       const artists = members
-        .filter((m: any) => m.type === 'artist' && Array.isArray(m.memberId) && m.memberId.length === 2)
-        .map((m: any) => m.memberId.map((id: any) => Number(id)));
-
+        .filter((p: any) => p.type === 'artist' && p.memberId)
+        .map((p: any) => [
+          Number(p.memberId.apprenticeId ?? p.memberId.ApprenticeId),
+          Number(p.memberId.groupId ?? p.memberId.GroupId)
+        ]);
 
 
       // Adaptar el payload según la estructura requerida
