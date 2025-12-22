@@ -166,16 +166,24 @@ const Activities: React.FC = () => {
         const data = await res.json();
         const agencies = Array.isArray(data.data) ? data.data : [];
         const found = agencies.find((a: any) => Number(a.id) === Number(user.profileData?.agencyId));
-        console.log('found',found)
+        console.log('found', found)
         agencyName = found ? found.name : '';
       }
       console.log('agencyName', agencyName);
-      
+
 
       // Separar performers en groups y artists
       const performers = Array.isArray(newactivity.performer) ? newactivity.performer : [];
-      const groups = performers.filter((p: any) => p.type === 'group' && p.memberId).map((p: any) => Number(p.memberId));
-      const artists = performers.filter((p: any) => p.type === 'artist' && p.memberId).map((p: any) => Number(p.memberId));
+      const groups = performers
+        .filter((p: any) => p.type === 'group' && p.memberId)
+        .map((p: any) => Number(p.memberId));
+      const artists = performers
+        .filter((p: any) => p.type === 'artist' && p.memberId)
+        .map((p: any) => [
+          Number(p.memberId.apprenticeId ?? p.memberId.ApprenticeId),
+          Number(p.memberId.groupId ?? p.memberId.GroupId)
+        ]);
+
       console.log("performers", performers);
 
       const mapActivityType = (type: string) => {
