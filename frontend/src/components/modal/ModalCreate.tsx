@@ -305,9 +305,9 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
 
   const handleAddMember = () => {
     const members = Array.isArray(formData.members) ? formData.members : [];
-    const newMembers = [...members, { type: 'apprentice', memberId: '', role: '' }];
+    const newMembers = [...members, { type: '', memberId: '', role: '' }];
     setFormData({ ...formData, members: newMembers });
-    setMemberTypes(prev => [...prev, 'apprentice']);
+    setMemberTypes(prev => [...prev, '']);
     setMemberOptions(prev => [...prev, []]);
   };
 
@@ -339,6 +339,7 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
     const members = Array.isArray(formData.members) ? formData.members : [];
     const newMembers = [...members];
     newMembers[idx][field] = val;
+    //newPerformers[idx].memberId = e.target.value;
     setFormData({ ...formData, members: newMembers });
   };
 
@@ -351,7 +352,9 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
     const data = await res.json();
     const arr = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
     const opts = arr.map((item: any) => ({
-      value: item.id,
+      value: type === 'artist'
+        ? [item.apprenticeId ?? item.IdAp, item.groupId ?? item.IdGr]
+        : item.id,
       label: item.name || item.realName || item.nombre || item.label || item.id
     }));
     setMemberOptions(prev => {
@@ -411,10 +414,11 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
                     <div key={idx} style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'center' }}>
                       {/* Tipo de miembro */}
                       <select
-                        value={member.type || memberTypes[idx] || 'apprentice'}
+                        value={member.type || memberTypes[idx] || ''}
                         onChange={e => handleTypeChange(idx, e.target.value)}
                         style={{ minWidth: 110 }}
                       >
+                        <option value="">Seleccione tipo</option>
                         <option value="apprentice">Aprendiz</option>
                         <option value="artist">Artista</option>
                       </select>
@@ -494,59 +498,59 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
                   {performers.map((performer: any, idx: number) => (
                     <div key={idx} style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'center' }}>
                       {/* Tipo: Grupo o Artista */}
-                        <select
-                          value={performer.type || memberTypes[idx] || ''}
-                          onChange={e => {
-                            setMemberTypes(prev => {
-                              const copy = [...prev];
-                              copy[idx] = e.target.value;
-                              return copy;
-                            });
-                            // Limpiar el miembro seleccionado al cambiar tipo
-                            const newPerformers = [...performers];
-                            newPerformers[idx].memberId = '';
-                            newPerformers[idx].type = e.target.value;
-                            setFormData({ ...formData, performer: newPerformers });
-                            // Cargar opciones
-                            const agencyId = user?.profileData?.agencyId;
-                            console.log('user', user)
-                            console.log('agencyId', agencyId);
-                            console.log('Date', clickedDate)
-                            //if (!agencyId) return; // Prevent error if user or agencyId is missing
-                            const endpoint = e.target.value === 'group' ? `/api/agency/${agencyId}/groups` : `/api/agency/${agencyId}/artists`;
-                            const token = localStorage.getItem('token');
-                            const res = fetch(`http://localhost:3000${endpoint}`, {
-                              method: 'POST',
-                              headers: {
-                                'Content-Type': 'application/json',
-                                ...(token ? { Authorization: `Bearer ${token}` } : {})
-                              },
-                              body: JSON.stringify({ date: clickedDate }) // <-- Aquí pasas clickedDate
-                            })
-                              .then(res => res.json())
-                              .then(data => {
-                                const arr = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
-                                const opts = arr.map((item: any) => ({
-                                  //value: item.id,
-                                  value: { apprenticeId: item.ApprenticeId, groupId: item.GroupId },
-                                  label: item.name || item.realName || item.nombre || item.label || item.id
-                                }));
-                                setMemberOptions(prev => {
-                                  const copy = [...prev];
-                                  copy[idx] = opts;
-                                  return copy;
-                                });
+                      <select
+                        value={performer.type || memberTypes[idx] || ''}
+                        onChange={e => {
+                          setMemberTypes(prev => {
+                            const copy = [...prev];
+                            copy[idx] = e.target.value;
+                            return copy;
+                          });
+                          // Limpiar el miembro seleccionado al cambiar tipo
+                          const newPerformers = [...performers];
+                          newPerformers[idx].memberId = '';
+                          newPerformers[idx].type = e.target.value;
+                          setFormData({ ...formData, performer: newPerformers });
+                          // Cargar opciones
+                          const agencyId = user?.profileData?.agencyId;
+                          console.log('user', user)
+                          console.log('agencyId', agencyId);
+                          console.log('Date', clickedDate)
+                          //if (!agencyId) return; // Prevent error if user or agencyId is missing
+                          const endpoint = e.target.value === 'group' ? `/api/agency/${agencyId}/groups` : `/api/agency/${agencyId}/artists`;
+                          const token = localStorage.getItem('token');
+                          const res = fetch(`http://localhost:3000${endpoint}`, {
+                            method: 'POST',
+                            headers: {
+                              'Content-Type': 'application/json',
+                              ...(token ? { Authorization: `Bearer ${token}` } : {})
+                            },
+                            body: JSON.stringify({ date: clickedDate }) // <-- Aquí pasas clickedDate
+                          })
+                            .then(res => res.json())
+                            .then(data => {
+                              const arr = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
+                              const opts = arr.map((item: any) => ({
+                                //value: item.id,
+                                value: { apprenticeId: item.ApprenticeId, groupId: item.GroupId },
+                                label: item.name || item.realName || item.nombre || item.label || item.id
+                              }));
+                              setMemberOptions(prev => {
+                                const copy = [...prev];
+                                copy[idx] = opts;
+                                return copy;
                               });
-                            console.log('Fetch response:', res);
-                            console.log('Performer',performer)
-                            console.log('MemberOptions',memberOptions)
-                          }}
-                          style={{ minWidth: 110 }}
-                        >
-                          <option value="">Seleccione tipo</option>
-                          <option value="group">Grupo</option>
-                          <option value="artist">Artista</option>
-                        </select>
+                            });
+                          console.log('Fetch response:', res);
+                          console.log('Performer', performer)
+                          console.log('MemberOptions', memberOptions)
+                        }}
+                        style={{ minWidth: 110 }}
+                      >
+                        <option value="">Seleccione tipo</option>
+                        <option value="group">Grupo</option>
+                        <option value="artist">Artista</option>
+                      </select>
                       {/* Miembro */}
                       <select
                         value={performer.memberId}
@@ -583,7 +587,7 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
               );
             }
 
-            if (f.type === 'textarea') {
+            else if (f.type === 'textarea') {
               return (
                 <div className={`form-group ${errorMessage ? 'form-group-error' : ''}`} key={key}>
                   <label htmlFor={key}>{f.label}</label>
