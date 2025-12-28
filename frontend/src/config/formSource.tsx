@@ -122,7 +122,6 @@ export const groupFields: Field[] = [
 export const albumFields: Field[] = [
     { id: 'title', name: 'title', label: 'Título Álbum', type: 'text' },
     { id: 'releaseDate', name: 'releaseDate', label: 'Fecha Lanzamiento', type: 'date' },
-    { id: 'tracks', name: 'tracks', label: 'No. Canciones', type: 'number', min: 0 },
     { id: 'producer', name: 'producer', label: 'Productor', type: 'text' },
 ];
 
@@ -131,7 +130,7 @@ export const songFields: Field[] = [
     { id: 'title', name: 'title', label: 'Título Canción', type: 'text' },
     { id: 'producer', name: 'producer', label: 'Productor', type: 'text' },
     { id: 'releaseDate', name: 'releaseDate', label: 'Fecha Lanzamiento', type: 'date' },
-    { id: 'genre', name: 'genre', label: 'Género', type: 'text' },
+    { id: 'gender', name: 'gender', label: 'Género', type: 'text' },
 ];
 
 // Premio
