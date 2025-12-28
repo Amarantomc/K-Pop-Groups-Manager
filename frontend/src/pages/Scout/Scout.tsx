@@ -40,6 +40,7 @@ const Scout: React.FC = () => {
       setSuccessMessage('Aprendiz captado exitosamente');
       setOpenSuccess(true);
     } catch (error) {
+      console.error(error)
       setErrorMessage('Error al captar aprendiz');
       setOpenError(true);
     }
@@ -198,6 +199,7 @@ const Scout: React.FC = () => {
       setOpenSuccess(true);
       setShowContractModal(false);
     } catch (error) {
+      console.error(error)
       setShowContractModal(false)
       setErrorMessage('Error al ofrecer contrato');
       setOpenError(true);

@@ -1,14 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react';
 import type { GridColDef } from '@mui/x-data-grid';
 import DataTable from '../../components/datatable/Datatable';
 import PageLayout from '../../components/pageLayout/PageLayout';
 import ModalCreate from '../../components/modal/ModalCreate';
-import Modal from '../../components/modal/Modal';
 import { useAuth } from '../../contexts/auth/AuthContext';
-import { albumFields } from '../../config/formSource';
 import { albumConstraints } from '../../config/modalConstraints';
 import ConfirmDialog from '../../components/confirmDialog/ConfirmDialog';
-import { albumColumns } from '../../config/datatableSource';
+import { Button,Select,Typography,MenuItem } from '@mui/material';
+import { songFields } from '../../config/formSource';
 
 interface Album {
   id: number;
@@ -25,8 +25,9 @@ interface Album {
 const Albums: React.FC = () => {
   const { user } = useAuth();
   const [albums, setAlbums] = useState<Album[]>([]);
+  const [albumToAddSong,setAlbumToAddSong] = useState<any>('')
   const [isLoading, setIsLoading] = useState(true);
-  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showAddSongModal, setShowAddSongModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [albumToDelete, setAlbumToDelete] = useState<number | null>(null);
   const [openConfirm, setOpenConfirm] = useState(false);
@@ -40,51 +41,83 @@ const Albums: React.FC = () => {
   };
 
   // Columnas base del DataTable
-  const baseColumns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 70 },
+const albumColumns: GridColDef[] = [
     { field: 'title', headerName: 'Título', width: 200 },
-    { field: 'idGroup', headerName: 'ID Grupo', width: 100 },
-    { field: 'producer', headerName: 'Productor', width: 180 },
-    {
-      field: 'releaseDate',
-      headerName: 'Fecha de Lanzamiento',
-      width: 160,
-      valueFormatter: (params: { value?: string }) => {
-        return params.value ? new Date(params.value).toLocaleDateString('es-ES') : '';
+    {field: 'producer',headerName: 'Productor',width:160},
+    { field: 'releaseDate', headerName: 'Fecha Lanzamiento', width: 150 },
+    {field:'noCopiesSold',headerName:'Copias Vendidas',width:140},
+    { field: 'songs'
+        , headerName: 'Canciones'
+        , width: 200,
+         renderCell:(params) => {
+            const songs = params.value || []
+             if (songs.length === 0) {
+        return (
+          <Typography variant="body2" color="text.secondary" sx={{ width: '100%', py: 1 }}>
+            Sin canciones
+          </Typography>
+        );
       }
+            return(
+                     <Select
+                    value=""
+                    displayEmpty
+                    sx={{ width: '100%', height: 40 }}
+                renderValue={() => `${songs.length} Canci${songs.length !== 1 ? 'ones' : 'ón'}`}
+            >
+            {songs.map((song: any) => (
+                <MenuItem key={song.id} value={song.id}>
+                {song.name}
+                </MenuItem>
+            ))}
+        </Select>
+            )
+        }
     },
-    { field: 'noSongs', headerName: 'Nº Canciones', width: 120 },
-    { field: 'noCopiesSold', headerName: 'Copias Vendidas', width: 140 },
+    {field:'awards',
+      headerName : 'Premios',
+      width:200,
+        renderCell:(params) => {
+            const awards = params.value || []
+             if (awards.length === 0) {
+        return (
+          <Typography variant="body2" color="text.secondary" sx={{ width: '100%', py: 1 }}>
+            Sin premios
+          </Typography>
+        );
+      }
+            return(
+                     <Select
+                    value=""
+                    displayEmpty
+                    sx={{ width: '100%', height: 40 }}
+                renderValue={() => `${awards.length} Premi${awards.length !== 1 ? 'os' : 'o'}`}
+            >
+            {awards.map((award: any) => (
+                <MenuItem key={award.idAward} value={award.idAward}>
+                {award.title} - {award.year}
+                </MenuItem>
+            ))}
+        </Select>
+            )
+        }
+    },
     {
-      field: 'songs',
-      headerName: 'IDs Canciones',
-      width: 130,
-      valueGetter: (params: any) => Array.isArray(params.row?.songs) ? params.row.songs.join(', ') : ''
-    },
-    {
-      field: 'artists',
-      headerName: 'Artistas',
-      width: 130,
-      valueGetter: (params: any) => Array.isArray(params.row?.artists) ? params.row.artists.map((a: any) => `Ap:${a.idAp}/Gr:${a.idGr}`).join(', ') : ''
-    },
-    {
-      field: 'awards',
-      headerName: 'Premios',
-      width: 130,
-      valueGetter: (params: any) => Array.isArray(params.row?.awards) ? params.row.awards.map((a: any) => `#${a.idPremio} (${a.año})`).join(', ') : ''
-    },
-    {
-      field: 'groups',
-      headerName: 'Grupos',
-      width: 100,
-      valueGetter: (params: any) => Array.isArray(params.row?.groups) ? params.row.groups.join(', ') : ''
-    },
-  ];
+          field: 'accion',
+          headerName: 'Acción',
+          flex: 1,
+          renderCell: (params: any) => (
+            <Button variant="contained" color="primary" onClick={() => handleOpenAddSongModal(params.row.id)}>
+              Agregar Canción
+            </Button>
+          ),
+        },
+]
 
   // Agregar columna de agencia solo para admin
   const columns = user?.role === 'admin'
-    ? [...baseColumns, { field: 'agencyName', headerName: 'Agencia', width: 150 }]
-    : baseColumns;
+    ? [...albumColumns, { field: 'agencyName', headerName: 'Agencia', width: 150 }]
+    : albumColumns;
 
   useEffect(() => {
     const fetchAlbums = async () => {
@@ -104,10 +137,15 @@ const Albums: React.FC = () => {
           case 'admin':
             endpoint = '/api/album';
             break;
+          case 'artist':
+            endpoint = '/api/album';
+            break;
           default:
             console.error('Rol no autorizado:', user.role);
             return;
         }
+        console.log("endpoint",endpoint)
+        console.log("user",user)
 
         // ============================================
         // SECCIÓN: BACKEND ENDPOINT
@@ -210,7 +248,12 @@ const Albums: React.FC = () => {
     const payload: Record<string, any> = {};
     if (data instanceof FormData) {
       data.forEach((v, k) => { payload[k] = v; });
-    } else Object.assign(payload, data);
+    } else{
+      Object.assign(payload, data);
+    }
+    payload.apprenticeId = user?.profileData?.IdAp;
+    payload.groupId = user?.profileData?.IdGr;
+
 
     (async () => {
       try {
@@ -231,7 +274,7 @@ const Albums: React.FC = () => {
             const txt = await res.text();
             try { const j = JSON.parse(txt); msg = j?.message || j?.error || txt || msg; }
             catch { msg = txt || msg; }
-          } catch (e) { }
+          } catch (e) { console.error(e)}
           setErrorMessage(msg);
           setOpenError(true);
           return;
@@ -250,30 +293,51 @@ const Albums: React.FC = () => {
     })();
   };
 
-  const handleFormSubmit = async (formData: Record<string, any>) => {
+      const handleOpenAddSongModal = (albumId: number) => {
+      setAlbumToAddSong(albumId);
+      setShowAddSongModal(true);
+    };
+
+  const handleAddSongToAlbum = async (formData: Record<string, any>) => {
+    if (!albumToAddSong) return;
+     const payload = {
+    ...formData,
+    albumIds: [albumToAddSong], // 👈 ARRAY con el álbum seleccionado
+  };
+  console.log("payload",payload)
     try {
-      const response = await fetch('http://localhost:3000/api/album', {
+      const response = await fetch('http://localhost:3000/api/song', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(payload)
       });
 
       if (!response.ok) {
-        throw new Error('Error al crear álbum');
+        throw new Error('Error al agregar la canción');
       }
 
       const data = await response.json();
-      setAlbums(prev => [...prev, (data.data || data)]);
-      setShowCreateModal(false);
-      setOpenAccept(true);
+      const newSong = {
+        id: data.data.id,
+        name: data.data.name ?? data.data.title, // 🔥 clave
+        };
+      setAlbums(prev =>
+      prev.map(album =>
+        album.id === albumToAddSong
+          ? { ...album, songs: [...(album.songs || []), newSong] }
+          : album
+      )
+    );
+      setShowAddSongModal(false);
+      setShowSuccessModal(true);
     } catch (error) {
-      console.error('Error al crear álbum:', error);
-      const errorMsg = error instanceof Error ? error.message : 'Error al crear álbum';
+      console.error('Error al agregar la canción:', error);
+      const errorMsg = error instanceof Error ? error.message : 'Error al agregar la canción';
       setErrorMessage(errorMsg);
-      setShowCreateModal(false);
+      setShowAddSongModal(false);
       setOpenError(true);
     }
   };
@@ -345,7 +409,7 @@ const Albums: React.FC = () => {
       ) : (
         <>
           <DataTable
-            columns={albumColumns}
+            columns={columns}
             rows={albums}
             pagesize={10}
             onDelete={askDelete}
@@ -385,18 +449,23 @@ const Albums: React.FC = () => {
             confirmText="Aceptar"
             showDeleteButton={false}
           />
+          {/* Para agregar cancion a album */}
           <ModalCreate
-            isOpen={showCreateModal}
-            title="Crear Álbum"
-            createFields={albumFields}
-            onSave={handleFormSubmit}
-            onClose={() => setShowCreateModal(false)}
+            isOpen={showAddSongModal}
+            title="Agregar Canción al Álbum"
+            createFields={songFields}
+            onSave={handleAddSongToAlbum}
+            onClose={() => setShowAddSongModal(false)}
           />
-          <Modal
-            isOpen={showSuccessModal}
-            title="Álbum creado exitosamente"
-            onSave={() => setShowSuccessModal(false)}
-            onClose={() => setShowSuccessModal(false)}
+          <ConfirmDialog
+            title="¡Éxito!"
+            message="La canción ha sido agregada al álbum correctamente"
+            open={showSuccessModal}
+            type="success"
+            onCancel={() => setShowSuccessModal(false)}
+            onConfirm={() => setShowSuccessModal(false)}
+            confirmText="Aceptar"
+            showDeleteButton={false}
           />
         </>
       )}
