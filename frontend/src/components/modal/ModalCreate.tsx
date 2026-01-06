@@ -319,7 +319,6 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
     setMemberOptions(prev => prev.filter((_, i) => i !== idx));
   };
 
-
   const handleTypeChange = (idx: number, type: string) => {
     setMemberTypes(prev => {
       const copy = [...prev];
@@ -483,9 +482,9 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
                       type="button"
                       onClick={() => {
                         if (!canAdd) return;
-                        const newPerformers = [...performers, { type: 'group', memberId: '' }];
+                        const newPerformers = [...performers, { type: '', memberId: '' }];
                         setFormData({ ...formData, performer: newPerformers });
-                        setMemberTypes(prev => [...prev, 'group']);
+                        setMemberTypes(prev => [...prev, '']);
                         setMemberOptions(prev => [...prev, []]);
                       }}
                       style={{ marginLeft: 8, fontWeight: 'bold', fontSize: 18, cursor: canAdd ? 'pointer' : 'not-allowed', background: 'none', border: 'none', color: canAdd ? '#2563eb' : '#aaa', padding: 0, opacity: canAdd ? 1 : 0.5 }}
@@ -532,7 +531,7 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
                               const arr = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
                               const opts = arr.map((item: any) => ({
                                 //value: item.id,
-                                value: { apprenticeId: item.ApprenticeId, groupId: item.GroupId },
+                                value: [item.ApprenticeId, item.GroupId],
                                 label: item.name || item.realName || item.nombre || item.label || item.id
                               }));
                               setMemberOptions(prev => {

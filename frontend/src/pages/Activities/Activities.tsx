@@ -179,10 +179,19 @@ const Activities: React.FC = () => {
         .map((p: any) => Number(p.memberId));
       const artists = performers
         .filter((p: any) => p.type === 'artist' && p.memberId)
-        .map((p: any) => [
-          Number(p.memberId.apprenticeId ?? p.memberId.ApprenticeId),
-          Number(p.memberId.groupId ?? p.memberId.GroupId)
-        ]);
+        .map((p: any) => {
+          let ids = p.memberId;
+          if (typeof ids === 'string') {
+            ids = ids.split(',').map(Number);
+          }
+          return Array.isArray(ids) && ids.length === 2 ? ids : [null, null];
+        });
+      /*
+      .map((p: any) => [
+        Number(p.memberId[0] ?? p.memberId[0]),
+        Number(p.memberId[1] ?? p.memberId[1])
+      ]);
+      */
 
       console.log("performers", performers);
 
