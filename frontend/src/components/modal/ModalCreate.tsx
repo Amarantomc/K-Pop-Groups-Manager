@@ -302,7 +302,6 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
     onSave?.(dataToSend);
   }
 
-
   const handleAddMember = () => {
     const members = Array.isArray(formData.members) ? formData.members : [];
     const newMembers = [...members, { type: '', memberId: '', role: '' }];
@@ -500,6 +499,9 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
                       <select
                         value={performer.type || memberTypes[idx] || ''}
                         onChange={e => {
+                          console.log('[Activity] Tipo de performer seleccionado:', e.target.value);
+                          console.log('[Activity] Index del performer:', idx);
+                          
                           setMemberTypes(prev => {
                             const copy = [...prev];
                             copy[idx] = e.target.value;
@@ -510,39 +512,76 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
                           newPerformers[idx].memberId = '';
                           newPerformers[idx].type = e.target.value;
                           setFormData({ ...formData, performer: newPerformers });
+                          console.log('[Activity] Performers actualizados después de cambiar tipo:', newPerformers);
+                          
                           // Cargar opciones
                           const agencyId = user?.profileData?.agencyId;
-                          console.log('user', user)
-                          console.log('agencyId', agencyId);
-                          console.log('Date', clickedDate)
+                          console.log('[Activity] user', user)
+                          console.log('[Activity] agencyId', agencyId);
+                          console.log('[Activity] Date', clickedDate)
                           //if (!agencyId) return; // Prevent error if user or agencyId is missing
-                          const endpoint = e.target.value === 'group' ? `/api/agency/${agencyId}/groups` : `/api/agency/${agencyId}/artists`;
+                          const performerType = e.target.value; // 'group' o 'artist'
+                          const endpoint = performerType === 'group' ? `/api/agency/${agencyId}/groups` : `/api/agency/${agencyId}/artists`;
+                          console.log('[Activity] Endpoint para obtener opciones:', endpoint);
+                          
                           const token = localStorage.getItem('token');
+                          const requestBody = { date: clickedDate };
+                          console.log('[Activity] Request body que se enviará:', requestBody);
+                          console.log('[Activity] URL completa del fetch:', `http://localhost:3000${endpoint}`);
+                          
                           const res = fetch(`http://localhost:3000${endpoint}`, {
                             method: 'POST',
                             headers: {
                               'Content-Type': 'application/json',
                               ...(token ? { Authorization: `Bearer ${token}` } : {})
                             },
-                            body: JSON.stringify({ date: clickedDate }) // <-- Aquí pasas clickedDate
+                            body: JSON.stringify(requestBody)
                           })
-                            .then(res => res.json())
+                            .then(res => {
+                              console.log('[Activity] Response status:', res.status);
+                              console.log('[Activity] Response ok:', res.ok);
+                              return res.json();
+                            })
                             .then(data => {
+                              console.log('[Activity] Datos recibidos del servidor:', data);
+                              console.log('[Activity] Tipo de data.data:', typeof data.data, 'Array.isArray:', Array.isArray(data.data));
                               const arr = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
+                              console.log('[Activity] Array procesado (length:', arr.length, '):', arr);
+                              
+                              // Log detallado de cada grupo recibido
+                              arr.forEach((item: any, index: number) => {
+                                console.log(`[Activity] ===== ${performerType === 'group' ? 'Grupo' : 'Artista'} ${index} =====`);
+                                console.log(`[Activity] Objeto completo:`, item);
+                                console.log(`[Activity] Propiedades disponibles:`, Object.keys(item));
+                                console.log(`[Activity] item.id:`, item.id);
+                                console.log(`[Activity] item.name:`, item.name);
+                                console.log(`[Activity] item.ApprenticeId:`, item.ApprenticeId);
+                                console.log(`[Activity] item.GroupId:`, item.GroupId);
+                                console.log(`[Activity] item.apprenticeId:`, item.apprenticeId);
+                                console.log(`[Activity] item.groupId:`, item.groupId);
+                                console.log(`[Activity] =====================`);
+                              });
+                              
                               const opts = arr.map((item: any) => ({
-                                //value: item.id,
-                                value: [item.ApprenticeId, item.GroupId],
+                                // Para grupos: solo el id | Para artistas: [ApprenticeId, GroupId]
+                                value: performerType === 'group' 
+                                  ? item.id 
+                                  : [item.ApprenticeId, item.GroupId],
                                 label: item.name || item.realName || item.nombre || item.label || item.id
                               }));
+                              console.log('[Activity] Opciones mapeadas para el select:', opts);
                               setMemberOptions(prev => {
                                 const copy = [...prev];
                                 copy[idx] = opts;
                                 return copy;
                               });
+                            })
+                            .catch(error => {
+                              console.error('[Activity] Error en el fetch:', error);
                             });
-                          console.log('Fetch response:', res);
-                          console.log('Performer', performer)
-                          console.log('MemberOptions', memberOptions)
+                          console.log('[Activity] Fetch response:', res);
+                          console.log('[Activity] Performer', performer)
+                          console.log('[Activity] MemberOptions', memberOptions)
                         }}
                         style={{ minWidth: 110 }}
                       >
@@ -554,9 +593,16 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
                       <select
                         value={performer.memberId}
                         onChange={e => {
+                          console.log('[Activity] Miembro/Grupo seleccionado:', e.target.value);
+                          console.log('[Activity] Tipo de performer:', performer.type || memberTypes[idx]);
+                          console.log('[Activity] Index del performer:', idx);
+                          
                           const newPerformers = [...performers];
                           newPerformers[idx].memberId = e.target.value;
                           setFormData({ ...formData, performer: newPerformers });
+                          
+                          console.log('[Activity] Performers actualizados después de seleccionar miembro:', newPerformers);
+                          console.log('[Activity] FormData completo:', { ...formData, performer: newPerformers });
                         }}
                         style={{ minWidth: 160 }}
                       >

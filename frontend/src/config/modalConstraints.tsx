@@ -458,3 +458,40 @@ export const userConstraints: Constraints = {
     },
     agencyName: {editable: false, label: "Agencia"}
 }
+
+export const passwordChangeConstraints: Constraints = {
+    currentPassword: {
+        editable: true,
+        required: true,
+        type: "string",
+        label: "Contraseña actual",
+        validate: (value) => {
+            const valueText = String(value || '').trim();
+            if (!valueText) return "Debe ingresar la contraseña actual";
+            return null;
+        }
+    },
+    newPassword: {
+        editable: true,
+        required: true,
+        type: "string",
+        label: "Nueva contraseña",
+        validate: (value) => {
+            const valueText = String(value || '').trim();
+            if (!valueText) return "Debe ingresar la nueva contraseña";
+            if (valueText.length < 6) return "La nueva contraseña debe tener al menos 6 caracteres";
+            return null;
+        }
+    },
+    confirmPassword: {
+        editable: true,
+        required: true,
+        type: "string",
+        label: "Confirmar contraseña",
+        validate: (value) => {
+            const valueText = String(value || '').trim();
+            if (!valueText) return "Debe confirmar la contraseña";
+            return null;
+        }
+    }
+}
