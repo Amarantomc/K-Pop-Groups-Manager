@@ -174,9 +174,12 @@ const Activities: React.FC = () => {
 
       // Separar performers en groups y artists
       const performers = Array.isArray(newactivity.performer) ? newactivity.performer : [];
+      console.log("performers", performers);
       const groups = performers
         .filter((p: any) => p.type === 'group' && p.memberId)
-        .map((p: any) => Number(p.memberId));
+        .map((p: any) => {
+          return Number(p.memberId);
+        });
       const artists = performers
         .filter((p: any) => p.type === 'artist' && p.memberId)
         .map((p: any) => {
@@ -186,18 +189,13 @@ const Activities: React.FC = () => {
           }
           return Array.isArray(ids) && ids.length === 2 ? ids : [null, null];
         });
-      /*
-      .map((p: any) => [
-        Number(p.memberId[0] ?? p.memberId[0]),
-        Number(p.memberId[1] ?? p.memberId[1])
-      ]);
-      */
-
       console.log("performers", performers);
+      console.log("groups", groups);
+      console.log("artists", artists);
 
       const mapActivityType = (type: string) => {
         if (type === 'grupal' || type === 'Groups') return 'GROUP';
-        if (type === 'individual') return 'INDIVIDUAL'; // <-- mayúscula
+        if (type === 'individual') return 'INDIVIDUAL';
         return '';
       };
       const payload = {
