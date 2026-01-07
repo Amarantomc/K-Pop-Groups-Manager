@@ -8,13 +8,6 @@ import ChartComponent from '../../components/chartComponent/ChartComponent';
 import PageLayout from '../../components/pageLayout/PageLayout';
 import './exampleUsage.css';
 
-/**
- * PÁGINA DE EJEMPLO: Cómo usar StatCard, ChartComponent y QueryCard
- * 
- * Esta página demuestra los 3 componentes nuevos trabajando juntos.
- * Puedes copiar estos ejemplos para crear tus páginas de reportes.
- */
-
 const ExampleUsage: React.FC = () => {
   // ============================================
   // EJEMPLO 1: StatCards (Métricas rápidas)
@@ -116,7 +109,7 @@ const ExampleUsage: React.FC = () => {
     return (
       <div className="charts-section">
         <h2>📈 Ejemplo 2: Todos los Tipos de Gráficos</h2>
-        
+
         {/* Gráficos de Barras */}
         <div className="chart-subsection">
           <h3 style={{ fontSize: '18px', color: '#374151', marginBottom: '16px' }}>
@@ -215,7 +208,7 @@ const ExampleUsage: React.FC = () => {
         <p style={{ color: '#6b7280', marginBottom: '16px' }}>
           Ejemplo de cómo combinar métricas y visualización en un dashboard
         </p>
-        
+
         {/* Métricas calculadas */}
         <div className="stat-cards-grid">
           <StatCard
@@ -334,36 +327,6 @@ const ExampleUsage: React.FC = () => {
         {renderChartsSection()}
         {renderCombinedExample()}
         {renderComparativeCharts()}
-
-        <div className="code-examples">
-          <h2>💻 Código de Ejemplo</h2>
-          <pre>
-{`// Uso básico de StatCard
-<StatCard
-  title="Artistas Activos"
-  value={120}
-  icon={<PeopleIcon />}
-  trend={{ value: 15, direction: 'up' }}
-  color="#10b981"
-/>
-
-// Uso de ChartComponent
-<ChartComponent.Bar
-  data={data}
-  xKey="category"
-  yKey="value"
-  title="Mi Gráfico"
-/>
-
-// Uso de QueryCard
-<QueryCard
-  title="Datos"
-  endpoint="/api/data"
-  filters={[...]}
-  renderData={(data) => <Table data={data} />}
-/>`}
-          </pre>
-        </div>
       </div>
     </PageLayout>
   );

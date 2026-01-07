@@ -7,9 +7,11 @@
   display: flex;
   width: 100%;
   min-height: 100vh;
+  max-height: 100vh;
   background-color: #f5f5f5;
   margin-top: 0.3%;
   align-items: stretch;
+  overflow: hidden;
 }
 
 /* Contenido principal (sin sidebar) */
@@ -19,8 +21,9 @@
   flex-direction: column;
   width: 100%;
   min-height: 100vh;
+  max-height: 100vh;
   padding: 20px;
-  overflow-x: hidden;
+  overflow: hidden;
   transition: all 0.3s ease;
 }
 
@@ -32,9 +35,29 @@
   gap: 20px;
   padding-top: 20px;
   overflow-y: auto;
+  overflow-x: hidden;
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
+}
+
+/* Scrollbar personalizado para el contenido de las páginas */
+.page-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.page-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.page-body::-webkit-scrollbar-thumb {
+  background: #7451f8;
+  border-radius: 10px;
+}
+
+.page-body::-webkit-scrollbar-thumb:hover {
+  background: #5a3dd8;
 }
 
 /* ============================================================================
