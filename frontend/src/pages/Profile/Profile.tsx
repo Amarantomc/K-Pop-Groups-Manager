@@ -2,8 +2,7 @@
 import React, { useState, useMemo } from 'react';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Form from "../../components/form/Form";
-import Header from '../../components/header/Header';
-import Sidebar from '../../components/sidebar/Sidebar';
+import PageLayout from '../../components/pageLayout/PageLayout';
 import ConfirmDialog from '../../components/confirmDialog/ConfirmDialog';
 import formFieldsByEntity, { managerDirectorFields, ROLE_MAPPING } from "../../config/formSource";
 import type { Field } from "../../config/formSource";
@@ -12,7 +11,6 @@ import "./profile.css";
 
 const Profile: React.FC = () => {
   const { user } = useAuth();
-  const [collapsed, setCollapsed] = useState(false);
   const [selectedRole, setSelectedRole] = useState<string>('');
   
   // Estados para ConfirmDialog
@@ -401,103 +399,91 @@ const Profile: React.FC = () => {
   };
   
   return (
-    <div className="Profile-sidebar">
-      <Sidebar collapsed={collapsed} role={user?.role || 'admin'}/>
-      <div className="Profile-navbar">
-        {/* <NavBar /> */}
+    <PageLayout
+      title="Perfil"
+      description="Información y ajustes de tu cuenta"
+    >
+      {/* Mostrar datos del usuario logueado en tarjeta principal */}
+      <div className="profile-container">
+        {user ? (
+          <>
+            <div className="profile-card">
+              <div className="profile-top">
+                {/* Avatar: si el usuario tiene avatarUrl, mostrar imagen, si no, icono por defecto */}
+                {user.avatarUrl ? (
+                  <img
+                    src={user.avatarUrl}
+                    alt={user.name ?? 'Avatar'}
+                    className="profile-avatar-img"
+                  />
+                ) : (
+                  <AccountCircleIcon 
+                    className="profile-avatar-icon"
+                    sx={{ 
+                      fontSize: 80, 
+                      color: '#7451f8',
+                      marginRight: '20px'
+                    }}
+                  />
+                )}
 
-        <div className="Profile-content">
-          <Header title='Perfil' description='Información y ajustes de tu cuenta' showlogo={false} collapsed={collapsed} setCollapsed={setCollapsed}/>
-
-          {/* Mostrar datos del usuario logueado en tarjeta principal */}
-          <div className="profile-container" style={{ marginTop: 12 }}>
-            {user ? (<>
-              <div className="profile-card">
-                <div className="profile-top" style={{ alignItems: 'center', display: 'flex' }}>
-                  {/* Avatar: si el usuario tiene avatarUrl, mostrar imagen, si no, icono por defecto */}
-                  {user.avatarUrl ? (
-                    <img
-                      src={user.avatarUrl}
-                      alt={user.name ?? 'Avatar'}
-                      className="profile-avatar-img"
-                    />
-                  ) : (
-                    <AccountCircleIcon 
-                      className="profile-avatar-icon"
-                      sx={{ 
-                        fontSize: 80, 
-                        color: '#7451f8',
-                        marginRight: '20px'
-                      }}
-                    />
+                {/* Meta principal: nombre, email y rol */}
+                <div className="profile-meta">
+                  <p className="meta-line-name"><strong>Nombre:</strong> {displayName}</p>
+                  <p className="meta-line"><strong>Email:</strong> {user.email ?? '-'}</p>
+                  <p className="meta-line"><strong>Rol:</strong> {displayRole}</p>
+                  
+                  {/* Campo de agencia para todos excepto admin */}
+                  {user.role !== 'admin' && (
+                    <p className="meta-line"><strong>Agencia:</strong> {user.agencyId ?? '-'}</p>
                   )}
 
-                  {/* Meta principal: nombre, email y rol */}
-                  <div className="profile-meta">
-                    <h2>{displayName}</h2>
-                    <p className="meta-line"><strong>Email:</strong> {user.email ?? '-'}</p>
-                    <p className="meta-line"><strong>Rol:</strong> {displayRole}</p>
-                    
-                    {/* Campos dinámicos según el rol */}
-                    {(user.role === 'manager' || user.role === 'director') && user.agencyId && (
-                      <p className="meta-line"><strong>ID Agencia:</strong> {user.agencyId}</p>
-                    )}
-
-                    
-                    <div className="profile-actions">
-                      {
-                      <button className="btn btn-primary" onClick={() => { setShowPasswordForm(true); setShowUserForm(false); }}>
-                        Cambiar contraseña
-                      </button>
-                      }
-                    </div>
+                  
+                  <div className="profile-actions">
+                    <button className="button-change-password" onClick={() => { setShowPasswordForm(true); setShowUserForm(false); }}>
+                      Cambiar contraseña
+                    </button>
+                    <button className="button-withdraw">
+                      Retirar
+                    </button>
+                    <button className="button-delete-profile" onClick={() => setOpenConfirmDelete(true)}>
+                      Eliminar perfil
+                    </button>
                   </div>
-
-                  {/* ID en la esquina superior derecha del header (alineado a la derecha dentro del flex) */}
-                  <div className="profile-id-top">{user.id ?? '-'}</div>
                 </div>
-              <button className="delete-profile-btn" onClick={() => setOpenConfirmDelete(true)}>
-                Eliminar perfil
-              </button>
+
+                {/* ID en la esquina superior derecha del header (alineado a la derecha dentro del flex) */}
+                <div className="profile-id-top">{user.id ?? '-'}</div>
               </div>
-              </>) : (
-              <div className="profile-card">
-                <p>No hay usuario autenticado</p>
-              </div>
-            )}
+            </div>
+          </>
+        ) : (
+          <div className="profile-card">
+            <p>No hay usuario autenticado</p>
           </div>
+        )}
+      </div>
 
-          {/*{/* Contenedor con los dos botones solicitados debajo del header/tarjeta }
-          {user?.role === 'admin' && (
-            <div className="profile-button-row" style={{ marginTop: 18 }}>
-              <button className="primary-btn" onClick={() => { setShowUserForm(!showUserForm); setShowPasswordForm(false); }}>
-                Añadir usuario
-              </button>
-            </div>
-          )*/}
+      {showUserForm && user?.role === 'admin' && (
+        <div className="Profile-form">
+          <div className="form-center">
+            <Form 
+              fields={userFormFields} 
+              entity="Usuario" 
+              onSubmit={handleSubmit}
+              onChange={(fieldName, value) => {
+                // Detectar cambios en el campo 'role' o 'rol'
+                if (fieldName === 'role' || fieldName === 'rol') {
+                  setSelectedRole(String(value || ''));
+                }
+              }}
+            />
+          </div>
+        </div>
+      )}
 
-          {showUserForm && user?.role === 'admin' && (
-            <div className="Profile-form">
-              <div className="form-center">
-                <Form 
-                  fields={userFormFields} 
-                  entity="Usuario" 
-                  onSubmit={handleSubmit}
-                  onChange={(fieldName, value) => {
-                    // Detectar cambios en el campo 'role' o 'rol'
-                    if (fieldName === 'role' || fieldName === 'rol') {
-                      setSelectedRole(String(value || ''));
-                    }
-                  }}
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Formulario de edición eliminado: solo se permite cambiar la contraseña desde el formulario específico */}
-
-          {/* Formulario para cambiar contraseña (implementación controlada para evitar que el gestor de contraseñas muestre selección) */}
-          {showPasswordForm && (
+      {/* Formulario para cambiar contraseña (implementación controlada para evitar que el gestor de contraseñas muestre selección) */}
+      {showPasswordForm && (
             <div className="Profile-form">
               <div className="form-center">
                 <div className="Form">
@@ -516,7 +502,7 @@ const Profile: React.FC = () => {
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 12 }}>
                     <button
-                      className="btn-primary"
+                      className="button-submit-password"
                       onClick={async () => {
                         // Validaciones cliente
                         if (!pfCurrent.trim()) {
@@ -626,8 +612,6 @@ const Profile: React.FC = () => {
               </div>
             </div>
           )}
-        </div>
-      </div>
 
       {/* ConfirmDialogs */}
       <ConfirmDialog 
@@ -658,7 +642,7 @@ const Profile: React.FC = () => {
         confirmText="Aceptar"
         showDeleteButton={false}
       />
-    </div>
+    </PageLayout>
   );
 };
 

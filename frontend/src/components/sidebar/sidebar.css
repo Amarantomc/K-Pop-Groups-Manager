@@ -4,9 +4,12 @@
     flex-shrink: 0;
     border-right: 0.5px solid rgb(230, 227, 227);
     min-height: 100vh;
+    max-height: 100vh;
     background-color: white;
     transition: width 0.3s ease;
     position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 .sidebar.collapsed {
@@ -24,6 +27,7 @@
     align-items: center;
     justify-content: center;
     margin-bottom: 10px;
+    flex-shrink: 0;
 }
 .logo {
     width: 160px; /* ajusta el tamaño según tu diseño */
@@ -38,6 +42,28 @@ hr{
 .center{
     padding-left: 10px;
     padding-bottom: 30px;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Estilos personalizados para el scrollbar */
+.center::-webkit-scrollbar {
+    width: 8px;
+}
+
+.center::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.center::-webkit-scrollbar-thumb {
+    background: #7451f8;
+    border-radius: 10px;
+}
+
+.center::-webkit-scrollbar-thumb:hover {
+    background: #5a3dd8;
 }
 ul{
     list-style: none;
