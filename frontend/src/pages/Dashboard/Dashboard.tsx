@@ -130,6 +130,7 @@ const Dashboard: React.FC = () => {
       className='dashboard-page'
     >
       <div className='dashboard-stats-grid'>
+        {/* Sección: Gestión Principal */}
         <StatCard
           title="Agencias"
           value={renderValue(agenciesCount)}
@@ -137,6 +138,13 @@ const Dashboard: React.FC = () => {
           color="#3b82f6"
           subtitle="Agencias registradas"
           trend={agenciesCount !== null && agenciesCount > 5 ? { value: 12, direction: "up" } : undefined}
+        />
+        <StatCard
+          title="Usuarios"
+          value={renderValue(usersCount)}
+          icon={<PersonIcon />}
+          color="#f59e0b"
+          subtitle="Usuarios del sistema"
         />
         <StatCard
           title="Aprendices"
@@ -147,12 +155,14 @@ const Dashboard: React.FC = () => {
           trend={apprenticesCount !== null && apprenticesCount > 0 ? { value: 8, direction: "up" } : undefined}
         />
         <StatCard
-          title="Usuarios"
-          value={renderValue(usersCount)}
-          icon={<PersonIcon />}
-          color="#f59e0b"
-          subtitle="Usuarios del sistema"
+          title="Contratos"
+          value={renderValue(contractsCount)}
+          icon={<DescriptionIcon />}
+          color="#64748b"
+          subtitle="Acuerdos vigentes"
         />
+
+        {/* Sección: Artistas y Producción */}
         <StatCard
           title="Artistas"
           value={renderValue(artistsCount)}
@@ -176,25 +186,20 @@ const Dashboard: React.FC = () => {
           subtitle="Lanzamientos totales"
         />
         <StatCard
-          title="Actividades"
-          value={renderValue(activitiesCount)}
-          icon={<EventIcon />}
-          color="#14b8a6"
-          subtitle="Eventos programados"
-        />
-        <StatCard
           title="Canciones"
           value={renderValue(songsCount)}
           icon={<LibraryMusicIcon />}
           color="#0ea5e9"
           subtitle="Tracks en catálogo"
         />
+
+        {/* Sección: Eventos y Creatividad */}
         <StatCard
-          title="Premios"
-          value={renderValue(awardsCount)}
-          icon={<EmojiEventsIcon />}
-          color="#eab308"
-          subtitle="Galardones obtenidos"
+          title="Actividades"
+          value={renderValue(activitiesCount)}
+          icon={<EventIcon />}
+          color="#14b8a6"
+          subtitle="Eventos programados"
         />
         <StatCard
           title="Conceptos"
@@ -211,18 +216,20 @@ const Dashboard: React.FC = () => {
           subtitle="Diseños visuales"
         />
         <StatCard
+          title="Premios"
+          value={renderValue(awardsCount)}
+          icon={<EmojiEventsIcon />}
+          color="#eab308"
+          subtitle="Galardones obtenidos"
+        />
+
+        {/* Sección: Análisis y Finanzas */}
+        <StatCard
           title="Listas de Popularidad"
           value={renderValue(popularityListsCount)}
           icon={<TrendingUpIcon />}
           color="#22c55e"
           subtitle="Rankings activos"
-        />
-        <StatCard
-          title="Contratos"
-          value={renderValue(contractsCount)}
-          icon={<DescriptionIcon />}
-          color="#64748b"
-          subtitle="Acuerdos vigentes"
         />
         <StatCard
           title="Ingresos"
@@ -238,15 +245,6 @@ const Dashboard: React.FC = () => {
           color="#dc2626"
           subtitle="Peticiones pendientes"
         />
-        {/*
-        <StatCard
-          title="Evaluaciones"
-          value={renderValue(evaluationsCount)}
-          icon={<AssignmentIcon />}
-          color="#7c3aed"
-          subtitle="Valoraciones registradas"
-        />
-*/}
       </div>
     </PageLayout>
   )

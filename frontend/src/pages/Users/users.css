@@ -1,4 +1,4 @@
-@import '../viejas/Agency/agency.css';
+@import '../Agency/agency.css';
 
 /* Importar estilos del header/form de Agency para que las páginas de listado compartan el mismo look */
 .listUsersSideBar{
@@ -9,10 +9,16 @@
     align-items: stretch;
 }
 .listUsersNavBar{
-    flex: 1; /* ocupar el espacio restante junto a la sidebar fija */
+    flex: 1;
     min-height: 100vh;
     padding: 20px;
     width: 100%;
     transition: all 0.3s ease;
     overflow: hidden;
+}
+
+.listUsers-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
 }

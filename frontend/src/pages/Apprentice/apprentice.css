@@ -7,13 +7,20 @@
 }
 
 .listApprenticeNavBar {
-    flex: 1; /* ocupar el espacio restante junto a la sidebar fija */
-    min-height: 100vh; /* emparejar altura con el sidebar */
+    flex: 1;
+    min-height: 100vh;
     padding: 20px;
     width: 100%;
     transition: all 0.3s ease;
     overflow: hidden;
 }
+
+.listApprentice-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
 .top,
 .bottom {
     background-color: #fff;
