@@ -13,8 +13,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  role: UserRole;                    
-  agencyId?: string;                 // Para managers, artistas, aprendices
+  role: UserRole;                 
   permissions: string[];             // Permisos específicos
   avatar?: string;
   isVerified: boolean;

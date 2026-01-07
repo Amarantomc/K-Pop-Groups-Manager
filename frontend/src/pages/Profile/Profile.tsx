@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Form from "../../components/form/Form";
 import PageLayout from '../../components/pageLayout/PageLayout';
@@ -12,11 +12,13 @@ import "./profile.css";
 const Profile: React.FC = () => {
   const { user } = useAuth();
   const [selectedRole, setSelectedRole] = useState<string>('');
+  const [agencyName, setAgencyName] = useState<string>('');
   
   // Estados para ConfirmDialog
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openError, setOpenError] = useState(false);
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
+  const [openConfirmWithdraw, setOpenConfirmWithdraw] = useState(false);
   const [dialogMessage, setDialogMessage] = useState('');
   
   // Campos dinámicos basados en el rol seleccionado
@@ -44,6 +46,80 @@ const Profile: React.FC = () => {
   const [pfCurrent, setPfCurrent] = useState('');
   const [pfNew, setPfNew] = useState('');
   const [pfConfirm, setPfConfirm] = useState('');
+
+  // Función para obtener el nombre de la agencia por ID
+  const fetchAgencyName = async (agencyId: number) => {
+    const API_BASE = 'http://localhost:3000';
+    try {
+      const token = localStorage.getItem('token');
+      const headers: Record<string, string> = {};
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
+      const res = await fetch(`${API_BASE}/api/agency/${agencyId}`, { headers });
+      
+      if (!res.ok) {
+        console.error('Error al obtener agencia:', res.status);
+        return;
+      }
+
+      const data = await res.json();
+      const agency = data?.data ?? data;
+      
+      if (agency?.name) {
+        setAgencyName(agency.name);
+      }
+    } catch (error) {
+      console.error('Error obteniendo nombre de agencia:', error);
+    }
+  };
+
+  // useEffect para cargar el nombre de la agencia cuando el componente se monta
+  useEffect(() => {
+    const agencyId = user?.profileData?.agencyId;
+    if (agencyId && typeof agencyId === 'number') {
+      fetchAgencyName(agencyId);
+    }
+  }, [user]);
+
+  const handleWithdraw = async () => {
+    if (!user) {
+      setDialogMessage('No hay usuario autenticado');
+      setOpenError(true);
+      return;
+    }
+
+    const API_BASE = 'http://localhost:3000';
+    try {
+      const token = localStorage.getItem('token');
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
+      // Llamar al endpoint de retiro del backend
+      const res = await fetch(`${API_BASE}/api/user/${user.id}/withdraw`, { method: 'POST', headers });
+      if (!res.ok) {
+        const raw = await res.text().catch(() => '');
+        let msg = 'Error al procesar el retiro';
+        try { const j = JSON.parse(raw); msg = j?.message || j?.error || raw || msg; } catch(e) { msg = raw || msg; }
+        setDialogMessage(msg);
+        setOpenError(true);
+        return;
+      }
+
+      // Mostrar mensaje de éxito
+      setDialogMessage('Retiro procesado exitosamente');
+      setOpenSuccess(true);
+      setOpenConfirmWithdraw(false);
+      
+      // Opcional: cerrar sesión después del retiro
+      // localStorage.removeItem('token');
+      // localStorage.removeItem('user');
+      // window.location.href = '/login';
+    } catch (err) {
+      console.error('Error al procesar retiro:', err);
+      setDialogMessage(err instanceof Error ? err.message : 'Error de red');
+      setOpenError(true);
+    }
+  };
 
   const handleDeleteProfile = async () => {
     if (!user) {
@@ -104,10 +180,6 @@ const Profile: React.FC = () => {
 
     (async () => {
       try {
-  // aqui va el endpoint
-  console.log('=== INICIO CREACIÓN DE USUARIO ===');
-  console.log('Payload recibido del formulario:', payload);
-
         // Compatibilidad: si backend espera 'name' en lugar de 'username', rellenarlo desde username
         if (!payload.name && payload.username) {
           payload.name = payload.username;
@@ -118,14 +190,10 @@ const Profile: React.FC = () => {
         // El backend valida con 'role in Role' y espera las keys: Admin, Manager, Director, Artist, Apprentice
         let userRole = payload.rol || payload.role || '';
         
-        console.log('Rol recibido del formulario:', userRole);
-        
         // Usar el mapeo para convertir del formulario a las keys del backend
         if (ROLE_MAPPING[userRole]) {
           userRole = ROLE_MAPPING[userRole];
         }
-        
-        console.log('Rol normalizado para backend:', userRole);
         
         payload.role = userRole;
         delete payload.rol; // Eliminar 'rol' si existe
@@ -148,8 +216,6 @@ const Profile: React.FC = () => {
           setOpenError(true);
           return;
         }
-        
-        console.log('Token obtenido, procesando según rol...');
 
         // Función auxiliar para buscar agencia por nombre
         const getAgencyIdByName = async (agencyName: string): Promise<number | null> => {
@@ -159,23 +225,17 @@ const Profile: React.FC = () => {
 
             // El backend espera query params para buscar por nombre
             const url = `${API_BASE}/api/agency/search/agency_name?name=${encodeURIComponent(agencyName)}`;
-            console.log('Consultando', url);
             const res = await fetch(url, { headers });
-            console.log('Respuesta agency/search/agency_name - status:', res.status);
 
             if (!res.ok) {
-              const raw = await res.text().catch(() => '');
-              console.error('Error obteniendo agencia, status:', res.status, raw);
               return null;
             }
 
             const data = await res.json().catch(() => null);
-            console.log('Datos recibidos de agency/search:', data);
 
             // La API puede devolver la agencia directamente o dentro de data
             const agency = data?.data ?? data;
             if (!agency) {
-              console.warn('Respuesta vacía al buscar agencia:', agencyName);
               return null;
             }
 
@@ -188,7 +248,6 @@ const Profile: React.FC = () => {
             // Si devuelve el objeto de la agencia, devolver su id
             return agency.id ?? null;
           } catch (error) {
-            console.error('Error buscando agencia:', error);
             return null;
           }
         };
@@ -201,28 +260,22 @@ const Profile: React.FC = () => {
             
             // Usar endpoint específico del backend: /api/apprentice/name/:name
             const url = `${API_BASE}/api/apprentice/name/${encodeURIComponent(apprenticeName)}`;
-            console.log('Consultando', url);
             const res = await fetch(url, { headers });
-            console.log('Respuesta apprentice/name - status:', res.status);
             
             if (!res.ok) {
-              console.error('Error obteniendo aprendiz, status:', res.status);
               return null;
             }
             
             const data = await res.json();
-            console.log('Aprendiz obtenido:', data);
             
             // El backend puede devolver el aprendiz directamente o dentro de data
             const apprentice = data?.data ?? data;
             if (!apprentice || !apprentice.id) {
-              console.warn('No se encontró aprendiz:', apprenticeName);
               return null;
             }
             
             return apprentice.id;
           } catch (error) {
-            console.error('Error buscando aprendiz:', error);
             return null;
           }
         };
@@ -233,20 +286,15 @@ const Profile: React.FC = () => {
             const headers: Record<string, string> = {};
             if (token) headers['Authorization'] = `Bearer ${token}`;
             
-            console.log('Buscando artista con apprenticeId:', apprenticeId);
             const res = await fetch(`${API_BASE}/api/artist`, { headers });
-            console.log('Respuesta artistas - status:', res.status);
             
             if (!res.ok) {
-              console.error('Error obteniendo artistas, status:', res.status);
               return null;
             }
             
             const data = await res.json();
-            console.log('Artistas obtenidos:', data);
             
             const artists = data.data || data;
-            console.log('Total artistas:', artists.length);
             
             // Buscar artista por apprenticeId (IdAp)
             const artist = artists.find((a: any) => 
@@ -255,19 +303,14 @@ const Profile: React.FC = () => {
               a.idAp === apprenticeId
             );
             
-            console.log('Artista encontrado:', artist);
-            
             if (!artist) {
-              console.warn('No se encontró artista con apprenticeId:', apprenticeId);
               return null;
             }
             
             // Retornar el IdGr (groupId)
             const groupId = artist.groupId || artist.IdGr || artist.idGr || null;
-            console.log('Grupo del artista (IdGr):', groupId);
             return groupId;
           } catch (error) {
-            console.error('Error buscando artista por apprenticeId:', error);
             return null;
           }
         };
@@ -284,43 +327,36 @@ const Profile: React.FC = () => {
         // userRole ya está con mayúscula inicial después del mapeo
         
         if (userRole === 'Manager' || userRole === 'Director') {
-          console.log('Procesando Manager/Director...');
           if (!payload.agencyName) {
             setDialogMessage('Debe proporcionar el nombre de la agencia');
             setOpenError(true);
             return;
           }
-          console.log('Buscando agencia:', payload.agencyName);
           const agencyId = await getAgencyIdByName(payload.agencyName);
           if (!agencyId) {
             setDialogMessage(`No se encontró la agencia con nombre: ${payload.agencyName}`);
             setOpenError(true);
             return;
           }
-          console.log('Agencia encontrada con ID:', agencyId);
           finalPayload.agencyId = agencyId;
           
         } else if (userRole === 'Apprentice') {
-          console.log('Procesando Apprentice...');
           if (!payload.name) {
             setDialogMessage('Debe proporcionar el nombre de usuario');
             setOpenError(true);
             return;
           }
           
-          console.log('Buscando aprendiz por nombre de usuario:', payload.name);
           const apprenticeId = await getApprenticeIdByName(payload.name);
           if (!apprenticeId) {
             setDialogMessage(`No se encontró el aprendiz con nombre: ${payload.name}`);
             setOpenError(true);
             return;
           }
-          console.log('Aprendiz encontrado con ID:', apprenticeId);
           
           finalPayload.IdAp = apprenticeId;
           
         } else if (userRole === 'Artist') {
-          console.log('Procesando Artist...');
           if (!payload.name) {
             setDialogMessage('Debe proporcionar el nombre de usuario');
             setOpenError(true);
@@ -328,17 +364,14 @@ const Profile: React.FC = () => {
           }
           
           // Paso 1: Buscar el aprendiz por nombre para obtener IdAp
-          console.log('Paso 1: Buscando aprendiz por nombre:', payload.name);
           const apprenticeId = await getApprenticeIdByName(payload.name);
           if (!apprenticeId) {
             setDialogMessage(`No se encontró el aprendiz con nombre: ${payload.name}`);
             setOpenError(true);
             return;
           }
-          console.log('Aprendiz encontrado con ID:', apprenticeId);
           
           // Paso 2: Buscar el artista usando IdAp para obtener IdGr
-          console.log('Paso 2: Buscando artista con apprenticeId:', apprenticeId);
           const groupId = await getArtistGroupByApprenticeId(apprenticeId);
           
           if (!groupId) {
@@ -346,16 +379,11 @@ const Profile: React.FC = () => {
             setOpenError(true);
             return;
           }
-          console.log('Artista encontrado con IdGr:', groupId);
           
           // Asignar ambos IDs al payload
           finalPayload.IdAp = apprenticeId;
           finalPayload.IdGr = groupId;
-        } else {
-          console.log('Rol Admin - no requiere campos adicionales');
         }
-
-        console.log('Payload final a enviar:', finalPayload);
 
         const res = await fetch(`${API_BASE}/api/user`, {
           method: 'POST',
@@ -365,18 +393,14 @@ const Profile: React.FC = () => {
           },
           body: JSON.stringify(finalPayload),
         });
-
-        console.log('Response status:', res.status);
         
         const responseData = await res.json().catch(() => null);
-        console.log('Response data:', responseData);
         
         if (!res.ok) {
           // El backend retorna { success: false, error: "mensaje" }
           const msg = responseData?.error || responseData?.message || `Error al crear usuario (${res.status})`;
           setDialogMessage(msg);
           setOpenError(true);
-          console.error('Error del servidor:', responseData);
           return;
         }
 
@@ -388,10 +412,8 @@ const Profile: React.FC = () => {
         } else {
           setDialogMessage('Usuario creado pero respuesta inesperada');
           setOpenError(true);
-          console.warn('Respuesta inesperada:', responseData);
         }
       } catch (err) {
-        console.error('Error creando usuario:', err);
         setDialogMessage(err instanceof Error ? err.message : 'Error de red');
         setOpenError(true);
       }
@@ -435,7 +457,7 @@ const Profile: React.FC = () => {
                   
                   {/* Campo de agencia para todos excepto admin */}
                   {user.role !== 'admin' && (
-                    <p className="meta-line"><strong>Agencia:</strong> {user.agencyId ?? '-'}</p>
+                    <p className="meta-line"><strong>Agencia:</strong> {agencyName || user.profileData?.agencyId || '-'}</p>
                   )}
 
                   
@@ -443,7 +465,7 @@ const Profile: React.FC = () => {
                     <button className="button-change-password" onClick={() => { setShowPasswordForm(true); setShowUserForm(false); }}>
                       Cambiar contraseña
                     </button>
-                    <button className="button-withdraw">
+                    <button className="button-withdraw" onClick={() => setOpenConfirmWithdraw(true)}>
                       Retirar
                     </button>
                     <button className="button-delete-profile" onClick={() => setOpenConfirmDelete(true)}>
@@ -486,21 +508,57 @@ const Profile: React.FC = () => {
       {showPasswordForm && (
             <div className="Profile-form">
               <div className="form-center">
-                <div className="Form">
-                  <h1>Editar Contraseña</h1>
+                <div className="Form password-form">
+                  <h1>Cambiar Contraseña</h1>
+                  <p className="form-description">Ingresa tu contraseña actual y la nueva contraseña</p>
                   <div className="form-group">
                     <label htmlFor="pf_current">Contraseña actual</label>
-                    <input id="pf_current" name="pf_current" type="password" placeholder="Contraseña actual" value={pfCurrent} onChange={(e) => setPfCurrent(e.target.value)} autoComplete="current-password" />
+                    <input 
+                      id="pf_current" 
+                      name="pf_current" 
+                      type="password" 
+                      placeholder="Ingresa tu contraseña actual" 
+                      value={pfCurrent} 
+                      onChange={(e) => setPfCurrent(e.target.value)} 
+                      autoComplete="current-password" 
+                    />
                   </div>
                   <div className="form-group">
                     <label htmlFor="pf_new">Nueva contraseña</label>
-                    <input id="pf_new" name="pf_new" type="password" placeholder="Nueva contraseña" value={pfNew} onChange={(e) => setPfNew(e.target.value)} autoComplete="new-password" />
+                    <input 
+                      id="pf_new" 
+                      name="pf_new" 
+                      type="password" 
+                      placeholder="Mínimo 6 caracteres" 
+                      value={pfNew} 
+                      onChange={(e) => setPfNew(e.target.value)} 
+                      autoComplete="new-password" 
+                    />
                   </div>
                   <div className="form-group">
                     <label htmlFor="pf_confirm">Confirmar contraseña</label>
-                    <input id="pf_confirm" name="pf_confirm" type="password" placeholder="Confirmar contraseña" value={pfConfirm} onChange={(e) => setPfConfirm(e.target.value)} autoComplete="new-password" />
+                    <input 
+                      id="pf_confirm" 
+                      name="pf_confirm" 
+                      type="password" 
+                      placeholder="Repite la nueva contraseña" 
+                      value={pfConfirm} 
+                      onChange={(e) => setPfConfirm(e.target.value)} 
+                      autoComplete="new-password" 
+                    />
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 12 }}>
+                  <div className="password-form-actions">
+                    <button
+                      className="button-cancel-password"
+                      onClick={() => {
+                        setShowPasswordForm(false);
+                        setPfCurrent('');
+                        setPfNew('');
+                        setPfConfirm('');
+                      }}
+                    >
+                      Cancelar
+                    </button>
                     <button
                       className="button-submit-password"
                       onClick={async () => {
@@ -555,7 +613,14 @@ const Profile: React.FC = () => {
                             newPassword: pfNew
                           };
 
-                          console.log('Cambiando contraseña para usuario:', user.id);
+                          console.log('=== INICIO CAMBIO DE CONTRASEÑA ===');
+                          console.log('Usuario ID:', user.id);
+                          console.log('Payload a enviar:', payload); // Mostrar el payload completo temporalmente para depuración
+                          console.log('Longitud currentPassword:', pfCurrent.length);
+                          console.log('Longitud newPassword:', pfNew.length);
+                          console.log('URL:', `${API_BASE}/api/user/${user.id}`);
+                          console.log('Método: PUT');
+                          console.log('Body JSON:', JSON.stringify(payload));
 
                           const res = await fetch(`${API_BASE}/api/user/${user.id}`, {
                             method: 'PUT',
@@ -564,36 +629,68 @@ const Profile: React.FC = () => {
                           });
 
                           console.log('Response status:', res.status);
+                          console.log('Response OK:', res.ok);
+                          console.log('Response statusText:', res.statusText);
 
                           if (!res.ok) {
                             const raw = await res.text().catch(() => '');
+                            console.error('Error - Response raw:', raw);
                             let msg = 'Error al cambiar contraseña';
                             try {
                               const j = JSON.parse(raw);
+                              console.error('Error - Response JSON:', j);
                               msg = j?.message || j?.error || raw || msg;
                             } catch(e) {
+                              console.error('Error al parsear respuesta:', e);
                               msg = raw || msg;
                             }
                             setDialogMessage(msg);
                             setOpenError(true);
-                            console.error('Error del servidor:', raw);
+                            console.log('=== FIN CAMBIO DE CONTRASEÑA (ERROR) ===');
                             return;
                           }
 
                           const responseData = await res.json().catch(() => null);
-                          console.log('Respuesta del servidor:', responseData);
+                          console.log('Respuesta del servidor (JSON completa):', JSON.stringify(responseData, null, 2));
+                          console.log('responseData.success:', responseData?.success);
+                          console.log('responseData.data:', responseData?.data);
+                          console.log('responseData.message:', responseData?.message);
+
+                          // Verificar si el backend realmente cambió la contraseña
+                          if (responseData?.success === false) {
+                            const msg = responseData?.error || responseData?.message || 'El backend reportó un error';
+                            console.error('Backend reportó error a pesar de status 200:', msg);
+                            setDialogMessage(msg);
+                            setOpenError(true);
+                            console.log('=== FIN CAMBIO DE CONTRASEÑA (ERROR DEL BACKEND) ===');
+                            return;
+                          }
 
                           // Actualizar usuario en localStorage si el backend devuelve datos actualizados
                           if (responseData?.data) {
+                            console.log('Actualizando usuario en localStorage');
                             localStorage.setItem('user', JSON.stringify(responseData.data));
+                          } else {
+                            console.warn('El backend no devolvió datos del usuario actualizados');
                           }
 
+                          console.log('Contraseña cambiada exitosamente');
+                          console.log('IMPORTANTE: Intenta hacer login con:');
+                          console.log('- Email:', user.email);
+                          console.log('- Nueva contraseña (longitud):', pfNew.length, 'caracteres');
+                          console.warn('⚠️ NOTA: Si no puedes hacer login con la nueva contraseña,');
+                          console.warn('⚠️ verifica que el backend esté hasheando y guardando correctamente.');
+                          console.warn('⚠️ El endpoint PUT /api/user/:id debe:');
+                          console.warn('⚠️ 1. Verificar currentPassword con bcrypt.compare()');
+                          console.warn('⚠️ 2. Hashear newPassword con bcrypt.hash()');
+                          console.warn('⚠️ 3. Guardar el nuevo hash en la base de datos');
                           setDialogMessage('Contraseña cambiada correctamente');
                           setOpenSuccess(true);
                           setPfCurrent('');
                           setPfNew('');
                           setPfConfirm('');
                           setShowPasswordForm(false);
+                          console.log('=== FIN CAMBIO DE CONTRASEÑA (ÉXITO) ===');
                           // ============================================
                           // FIN SECCIÓN: BACKEND ENDPOINT
                           // ============================================
@@ -614,6 +711,14 @@ const Profile: React.FC = () => {
           )}
 
       {/* ConfirmDialogs */}
+      <ConfirmDialog 
+        message="¿Estás seguro de que quiere retirarse? Esta acción procesará tu solicitud de retiro."
+        open={openConfirmWithdraw}
+        onCancel={() => setOpenConfirmWithdraw(false)}
+        onConfirm={handleWithdraw}
+        title="Confirmar retiro"
+        type="confirm"
+      />
       <ConfirmDialog 
         message="¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer."
         open={openConfirmDelete}
