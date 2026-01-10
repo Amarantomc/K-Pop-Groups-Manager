@@ -169,7 +169,7 @@ export class AgencyRepository implements IAgencyRepository {
 		for (const contrato of contratosArtistas) {
 			await this.db.artista.update({
 				where: { idAp_idGr: { idAp: contrato.idAp, idGr: contrato.idGr } },
-				data: { estadoArtista: "En Pausa" },
+				data: { estadoArtista: "EN PAUSA" },
 			});
 		}
 	
@@ -191,11 +191,17 @@ export class AgencyRepository implements IAgencyRepository {
 		});
 	
 		for (const aprendiz of aprendices) {
-			await this.db.aprendiz.update({
-				where: { id: aprendiz.idAp },
-				data: { estadoAprendiz: "Proceso de Selección" },
+			await this.db.aprendizEnAgencia.updateMany({
+			  where: {
+				idAp: aprendiz.idAp,
+				idAg: numericId,
+			  },
+			  data: {
+				estado: "PROCESO DE SELECCION",
+				fechaFinalizacion: new Date(),
+			  },
 			});
-		}
+		  }
 	
 		await this.db.aprendizEnAgencia.deleteMany({ where: { idAg: numericId } });
 		await this.db.evaluacionAprendiz.deleteMany({ where: { idAg: numericId } });

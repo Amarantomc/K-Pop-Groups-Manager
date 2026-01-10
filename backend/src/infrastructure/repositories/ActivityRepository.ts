@@ -6,8 +6,6 @@
   import type { UpdateActivityDto } from "../../application/dtos/activity/UpdateActivityDto";
   import type { Activity } from "../../domain";
   import { ActivityResponseDto } from "../../application/dtos/activity/ActivityResponseDto";
-  import type { Prisma } from "@prisma/client";
-  import type { PrismaClient } from "../../generated/prisma";
   import type { ArtistOnActivityDto } from "../../application/dtos/activity/ArtistOnActivityDto";
  
 
@@ -17,17 +15,17 @@
     constructor(@inject(Types.PrismaClient) private prisma: any,
       @inject(Types.IUnitOfWork) private unitOfWork: IUnitOfWork) { }
 
-      private get db() {
+    private get db() {
         return this.unitOfWork.getTransaction();
-      }
+    }
     
-      async cancelExpiredActivities(): Promise<void> {
+    async cancelExpiredActivities(): Promise<void> {
         const expiredActivities = await this.db.$queryRaw<
           { id: number }[]
         >`
           SELECT id
           FROM "Actividad"
-          WHERE estado != 'CANCELADA'
+          WHERE estado = 'PENDIENTE'
             AND fecha <= NOW() - INTERVAL '5 days'
         `;
       
@@ -63,9 +61,9 @@
             }
           })
         ]);
-      }
+    }
 
-      async acceptedActivity(activityId: number,isAccepted: boolean,apprenticeId: number,groupId: number): Promise<void> {
+    async acceptedActivity(activityId: number,isAccepted: boolean,apprenticeId: number,groupId: number): Promise<void> {
       
         await this.db.PersonasEnActividad.updateMany({
           where: {
@@ -117,10 +115,11 @@
           return;
         }
       
-      }
+    }
 
-      async create(data: CreateActivityDto): Promise<Activity> {
+    async create(data: CreateActivityDto): Promise<Activity> {
 
+        console.log(data);
         const activity = await this.db.actividad.create({
           data: {
             responsable: data.responsible,
@@ -149,7 +148,7 @@
         });
       
         return ActivityResponseDto.toEntity(activity);
-      }
+    }
 
     async findById(id: string): Promise<Activity | null> {
       const activity = await this.db.actividad.findUnique({
