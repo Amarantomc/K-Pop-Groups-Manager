@@ -7,7 +7,7 @@ export class CreateActivityDto {
     public readonly activityType: string,
     public readonly date: string,
     public readonly place: string,
-    public readonly eventType:string,
+    public readonly eventType: string,
 
     public readonly artists?: Array<[number, number]>, 
     public readonly groups?: number[], 

@@ -6,7 +6,6 @@ import type { Group } from "../../domain/entities/Group";
 import type { GroupStatus } from "../../domain/enums/GroupStatus";
 import type { UnitOfWork } from "../PrismaUnitOfWork";
 import { Types } from "../di/Types";
-import { Artist } from "../../domain/entities/Artist";
 
 // ! Hay que crear la relación de grupo y concepto visual en la base de datos y actualizar los métodos que usan toEntity y actualizar el mismo toEntity
 
@@ -94,7 +93,7 @@ export class GroupRepository implements IGroupRepository {
 	  
 		  albums: group.Lanzamiento.map((l: { album: any; }) => l.album)
 		});
-	  }
+	}
 
 	async update(id: string, data: Partial<CreateGroupDTO>): Promise<Group> {
 		const updateData: any = {};
@@ -437,13 +436,9 @@ export class GroupRepository implements IGroupRepository {
 			albums: group.Lanzamiento.map((l: { album: any; }) => l.album)
 		  })
 		);
-	  }
+	}
 
-	async addMembers(
-		groupId: number,
-		artistIds: number[],
-		artistRoles: string[]
-	): Promise<void> {
+	async addMembers(groupId: number,artistIds: number[],artistRoles: string[]): Promise<void> {
 		const today = new Date();
 		for (let i = 0; i < artistIds.length; i++) {
 			const artist = await this.db.artista.findFirst({
@@ -470,10 +465,9 @@ export class GroupRepository implements IGroupRepository {
 			})
 						
 				}
-		}
-	
+	}
 
-async removeMembers(groupId: number, artistIds: number[]): Promise<void> {
+    async removeMembers(groupId: number, artistIds: number[]): Promise<void> {
 		const today = new Date();
 		for (const artistId of artistIds) {
 			const artist = await this.db.artistaEnGrupo.findFirst({
@@ -581,4 +575,6 @@ async removeMembers(groupId: number, artistIds: number[]): Promise<void> {
 	   
 	   return GroupResponseDTO.toEntitySimple(groups[0])
 	}
+
+
 }

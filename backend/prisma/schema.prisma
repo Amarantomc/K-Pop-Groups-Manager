@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
@@ -14,265 +8,248 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
-  id Int @id @default(autoincrement())
-  name String
-  email String @unique
-  password String  
-  role String
-
-  perfilManager PerfilManager?
-  perfilDirector PerfilDirector?
+model User {
+  id             Int             @id @default(autoincrement())
+  name           String
+  email          String          @unique
+  password       String
+  role           String
   perfilAprendiz PerfilAprendiz?
-  perfilArtista PerfilArtista?
+  perfilArtista  PerfilArtista?
+  perfilDirector PerfilDirector?
+  perfilManager  PerfilManager?
 }
 
 model PerfilManager {
-  userId Int @id
+  userId    Int     @id
   agenciaId Int
- usuario User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  agencia Agencia @relation( fields: [agenciaId], references: [id])
+  agencia   Agencia @relation(fields: [agenciaId], references: [id])
+  usuario   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model PerfilDirector {
-  userId Int @id
+  userId    Int     @id
   agenciaId Int
-
- usuario User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  agencia Agencia @relation( fields: [agenciaId], references: [id])
+  agencia   Agencia @relation(fields: [agenciaId], references: [id])
+  usuario   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model PerfilAprendiz {
-  userId Int @id
-  aprendizId Int @unique
- 
- usuario User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  aprendiz Aprendiz @relation(fields: [aprendizId], references: [id])
+  userId     Int      @id
+  aprendizId Int      @unique
+  aprendiz   Aprendiz @relation(fields: [aprendizId], references: [id])
+  usuario    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model PerfilArtista {
-  userId Int @id
-  IdAp Int
-  IdGr Int
-  
-  usuario User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  Int     @id
+  IdAp    Int
+  IdGr    Int
   artista Artista @relation(fields: [IdAp, IdGr], references: [idAp, idGr])
-  
+  usuario User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([IdAp, IdGr])
 }
 
-model Agencia{
-  id Int @id @default(autoincrement())
-  nombre String
-  ubicacion String
-  fechaFundacion DateTime 
-  Contrato Contrato []
-  Aprendices AprendizEnAgencia[]
-  Evaluaciones EvaluacionAprendiz[]
+model Agencia {
+  id                  Int                     @id @default(autoincrement())
+  nombre              String
+  ubicacion           String
+  fechaFundacion      DateTime
+  Aprendices          AprendizEnAgencia[]
   SolicitudesAprendiz AprendizSolicitaGrupo[]
   SolicitudesArtistas ArtistaSolicitaGrupo[]
-  Grupos Grupo[]
-  Managers PerfilManager []
-  Directores PerfilDirector [] 
-  ContratosGrupo ContratoGrupo []
+  Contrato            Contrato[]
+  ContratosGrupo      ContratoGrupo[]
+  Evaluaciones        EvaluacionAprendiz[]
+  Directores          PerfilDirector[]
+  Managers            PerfilManager[]
+  Grupos              Grupo[]                 @relation("AgenciaToGrupo")
 }
-model Aprendiz{
-  id Int @id @default(autoincrement())
-  idSolicitud  Int ?
-  nombreCompleto  String
-  fechaNacimiento DateTime @default(now())
-  edad Int
-  nivelEntrenamiento Int
-  Agencia AprendizEnAgencia[]
-  Evaluacion EvaluacionAprendiz[]
-  Artista Artista ?
-  SolicitudGrupo AprendizSolicitaGrupo[]
-  Perfil PerfilAprendiz?
-  AprendizEnSolicitud Solicitud ? @relation(fields: [idSolicitud], references: [id])
+
+model Aprendiz {
+  id                  Int                     @id @default(autoincrement())
+  nombreCompleto      String
+  fechaNacimiento     DateTime                @default(now())
+  edad                Int
+  nivelEntrenamiento  Int
+  idSolicitud         Int?
+  AprendizEnSolicitud Solicitud?              @relation(fields: [idSolicitud], references: [id])
+  Agencia             AprendizEnAgencia[]
+  SolicitudGrupo      AprendizSolicitaGrupo[]
+  Artista             Artista?
+  Evaluacion          EvaluacionAprendiz[]
+  Perfil              PerfilAprendiz?
 }
-model Actividad{
-  id Int @id @default(autoincrement())
-  responsable String
-  lugar String
-  fecha DateTime @default(now())
+
+model Actividad {
+  id            Int                   @id @default(autoincrement())
+  responsable   String
+  lugar         String
+  fecha         DateTime              @default(now())
   tipoActividad String
-  //Nuevo
-  tipoEvento String
-  estado String @default("PENDIENTE") // Estado de la actividad (ej: PENDIENTE, REALIZADA, CANCELADA)
-  Personas PersonasEnActividad[]
-  
-  Ingreso Ingreso[]
+  tipoEvento    String
+  estado        String                @default("PENDIENTE")
+  Ingreso       Ingreso[]
+  Personas      PersonasEnActividad[]
 }
 
-model Ingreso{
-  idIng Int @default(autoincrement())
-  idAct Int
-  monto Decimal
-  fecha DateTime @default(now())
+model Ingreso {
+  idIng       Int       @default(autoincrement())
+  idAct       Int
+  monto       Decimal
+  fecha       DateTime  @default(now())
   descripcion String
-  actividad Actividad @relation(fields: [idAct], references: [id],onDelete: Cascade)
-  
-  @@id([idIng,idAct])
+  actividad   Actividad @relation(fields: [idAct], references: [id], onDelete: Cascade)
+
+  @@id([idIng, idAct])
 }
 
-model Concepto{
-  id Int @id @default(autoincrement())
-  nombre String
+model Concepto {
+  id          Int     @id @default(autoincrement())
   descripcion String
-  Grupo Grupo[]
-  
+  nombre      String
+  Grupo       Grupo[]
 }
 
-model ConceptoVisual{
-  id Int @id @default(autoincrement())
-  //Buscar como tener img
+model ConceptoVisual {
   imagen String
-  Grupo Grupo []
-  
-  
+  id     Int     @id @default(autoincrement())
+  Grupo  Grupo[]
 }
 
-model Grupo{
-  id Int @id @default(autoincrement())
-  nombreCompleto String
-  fechaDebut DateTime
-  estadoGrupo String
-  idConcepto Int
-  idConceptoVisual Int
-  Nomiembros Int
-  concepto Concepto @relation(fields: [idConcepto], references: [id])
-  conceptoVisual ConceptoVisual @relation(fields: [idConceptoVisual], references: [id])
-
-  Actividades PersonasEnActividad[]
- // Album Album[]
-  Artista Artista[]
+model Grupo {
+  id                Int                   @id @default(autoincrement())
+  nombreCompleto    String
+  fechaDebut        DateTime
+  estadoGrupo       String
+  idConcepto        Int
+  Nomiembros        Int
+  idConceptoVisual  Int
+  Artista           Artista[]
   HistorialArtistas ArtistaEnGrupo[]
-  Lanzamiento GrupoLanzaAlbum[]
-  Agencias Agencia[]
-  Contratos ContratoGrupo []
-
+  Contratos         ContratoGrupo[]
+  conceptoVisual    ConceptoVisual        @relation(fields: [idConceptoVisual], references: [id])
+  concepto          Concepto              @relation(fields: [idConcepto], references: [id])
+  Lanzamiento       GrupoLanzaAlbum[]
+  Actividades       PersonasEnActividad[]
+  Agencias          Agencia[]             @relation("AgenciaToGrupo")
 }
 
-model Album{
-  id Int @id @default(autoincrement())
-  //idGrupo Int
-  titulo String
-  fechaLanzamiento DateTime @default(now())
-  productor String
-  NoCanciones Int
-  NoCopiasVendidas Int
-  Canciones Cancion[]
- // grupo Grupo @relation(fields: [idGrupo], references: [id])
-  Premios AlbumPremiado[]
+model Album {
+  id                 Int                 @id @default(autoincrement())
+  titulo             String
+  fechaLanzamiento   DateTime            @default(now())
+  productor          String
+  NoCanciones        Int
+  NoCopiasVendidas   Int
+  Premios            AlbumPremiado[]
   LanzamientoArtista ArtistaLanzaAlbum[]
-  LanzamientoGrupo GrupoLanzaAlbum[]
-  
+  LanzamientoGrupo   GrupoLanzaAlbum[]
+  Canciones          Cancion[]           @relation("AlbumToCancion")
 }
+
 model Artista {
-  idAp Int @unique
-  idGr Int
-  idSolicitud  Int ?
-  nombreArtistico String
-  fechaDebut DateTime
-  estadoArtista String
-  grupo Grupo @relation(fields: [idGr], references: [id])
-  aprendiz  Aprendiz @relation(fields: [idAp],references: [id])
-  Contrato Contrato []
-  HistorialGrupos ArtistaEnGrupo []
-  Actividades PersonasEnActividad[]
-  Lanzamientos ArtistaLanzaAlbum[]
-  SolicitudGrupo ArtistaSolicitaGrupo[]
-  Perfil PerfilArtista?
-  ArtistaEnSolicutud Solicitud ?@relation(fields: [idSolicitud],references: [id])
-  
+  idAp               Int                    @unique
+  idGr               Int
+  nombreArtistico    String
+  estadoArtista      String
+  fechaDebut         DateTime
+  idSolicitud        Int?
+  aprendiz           Aprendiz               @relation(fields: [idAp], references: [id])
+  grupo              Grupo                  @relation(fields: [idGr], references: [id])
+  ArtistaEnSolicutud Solicitud?             @relation(fields: [idSolicitud], references: [id])
+  HistorialGrupos    ArtistaEnGrupo[]
+  Lanzamientos       ArtistaLanzaAlbum[]
+  SolicitudGrupo     ArtistaSolicitaGrupo[]
+  Contrato           Contrato[]
+  Perfil             PerfilArtista?
+  Actividades        PersonasEnActividad[]
 
-  
-
-  @@id([idAp,idGr])
+  @@id([idAp, idGr])
 }
-model Solicitud{
-  id Int @id @default(autoincrement())
-  nombreGrupo String
-  idConcepto Int
-  roles String []
-  idAgencia Int
-  fechaSolicitud DateTime @default(now())
-  //Referencia
-  AprendizMiembro Aprendiz []
-  ArtistaMiembro Artista []
+
+model Solicitud {
+  id                     Int                     @id @default(autoincrement())
+  fechaSolicitud         DateTime                @default(now())
+  idAgencia              Int
+  idConcepto             Int
+  nombreGrupo            String
+  roles                  String[]
+  estado                 String
+  AprendizMiembro        Aprendiz[]
   SolicitudGrupoAprendiz AprendizSolicitaGrupo[]
-  SolicitudGrupoArtista ArtistaSolicitaGrupo[]
-    estado String
+  ArtistaMiembro         Artista[]
+  SolicitudGrupoArtista  ArtistaSolicitaGrupo[]
 }
-model ListaPopularidad{
-  id Int @id @default(autoincrement())
-  nombre String
+
+model ListaPopularidad {
+  id        Int                           @id @default(autoincrement())
+  nombre    String
   tipoLista String
-  requisito Int @default(1000000)
+  requisito Int                           @default(1000000)
   Canciones CancionEnListaDePopularidad[]
 }
-model Cancion{
-  id Int @id @default(autoincrement())
-  titulo String
-  genero String
-  productor String
-  fechaLanzamiento DateTime
-  reproducciones Int @default(0)
+
+model Cancion {
+  id                 Int                           @id @default(autoincrement())
+  titulo             String
+  genero             String
+  productor          String
+  fechaLanzamiento   DateTime
+  reproducciones     Int                           @default(0)
   ListaDePopularidad CancionEnListaDePopularidad[]
-  Albums Album[]
+  Albums             Album[]                       @relation("AlbumToCancion")
 }
-model Premio{
-  id Int @id @default(autoincrement())
-  tituloPremio String
+
+model Premio {
+  id             Int             @id @default(autoincrement())
+  tituloPremio   String
   nombreAcademia String
-  requisito Int @default(1000000)
-  Albums  AlbumPremiado[]
+  requisito      Int             @default(1000000)
+  Albums         AlbumPremiado[]
 }
 
 model Contrato {
   idAg                 Int
   idAp                 Int
-  idGr                  Int
-  fechaInicio           DateTime
-  fechaFinalizacion     DateTime?
-  estado                String
-  condicionesIniciales  String
-  distribucionIngresos  String
-
-  Artista Artista @relation(fields: [idAp, idGr], references: [idAp, idGr],onDelete: Cascade)
-  Agencia Agencia @relation(fields: [idAg], references: [id],onDelete: Cascade)
+  idGr                 Int
+  fechaInicio          DateTime
+  fechaFinalizacion    DateTime?
+  estado               String
+  condicionesIniciales String
+  distribucionIngresos String
+  Agencia              Agencia   @relation(fields: [idAg], references: [id], onDelete: Cascade)
+  Artista              Artista   @relation(fields: [idAp, idGr], references: [idAp, idGr], onDelete: Cascade)
 
   @@id([idAg, idAp, idGr, fechaInicio])
   @@map("Contrato")
 }
 
-model ContratoGrupo{
-  id Int @id @default(autoincrement())
-  idAg Int 
-  IdGr Int 
-  fechaInicio DateTime
-  fechaFinalizacion DateTime ?
-  estado String
+model ContratoGrupo {
+  id                   Int       @id @default(autoincrement())
+  idAg                 Int
+  IdGr                 Int
+  fechaInicio          DateTime
+  fechaFinalizacion    DateTime?
+  estado               String
   condicionesIniciales String
   distribucionIngresos String
-  Agencia Agencia  @relation(fields: [idAg], references: [id],onDelete: Cascade)
-  Grupo  Grupo  @relation(fields: [IdGr], references: [id], onDelete: Cascade)
-  
- @@map("ContratoGrupo")
+  Grupo                Grupo     @relation(fields: [IdGr], references: [id], onDelete: Cascade)
+  Agencia              Agencia   @relation(fields: [idAg], references: [id], onDelete: Cascade)
 
+  @@map("ContratoGrupo")
 }
-
 
 model ArtistaEnGrupo {
   idAp              Int
   idGrupoDebut      Int
-  idGr               Int
+  idGr              Int
   fechaInicio       DateTime
   fechaFinalizacion DateTime?
   rol               String
-
-  artista Artista @relation(fields: [idAp, idGrupoDebut], references: [idAp, idGr])
-  grupo   Grupo   @relation(fields: [idGr], references: [id])
+  artista           Artista   @relation(fields: [idAp, idGrupoDebut], references: [idAp, idGr])
+  grupo             Grupo     @relation(fields: [idGr], references: [id])
 
   @@id([idAp, idGrupoDebut, idGr, fechaInicio])
   @@map("ArtistaEnGrupo")
@@ -281,22 +258,20 @@ model ArtistaEnGrupo {
 model AlbumPremiado {
   idAlb    Int
   idPremio Int
-  año      Int
-
-  album  Album  @relation(fields: [idAlb], references: [id])
-  premio Premio @relation(fields: [idPremio], references: [id])
+  año     Int
+  album    Album  @relation(fields: [idAlb], references: [id])
+  premio   Premio @relation(fields: [idPremio], references: [id])
 
   @@id([idAlb, idPremio])
   @@map("AlbumPremiado")
 }
 
 model CancionEnListaDePopularidad {
-  idCa      Int
-  idLista   Int
-  posicion  Int
-  año       Int
-
-  cancion Cancion @relation(fields: [idCa], references: [id])
+  idCa             Int
+  idLista          Int
+  posicion         Int
+  año             Int
+  cancion          Cancion          @relation(fields: [idCa], references: [id])
   listaPopularidad ListaPopularidad @relation(fields: [idLista], references: [id])
 
   @@id([idCa, idLista])
@@ -308,10 +283,9 @@ model AprendizEnAgencia {
   idAg              Int
   fechaInicio       DateTime
   fechaFinalizacion DateTime?
-  estado String @default("en entrenamiento")
-
-  aprendiz Aprendiz @relation(fields: [idAp], references: [id],onDelete: Cascade)
-  agencia  Agencia  @relation(fields: [idAg], references: [id],onDelete: Cascade)
+  estado            String    @default("en entrenamiento")
+  agencia           Agencia   @relation(fields: [idAg], references: [id], onDelete: Cascade)
+  aprendiz          Aprendiz  @relation(fields: [idAp], references: [id], onDelete: Cascade)
 
   @@id([idAp, idAg, fechaInicio])
   @@map("AprendizEnAgencia")
@@ -322,72 +296,56 @@ model EvaluacionAprendiz {
   idAg            Int
   fechaEvaluacion DateTime
   evaluacion      Int
-
-  aprendiz Aprendiz @relation(fields: [idAp], references: [id],onDelete: Cascade)
-  agencia  Agencia  @relation(fields: [idAg], references: [id],onDelete: Cascade)
+  agencia         Agencia  @relation(fields: [idAg], references: [id], onDelete: Cascade)
+  aprendiz        Aprendiz @relation(fields: [idAp], references: [id], onDelete: Cascade)
 
   @@id([idAp, idAg, fechaEvaluacion])
   @@map("EvaluacionAprendiz")
 }
 
 model PersonasEnActividad {
-  //Cambiar nombre
-  id Int @id @default(autoincrement())
-  idAp     Int ?
-  idGr     Int ?
-  idAct    Int
-  //Nuevo
-  idGrupos Int ?
-  aceptado Boolean?
+  idAp      Int?
+  idGr      Int?
+  idAct     Int
+  idGrupos  Int?
+  aceptado  Boolean?
+  id        Int       @id @default(autoincrement())
+  actividad Actividad @relation(fields: [idAct], references: [id])
+  artista   Artista?  @relation(fields: [idAp, idGr], references: [idAp, idGr])
+  grupos    Grupo?    @relation(fields: [idGrupos], references: [id])
 
-  artista   Artista ?   @relation(fields: [idAp, idGr], references: [idAp, idGr])
-  actividad Actividad  @relation(fields: [idAct], references: [id])
-  grupos Grupo ? @relation(fields: [idGrupos], references: [id])
-
-  
   @@map("PersonasEnActividad")
 }
 
- 
-
 model ArtistaLanzaAlbum {
-  idAp             Int
-  idGr             Int
-  idAlb            Int
-  
-
+  idAp    Int
+  idGr    Int
+  idAlb   Int
+  album   Album   @relation(fields: [idAlb], references: [id])
   artista Artista @relation(fields: [idAp, idGr], references: [idAp, idGr])
-  album Album @relation(fields: [idAlb], references: [id])
- 
 
   @@id([idAp, idGr, idAlb])
   @@map("ArtistaLanzaAlbum")
 }
 
 model GrupoLanzaAlbum {
-  idGr              Int
-  idAlb            Int
-  
-
-  grupo Grupo @relation(fields: [idGr], references: [id])
+  idGr  Int
+  idAlb Int
   album Album @relation(fields: [idAlb], references: [id])
- 
+  grupo Grupo @relation(fields: [idGr], references: [id])
 
   @@id([idGr, idAlb])
   @@map("GrupoLanzaAlbum")
 }
 
-
-
 model AprendizSolicitaGrupo {
   idAp        Int
   idAg        Int
   idSolicitud Int
-  estado    String
-
-  aprendiz  Aprendiz  @relation(fields: [idAp], references: [id])
-  agencia   Agencia   @relation(fields: [idAg], references: [id])
-  solicitud Solicitud @relation(fields: [idSolicitud], references: [id])
+  estado      String
+  agencia     Agencia   @relation(fields: [idAg], references: [id])
+  aprendiz    Aprendiz  @relation(fields: [idAp], references: [id])
+  solicitud   Solicitud @relation(fields: [idSolicitud], references: [id])
 
   @@id([idAp, idAg, idSolicitud])
   @@map("AprendizSolicitaGrupo")
@@ -395,16 +353,14 @@ model AprendizSolicitaGrupo {
 
 model ArtistaSolicitaGrupo {
   idAp        Int
-  idGr         Int
+  idGr        Int
   idAg        Int
   idSolicitud Int
-  estado    String
-
-  artista   Artista   @relation(fields: [idAp, idGr], references: [idAp, idGr])
-  agencia   Agencia   @relation(fields: [idAg], references: [id])
-  solicitud Solicitud @relation(fields: [idSolicitud], references: [id])
+  estado      String
+  agencia     Agencia   @relation(fields: [idAg], references: [id])
+  artista     Artista   @relation(fields: [idAp, idGr], references: [idAp, idGr])
+  solicitud   Solicitud @relation(fields: [idSolicitud], references: [id])
 
   @@id([idAp, idGr, idAg, idSolicitud])
   @@map("ArtistaSolicitaGrupo")
 }
-

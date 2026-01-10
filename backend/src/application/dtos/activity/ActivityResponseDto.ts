@@ -1,9 +1,7 @@
 // ActivityResponseDto.ts
 import { Activity } from "../../../domain/entities/Activity";
 import { Artist } from "../../../domain/entities/Artist";
-import  Income from "../../../domain/entities/Income";
 import type { ArtistStatus } from "../../../domain/enums/ArtistStatus";
-import type { ArtistRoutes } from "../../../presentation/routes/ArtistRoutes";
 
 export class ActivityResponseDto {
   constructor(
@@ -47,7 +45,7 @@ export class ActivityResponseDto {
         GroupId:a.idGr,
         ArtistName:a.nombreArtistico,
         DebutDate:a.fechaDebut,
-        Status:a.estadoArtista as ArtistStatus}))
+        Status:a.estadoArtista }))
     }
 
     
