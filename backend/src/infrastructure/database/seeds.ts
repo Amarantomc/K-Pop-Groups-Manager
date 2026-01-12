@@ -433,22 +433,22 @@ async function main() {
   console.log('🏢 Asignando aprendices a agencias...')
   await prisma.aprendizEnAgencia.createMany({
     data: [
-      { idAp: aprendiz1.id, idAg: smEntertainment.id, fechaInicio: new Date("2019-01-15"), estado: "En entrenamiento" },
-      { idAp: aprendiz2.id, idAg: ygEntertainment.id, fechaInicio: new Date("2018-06-20"), estado: "En entrenamiento" },
-      { idAp: aprendiz3.id, idAg: jypEntertainment.id, fechaInicio: new Date("2017-03-10"), estado: "Artista" },
-      { idAp: aprendiz4.id, idAg: hibeEntertainment.id, fechaInicio: new Date("2016-05-01"), fechaFinalizacion: new Date("2019-03-04"), estado: "Artista" },
-      { idAp: aprendiz5.id, idAg: jypEntertainment.id, fechaInicio: new Date("2017-08-15"), fechaFinalizacion: new Date("2019-02-12"), estado: "Artista" },
-      { idAp: aprendiz6.id, idAg: smEntertainment.id, fechaInicio: new Date("2016-09-01"), fechaFinalizacion: new Date("2020-11-17"), estado: "Artista"},
-      { idAp: aprendiz7.id, idAg: starshipEntertainment.id, fechaInicio: new Date("2021-07-10"), estado: "En entrenamiento" },
-      { idAp: aprendiz8.id, idAg: hibeEntertainment.id, fechaInicio: new Date("2020-11-05"), estado: "En entrenamiento" },
-      { idAp: aprendiz9.id, idAg: smEntertainment.id, fechaInicio: new Date("2009-03-20"), fechaFinalizacion: new Date("2014-08-01"), estado: "Artista" },
-      { idAp: aprendiz10.id, idAg: pledisEntertainment.id, fechaInicio: new Date("2010-05-15"), fechaFinalizacion: new Date("2015-05-26"), estado: "Artista" },
-      { idAp: aprendiz11.id, idAg: hibeEntertainment.id, fechaInicio: new Date("2011-06-13"), fechaFinalizacion: new Date("2013-06-13"), estado: "Artista" },
-      { idAp: aprendiz12.id, idAg: ygEntertainment.id, fechaInicio: new Date("2012-08-08"), fechaFinalizacion: new Date("2016-08-08"), estado: "Artista" },
-      { idAp: aprendiz13.id, idAg: ygEntertainment.id, fechaInicio: new Date("2012-08-08"), fechaFinalizacion: new Date("2016-08-08"), estado: "En proceso de seleccion" },
-      { idAp: aprendiz14.id, idAg: ygEntertainment.id, fechaInicio: new Date("2012-08-08"), fechaFinalizacion: new Date("2016-08-08"), estado: "En proceso de seleccion" },
-      { idAp: aprendiz15.id, idAg: hibeEntertainment.id, fechaInicio: new Date("2012-08-08"), fechaFinalizacion: new Date("2016-08-08"), estado: "En proceso de seleccion" }, 
-      { idAp: aprendiz16.id, idAg: ygEntertainment.id, fechaInicio: new Date("2012-08-08"), fechaFinalizacion: new Date("2016-08-08"), estado: "En entrenamiento" }, 
+      { idAp: aprendiz1.id, idAg: smEntertainment.id, fechaInicio: new Date("2019-01-15"), estado: "EN ENTRENAMIENTO" },
+      { idAp: aprendiz2.id, idAg: ygEntertainment.id, fechaInicio: new Date("2018-06-20"), estado: "EN ENTRENAMIENTO" },
+      { idAp: aprendiz3.id, idAg: jypEntertainment.id, fechaInicio: new Date("2017-03-10"), estado: "ARTISTA" },
+      { idAp: aprendiz4.id, idAg: hibeEntertainment.id, fechaInicio: new Date("2016-05-01"), fechaFinalizacion: new Date("2019-03-04"), estado: "ARTISTA" },
+      { idAp: aprendiz5.id, idAg: jypEntertainment.id, fechaInicio: new Date("2017-08-15"), fechaFinalizacion: new Date("2019-02-12"), estado: "ARTISTA" },
+      { idAp: aprendiz6.id, idAg: smEntertainment.id, fechaInicio: new Date("2016-09-01"), fechaFinalizacion: new Date("2020-11-17"), estado: "ARTISTA"},
+      { idAp: aprendiz7.id, idAg: starshipEntertainment.id, fechaInicio: new Date("2021-07-10"), estado: "EN ENTRENAMIENTO" },
+      { idAp: aprendiz8.id, idAg: hibeEntertainment.id, fechaInicio: new Date("2020-11-05"), estado: "EN ENTRENAMIENTO" },
+      { idAp: aprendiz9.id, idAg: smEntertainment.id, fechaInicio: new Date("2009-03-20"), fechaFinalizacion: new Date("2014-08-01"), estado: "ARTISTA" },
+      { idAp: aprendiz10.id, idAg: pledisEntertainment.id, fechaInicio: new Date("2010-05-15"), fechaFinalizacion: new Date("2015-05-26"), estado: "ARTISTA" },
+      { idAp: aprendiz11.id, idAg: hibeEntertainment.id, fechaInicio: new Date("2011-06-13"), fechaFinalizacion: new Date("2013-06-13"), estado: "ARTISTA" },
+      { idAp: aprendiz12.id, idAg: ygEntertainment.id, fechaInicio: new Date("2012-08-08"), fechaFinalizacion: new Date("2016-08-08"), estado: "ARTISTA" },
+      { idAp: aprendiz13.id, idAg: ygEntertainment.id, fechaInicio: new Date("2012-08-08"), fechaFinalizacion: new Date("2016-08-08"), estado: "EN PROCESO DE SELECCION" },
+      { idAp: aprendiz14.id, idAg: ygEntertainment.id, fechaInicio: new Date("2012-08-08"), fechaFinalizacion: new Date("2016-08-08"), estado: "EN PROCESO DE SELECCION" },
+      { idAp: aprendiz15.id, idAg: hibeEntertainment.id, fechaInicio: new Date("2012-08-08"), fechaFinalizacion: new Date("2016-08-08"), estado: "EN PROCESO DE SELECCION" }, 
+      { idAp: aprendiz16.id, idAg: ygEntertainment.id, fechaInicio: new Date("2012-08-08"), fechaFinalizacion: new Date("2016-08-08"), estado: "EN ENTRENAMIENTO" }, 
 
     ]
   })
@@ -534,7 +534,7 @@ async function main() {
       idGr: nct127.id,
       nombreArtistico: "Taeyong",
       fechaDebut: new Date("2016-07-07"),
-      estadoArtista: "Pausa"
+      estadoArtista: "PAUSA"
     }
   })
   const artista2 = await prisma.artista.create({
@@ -543,7 +543,7 @@ async function main() {
       idGr: blackpink.id,
       nombreArtistico: "Rosé",
       fechaDebut: new Date("2016-08-08"),
-      estadoArtista: "Activo"
+      estadoArtista: "ACTIVO"
     }
   })
   const artista3 = await prisma.artista.create({
@@ -552,7 +552,7 @@ async function main() {
       idGr: twice.id,
       nombreArtistico: "Chaeyoung",
       fechaDebut: new Date("2015-10-20"),
-      estadoArtista: "Activo"
+      estadoArtista: "ACTIVO"
     }
   })
   const artista4 = await prisma.artista.create({
@@ -561,7 +561,7 @@ async function main() {
       idGr: bts.id,
       nombreArtistico: "V",
       fechaDebut: new Date("2013-06-13"),
-      estadoArtista: "Pausa"
+      estadoArtista: "PAUSA"
     }
   })
   const artista5 = await prisma.artista.create({
@@ -570,7 +570,7 @@ async function main() {
       idGr: itzy.id,
       nombreArtistico: "Yeji",
       fechaDebut: new Date("2019-02-12"),
-      estadoArtista: "Activo"
+      estadoArtista: "ACTIVO"
     }
   })
   const artista6 = await prisma.artista.create({
@@ -579,7 +579,7 @@ async function main() {
       idGr: aespa.id,
       nombreArtistico: "Karina",
       fechaDebut: new Date("2020-11-17"),
-      estadoArtista: "Activo"
+      estadoArtista: "ACTIVO"
     }
   })
   const artista7 = await prisma.artista.create({
@@ -588,7 +588,7 @@ async function main() {
       idGr: redVelvet.id,
       nombreArtistico: "Irene",
       fechaDebut: new Date("2014-08-01"),
-      estadoArtista: "Activo"
+      estadoArtista: "ACTIVO"
     }
   })
   const artista8 = await prisma.artista.create({
@@ -597,7 +597,7 @@ async function main() {
       idGr: seventeen.id,
       nombreArtistico: "S.Coups",
       fechaDebut: new Date("2015-05-26"),
-      estadoArtista: "Pausa"
+      estadoArtista: "PAUSA"
     }
   })
   console.log('✅ 8 Artistas creados')
@@ -690,7 +690,7 @@ async function main() {
         idAp: artista8.idAp,
         idGr: artista8.idGr,
         fechaInicio: new Date("2015-05-26"),
-        estado: "Activo",
+        estado: "ACTIVO",
         condicionesIniciales: "Contrato por 7 años con términos flexibles",
         distribucionIngresos: "55% agencia, 45% artista"
       }
@@ -776,7 +776,7 @@ async function main() {
         idAg: smEntertainment.id,
         IdGr: redVelvet.id,
         fechaInicio: new Date("2014-08-01"),
-        estado: "Activo",
+        estado: "ACTIVO",
         condicionesIniciales: "Contrato de grupo por 7 años renovado",
         distribucionIngresos: "48% agencia, 52% grupo"
       },
@@ -784,7 +784,7 @@ async function main() {
         idAg: pledisEntertainment.id,
         IdGr: seventeen.id,
         fechaInicio: new Date("2015-05-26"),
-        estado: "Activo",
+        estado: "ACTIVO",
         condicionesIniciales: "Contrato de grupo por 7 años con 13 miembros",
         distribucionIngresos: "45% agencia, 55% grupo"
       }
@@ -1424,30 +1424,27 @@ console.log('🎸 Creando lanzamientos de grupos...')
     data: {
       nombreGrupo: "New Generation",
       idConcepto: conceptoFuturista.id,
-      roles: ["Líder", "Vocalista principal", "Rapero", "Bailarín principal", "Visual"],
       idAgencia: smEntertainment.id,
       fechaSolicitud: new Date("2024-01-15"),
-      estado: "Pendiente"
+      estado: "PENDIENTE"
     }
   })
   const solicitud2 = await prisma.solicitud.create({
     data: {
       nombreGrupo: "Rising Stars",
       idConcepto: conceptoCute.id,
-      roles: ["Líder", "Vocalista", "Rapera", "Bailarina", "Maknae"],
       idAgencia: jypEntertainment.id,
       fechaSolicitud: new Date("2024-02-20"),
-      estado: "Pendiente"
+      estado: "PENDIENTE"
     }
   })
   const solicitud3 = await prisma.solicitud.create({
     data: {
       nombreGrupo: "Urban Legends",
       idConcepto: conceptoUrbano.id,
-      roles: ["Líder", "Rapero principal", "Vocalista", "Productor", "Bailarín"],
       idAgencia: hibeEntertainment.id,
       fechaSolicitud: new Date("2024-03-10"),
-      estado: "Pendiente"
+      estado: "PENDIENTE"
     }
   })
   console.log('✅ 3 Solicitudes de grupo creadas')
@@ -1467,9 +1464,9 @@ console.log('🎸 Creando lanzamientos de grupos...')
   console.log('🎯 Creando solicitudes de aprendices para grupos...')
   await prisma.aprendizSolicitaGrupo.createMany({
     data: [
-      { idAp: aprendiz1.id, idAg: smEntertainment.id, idSolicitud: solicitud1.id, estado: "Pendiente" },
-      { idAp: aprendiz7.id, idAg: starshipEntertainment.id, idSolicitud: solicitud2.id, estado: "Aprobado" },
-      { idAp: aprendiz8.id, idAg: hibeEntertainment.id, idSolicitud: solicitud3.id, estado: "En revisión" }
+      { idAp: aprendiz1.id, idAg: smEntertainment.id, idSolicitud: solicitud1.id, rol: "LIDER", estado: "PENDIENTE" },
+      { idAp: aprendiz7.id, idAg: starshipEntertainment.id, idSolicitud: solicitud2.id, rol: "VOCALISTA", estado: "APROBADO" },
+      { idAp: aprendiz8.id, idAg: hibeEntertainment.id, idSolicitud: solicitud3.id, rol: "BAILARIN", estado: "EN REVISION" }
     ]
   })
   console.log('✅ Solicitudes de aprendices creadas')
@@ -1522,8 +1519,8 @@ console.log('🎸 Creando lanzamientos de grupos...')
   console.log('⭐ Creando solicitudes de artistas para nuevos grupos...')
   await prisma.artistaSolicitaGrupo.createMany({
     data: [
-      { idAp: artista1.idAp, idGr: artista1.idGr, idAg: smEntertainment.id, idSolicitud: solicitud1.id, estado: "Aprobado" },
-      { idAp: artista5.idAp, idGr: artista5.idGr, idAg: jypEntertainment.id, idSolicitud: solicitud2.id, estado: "Pendiente" }
+      { idAp: artista1.idAp, idGr: artista1.idGr, idAg: smEntertainment.id, idSolicitud: solicitud1.id, rol: "LIDER", estado: "APROBADO" },
+      { idAp: artista5.idAp, idGr: artista5.idGr, idAg: jypEntertainment.id, idSolicitud: solicitud2.id, rol: "VOCALISTA", estado: "PENDIENTE" }
     ]
   })
   console.log('✅ Solicitudes de artistas creadas')
