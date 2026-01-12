@@ -226,8 +226,9 @@ export class ApplicationRepository implements IApplicationRepository
     return ArtistResponseDto.toEntities(artists);
   }
 
-  async createFromApplication(dto: ApplicationCreateGroupDTO, applicationId: number): Promise<Group> {
-    // 1️⃣ Crear el grupo
+  async createFromApplication(dto: ApplicationCreateGroupDTO,applicationId: number): Promise<Group> {
+  
+    // 1️⃣ CREAR GRUPO
     const group = await this.db.Grupo.create({
       data: {
         nombreCompleto: dto.groupName,
@@ -240,92 +241,93 @@ export class ApplicationRepository implements IApplicationRepository
       },
     });
   
-    const apprentices: number[] = Array.isArray(dto.apprentices) ? dto.apprentices : [];
-    const artists: [number, number][] = Array.isArray(dto.artists) ? dto.artists : []; // [idAp, oldGroupId]
-  
-    // 2️⃣ Convertir Aprendices en Artistas
-    for (let i = 0; i < apprentices.length; i++) {
-      const apprenticeId = apprentices[i];
-      const role = dto.roles?.[i] ?? "Miembro";
-  
-      // Crear Artista
-      await this.db.Artista.create({
+    // 2️⃣ APRENDICES → ARTISTAS NUEVOS
+    for (const [idAp, rol] of dto.apprentices) {
+      const artista = await this.db.Artista.create({
         data: {
-          idAp: apprenticeId,
+          idAp,
           idGr: group.id,
           idSolicitud: applicationId,
-          nombreArtistico: `Artista ${apprenticeId}`,
+          nombreArtistico: `Artista ${idAp}`,
           fechaDebut: dto.debut,
           estadoArtista: "ACTIVO",
         },
       });
   
-      // Registrar en ArtistaEnGrupo
       await this.db.ArtistaEnGrupo.create({
         data: {
-          idAp: apprenticeId,
-          idGrupoDebut: group.id,
+          idAp,
+          idGrupoDebut: artista.idGr, // FK correcta
           idGr: group.id,
           fechaInicio: dto.debut,
           rol,
         },
       });
   
-      // Registrar en AprendizSolicitaGrupo
-      await this.db.AprendizSolicitaGrupo.create({
-        data: {
-          idAp: apprenticeId,
-          idAg: dto.agencyId,
-          idSolicitud: applicationId,
-          estado: "ACEPTADO",
+      await this.db.AprendizSolicitaGrupo.update({
+        where: {
+          idAp_idAg_idSolicitud: {
+            idAp,
+            idAg: dto.agencyId,
+            idSolicitud: applicationId,
+          },
         },
+        data: { estado: "ACEPTADO" },
       });
     }
   
-    // 3️⃣ Mover artistas existentes al nuevo grupo
-    for (let j = 0; j < artists.length; j++) {
-      const tuple = artists[j];
-      if (!tuple) continue;
+    // 3️⃣ ARTISTAS EXISTENTES → NUEVO GRUPO
+    for (const [idAp, oldGroupId, rol] of dto.artists) {
+      await this.db.ArtistaEnGrupo.updateMany({
+        where: { idAp, idGr: oldGroupId, fechaFinalizacion: null },
+        data: { fechaFinalizacion: dto.debut },
+      });
   
-      const [idAp, oldGroupId] = tuple;
-      const role = dto.roles?.[apprentices.length + j] ?? "Miembro";
+      const artistaExistente = await this.db.Artista.findUnique({
+        where: { idAp_idGr: { idAp, idGr: oldGroupId } },
+      });
   
-      // Actualizar Artista a nuevo grupo
+      if (!artistaExistente) {
+        throw new Error(`No existe el artista con idAp=${idAp} y idGr=${oldGroupId}`);
+      }
+  
+      const idGrupoOriginal = artistaExistente.idGr;
+  
       await this.db.Artista.update({
         where: { idAp_idGr: { idAp, idGr: oldGroupId } },
         data: { idGr: group.id },
       });
   
-      // Registrar en ArtistaEnGrupo (historial)
       await this.db.ArtistaEnGrupo.create({
         data: {
           idAp,
-          idGrupoDebut: oldGroupId,
+          idGrupoDebut: idGrupoOriginal, // ✅ FK correcta
           idGr: group.id,
           fechaInicio: dto.debut,
           rol,
         },
       });
   
-      // Registrar en ArtistaSolicitaGrupo
-      await this.db.ArtistaSolicitaGrupo.create({
-        data: {
-          idAp,
-          idGr: group.id,
-          idAg: dto.agencyId,
-          idSolicitud: applicationId,
-          estado: "ACEPTADO",
+      await this.db.ArtistaSolicitaGrupo.update({
+        where: {
+          idAp_idGr_idAg_idSolicitud: {
+            idAp,
+            idGr: oldGroupId,
+            idAg: dto.agencyId,
+            idSolicitud: applicationId,
+          },
         },
+        data: { estado: "ACEPTADO" },
       });
     }
   
-    // 4️⃣ Actualizar estado de la solicitud
+    // 4️⃣ CERRAR SOLICITUD
     await this.db.Solicitud.update({
       where: { id: applicationId },
       data: { estado: "TERMINADA" },
     });
   
-    // 5️⃣ Traer grupo actualizado con relaciones
+    // 5️⃣ RETORNAR GRUPO CON RELACIONES
     const groupWithRelations = await this.db.Grupo.findUnique({
       where: { id: group.id },
       include: {
@@ -342,6 +344,7 @@ export class ApplicationRepository implements IApplicationRepository
     return GroupResponseDTO.toEntity(groupWithRelations);
   }
  
+
   async createRol(data: CreateRolApplicationDto): Promise<Application> {
     try {
       const idAgency = Number(data.idAgency);
@@ -359,27 +362,42 @@ export class ApplicationRepository implements IApplicationRepository
         throw new Error("Agency or Concept not found");
       }
   
-      // ============================
-      // ROLES → asegurar LIDER
-      // ============================
-      const roles = data.roles.includes("LIDER")
-        ? data.roles
-        : [...data.roles, "LIDER"];
+// NORMALIZAR ARRAYS (forzar rol)
+// ============================
+
+const apprentices: Array<[number, string]> = (data.apprentices ?? []).map(
+  (a: any) => {
+    // viene como [idAp, rol]
+    if (Array.isArray(a) && a.length === 2) {
+      return [a[0], a[1]];
+    }
+
+    // viene como idAp suelto
+    return [a, "MIEMBRO"];
+  }
+);
+
+const artists: Array<[number, number, string]> = (data.artists ?? []).map(
+  (a: any) => {
+    // viene como [idAp, idGr, rol]
+    if (Array.isArray(a) && a.length === 3) {
+      return [a[0], a[1], a[2]];
+    }
+
+    // viene como [idAp, idGr]
+    return [a[0], a[1], "MIEMBRO"];
+  }
+);
   
       // ============================
-      // CLONAR ARRAYS
+      // AGREGAR CREADOR COMO LÍDER
       // ============================
-      const apprentices = [...(data.apprentices ?? [])];
-      const artists = [...(data.artists ?? [])];
-  
-      // ============================
-      // AGREGAR AL CREADOR
-      // ============================
-  
       if (!data.idGroup) {
         // 👉 creador es APRENDIZ
-        if (!apprentices.includes(data.idApprentice)) {
-          apprentices.push(data.idApprentice);
+        const exists = apprentices.some(([idAp]) => idAp === data.idApprentice);
+  
+        if (!exists) {
+          apprentices.push([data.idApprentice, "LIDER"]);
         }
       } else {
         // 👉 creador es ARTISTA
@@ -389,7 +407,7 @@ export class ApplicationRepository implements IApplicationRepository
         );
   
         if (!exists) {
-          artists.push([data.idApprentice, data.idGroup]);
+          artists.push([data.idApprentice, data.idGroup, "LIDER"]);
         }
       }
   
@@ -401,12 +419,11 @@ export class ApplicationRepository implements IApplicationRepository
           nombreGrupo: data.groupName,
           idAgencia: idAgency,
           idConcepto: idConcept,
-          roles,
           estado: data.status ?? "PENDIENTE",
   
           // --------- CONEXIONES ---------
           AprendizMiembro: {
-            connect: apprentices.map((idAp) => ({ id: idAp })),
+            connect: apprentices.map(([idAp]) => ({ id: idAp })),
           },
   
           ArtistaMiembro: {
@@ -415,20 +432,22 @@ export class ApplicationRepository implements IApplicationRepository
             })),
           },
   
-          // --------- TABLAS PUENTE ---------
+          // --------- SOLICITUDES CON ROL ---------
           SolicitudGrupoAprendiz: {
-            create: apprentices.map((idAp) => ({
+            create: apprentices.map(([idAp, rol]) => ({
               idAp,
               idAg: idAgency,
+              rol,
               estado: "PENDIENTE",
             })),
           },
   
           SolicitudGrupoArtista: {
-            create: artists.map(([idAp, idGr]) => ({
+            create: artists.map(([idAp, idGr, rol]) => ({
               idAp,
               idGr,
               idAg: idAgency,
+              rol,
               estado: "PENDIENTE",
             })),
           },
@@ -455,8 +474,13 @@ export class ApplicationRepository implements IApplicationRepository
     const idAgency = Number(data.idAgency);
     const idConcept = Number(data.idConcept);
   
-    const concept = await this.db.Concepto.findUnique({ where: { id: idConcept } });
-    const agency = await this.db.Agencia.findUnique({ where: { id: idAgency } });
+    const concept = await this.db.Concepto.findUnique({
+      where: { id: idConcept },
+    });
+  
+    const agency = await this.db.Agencia.findUnique({
+      where: { id: idAgency },
+    });
   
     if (!agency || !concept) {
       throw new Error("Agency or Concept not found");
@@ -467,11 +491,15 @@ export class ApplicationRepository implements IApplicationRepository
         nombreGrupo: data.groupName,
         idAgencia: idAgency,
         idConcepto: idConcept,
-        roles: data.roles,
-        estado: "PENDIENTE",
+        estado: data.status ?? "PENDIENTE",
   
+        // =========================
+        // RELACIÓN MIEMBROS
+        // =========================
         AprendizMiembro: {
-          connect: data.apprentices.map(idAp => ({ id: idAp })),
+          connect: data.apprentices.map(([idAp]) => ({
+            id: idAp,
+          })),
         },
   
         ArtistaMiembro: {
@@ -480,19 +508,24 @@ export class ApplicationRepository implements IApplicationRepository
           })),
         },
   
+        // =========================
+        // SOLICITUDES (CON ROL)
+        // =========================
         SolicitudGrupoAprendiz: {
-          create: data.apprentices.map(idAp => ({
+          create: data.apprentices.map(([idAp, rol]) => ({
             idAp,
             idAg: idAgency,
+            rol,
             estado: "PENDIENTE",
           })),
         },
   
         SolicitudGrupoArtista: {
-          create: data.artists.map(([idAp, idGr]) => ({
+          create: data.artists.map(([idAp, idGr, rol]) => ({
             idAp,
             idGr,
             idAg: idAgency,
+            rol,
             estado: "PENDIENTE",
           })),
         },
@@ -549,7 +582,6 @@ export class ApplicationRepository implements IApplicationRepository
           where: { id: Number(id) },
           data: {
             nombreGrupo:data.groupName,
-            roles:data.roles,
             estado:data.status,
           },
         });
