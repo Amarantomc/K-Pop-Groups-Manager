@@ -228,7 +228,7 @@ export class ApplicationRepository implements IApplicationRepository
 
   async createFromApplication(dto: ApplicationCreateGroupDTO,applicationId: number): Promise<Group> {
   
-    // 1️⃣ CREAR GRUPO
+    // 1️⃣ Crear grupo
     const group = await this.db.Grupo.create({
       data: {
         nombreCompleto: dto.groupName,
@@ -241,93 +241,132 @@ export class ApplicationRepository implements IApplicationRepository
       },
     });
   
-    // 2️⃣ APRENDICES → ARTISTAS NUEVOS
-    for (const [idAp, rol] of dto.apprentices) {
-      const artista = await this.db.Artista.create({
+    const apprentices = await this.db.AprendizSolicitaGrupo.findMany({
+      where: {
+        idSolicitud: applicationId,
+        estado: "ACEPTADO"
+      },
+    });
+
+    const artists = await this.db.ArtistaSolicitaGrupo.findMany({
+      where: {
+        idSolicitud: applicationId,
+        estado: "ACEPTADO"
+      },
+    });
+
+    const totalMembers = apprentices.length + artists.length;
+
+    if (totalMembers < 2) {
+     throw new Error("La solicitud no tiene suficientes miembros aceptados. " +
+      "Se requiere al menos 2 personas (aprendices o artistas) para crear un grupo."
+     );
+    }
+    // 3️⃣ APRENDICES → ARTISTAS
+    for (const a of apprentices) {
+  
+      // (opcional pero sano)
+      const aprendizExists = await this.db.Aprendiz.findUnique({
+        where: { id: a.idAp },
+      });
+  
+      if (!aprendizExists) {
+        throw new Error(`Aprendiz ${a.idAp} no existe`);
+      }
+  
+      // 3.1 Crear artista
+      await this.db.Artista.create({
         data: {
-          idAp,
+          idAp: a.idAp,
           idGr: group.id,
           idSolicitud: applicationId,
-          nombreArtistico: `Artista ${idAp}`,
+          nombreArtistico: `Artista ${a.idAp}`,
           fechaDebut: dto.debut,
           estadoArtista: "ACTIVO",
         },
       });
   
+      // 3.2 Historial artista → grupo
       await this.db.ArtistaEnGrupo.create({
         data: {
-          idAp,
-          idGrupoDebut: artista.idGr, // FK correcta
+          idAp: a.idAp,
+          idGrupoDebut: group.id,
           idGr: group.id,
           fechaInicio: dto.debut,
-          rol,
+          rol: a.rol,
         },
       });
   
-      await this.db.AprendizSolicitaGrupo.update({
-        where: {
-          idAp_idAg_idSolicitud: {
-            idAp,
-            idAg: dto.agencyId,
-            idSolicitud: applicationId,
-          },
-        },
-        data: { estado: "ACEPTADO" },
-      });
     }
-  
-    // 3️⃣ ARTISTAS EXISTENTES → NUEVO GRUPO
-    for (const [idAp, oldGroupId, rol] of dto.artists) {
-      await this.db.ArtistaEnGrupo.updateMany({
-        where: { idAp, idGr: oldGroupId, fechaFinalizacion: null },
-        data: { fechaFinalizacion: dto.debut },
-      });
-  
-      const artistaExistente = await this.db.Artista.findUnique({
-        where: { idAp_idGr: { idAp, idGr: oldGroupId } },
-      });
-  
-      if (!artistaExistente) {
-        throw new Error(`No existe el artista con idAp=${idAp} y idGr=${oldGroupId}`);
-      }
-  
-      const idGrupoOriginal = artistaExistente.idGr;
-  
-      await this.db.Artista.update({
-        where: { idAp_idGr: { idAp, idGr: oldGroupId } },
-        data: { idGr: group.id },
-      });
-  
-      await this.db.ArtistaEnGrupo.create({
-        data: {
+
+    // 4️⃣ ARTISTAS EXISTENTES → NUEVO GRUPO
+
+    for (const a of artists) {
+
+    const { idAp, idGr: oldGroupId, rol } = a;
+
+    // 4.1 Cerrar historial activo en grupo viejo
+    await this.db.ArtistaEnGrupo.updateMany({
+      where: {
+        idAp,
+        idGr: oldGroupId,
+        fechaFinalizacion: null,
+      },
+      data: {
+        fechaFinalizacion: new Date(),
+      },
+    });
+
+    // 4.2 Obtener artista actual
+    const artistaExistente = await this.db.Artista.findUnique({
+      where: {
+        idAp_idGr: {
           idAp,
-          idGrupoDebut: idGrupoOriginal, // ✅ FK correcta
-          idGr: group.id,
-          fechaInicio: dto.debut,
-          rol,
+          idGr: oldGroupId,
         },
-      });
-  
-      await this.db.ArtistaSolicitaGrupo.update({
-        where: {
-          idAp_idGr_idAg_idSolicitud: {
-            idAp,
-            idGr: oldGroupId,
-            idAg: dto.agencyId,
-            idSolicitud: applicationId,
-          },
-        },
-        data: { estado: "ACEPTADO" },
-      });
+      },
+    });
+
+    if (!artistaExistente) {
+      throw new Error(
+        `No existe el artista con idAp=${idAp} en grupo ${oldGroupId}`
+      );
     }
+
+    const idGrupoOriginal = artistaExistente.idGr;
+
+    // 4.3 NUEVO HISTORIAL (MIENTRAS FK ES VÁLIDA)
+    await this.db.ArtistaEnGrupo.create({
+      data: {
+        idAp,
+        idGrupoDebut: idGrupoOriginal, // sigue existiendo
+        idGr: group.id,
+        fechaInicio: new Date(),
+        rol,
+      },
+    });
+
+    // 4.4 MOVER ARTISTA AL NUEVO GRUPO
+    await this.db.Artista.update({
+      where: {
+        idAp_idGr: {
+         idAp,
+         idGr: oldGroupId,
+        },
+     },
+     data: {
+       idGr: group.id,
+      },
+    });
+
+ 
+  }
   
-    // 4️⃣ CERRAR SOLICITUD
     await this.db.Solicitud.update({
       where: { id: applicationId },
       data: { estado: "TERMINADA" },
     });
   
-    // 5️⃣ RETORNAR GRUPO CON RELACIONES
     const groupWithRelations = await this.db.Grupo.findUnique({
       where: { id: group.id },
       include: {
@@ -336,8 +375,6 @@ export class ApplicationRepository implements IApplicationRepository
         Agencias: true,
         Artista: { include: { aprendiz: true } },
         HistorialArtistas: true,
-        Lanzamiento: true,
-        Actividades: true,
       },
     });
   
