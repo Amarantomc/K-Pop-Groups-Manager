@@ -168,6 +168,9 @@ export class PopularityListRepository implements IPopularityListRepository{
 
 
       async findAll(): Promise<PopularityList[]> {
+
+      await this.syncPopularityLists();
+
         const popularityLists = await this.db.ListaPopularidad.findMany({
             include: {
                 Canciones: {
@@ -274,49 +277,68 @@ export class PopularityListRepository implements IPopularityListRepository{
         return PopularityListResponseDto.toEntity(popularityList);
       }
 
-      // async addSongToPopularityList( popularityListId: number,songId: number): Promise<PopularityList> {
+      private async syncPopularityLists(): Promise<void> {
+        const now = new Date();
+        const currentYear = now.getFullYear();
       
-      //   const count = await this.db.CancionEnListaDePopularidad.count({
-      //     where: {
-      //       idLista: popularityListId,
-      //     },
-      //   });
+        const oneYearAgo = new Date();
+        oneYearAgo.setFullYear(now.getFullYear() - 1);
       
-      //   await this.db.CancionEnListaDePopularidad.create({
-      //     data: {
-      //       idCa: songId,
-      //       idLista: popularityListId,
-      //       posicion: count + 1,
-      //       año: new Date().getFullYear(),
-      //     },
-      //   });
+        // Obtener todas las listas de popularidad
+        const lists = await this.db.listaPopularidad.findMany();
       
-      //   const popularityList = await this.db.ListaPopularidad.findUnique({
-      //     where: { id: popularityListId },
-      //     include: {
-      //       Canciones: {
-      //         orderBy: {
-      //           posicion: "asc",
-      //         },
-      //         include: {
-      //           cancion: {
-      //             select: {
-      //               id: true,
-      //               titulo: true,
-      //             },
-      //           },
-      //         },
-      //       },
-      //     },
-      //   });
+        for (const list of lists) {
       
-
-      //   if (!popularityList) {
-      //     throw new Error("Popularity list not found");
-      //   }
+          // 1️⃣ Borramos los rankings actuales del año en curso
+          await this.db.cancionEnListaDePopularidad.deleteMany({
+            where: {
+              idLista: list.id,
+              año: currentYear,
+            },
+          });
       
-      //   return PopularityListResponseDto.toEntity(popularityList);
-      // }
+          // 2️⃣ Canciones elegibles para la lista
+          const songs = await this.db.cancion.findMany({
+            where: {
+              fechaLanzamiento: {
+                lte: oneYearAgo, // lanzadas hace más de un año
+              },
+              reproducciones: {
+                gte: list.requisito, // cumplen el requisito mínimo
+              },
+            },
+            orderBy: {
+              reproducciones: 'desc', // de más a menos reproducciones
+            },
+          });
+      
+          let position = 1;
+      
+          // 3️⃣ Insertar o actualizar canciones en la lista
+          for (const song of songs) {
+            await this.db.cancionEnListaDePopularidad.upsert({
+              where: {
+                idCa_idLista: {
+                  idCa: song.id,
+                  idLista: list.id,
+                },
+              },
+              update: {
+                posicion: position,
+                año: currentYear,
+              },
+              create: {
+                idCa: song.id,
+                idLista: list.id,
+                posicion: position,
+                año: currentYear,
+              },
+            });
+      
+            position++;
+          }
+        }
+      }
 
     
 

@@ -16,68 +16,6 @@ export class SongRepository implements ISongRepository{
   }
 
 
-  private async syncPopularityLists(): Promise<void> {
-    const now = new Date();
-    const currentYear = now.getFullYear();
-  
-    const oneYearAgo = new Date();
-    oneYearAgo.setFullYear(now.getFullYear() - 1);
-  
-    // Obtener todas las listas de popularidad
-    const lists = await this.db.listaPopularidad.findMany();
-  
-    for (const list of lists) {
-  
-      // 1️⃣ Borramos los rankings actuales del año en curso
-      await this.db.cancionEnListaDePopularidad.deleteMany({
-        where: {
-          idLista: list.id,
-          año: currentYear,
-        },
-      });
-  
-      // 2️⃣ Canciones elegibles para la lista
-      const songs = await this.db.cancion.findMany({
-        where: {
-          fechaLanzamiento: {
-            lte: oneYearAgo, // lanzadas hace más de un año
-          },
-          reproducciones: {
-            gte: list.requisito, // cumplen el requisito mínimo
-          },
-        },
-        orderBy: {
-          reproducciones: 'desc', // de más a menos reproducciones
-        },
-      });
-  
-      let position = 1;
-  
-      // 3️⃣ Insertar o actualizar canciones en la lista
-      for (const song of songs) {
-        await this.db.cancionEnListaDePopularidad.upsert({
-          where: {
-            idCa_idLista: {
-              idCa: song.id,
-              idLista: list.id,
-            },
-          },
-          update: {
-            posicion: position,
-            año: currentYear,
-          },
-          create: {
-            idCa: song.id,
-            idLista: list.id,
-            posicion: position,
-            año: currentYear,
-          },
-        });
-  
-        position++;
-      }
-    }
-  }
 
     async create(data: CreateSongDto): Promise<Song> {
         const created = await this.db.cancion.create({
@@ -151,7 +89,6 @@ export class SongRepository implements ISongRepository{
 
     async findAll(): Promise<Song[]> {
 
-      await this.syncPopularityLists();
 
      const songs= await this.db.cancion.findMany({
       include: {

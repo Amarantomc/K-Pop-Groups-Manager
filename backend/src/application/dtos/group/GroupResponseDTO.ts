@@ -37,19 +37,19 @@ export class GroupResponseDTO {
       group.debut,
       group.status,
       group.memberCount,
-
+  
       group.agency
         ? AgencyResponseDTO.fromEntity(group.agency)
         : null,
-
+  
       group.concept
         ? ConceptResponseDto.fromEntity(group.concept)
         : undefined,
-
+  
       group.visualConcept
         ? VisualConceptResponseDto.fromEntity(group.visualConcept)
         : undefined,
-
+  
       group.members ?? [],
       group.albums ?? [],
       group.activities ?? []
@@ -64,19 +64,32 @@ export class GroupResponseDTO {
   static toEntity(group: any): Group {
     return new Group({
       id: group.id,
-      name: group.nombreCompleto ?? group.name,
-      debut: group.fechaDebut ?? group.debut,
-      status: group.estadoGrupo ?? group.status,
-      memberCount: group.Nomiembros ?? group.memberCount,
+      name: group.nombreCompleto,
+      debut: group.fechaDebut,
+      status: group.estadoGrupo,
+      memberCount: group.Nomiembros,
+  
+      // AGENCIA (tomamos la primera)
+      agency: group.Agencias?.length
+        ? AgencyResponseDTO.toEntity(group.Agencias[0])
+        : undefined,
+  
+      // CONCEPTOS
+      concept: group.concepto ?? null,
+      visualConcept: group.conceptoVisual ?? null,
+  
+      members: group.HistorialArtistas
+      ?.filter((h: any) => h.fechaFinalizacion === null)
+      .map((h: any) => ({
+         apprenticeId: h.idAp,
+         groupId: h.idGr,
+         realName: h.artista?.aprendiz?.nombreCompleto ?? "",
+         artisticName: h.artista?.nombreArtistico ?? "",
+         rol: h.rol,
+      })) ?? [],
 
-      agency: group.agency ?? null,
-      concept: group.concept ?? null,
-      visualConcept: group.visualConcept ?? null,
+    })
 
-      members: group.members ?? [],
-      albums: group.albums ?? [],
-      activities: group.activities ?? []
-    });
   }
 
   static toEntities(groups: any[]): Group[] {
