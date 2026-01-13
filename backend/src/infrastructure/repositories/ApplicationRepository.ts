@@ -345,20 +345,6 @@ export class ApplicationRepository implements IApplicationRepository
         rol,
       },
     });
-
-    // 4.4 MOVER ARTISTA AL NUEVO GRUPO
-    await this.db.Artista.update({
-      where: {
-        idAp_idGr: {
-         idAp,
-         idGr: oldGroupId,
-        },
-     },
-     data: {
-       idGr: group.id,
-      },
-    });
-
  
   }
   
@@ -378,6 +364,7 @@ export class ApplicationRepository implements IApplicationRepository
       },
     });
   
+    console.log(groupWithRelations);
     return GroupResponseDTO.toEntity(groupWithRelations);
   }
  
@@ -400,7 +387,6 @@ export class ApplicationRepository implements IApplicationRepository
       }
   
 // NORMALIZAR ARRAYS (forzar rol)
-// ============================
 
 const apprentices: Array<[number, string]> = (data.apprentices ?? []).map(
   (a: any) => {
@@ -426,9 +412,7 @@ const artists: Array<[number, number, string]> = (data.artists ?? []).map(
   }
 );
   
-      // ============================
       // AGREGAR CREADOR COMO LÍDER
-      // ============================
       if (!data.idGroup) {
         // 👉 creador es APRENDIZ
         const exists = apprentices.some(([idAp]) => idAp === data.idApprentice);
@@ -448,9 +432,7 @@ const artists: Array<[number, number, string]> = (data.artists ?? []).map(
         }
       }
   
-      // ============================
       // CREAR SOLICITUD
-      // ============================
       const application = await this.db.Solicitud.create({
         data: {
           nombreGrupo: data.groupName,
