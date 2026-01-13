@@ -17,11 +17,17 @@ export class AgencyRoutes {
 
 	private setupRoutes(): void {
 		//this.router.use(AuthMiddleware.authenticate())
-		this.router.post("/", RoleMiddleware.onlyStaff(), (req, res) =>this.agencyController.createAgency(req, res));
+		this.router.post("/",
+			AuthMiddleware.authenticate(),
+			RoleMiddleware.onlyStaff(),
+			(req, res) =>this.agencyController.createAgency(req, res));
 		this.router.get("/", (req, res) =>this.agencyController.listAgencies(req, res));
 		this.router.get("/:id", (req, res) =>this.agencyController.getAgency(req, res));
 		this.router.put("/:id", RoleMiddleware.onlyStaff(), (req, res) =>this.agencyController.updateAgency(req, res));
-		this.router.delete("/:id", RoleMiddleware.onlyStaff(), (req, res) =>this.agencyController.deleteAgency(req, res));
+		this.router.delete("/:id",
+			AuthMiddleware.authenticate(),
+			RoleMiddleware.onlyStaff(), 
+			(req, res) =>this.agencyController.deleteAgency(req, res));
 		this.router.get("/search/agency_name", (req, res) =>this.agencyController.findAgenciesByName(req, res));
 		this.router.get("/search/agency_address", (req, res) =>this.agencyController.findAgenciesByAddress(req, res));
 		this.router.get("/search/agency_foundation", (req, res) =>this.agencyController.findAgenciesByFoundation(req, res));
