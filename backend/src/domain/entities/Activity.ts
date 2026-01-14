@@ -11,9 +11,17 @@ export class Activity {
     readonly place: string;
     readonly eventType:string;
     readonly status: string;
-    readonly artists: Artist[];
-    //readonly groups: Group[];
-    //readonly income: Income | null;
+    readonly artists?: Array<{
+        apprenticeId: number;
+        groupId: number;
+        artistName: string;
+      }>;
+    readonly incomes?: {
+        idIncome: number;
+        amount: number;
+        type: string;
+        date: Date;
+      }[]
 
     constructor(attrs: {
         id: number;
@@ -22,10 +30,17 @@ export class Activity {
         date: Date ;
         place: string;
         eventType:string;
-        status: string
-        artists: Artist[];
-        //groups: Group[];
-       // income: Income ;
+        status: string;
+        artists: Array<{
+            apprenticeId: number;
+            groupId: number;
+            artistName: string;
+          }>;
+        incomes: {
+            idIncome: number;
+            amount: number;
+            type: string;
+            date: Date;}[] ;
     }) {
         this.id = attrs.id;
         this.responsible = attrs.responsible;
@@ -35,7 +50,6 @@ export class Activity {
         this.artists = attrs.artists;
         this.eventType=attrs.eventType;
         this.status = attrs.status
-        //this.groups = attrs.groups;
-        //this.income = attrs.income;
+        this.incomes = attrs.incomes;
     }
 }

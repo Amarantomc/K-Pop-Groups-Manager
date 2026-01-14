@@ -1,7 +1,9 @@
 import type { Agency } from "../../../domain/entities/Agency";
 import { Group } from "../../../domain/entities/Group";
+import { ActivityResponseDto } from "../activity/ActivityResponseDto";
 
 import { AgencyResponseDTO } from "../agency/AgencyResponseDTO";
+import type { AlbumResponseDto } from "../album/AlbumResponseDto";
 import { ConceptResponseDto } from "../concept/ConceptResponseDto";
 import { VisualConceptResponseDto } from "../visualConcept/VisualConceptResponseDto";
 
@@ -25,8 +27,8 @@ export class GroupResponseDTO {
       artisticName: string;
     }>,
 
-    public readonly albums?: any[],
-    public readonly activities?: any[]
+    public readonly albums?: AlbumResponseDto[],
+    public readonly activities?: ActivityResponseDto[] 
   ) {}
 
 
@@ -52,7 +54,11 @@ export class GroupResponseDTO {
   
       group.members ?? [],
       group.albums ?? [],
-      group.activities ?? []
+      group.activities
+      ? group.activities.map(a => ActivityResponseDto.fromEntity(ActivityResponseDto.toEntity(a)))
+      : [],
+
+
     );
   }
 
@@ -77,7 +83,8 @@ export class GroupResponseDTO {
       // CONCEPTOS
       concept: group.concepto ?? null,
       visualConcept: group.conceptoVisual ?? null,
-  
+      
+      // MIEMBROS
       members: group.HistorialArtistas
       ?.filter((h: any) => h.fechaFinalizacion === null)
       .map((h: any) => ({
@@ -88,8 +95,17 @@ export class GroupResponseDTO {
          rol: h.rol,
       })) ?? [],
 
-    })
+      //ALBUMS
+      albums: group.Lanzamiento
+      ?.map((la: any) => la.album)
+      ?? [],
 
+      //ACTIVITIES
+      activities: group.Actividades
+      ?.map((pa: any) => pa.actividad)
+      ?? [],
+
+    })
   }
 
   static toEntities(groups: any[]): Group[] {

@@ -209,19 +209,21 @@
     }
 
     async getAll(): Promise<Activity[]> {
-
       await this.cancelExpiredActivities();
-
+    
       const activities = await this.db.actividad.findMany({
         include: {
           Ingreso: true,
-          Personas: {
+          Personas: { // usar el nombre correcto según tu schema
             include: {
-              artista: true
+              artista: true // aquí está el artista
             }
           }
         }
       });
+    
+      // Debug: ver qué trae realmente Prisma
+    
       return ActivityResponseDto.toEntities(activities);
     }
 
