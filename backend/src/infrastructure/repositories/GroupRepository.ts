@@ -64,10 +64,19 @@ export class GroupRepository implements IGroupRepository {
 			},
 	  
 			Actividades: {
-			  include: {
-				actividad: true
-			  }
-			},
+				include: {
+				  actividad: {
+					include: {
+					  Personas: {
+						include: {
+						  artista: true
+						}
+					  },
+					  Ingreso: true
+					}
+				  }
+				}
+			  },
 	  
 			Lanzamiento: {
 			  include: {
@@ -82,14 +91,18 @@ export class GroupRepository implements IGroupRepository {
 		return GroupResponseDTO.toEntity({
 		  ...group,
 	  
-		  members: group.HistorialArtistas.map((h: { idAp: any; idGr: any; artista: { aprendiz: { nombreCompleto: any; }; nombreArtistico: any; }; }) => ({
+		    members: group.HistorialArtistas.map((h: { idAp: any; idGr: any; artista: { aprendiz: { nombreCompleto: any; }; nombreArtistico: any; }; }) => ({
 			apprenticeId: h.idAp,
 			groupId: h.idGr,
 			realName: h.artista.aprendiz.nombreCompleto,
 			artisticName: h.artista.nombreArtistico
 		  })),
 	  
-		  activities: group.Actividades.map((a: { actividad: any; }) => a.actividad),
+		  activities: group.Actividades.map((pa: { actividad: { Personas: any; Ingreso: any; }; }) => ({
+			...pa.actividad,
+			Personas: pa.actividad.Personas,
+			Ingreso: pa.actividad.Ingreso
+		  })),
 	  
 		  albums: group.Lanzamiento.map((l: { album: any; }) => l.album)
 		});

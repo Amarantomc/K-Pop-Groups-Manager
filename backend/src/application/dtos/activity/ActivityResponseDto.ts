@@ -7,8 +7,8 @@ export class ActivityResponseDto {
   constructor(
     public readonly id: number,
     public readonly responsible: string,
-    public readonly activityType: string,
-    public readonly date: string,
+    public readonly activityType: string | null,
+    public readonly date: string | null,
     public readonly place: string,
     public readonly eventType: string,
     public readonly status:string,
@@ -17,38 +17,65 @@ export class ActivityResponseDto {
       groupId: number;
       artistName: string;
     }>,
-    public readonly income?: {
+    public readonly incomes?: {
       idIncome: number;
       amount: number;
       type: string;
-      date: string;
-    }
+      date: Date;
+    }[]
   ) {}
 
   static fromEntity(activity: Activity): ActivityResponseDto {
     return new ActivityResponseDto(
       activity.id,
       activity.responsible,
-      activity.activityType.toString(),
-      activity.date.toDateString(),
+      activity.activityType ?? null,
+      activity.date ? activity.date.toISOString() : null,
       activity.place,
       activity.eventType,
-      activity.status
+      activity.status,
+  
+      // ARTISTAS
+      activity.artists?.map(a => ({
+        apprenticeId: a.apprenticeId,
+        groupId: a.groupId,
+        artistName: a.artistName
+      })) ?? [],
+  
+      // INGRESOS
+      activity.incomes?.map(i => ({
+        idIncome: i.idIncome,
+        amount: i.amount,
+        type: i.type,
+        date: i.date,
+      })) ?? []
     );
   }
 
   static toEntity(activity: any): Activity {
-    let artista : Artist []=[]
-    //let ingreso =null
-    if(activity.Artista){
-      artista= activity.Artista.map((a: { idAp: any; idGr: any; nombreArtistico: any; fechaDebut: any; estadoArtista: ArtistStatus; }) => new Artist({ApprenticeId:a.idAp,
-        GroupId:a.idGr,
-        ArtistName:a.nombreArtistico,
-        DebutDate:a.fechaDebut,
-        Status:a.estadoArtista }))
-    }
-
-    
+    // ARTISTAS desde PersonasEnActividad
+    const artists: Array<{
+      apprenticeId: number;
+      groupId: number;
+      artistName: string;
+    }> =
+      activity.Personas
+        ?.filter((p: any) => p.artista)
+        .map((p: any) => ({
+          apprenticeId: p.artista.idAp,
+          groupId: p.artista.idGr,
+          artistName: p.artista.nombreArtistico
+        })) ?? [];
+  
+    // INGRESOS
+    const incomes =
+      activity.Ingreso?.map((i: any) => ({
+        idIncome: i.idIng,
+        amount: Number(i.monto),
+        type: i.descripcion,
+        date: i.fecha
+      })) ?? [];
+  
     return new Activity({
       id: activity.id,
       responsible: activity.responsable,
@@ -57,8 +84,8 @@ export class ActivityResponseDto {
       place: activity.lugar,
       eventType: activity.tipoEvento,
       status: activity.estado,
-      artists:artista ? artista : [],
-    
+      artists,
+      incomes
     });
   }
 

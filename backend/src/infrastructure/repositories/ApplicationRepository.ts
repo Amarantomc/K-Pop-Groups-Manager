@@ -364,7 +364,7 @@ export class ApplicationRepository implements IApplicationRepository
       },
     });
   
-    console.log(groupWithRelations);
+    //console.log(groupWithRelations);
     return GroupResponseDTO.toEntity(groupWithRelations);
   }
  
