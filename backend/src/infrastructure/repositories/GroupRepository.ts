@@ -416,7 +416,16 @@ export class GroupRepository implements IGroupRepository {
 	  
 			Actividades: {
 			  include: {
-				actividad: true
+				actividad: {
+				  include: {
+					Personas: {
+					  include: {
+						artista: true
+					  }
+					},
+					Ingreso: true
+				  }
+				}
 			  }
 			},
 	  
@@ -428,28 +437,37 @@ export class GroupRepository implements IGroupRepository {
 		  }
 		});
 	  
-		return groups.map((group: { Agencias: string | any[]; concepto: any; conceptoVisual: any; HistorialArtistas: { idAp: any; idGr: any; artista: { aprendiz: { nombreCompleto: any; }; nombreArtistico: any; }; }[]; Actividades: { actividad: any; }[]; Lanzamiento: { album: any; }[]; }) =>
+		return groups.map((group: { Agencias: string | any[]; concepto: any; conceptoVisual: any; HistorialArtistas: any[]; Actividades: any[]; Lanzamiento: any[]; }) =>
 		  GroupResponseDTO.toEntity({
 			...group,
 	  
+			// Agencia: tomamos la primera si existe
 			agency: group.Agencias.length ? group.Agencias[0] : null,
 	  
+			// Conceptos
 			concept: group.concepto,
 			visualConcept: group.conceptoVisual,
 	  
-			members: group.HistorialArtistas.map((h: { idAp: any; idGr: any; artista: { aprendiz: { nombreCompleto: any; }; nombreArtistico: any; }; }) => ({
+			// Miembros
+			members: group.HistorialArtistas.map(h => ({
 			  apprenticeId: h.idAp,
 			  groupId: h.idGr,
 			  realName: h.artista.aprendiz.nombreCompleto,
 			  artisticName: h.artista.nombreArtistico
 			})),
 	  
-			activities: group.Actividades.map((a: { actividad: any; }) => a.actividad),
+			// Actividades
+			activities: group.Actividades.map(pa => ({
+			  ...pa.actividad,
+			  Personas: pa.actividad.Personas,
+			  Ingreso: pa.actividad.Ingreso
+			})),
 	  
-			albums: group.Lanzamiento.map((l: { album: any; }) => l.album)
+			// Álbumes
+			albums: group.Lanzamiento.map(l => l.album)
 		  })
 		);
-	}
+	  }
 
 	async addMembers(groupId: number,artistIds: number[],artistRoles: string[]): Promise<void> {
 		const today = new Date();
