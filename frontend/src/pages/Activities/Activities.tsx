@@ -8,19 +8,6 @@ import { activityConstraints } from '../../config/modalConstraints';
 import './Activities.css';
 import ModalCreate from '../../components/modal/ModalCreate';
 
-interface Activity {
-  id: number;
-  artistName: string;
-  groupName: string;
-  title: string;
-  type: string;
-  date: string;
-  time: string;
-  location: string;
-  status: string;
-  description: string;
-}
-
 const Activities: React.FC = () => {
   const { user } = useAuth();
   const [activities, setActivities] = useState<any[]>([]);
@@ -36,6 +23,11 @@ const Activities: React.FC = () => {
   const [showIncomeModal, setShowIncomeModal] = useState(false);
   const [successContext, setSuccessContext] = useState<string | null>(null);
   const [lastCreatedActivity, setLastCreatedActivity] = useState<any | null>(null);
+  const [openAcceptActivity, setOpenAcceptActivity] = useState(false);
+  const [openRejectActivity,setOpenRejectActivity] = useState(false);
+  const [openConfirmAcceptActivity,setOpenConfirmAcceptActivity] = useState(false);
+  const [openConfirmRejectActivity,setOpenConfirmRejectActivity] = useState(false);
+
 
   const updateDate = (date: string) => {
     setClickedDate(date)
@@ -117,11 +109,11 @@ const Activities: React.FC = () => {
 
   const askConfirm = (id: number) => {
     setSelectedActivity(id)
-    handleAcceptActivity()
+    setOpenConfirmAcceptActivity(true)
   }
   const askCancelled = (id: number) => {
     setSelectedActivity(id)
-    handleRejectActivity()
+    setOpenConfirmRejectActivity(true)
   }
 
   const handleDelete = async () => {
@@ -292,9 +284,12 @@ const Activities: React.FC = () => {
       setActivities(prev =>
         prev.map(a => a.id === selectedActivity.id ? { ...a, status: 'confirmed' } : a)
       );
-      setSelectedActivity({ ...selectedActivity, status: 'confirmed' });
+      setOpenAcceptActivity(true);
     } catch (error) {
       console.error('Error al aceptar actividad:', error);
+    }finally{
+      setOpenConfirmAcceptActivity(false)
+      setSelectedActivity(null);
     }
   };
 
@@ -321,9 +316,12 @@ const Activities: React.FC = () => {
       setActivities(prev =>
         prev.map(a => a.id === selectedActivity.id ? { ...a, status: 'cancelled' } : a)
       );
-      setSelectedActivity({ ...selectedActivity, status: 'cancelled' });
+      setOpenRejectActivity(true);
     } catch (error) {
       console.error('Error al rechazar actividad:', error);
+    }finally{
+      setOpenConfirmRejectActivity(false)
+      setSelectedActivity(null);
     }
   };
 
@@ -454,6 +452,40 @@ const Activities: React.FC = () => {
             confirmText="Aceptar"
             showDeleteButton={false}
           />
+          {/* Para mostrar mensaje al aceptar o rechazar actividad */}
+          <ConfirmDialog
+                  type="success"
+                  title="Exito"
+                  message="Se ha aceptado la actividad"
+                  open={openAcceptActivity}
+                  onCancel={() => setOpenAcceptActivity(false)}
+                  onConfirm={() => setOpenAcceptActivity(false)}
+                  confirmText="Aceptar"
+                  showDeleteButton={false}
+            />
+            <ConfirmDialog
+                    title=" "
+                    message="Actividad Rechazada"
+                    type="error"
+                    open={openRejectActivity}
+                    onCancel={() => setOpenRejectActivity(false)}
+                    onConfirm={() => setOpenRejectActivity(false)}
+                    confirmText="Aceptar"
+                    showDeleteButton={false} />
+            <ConfirmDialog 
+            message="¿Está seguro que desea aceptar esta actividad?"
+            open={openConfirmAcceptActivity}
+            onCancel={() => setOpenConfirmAcceptActivity(false)}
+            onConfirm={handleAcceptActivity}
+            type='confirm'
+            />
+            <ConfirmDialog
+            message="¿Está seguro que desea rechazar esta actividad?"
+            open={openConfirmRejectActivity}
+            onCancel={() => setOpenConfirmRejectActivity(false)}
+            onConfirm={handleRejectActivity}
+            type='confirm'
+            />
         </>
       )}
       {showIncomeModal && (
