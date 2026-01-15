@@ -37,6 +37,7 @@ const ListAgency: React.FC = () => {
       const fetchAgencies = async () => {
         try {
           const token = localStorage.getItem('token')
+          console.log(JSON.parse(atob(token.split('.')[1])));
           const response = await fetch('http://localhost:3000/api/agency', {
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -66,12 +67,12 @@ const ListAgency: React.FC = () => {
 
   const handleDelete = async () => {
     if (agencyToDelete === null) return;
-    const token = localStorage.getItem('token');
-    const headers: Record<string, string> = {};
-    if (token) headers['Authorization'] = `Bearer ${token}`;
     try {
       const response = await fetch(`http://localhost:3000/api/agency/${agencyToDelete}`, {
-        method: "DELETE"
+        method: "DELETE",
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
       });
 
       const result = await response.json();

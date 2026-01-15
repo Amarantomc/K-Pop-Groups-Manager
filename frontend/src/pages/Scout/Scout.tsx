@@ -136,7 +136,7 @@ const Scout: React.FC = () => {
     setapprenticeID(artistRow.ApprenticeId || '');
     if(isArtist)
       {
-        SetgroupId(artistRow.id || '')
+        SetgroupId(artistRow.GroupId || '')
       } else{
         SetgroupId(artistRow.GroupId);
       }
@@ -169,6 +169,8 @@ const Scout: React.FC = () => {
 
   const handleContractSave = async (formData: any) => {
     try {
+      console.log("Form Data",formData)
+      console.log("UserInfo",user?.profileData)
       console.log(apprenticeID);
       console.log(groupID);
       const token = localStorage.getItem('token');
@@ -183,7 +185,7 @@ const Scout: React.FC = () => {
         apprenticeId: isArtist ? (apprenticeID || formData.apprenticeId || '') : '',
         groupId: groupID || formData.groupId || formData.GroupId || '',
       };
-      console.log(payload)
+      console.log("payload",payload)
       
       const url = 'http://localhost:3000/api/contract'
       const response = await fetch(url, {
@@ -250,6 +252,7 @@ const Scout: React.FC = () => {
             ApprenticeId: artist.ApprenticeId,
             GroupId: artist.GroupId,
           }));
+          console.log(formattedArtistData)
           setArtistsScoutRows(formattedArtistData)
 
           const group_response =  await fetch('http://localhost:3000/api/contract/offer/group', {
