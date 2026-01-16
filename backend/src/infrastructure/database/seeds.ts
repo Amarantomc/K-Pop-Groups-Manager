@@ -915,6 +915,8 @@ async function main() {
 //#region  HISTORIAL DE ARTISTAS EN GRUPOS
 console.log('📚 Creando historial de artistas en grupos...')
 
+const ROLES = ["VOCALISTA", "RAPERO", "BAILARIN", "VISUAL"];
+
 const historialArtistas = [
   // ARTISTAS BASE (debut → otros grupos)
 
@@ -1048,6 +1050,91 @@ for (const h of historialArtistas) {
   })
 }
 
+
+
+const artistasHistorial = await prisma.artista.findMany({
+  where: {
+    idAp: { gte: 17, lte: 40 }
+  },
+  orderBy: { idAp: "asc" }
+});
+
+const artistasPorGrupo = new Map<number, typeof artistasHistorial>();
+
+for (const a of artistasHistorial) {
+  if (!artistasPorGrupo.has(a.idGr)) {
+    artistasPorGrupo.set(a.idGr, []);
+  }
+  artistasPorGrupo.get(a.idGr)!.push(a);
+}
+
+
+for (const [idGr, miembros] of artistasPorGrupo) {
+
+  if (miembros.length < 2) continue;
+
+  // Ordenar por debut
+  miembros.sort(
+    (a, b) => a.fechaDebut.getTime() - b.fechaDebut.getTime()
+  );
+
+  let rolIndex = 0;
+  let liderAsignado = false;
+
+  for (let i = 0; i < miembros.length; i++) {
+    const a = miembros[i];
+    const esLider = !liderAsignado;
+    if (esLider) liderAsignado = true;
+
+    const activo = a!.estadoArtista === "ACTIVO";
+    const rol = ROLES[rolIndex++ % ROLES.length]
+
+
+    // LÓGICA DE FECHAS
+    const fechaInicio =
+      i === 0
+        ? a!.fechaDebut
+        : new Date(a!.fechaDebut.getTime() + 1000 * 60 * 60 * 24 * 90 * i);
+
+    let fechaFinalizacion: Date | null = null;
+
+    // Inactivos SIEMPRE terminan
+    if (!activo) {
+      fechaFinalizacion = new Date("2024-01-01");
+    }
+
+    // si hay muchos miembros, uno se va antes
+    if (miembros.length >= 4 && i === 2 && activo) {
+      fechaFinalizacion = new Date("2023-12-01");
+    }
+
+    await prisma.artistaEnGrupo.create({
+      data: {
+        idAp: a!.idAp,
+        idGrupoDebut: a!.idGr, 
+        idGr: idGr,                   
+        fechaInicio,
+        fechaFinalizacion,
+        rol: esLider ? "LIDER" : !rol ? "MIEMBRO" : rol ,
+      }
+    });
+  }
+}
+
+//Actualizar numero de miembros
+for (const [idGr] of artistasPorGrupo) {
+  const count = await prisma.artistaEnGrupo.count({
+    where: {
+      idGr,
+      fechaFinalizacion: null
+    }
+  });
+
+  await prisma.grupo.update({
+    where: { id: idGr },
+    data: { Nomiembros: count }
+  });
+}
 console.log('✅ Historial de artistas creado correctamente')
 //#endregion
 
