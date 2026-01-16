@@ -11,7 +11,7 @@ import type { CreateGroupToApplicationUseCase } from "../../application/usesCase
 import type { AttractApprenticesUseCase } from "../../application/usesCase/apprentice/AttractApprenticeUsaCase";
 import type { CreateRolApplicationUseCase } from "../../application/usesCase/application(solicitud)/CreateRolApplicationUseCase";
 import { CreateRolApplicationDto } from "../../application/dtos/application(solicitud)/CreateRolApplicationDto";
-import type { GetApprenticesWhithoutApplicationUseCase } from "../../application/usesCase/apprentice/getApprenticesWhithoutApplicationUseCase";
+import type { GetApprenticesWhithoutApplicationUseCase } from "../../application/usesCase/apprentice/GetApprenticesWhithoutApplicationUseCase";
 import type { ApprenticeDecisionByApplicationUseCase } from "../../application/usesCase/apprentice/ApprenticeDecisionByApplicationUseCase";
 import type { ArtistDecisionByApplicationUseCase } from "../../application/usesCase/apprentice/ArtistDecisionByApplicationUseCase";
 import type { SoloistsArtistWhithoutApplicationUseCase } from "../../application/usesCase/application(solicitud)/SoloistsArtistWhithoutApplicationUseCase";

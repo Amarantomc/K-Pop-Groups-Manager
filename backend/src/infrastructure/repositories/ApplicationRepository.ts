@@ -47,7 +47,11 @@ export class ApplicationRepository implements IApplicationRepository
   async apprenticeDecisionByApplication(idApplication: number,idApprentice: number,decision: boolean): Promise<void> {
   
     const solicitud = await this.db.Solicitud.findUnique({
-      where: { id: idApplication },
+      where: 
+      { 
+        id: idApplication,
+        estado: "PENDIENTE"
+      },
       select: { idAgencia: true },
     });
   
@@ -119,7 +123,11 @@ export class ApplicationRepository implements IApplicationRepository
   async artistDecisionByApplication(idApplication: number,idApprentice: number,idGroup: number,decision: boolean): Promise<void> {
   
     const solicitud = await this.db.Solicitud.findUnique({
-      where: { id: idApplication },
+      where: 
+      { 
+        id: idApplication,
+        estado: "PENDIENTE"
+      },
       select: { idAgencia: true },
     });
   
@@ -227,8 +235,23 @@ export class ApplicationRepository implements IApplicationRepository
   }
 
   async createFromApplication(dto: ApplicationCreateGroupDTO,applicationId: number): Promise<Group> {
-  
-    // 1️⃣ Crear grupo
+    
+    // Verificar si la solicitud es valida o existe 
+    const application = await this.db.Solicitud.findUnique({
+      where:{
+        id: applicationId
+      }
+    });
+
+    if(!application){
+      throw new Error("Solicitud no encontrada");
+    }
+
+    if(application.estado == "TERMINADA"){
+      throw new Error("Solicitud ya aceptada");
+    }
+
+    // Crear grupo
     const group = await this.db.Grupo.create({
       data: {
         nombreCompleto: dto.groupName,
@@ -262,7 +285,7 @@ export class ApplicationRepository implements IApplicationRepository
       "Se requiere al menos 2 personas (aprendices o artistas) para crear un grupo."
      );
     }
-    // 3️⃣ APRENDICES → ARTISTAS
+    //  APRENDICES → ARTISTAS
     for (const a of apprentices) {
   
       // (opcional pero sano)
@@ -274,7 +297,7 @@ export class ApplicationRepository implements IApplicationRepository
         throw new Error(`Aprendiz ${a.idAp} no existe`);
       }
   
-      // 3.1 Crear artista
+      //  Crear artista
       await this.db.Artista.create({
         data: {
           idAp: a.idAp,
@@ -286,7 +309,7 @@ export class ApplicationRepository implements IApplicationRepository
         },
       });
   
-      // 3.2 Historial artista → grupo
+      //  Historial artista → grupo
       await this.db.ArtistaEnGrupo.create({
         data: {
           idAp: a.idAp,
@@ -299,13 +322,13 @@ export class ApplicationRepository implements IApplicationRepository
   
     }
 
-    // 4️⃣ ARTISTAS EXISTENTES → NUEVO GRUPO
+    //  ARTISTAS EXISTENTES → NUEVO GRUPO
 
     for (const a of artists) {
 
     const { idAp, idGr: oldGroupId, rol } = a;
 
-    // 4.1 Cerrar historial activo en grupo viejo
+    //  Cerrar historial activo en grupo viejo
     await this.db.ArtistaEnGrupo.updateMany({
       where: {
         idAp,
@@ -317,7 +340,7 @@ export class ApplicationRepository implements IApplicationRepository
       },
     });
 
-    // 4.2 Obtener artista actual
+    //  Obtener artista actual
     const artistaExistente = await this.db.Artista.findUnique({
       where: {
         idAp_idGr: {
@@ -335,7 +358,7 @@ export class ApplicationRepository implements IApplicationRepository
 
     const idGrupoOriginal = artistaExistente.idGr;
 
-    // 4.3 NUEVO HISTORIAL (MIENTRAS FK ES VÁLIDA)
+    //  NUEVO HISTORIAL (MIENTRAS FK ES VÁLIDA)
     await this.db.ArtistaEnGrupo.create({
       data: {
         idAp,
@@ -347,12 +370,36 @@ export class ApplicationRepository implements IApplicationRepository
     });
  
   }
-  
+
+  //terminar ya con la solicitud 
     await this.db.Solicitud.update({
       where: { id: applicationId },
       data: { estado: "TERMINADA" },
     });
-  
+
+  //#region Rechazar a los artistas y aprendices en pendiente
+    await this.db.AprendizSolicitaGrupo.updateMany({
+      where: {
+        idSolicitud: applicationId,
+        estado: "PENDIENTE"
+      },
+      data:{
+        estado: "RECHAZADO"
+      },
+    });
+
+    await this.db.ArtistaSolicitaGrupo.updateMany({
+      where: {
+        idSolicitud: applicationId,
+        estado: "PENDIENTE"
+      },
+      data:{
+        estado: "RECHAZADO"
+      },
+    });
+  //#endregion
+
+
     const groupWithRelations = await this.db.Grupo.findUnique({
       where: { id: group.id },
       include: {
@@ -369,7 +416,65 @@ export class ApplicationRepository implements IApplicationRepository
   }
  
 
+  private async checkCreatorCanCreateApplication(idApprentice: number,idGroup: number | undefined): Promise<void> {
+  
+    // ES APRENDIZ
+    if (idGroup === undefined) {
+      const acceptedRequest = await this.db.AprendizSolicitaGrupo.findFirst({
+        where: {
+          idAp: idApprentice,
+          estado: "ACEPTADO",
+        },
+      });
+  
+      if (acceptedRequest) {
+        throw new Error(
+          "El aprendiz ya tiene una solicitud aceptada y no puede crear otra"
+        );
+      }
+  
+      return;
+    }
+  
+    // ES ARTISTA
+  
+    // Verificar que sea SOLISTA
+    const activeGroup = await this.db.ArtistaEnGrupo.findFirst({
+      where: {
+        idAp: idApprentice,
+        idGr: idGroup,
+        fechaFinalizacion: null,
+      },
+    });
+  
+    if (activeGroup) {
+      throw new Error(
+        "El artista no es solista y no puede crear una nueva solicitud"
+      );
+    }
+  
+    // Verificar que no tenga solicitud aceptada
+    const acceptedArtistRequest =
+      await this.db.ArtistaSolicitaGrupo.findFirst({
+        where: {
+          idAp: idApprentice,
+          idGr: idGroup,
+          estado: "ACEPTADO",
+        },
+      });
+  
+    if (acceptedArtistRequest) {
+      throw new Error(
+        "El artista ya tiene una solicitud aceptada y no puede crear otra"
+      );
+    }
+  }
+
   async createRol(data: CreateRolApplicationDto): Promise<Application> {
+
+    // chequeo sobre aprendiz y solista
+    await this.checkCreatorCanCreateApplication(data.idApprentice,data.idGroup);
+
     try {
       const idAgency = Number(data.idAgency);
       const idConcept = Number(data.idConcept);
@@ -414,14 +519,14 @@ const artists: Array<[number, number, string]> = (data.artists ?? []).map(
   
       // AGREGAR CREADOR COMO LÍDER
       if (!data.idGroup) {
-        // 👉 creador es APRENDIZ
+        // creador es APRENDIZ
         const exists = apprentices.some(([idAp]) => idAp === data.idApprentice);
   
         if (!exists) {
           apprentices.push([data.idApprentice, "LIDER"]);
         }
       } else {
-        // 👉 creador es ARTISTA
+        // creador es ARTISTA
         const exists = artists.some(
           ([idAp, idGr]) =>
             idAp === data.idApprentice && idGr === data.idGroup
@@ -440,7 +545,7 @@ const artists: Array<[number, number, string]> = (data.artists ?? []).map(
           idConcepto: idConcept,
           estado: data.status ?? "PENDIENTE",
   
-          // --------- CONEXIONES ---------
+          //  CONEXIONES 
           AprendizMiembro: {
             connect: apprentices.map(([idAp]) => ({ id: idAp })),
           },
@@ -451,13 +556,13 @@ const artists: Array<[number, number, string]> = (data.artists ?? []).map(
             })),
           },
   
-          // --------- SOLICITUDES CON ROL ---------
+          //  SOLICITUDES CON ROL 
           SolicitudGrupoAprendiz: {
             create: apprentices.map(([idAp, rol]) => ({
               idAp,
               idAg: idAgency,
               rol,
-              estado: "PENDIENTE",
+              estado: idAp === data.idApprentice ? "ACEPTADO" : "PENDIENTE",
             })),
           },
   
@@ -467,7 +572,7 @@ const artists: Array<[number, number, string]> = (data.artists ?? []).map(
               idGr,
               idAg: idAgency,
               rol,
-              estado: "PENDIENTE",
+              estado: idAp === data.idApprentice ? "ACEPTADO" : "PENDIENTE",
             })),
           },
         },

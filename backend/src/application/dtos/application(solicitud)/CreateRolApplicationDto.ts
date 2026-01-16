@@ -12,10 +12,13 @@ export class CreateRolApplicationDto {
     ) {}
 
     static create(body: any): CreateRolApplicationDto {
-        if (!body.groupName || !body.idAgency || !body.idConcept ) {
+        if (!body.groupName || !body.idAgency || !body.idConcept || !body.idApprentice ) {
             throw new Error("Missing required fields");
         }
-  
+        
+        if (!body.apprentices && !body.artists){
+            throw new Error("No se presentan miembros para la creacion del grupo");
+        }
         
         return new CreateRolApplicationDto(
             body.groupName, 
