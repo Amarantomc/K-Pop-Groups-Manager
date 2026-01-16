@@ -1777,12 +1777,20 @@ console.log('🎸 Creando lanzamientos de grupos...')
 
 
   //#region  APRENDICES SOLICITANDO GRUPOS
-  console.log('🎯 Creando solicitudes de aprendices para grupos...')
   await prisma.aprendizSolicitaGrupo.createMany({
     data: [
-      { idAp: aprendiz1.id, idAg: smEntertainment.id, idSolicitud: solicitud1.id, rol: "LIDER", estado: "PENDIENTE" },
-      { idAp: aprendiz7.id, idAg: starshipEntertainment.id, idSolicitud: solicitud2.id, rol: "VOCALISTA", estado: "APROBADO" },
-      { idAp: aprendiz8.id, idAg: hibeEntertainment.id, idSolicitud: solicitud3.id, rol: "BAILARIN", estado: "EN REVISION" }
+      { idAp: aprendiz1.id, idAg: smEntertainment.id, idSolicitud: solicitud1.id, rol: "LIDER", estado: "APROBADO" },
+      { idAp: aprendiz2.id, idAg: ygEntertainment.id, idSolicitud: solicitud1.id, rol: "VOCALISTA", estado: "PENDIENTE" },
+      { idAp: aprendiz7.id, idAg: starshipEntertainment.id, idSolicitud: solicitud1.id, rol: "BATERISTA", estado: "PENDIENTE" },
+      { idAp: aprendiz8.id, idAg: hibeEntertainment.id, idSolicitud: solicitud1.id, rol: "RAPERO", estado: "RECHAZADO" },
+
+      { idAp: aprendiz7.id, idAg: starshipEntertainment.id, idSolicitud: solicitud2.id, rol: "VOCALISTA", estado: "PENDIENTE" },
+      { idAp: aprendiz1.id, idAg: smEntertainment.id, idSolicitud: solicitud2.id, rol: "BATERISTA", estado: "RECHAZADO" },
+
+      { idAp: aprendiz1.id, idAg: smEntertainment.id, idSolicitud: solicitud3.id, rol: "BATERISTA", estado: "RECHAZADO" },
+      { idAp: aprendiz8.id, idAg: hibeEntertainment.id, idSolicitud: solicitud3.id, rol: "BAILARIN", estado: "RECHAZADO" },
+      { idAp: aprendiz2.id, idAg: ygEntertainment.id, idSolicitud: solicitud3.id, rol: "VOCALISTA", estado: "PENDIENTE" },
+
     ]
   })
   console.log('✅ Solicitudes de aprendices creadas')
@@ -1790,8 +1798,17 @@ console.log('🎸 Creando lanzamientos de grupos...')
   // Actualizar arrays directos para AprendizSolicitaGrupo
   const aprendizSolicitaGrupo = [
     { idAp: aprendiz1.id, idAg: smEntertainment.id, idSolicitud: solicitud1.id },
+    { idAp: aprendiz2.id, idAg: ygEntertainment.id, idSolicitud: solicitud1.id },
+    { idAp: aprendiz7.id, idAg: starshipEntertainment.id, idSolicitud: solicitud1.id },
+    { idAp: aprendiz8.id, idAg: hibeEntertainment.id, idSolicitud: solicitud1.id },
+
+    { idAp: aprendiz1.id, idAg: smEntertainment.id, idSolicitud: solicitud2.id },
     { idAp: aprendiz7.id, idAg: starshipEntertainment.id, idSolicitud: solicitud2.id },
-    { idAp: aprendiz8.id, idAg: hibeEntertainment.id, idSolicitud: solicitud3.id }
+
+    { idAp: aprendiz1.id, idAg: smEntertainment.id, idSolicitud: solicitud3.id },
+    { idAp: aprendiz8.id, idAg: hibeEntertainment.id, idSolicitud: solicitud3.id },
+    { idAp: aprendiz2.id, idAg: ygEntertainment.id, idSolicitud: solicitud3.id },
+
   ];
   for (const { idAp, idAg, idSolicitud } of aprendizSolicitaGrupo) {
     await prisma.aprendiz.update({
@@ -1830,21 +1847,34 @@ console.log('🎸 Creando lanzamientos de grupos...')
 
 
   //#region  ARTISTAS SOLICITANDO GRUPOS
+  const artista14 = await prisma.artista.findUnique({where:{idAp: 14}});
+  const artista15 = await prisma.artista.findUnique({where:{idAp: 15}})
+  const artista16 = await prisma.artista.findUnique({where:{idAp: 15}})
 
 
   console.log('⭐ Creando solicitudes de artistas para nuevos grupos...')
   await prisma.artistaSolicitaGrupo.createMany({
     data: [
-      { idAp: artista1.idAp, idGr: artista1.idGr, idAg: smEntertainment.id, idSolicitud: solicitud1.id, rol: "LIDER", estado: "APROBADO" },
-      { idAp: artista5.idAp, idGr: artista5.idGr, idAg: jypEntertainment.id, idSolicitud: solicitud2.id, rol: "VOCALISTA", estado: "PENDIENTE" }
+      { idAp: artista16!.idAp, idGr: artista16!.idGr, idAg: ygEntertainment.id, idSolicitud: solicitud1.id, rol: "VOCALISTA", estado: "RECHAZADO" },
+
+      { idAp: artista14!.idAp, idGr: artista14!.idGr, idAg: ygEntertainment.id, idSolicitud: solicitud2.id, rol: "LIDER", estado: "APROBADO" },
+
+      { idAp: artista15!.idAp, idGr: artista15!.idGr, idAg: hibeEntertainment.id, idSolicitud: solicitud3.id, rol: "VOCALISTA", estado: "PENDIENTE" },
+      { idAp: artista16!.idAp, idGr: artista16!.idGr, idAg: ygEntertainment.id, idSolicitud: solicitud3.id, rol: "LIDER", estado: "APROBADO" }
+
     ]
   })
   console.log('✅ Solicitudes de artistas creadas')
 
   // Actualizar arrays directos para ArtistaSolicitaGrupo
   const artistaSolicitaGrupo = [
-    { idAp: artista1.idAp, idGr: artista1.idGr, idAg: smEntertainment.id, idSolicitud: solicitud1.id },
-    { idAp: artista5.idAp, idGr: artista5.idGr, idAg: jypEntertainment.id, idSolicitud: solicitud2.id }
+    { idAp: artista16!.idAp, idGr: artista16!.idGr, idAg: ygEntertainment.id, idSolicitud: solicitud1.id },
+
+    { idAp: artista14!.idAp, idGr: artista14!.idGr, idAg: ygEntertainment.id, idSolicitud: solicitud2.id },
+
+    { idAp: artista15!.idAp, idGr: artista15!.idGr, idAg: hibeEntertainment.id, idSolicitud: solicitud3.id },
+    { idAp: artista16!.idAp, idGr: artista16!.idGr, idAg: ygEntertainment.id, idSolicitud: solicitud3.id }
+
   ];
   for (const { idAp, idGr, idAg, idSolicitud } of artistaSolicitaGrupo) {
     await prisma.artista.update({
