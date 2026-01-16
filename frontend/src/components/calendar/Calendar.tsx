@@ -269,6 +269,17 @@ const Calendar: React.FC<CalendarProps> = ({
   }
   const selectedDayActivities = selectedDay ? getEventsForDate(selectedDay) : []
 
+  const isDateWithinFiveDays = (dateStr: string): boolean => {
+  const selectedDate = new Date(dateStr);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Normalizar a inicio del día
+  
+  const differenceInTime = selectedDate.getTime() - today.getTime();
+  const differenceInDays = Math.ceil(differenceInTime / (1000 * 3600 * 24));
+  
+  return differenceInDays >= 6
+};
+
   return (
     <div className="calendar-container">
       <ExportButton onExport={onExport} />
@@ -427,7 +438,7 @@ const Calendar: React.FC<CalendarProps> = ({
                       </div>
                     ))}
                   </div>
-                  {!isArtist && (<button className="day-menu-add-button" onClick={handleAddFromDayMenu}>
+                  {!isArtist && selectedDateStr && isDateWithinFiveDays(selectedDateStr) && (<button className="day-menu-add-button" onClick={handleAddFromDayMenu}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="18"
@@ -446,7 +457,7 @@ const Calendar: React.FC<CalendarProps> = ({
               ) : (
                 <div className="day-menu-empty">
                   <p>No hay actividades programadas para este día</p>
-                  {!isArtist && (<button className="day-menu-add-button" onClick={handleAddFromDayMenu}>
+                  {!isArtist && selectedDateStr && isDateWithinFiveDays(selectedDateStr) && (<button className="day-menu-add-button" onClick={handleAddFromDayMenu}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="18"
