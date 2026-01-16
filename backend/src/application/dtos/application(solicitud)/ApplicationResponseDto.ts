@@ -11,12 +11,16 @@ export class ApplicationResponseDto {
     public readonly apprentices: {
       apprenticeId: number;
       name: string;
+      rol: string;
+      status:string;
     }[],
     public readonly artists: {
       idApprentice: number;
       groupId: number;
       realName: string;
       artisticName: string;
+      rol: string;
+      status:string;
     }[],
     public readonly status: string
   ) {}
@@ -30,15 +34,29 @@ export class ApplicationResponseDto {
       application.idConcept,
       application.roles,
       application.idAgency,
-      application.apprentices,
-      application.artists,
+  
+      // APRENDICES CON ROL Y STATUS
+      application.apprentices.map(a => ({
+        apprenticeId: a.apprenticeId,
+        name: a.name,
+        rol: a.rol,
+        status: a.status,
+      })),
+  
+      // ARTISTAS CON ROL Y STATUS
+      application.artists.map(a => ({
+        idApprentice: a.idApprentice,
+        groupId: a.groupId,
+        realName: a.realName,
+        artisticName: a.artisticName,
+        rol: a.rol,
+        status: a.status,
+      })),
+  
       application.status
     );
   }
 
-  // ===============================
-  // PERSISTENCE → DOMAIN
-  // ===============================
   static toEntity(application: any): Application {
     return new Application({
       id: application.id,
@@ -48,24 +66,36 @@ export class ApplicationResponseDto {
       idAgency: application.idAgencia,
       date: application.fechaSolicitud,
       status: application.estado,
-
-      // 🔥 Aprendices → PROTOTIPO
+  
+      // APRENDICES CON ROL Y STATUS
       apprentices:
-        application.AprendizMiembro?.map((a: any) => ({
-          apprenticeId: a.id,
-          name: a.nombreCompleto
+        application.SolicitudGrupoAprendiz?.map((s: any) => ({
+          apprenticeId: s.idAp,
+          name:
+            application.AprendizMiembro?.find((a: any) => a.id === s.idAp)
+              ?.nombreCompleto ?? "",
+          rol: s.rol,
+          status: s.estado,
         })) ?? [],
-
-      // 🔥 Artistas → PROTOTIPO
+  
+      // ARTISTAS CON ROL Y STATUS
       artists:
-        application.ArtistaMiembro?.map((a: any) => ({
-          idApprentice: a.idAp,
-          groupId: a.idGr,
-          realName: a.aprendiz?.nombreCompleto ?? "",
-          artisticName: a.nombreArtistico
-        })) ?? [],
-
-      idVisualConcept: application.idConceptoVisual ?? 1
+        application.SolicitudGrupoArtista?.map((s: any) => {
+          const artista = application.ArtistaMiembro?.find(
+            (a: any) => a.idAp === s.idAp && a.idGr === s.idGr
+          );
+  
+          return {
+            idApprentice: s.idAp,
+            groupId: s.idGr,
+            realName: artista?.aprendiz?.nombreCompleto ?? "",
+            artisticName: artista?.nombreArtistico ?? "",
+            rol: s.rol,
+            status: s.estado,
+          };
+        }) ?? [],
+  
+      idVisualConcept: application.idConceptoVisual ?? 1,
     });
   }
 
