@@ -669,32 +669,47 @@ const artists: Array<[number, number, string]> = (data.artists ?? []).map(
 
 
     async findById(id: any): Promise<Application | null> {
-      id = Number(id);
-    
       const application = await this.db.Solicitud.findUnique({
-        where: { id },
+        where: {
+          id: Number(id),
+        },
         include: {
           AprendizMiembro: {
             select: {
               id: true,
-              nombreCompleto: true
-            }
+              nombreCompleto: true,
+            },
           },
           ArtistaMiembro: {
             orderBy: { idAp: "asc" },
             include: {
               aprendiz: {
                 select: {
-                  nombreCompleto: true
-                }
-              }
-            }
-          }
-        }
+                  nombreCompleto: true,
+                },
+              },
+            },
+          },
+          SolicitudGrupoAprendiz: {
+            select: {
+              idAp: true,
+              rol: true,
+              estado: true,
+            },
+          },
+          SolicitudGrupoArtista: {
+            select: {
+              idAp: true,
+              idGr: true,
+              rol: true,
+              estado: true,
+            },
+          },
+        },
       });
     
-      if (!application) {
-        throw new Error("Application not found");
+      if (!application){
+        throw new Error("Solicitud no encontrada.");
       }
     
       return ApplicationResponseDto.toEntity(application);
@@ -731,30 +746,45 @@ const artists: Array<[number, number, string]> = (data.artists ?? []).map(
         ]);
       }
 
-    async findAll(): Promise<Application[]> {
-  const applications = await this.db.Solicitud.findMany({
-    include: {
-      AprendizMiembro: {
-        select: {
-          id: true,
-          nombreCompleto: true
-        }
-      },
-      ArtistaMiembro: {
-        orderBy: { idAp: "asc" },
-        include: {
-          aprendiz: {
-            select: {
-              nombreCompleto: true
-            }
-          }
-        }
+      async findAll(): Promise<Application[]> {
+        const applications = await this.db.Solicitud.findMany({
+          include: {
+            AprendizMiembro: {
+              select: {
+                id: true,
+                nombreCompleto: true,
+              },
+            },
+            ArtistaMiembro: {
+              orderBy: { idAp: "asc" },
+              include: {
+                aprendiz: {
+                  select: {
+                    nombreCompleto: true,
+                  },
+                },
+              },
+            },
+            SolicitudGrupoAprendiz: {
+              select: {
+                idAp: true,
+                rol: true,
+                estado: true,
+              },
+            },
+            SolicitudGrupoArtista: {
+              select: {
+                idAp: true,
+                idGr: true,
+                rol: true,
+                estado: true,
+              },
+            },
+          },
+        });
+      
+        return ApplicationResponseDto.toEntities(applications);
       }
-    }
-  });
-
-  return ApplicationResponseDto.toEntities(applications);
-}
 
 
   

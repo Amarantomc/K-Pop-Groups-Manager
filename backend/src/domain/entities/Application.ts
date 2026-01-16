@@ -10,6 +10,8 @@ export default class Application {
     readonly apprentices: {
       apprenticeId: number;
       name: string;
+      rol:string;
+      status: string;
     }[];
   
     readonly artists: {
@@ -17,6 +19,8 @@ export default class Application {
       groupId: number;
       realName: string;
       artisticName: string;
+      rol:string;
+      status: string;
     }[];
   
     readonly status: string;
@@ -32,12 +36,16 @@ export default class Application {
       apprentices: {
         apprenticeId: number;
         name: string;
+        rol:string;
+      status: string;
       }[];
       artists: {
         idApprentice: number;
         groupId: number;
         realName: string;
         artisticName: string;
+        rol:string;
+        status: string;
       }[];
       status: string;
       idVisualConcept: number;
