@@ -68,32 +68,25 @@ export class ApplicationResponseDto {
       status: application.estado,
   
       // APRENDICES CON ROL Y STATUS
+     // APRENDICES CON ROL Y STATUS (desde aprendiz)
       apprentices:
-        application.SolicitudGrupoAprendiz?.map((s: any) => ({
-          apprenticeId: s.idAp,
-          name:
-            application.AprendizMiembro?.find((a: any) => a.id === s.idAp)
-              ?.nombreCompleto ?? "",
-          rol: s.rol,
-          status: s.estado,
-        })) ?? [],
+      application.SolicitudGrupoAprendiz?.map((s: any) => ({
+        apprenticeId: s.idAp,
+        name: s.aprendiz?.nombreCompleto ?? "",
+        rol: s.rol,
+        status: s.estado,
+      })) ?? [],
   
-      // ARTISTAS CON ROL Y STATUS
+      // ARTISTAS CON ROL Y STATUS (desde artista)
       artists:
-        application.SolicitudGrupoArtista?.map((s: any) => {
-          const artista = application.ArtistaMiembro?.find(
-            (a: any) => a.idAp === s.idAp && a.idGr === s.idGr
-          );
-  
-          return {
-            idApprentice: s.idAp,
-            groupId: s.idGr,
-            realName: artista?.aprendiz?.nombreCompleto ?? "",
-            artisticName: artista?.nombreArtistico ?? "",
-            rol: s.rol,
-            status: s.estado,
-          };
-        }) ?? [],
+      application.SolicitudGrupoArtista?.map((s: any) => ({
+        idApprentice: s.idAp,
+        groupId: s.idGr,
+        realName: s.artista?.aprendiz?.nombreCompleto ?? "",
+        artisticName: s.artista?.nombreArtistico ?? "",
+        rol: s.rol,
+        status: s.estado,
+      })) ?? [],
   
       idVisualConcept: application.idConceptoVisual ?? 1,
     });

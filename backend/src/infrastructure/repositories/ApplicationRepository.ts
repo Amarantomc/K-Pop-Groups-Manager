@@ -668,52 +668,42 @@ const artists: Array<[number, number, string]> = (data.artists ?? []).map(
 
 
 
-    async findById(id: any): Promise<Application | null> {
-      const application = await this.db.Solicitud.findUnique({
-        where: {
-          id: Number(id),
-        },
-        include: {
-          AprendizMiembro: {
-            select: {
-              id: true,
-              nombreCompleto: true,
+  async findById(id: string): Promise<Application | null> {
+    const application = await this.db.Solicitud.findUnique({
+      where: { id: Number(id) },
+      include: {
+        SolicitudGrupoAprendiz: {
+          include: {
+            aprendiz: {
+              select: {
+                id: true,
+                nombreCompleto: true,
+              },
             },
           },
-          ArtistaMiembro: {
-            orderBy: { idAp: "asc" },
-            include: {
-              aprendiz: {
-                select: {
-                  nombreCompleto: true,
+        },
+        SolicitudGrupoArtista: {
+          include: {
+            artista: {
+              include: {
+                aprendiz: {
+                  select: {
+                    nombreCompleto: true,
+                  },
                 },
               },
             },
           },
-          SolicitudGrupoAprendiz: {
-            select: {
-              idAp: true,
-              rol: true,
-              estado: true,
-            },
-          },
-          SolicitudGrupoArtista: {
-            select: {
-              idAp: true,
-              idGr: true,
-              rol: true,
-              estado: true,
-            },
-          },
         },
-      });
-    
-      if (!application){
-        throw new Error("Solicitud no encontrada.");
-      }
-    
-      return ApplicationResponseDto.toEntity(application);
+      },
+    });
+  
+    if (!application) {
+      throw new Error(`Solicitud con id ${id} no existe`);
     }
+  
+    return ApplicationResponseDto.toEntity(application);
+  }
     
 
     async update(id: string, data: Partial<UpdateApplicationDto>): Promise<Application> {
@@ -749,35 +739,27 @@ const artists: Array<[number, number, string]> = (data.artists ?? []).map(
       async findAll(): Promise<Application[]> {
         const applications = await this.db.Solicitud.findMany({
           include: {
-            AprendizMiembro: {
-              select: {
-                id: true,
-                nombreCompleto: true,
-              },
-            },
-            ArtistaMiembro: {
-              orderBy: { idAp: "asc" },
+            SolicitudGrupoAprendiz: {
               include: {
                 aprendiz: {
                   select: {
+                    id: true,
                     nombreCompleto: true,
                   },
                 },
               },
             },
-            SolicitudGrupoAprendiz: {
-              select: {
-                idAp: true,
-                rol: true,
-                estado: true,
-              },
-            },
             SolicitudGrupoArtista: {
-              select: {
-                idAp: true,
-                idGr: true,
-                rol: true,
-                estado: true,
+              include: {
+                artista: {
+                  include: {
+                    aprendiz: {
+                      select: {
+                        nombreCompleto: true,
+                      },
+                    },
+                  },
+                },
               },
             },
           },
