@@ -33,6 +33,7 @@ export class ApplicationRepository implements IApplicationRepository
   async getApprenticesWhithoutApplication(): Promise<Apprentice[]> {
     const apprentices = await this.db.Aprendiz.findMany({
       where: {
+
         SolicitudGrupo: {
           none: {
             estado: "ACEPTADO",
@@ -202,6 +203,7 @@ export class ApplicationRepository implements IApplicationRepository
 
     const artists = await this.db.artista.findMany({
       where: {
+        estadoArtista: "ACTIVO",
         HistorialGrupos: {
           every: {
             fechaFinalizacion: { not: null },

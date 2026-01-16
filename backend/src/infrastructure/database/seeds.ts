@@ -418,7 +418,48 @@ async function main() {
       nivelEntrenamiento: 9
     }
   })
-  console.log('✅ 15 Aprendices creados')
+
+  const nuevosAprendicesData = [
+    { nombreCompleto: "Kim Jiwon", fechaNacimiento: new Date("2004-03-14"), edad: 19, nivelEntrenamiento: 1 },
+    { nombreCompleto: "Lee Haerin", fechaNacimiento: new Date("2003-07-22"), edad: 20, nivelEntrenamiento: 2 },
+    { nombreCompleto: "Park Seojun", fechaNacimiento: new Date("2002-05-30"), edad: 21, nivelEntrenamiento: 3 },
+    { nombreCompleto: "Choi Haeun", fechaNacimiento: new Date("2001-11-12"), edad: 22, nivelEntrenamiento: 4 },
+    { nombreCompleto: "Yoon Minseok", fechaNacimiento: new Date("2000-08-09"), edad: 23, nivelEntrenamiento: 5 },
+    { nombreCompleto: "Han Soojin", fechaNacimiento: new Date("2001-02-18"), edad: 22, nivelEntrenamiento: 4 },
+    { nombreCompleto: "Lee Kyungsoo", fechaNacimiento: new Date("1999-12-25"), edad: 24, nivelEntrenamiento: 5 },
+    { nombreCompleto: "Kim Yerin", fechaNacimiento: new Date("2002-01-07"), edad: 21, nivelEntrenamiento: 3 },
+    { nombreCompleto: "Jung Taemin", fechaNacimiento: new Date("2000-04-20"), edad: 23, nivelEntrenamiento: 5 },
+    { nombreCompleto: "Park Hyunjin", fechaNacimiento: new Date("2001-06-15"), edad: 22, nivelEntrenamiento: 4 },
+    { nombreCompleto: "Lee Sunwoo", fechaNacimiento: new Date("2003-09-10"), edad: 20, nivelEntrenamiento: 2 },
+    { nombreCompleto: "Choi Jieun", fechaNacimiento: new Date("2004-12-05"), edad: 19, nivelEntrenamiento: 1 },
+    { nombreCompleto: "Yoo Seohyun", fechaNacimiento: new Date("2002-11-21"), edad: 21, nivelEntrenamiento: 3 },
+    { nombreCompleto: "Kim Minseok", fechaNacimiento: new Date("2000-03-12"), edad: 23, nivelEntrenamiento: 5 },
+    { nombreCompleto: "Lee Nayeon", fechaNacimiento: new Date("2001-08-17"), edad: 22, nivelEntrenamiento: 4 },
+    { nombreCompleto: "Park Jihoon", fechaNacimiento: new Date("2003-05-25"), edad: 20, nivelEntrenamiento: 2 },
+    { nombreCompleto: "Choi Mina", fechaNacimiento: new Date("2004-10-09"), edad: 19, nivelEntrenamiento: 1 },
+    { nombreCompleto: "Han Donghyun", fechaNacimiento: new Date("2002-02-27"), edad: 21, nivelEntrenamiento: 3 },
+    { nombreCompleto: "Lee Jihwan", fechaNacimiento: new Date("2001-07-30"), edad: 22, nivelEntrenamiento: 4 },
+    { nombreCompleto: "Kim Soobin", fechaNacimiento: new Date("2000-12-12"), edad: 23, nivelEntrenamiento: 5 },
+    { nombreCompleto: "Park Seulgi", fechaNacimiento: new Date("2003-03-03"), edad: 20, nivelEntrenamiento: 2 },
+    { nombreCompleto: "Choi Junsu", fechaNacimiento: new Date("2004-06-18"), edad: 19, nivelEntrenamiento: 1 },
+    { nombreCompleto: "Lee Haechan", fechaNacimiento: new Date("2002-09-22"), edad: 21, nivelEntrenamiento: 3 },
+    { nombreCompleto: "Yoon Dahyun", fechaNacimiento: new Date("2001-11-05"), edad: 22, nivelEntrenamiento: 4 },
+  ];
+  
+  const nuevosAprendices: any[] = [];
+  for (const a of nuevosAprendicesData) {
+    const ap = await prisma.aprendiz.create({
+      data: {
+        nombreCompleto: a.nombreCompleto,
+        fechaNacimiento: a.fechaNacimiento,
+        edad: a.edad,
+        nivelEntrenamiento: a.nivelEntrenamiento,
+      }
+    });
+    nuevosAprendices.push(ap);
+  }
+  
+  console.log('✅ 40 Aprendices creados');
 //#endregion
 
 
@@ -526,81 +567,151 @@ async function main() {
 
 
 
-  //#region  CREAR ARTISTAS
-  console.log('🌟 Creando artistas...')
-  const artista1 = await prisma.artista.create({
-    data: {
-      idAp: aprendiz4.id,
-      idGr: nct127.id,
-      nombreArtistico: "Taeyong",
-      fechaDebut: new Date("2016-07-07"),
-      estadoArtista: "PAUSA"
+    //#region  CREAR ARTISTAS
+    console.log('🌟 Creando artistas...')
+    const artista1 = await prisma.artista.create({
+      data: {
+        idAp: aprendiz4.id,
+        idGr: nct127.id,
+        nombreArtistico: "Taeyong",
+        fechaDebut: new Date("2016-07-07"),
+        estadoArtista: "PAUSA"
+      }
+    })
+    const artista2 = await prisma.artista.create({
+      data: {
+        idAp: aprendiz12.id,
+        idGr: blackpink.id,
+        nombreArtistico: "Rosé",
+        fechaDebut: new Date("2016-08-08"),
+        estadoArtista: "ACTIVO"
+      }
+    })
+    const artista3 = await prisma.artista.create({
+      data: {
+        idAp: aprendiz3.id,
+        idGr: twice.id,
+        nombreArtistico: "Chaeyoung",
+        fechaDebut: new Date("2015-10-20"),
+        estadoArtista: "ACTIVO"
+      }
+    })
+    const artista4 = await prisma.artista.create({
+      data: {
+        idAp: aprendiz11.id,
+        idGr: bts.id,
+        nombreArtistico: "V",
+        fechaDebut: new Date("2013-06-13"),
+        estadoArtista: "PAUSA"
+      }
+    })
+    const artista5 = await prisma.artista.create({
+      data: {
+        idAp: aprendiz5.id,
+        idGr: itzy.id,
+        nombreArtistico: "Yeji",
+        fechaDebut: new Date("2019-02-12"),
+        estadoArtista: "ACTIVO"
+      }
+    })
+    const artista6 = await prisma.artista.create({
+      data: {
+        idAp: aprendiz6.id,
+        idGr: aespa.id,
+        nombreArtistico: "Karina",
+        fechaDebut: new Date("2020-11-17"),
+        estadoArtista: "ACTIVO"
+      }
+    })
+    const artista7 = await prisma.artista.create({
+      data: {
+        idAp: aprendiz9.id,
+        idGr: redVelvet.id,
+        nombreArtistico: "Irene",
+        fechaDebut: new Date("2014-08-01"),
+        estadoArtista: "ACTIVO"
+      }
+    })
+    const artista8 = await prisma.artista.create({
+      data: {
+        idAp: aprendiz10.id,
+        idGr: seventeen.id,
+        nombreArtistico: "S.Coups",
+        fechaDebut: new Date("2015-05-26"),
+        estadoArtista: "PAUSA"
+      }
+    })
+    const artista9 = await prisma.artista.create({
+      data: {
+        idAp: aprendiz14.id,
+        idGr: seventeen.id,
+        nombreArtistico: "Lil Agus03",
+        fechaDebut: new Date("2016-05-09"),
+        estadoArtista: "ACTIVO"
+      }
+    })
+    const artista10 = await prisma.artista.create({
+      data: {
+        idAp: aprendiz15.id,
+        idGr: seventeen.id,
+        nombreArtistico: "RPV",
+        fechaDebut: new Date("2017-12-03"),
+        estadoArtista: "ACTIVO"
+      }
+    })
+    const artista11 = await prisma.artista.create({
+      data: {
+        idAp: aprendiz16.id,
+        idGr: seventeen.id,
+        nombreArtistico: "Awa pichi",
+        fechaDebut: new Date("2015-10-26"),
+        estadoArtista: "ACTIVO"
+      }
+    })
+
+    const gruposActivos = [nct127, blackpink, twice, bts, itzy, aespa, redVelvet, seventeen];
+
+    // Definimos los artistas con sus grupos y fechas de debut
+    const artistasNuevosData = [
+      { aprendiz: nuevosAprendices[0], grupo: nct127, nombreArtistico: "MINJU", fechaDebut: new Date("2023-01-15"), estadoArtista: "ACTIVO" },
+      { aprendiz: nuevosAprendices[1], grupo: nct127, nombreArtistico: "HAERIN", fechaDebut: new Date("2023-02-01"), estadoArtista: "ACTIVO" },
+      { aprendiz: nuevosAprendices[2], grupo: blackpink, nombreArtistico: "SEOJUN", fechaDebut: new Date("2023-03-01"), estadoArtista: "ACTIVO" },
+      { aprendiz: nuevosAprendices[3], grupo: blackpink, nombreArtistico: "HAEUN", fechaDebut: new Date("2023-03-20"), estadoArtista: "ACTIVO" },
+      { aprendiz: nuevosAprendices[4], grupo: twice, nombreArtistico: "MINSEOK", fechaDebut: new Date("2023-04-05"), estadoArtista: "ACTIVO" },
+      { aprendiz: nuevosAprendices[5], grupo: twice, nombreArtistico: "SOOJIN", fechaDebut: new Date("2023-04-18"), estadoArtista: "ACTIVO" },
+      { aprendiz: nuevosAprendices[6], grupo: bts, nombreArtistico: "MINHO", fechaDebut: new Date("2023-05-01"), estadoArtista: "ACTIVO" },
+      { aprendiz: nuevosAprendices[7], grupo: bts, nombreArtistico: "JIWON", fechaDebut: new Date("2023-05-12"), estadoArtista: "ACTIVO" },
+      { aprendiz: nuevosAprendices[8], grupo: itzy, nombreArtistico: "KYUNGSOO", fechaDebut: new Date("2023-06-01"), estadoArtista: "ACTIVO" },
+      { aprendiz: nuevosAprendices[9], grupo: itzy, nombreArtistico: "YERIN", fechaDebut: new Date("2023-06-15"), estadoArtista: "ACTIVO" },
+      { aprendiz: nuevosAprendices[10], grupo: aespa, nombreArtistico: "TAEMIN", fechaDebut: new Date("2023-07-01"), estadoArtista: "ACTIVO" },
+      { aprendiz: nuevosAprendices[11], grupo: aespa, nombreArtistico: "HYUNJIN", fechaDebut: new Date("2023-07-20"), estadoArtista: "ACTIVO" },
+      { aprendiz: nuevosAprendices[12], grupo: redVelvet, nombreArtistico: "SUNWOO", fechaDebut: new Date("2023-08-01"), estadoArtista: "ACTIVO" },
+      { aprendiz: nuevosAprendices[13], grupo: redVelvet, nombreArtistico: "JIEUN", fechaDebut: new Date("2023-08-18"), estadoArtista: "ACTIVO" },
+      { aprendiz: nuevosAprendices[14], grupo: seventeen, nombreArtistico: "SEOHYUN", fechaDebut: new Date("2023-09-01"), estadoArtista: "ACTIVO" },
+      { aprendiz: nuevosAprendices[15], grupo: seventeen, nombreArtistico: "MINSEOK2", fechaDebut: new Date("2023-09-15"), estadoArtista: "ACTIVO" },
+      { aprendiz: nuevosAprendices[16], grupo: nct127, nombreArtistico: "NAYEON", fechaDebut: new Date("2023-10-01"), estadoArtista: "ACTIVO" },
+      { aprendiz: nuevosAprendices[17], grupo: nct127, nombreArtistico: "JIHOON", fechaDebut: new Date("2023-10-20"), estadoArtista: "ACTIVO" },
+      { aprendiz: nuevosAprendices[18], grupo: blackpink, nombreArtistico: "MINA", fechaDebut: new Date("2023-11-01"), estadoArtista: "INACTIVO" },
+      { aprendiz: nuevosAprendices[19], grupo: blackpink, nombreArtistico: "DONGHYUN", fechaDebut: new Date("2023-11-15"), estadoArtista: "INACTIVO" },
+      { aprendiz: nuevosAprendices[20], grupo: twice, nombreArtistico: "JIHWAN", fechaDebut: new Date("2023-12-01"), estadoArtista: "INACTIVO" },
+      { aprendiz: nuevosAprendices[21], grupo: twice, nombreArtistico: "SOOBIN", fechaDebut: new Date("2023-12-12"), estadoArtista: "INACTIVO" },
+      { aprendiz: nuevosAprendices[22], grupo: itzy, nombreArtistico: "SEULGI", fechaDebut: new Date("2024-01-01"), estadoArtista: "INACTIVO" },
+      { aprendiz: nuevosAprendices[23], grupo: itzy, nombreArtistico: "JUNSU", fechaDebut: new Date("2024-01-15"), estadoArtista: "INACTIVO" },
+    ];
+
+    // Creamos los artistas con Prisma
+    for (const a of artistasNuevosData) {
+      await prisma.artista.create({
+        data: {
+          idAp: a.aprendiz.id,
+          idGr: a.grupo.id,
+          nombreArtistico: a.nombreArtistico,
+          fechaDebut: a.fechaDebut,
+          estadoArtista: a.estadoArtista
+        }
+      });
     }
-  })
-  const artista2 = await prisma.artista.create({
-    data: {
-      idAp: aprendiz12.id,
-      idGr: blackpink.id,
-      nombreArtistico: "Rosé",
-      fechaDebut: new Date("2016-08-08"),
-      estadoArtista: "ACTIVO"
-    }
-  })
-  const artista3 = await prisma.artista.create({
-    data: {
-      idAp: aprendiz3.id,
-      idGr: twice.id,
-      nombreArtistico: "Chaeyoung",
-      fechaDebut: new Date("2015-10-20"),
-      estadoArtista: "ACTIVO"
-    }
-  })
-  const artista4 = await prisma.artista.create({
-    data: {
-      idAp: aprendiz11.id,
-      idGr: bts.id,
-      nombreArtistico: "V",
-      fechaDebut: new Date("2013-06-13"),
-      estadoArtista: "PAUSA"
-    }
-  })
-  const artista5 = await prisma.artista.create({
-    data: {
-      idAp: aprendiz5.id,
-      idGr: itzy.id,
-      nombreArtistico: "Yeji",
-      fechaDebut: new Date("2019-02-12"),
-      estadoArtista: "ACTIVO"
-    }
-  })
-  const artista6 = await prisma.artista.create({
-    data: {
-      idAp: aprendiz6.id,
-      idGr: aespa.id,
-      nombreArtistico: "Karina",
-      fechaDebut: new Date("2020-11-17"),
-      estadoArtista: "ACTIVO"
-    }
-  })
-  const artista7 = await prisma.artista.create({
-    data: {
-      idAp: aprendiz9.id,
-      idGr: redVelvet.id,
-      nombreArtistico: "Irene",
-      fechaDebut: new Date("2014-08-01"),
-      estadoArtista: "ACTIVO"
-    }
-  })
-  const artista8 = await prisma.artista.create({
-    data: {
-      idAp: aprendiz10.id,
-      idGr: seventeen.id,
-      nombreArtistico: "S.Coups",
-      fechaDebut: new Date("2015-05-26"),
-      estadoArtista: "PAUSA"
-    }
-  })
-  console.log('✅ 8 Artistas creados')
+    console.log('✅ 40 Artistas creados')
 //#endregion
 
 
@@ -801,26 +912,144 @@ async function main() {
 
 
 
-  //#region  HISTORIAL DE ARTISTAS EN GRUPOS
-  console.log('📚 Creando historial de artistas en grupos...')
-  await prisma.artistaEnGrupo.createMany({
-    data: [
-      { idAp: artista1.idAp, idGrupoDebut: nct127.id, idGr: nct127.id, fechaInicio: new Date("2016-07-07"), rol: "Líder, Rapero principal, Bailarín principal" },
-      { idAp: artista2.idAp, idGrupoDebut: blackpink.id, idGr: blackpink.id, fechaInicio: new Date("2016-08-08"), rol: "Vocalista principal, Bailarina" },
-      { idAp: artista3.idAp, idGrupoDebut: twice.id, idGr: twice.id, fechaInicio: new Date("2015-10-20"), rol: "Rapera principal, Visual" },
-      { idAp: artista4.idAp, idGrupoDebut: bts.id, idGr: bts.id, fechaInicio: new Date("2013-06-13"), rol: "Vocalista, Visual, Bailarín" },
-      { idAp: artista5.idAp, idGrupoDebut: itzy.id, idGr: itzy.id, fechaInicio: new Date("2019-02-12"), rol: "Líder, Bailarina principal, Rapera" },
-      { idAp: artista6.idAp, idGrupoDebut: aespa.id, idGr: aespa.id, fechaInicio: new Date("2020-11-17"), rol: "Líder, Bailarina principal, Rapera" },
-      { idAp: artista7.idAp, idGrupoDebut: redVelvet.id, idGr: redVelvet.id, fechaInicio: new Date("2014-08-01"), rol: "Líder, Rapera principal, Visual" },
-      { idAp: artista8.idAp, idGrupoDebut: seventeen.id, idGr: seventeen.id, fechaInicio: new Date("2015-05-26"), rol: "Líder general, Rapero, Líder de Hip-hop Team" }
-    ]
+//#region  HISTORIAL DE ARTISTAS EN GRUPOS
+console.log('📚 Creando historial de artistas en grupos...')
+
+const historialArtistas = [
+  // ARTISTAS BASE (debut → otros grupos)
+
+  // artista1 – debut NCT127
+  {
+    idAp: artista1.idAp,
+    idGrupoDebut: artista1.idGr, // NCT127
+    idGr: nct127.id,
+    fechaInicio: new Date("2016-07-07"),
+    fechaFinalizacion: null,
+    rol: "LIDER"
+  },
+  {
+    idAp: artista1.idAp,
+    idGrupoDebut: artista1.idGr,
+    idGr: aespa.id,
+    fechaInicio: new Date("2019-01-01"),
+    fechaFinalizacion: new Date("2020-01-01"),
+    rol: "RAPERO"
+  },
+
+  // artista2 – debut BLACKPINK
+  {
+    idAp: artista2.idAp,
+    idGrupoDebut: artista2.idGr,
+    idGr: blackpink.id,
+    fechaInicio: new Date("2016-08-08"),
+    fechaFinalizacion: null,
+    rol: "VOCALISTA"
+  },
+
+  // artista3 – debut TWICE
+  {
+    idAp: artista3.idAp,
+    idGrupoDebut: artista3.idGr,
+    idGr: twice.id,
+    fechaInicio: new Date("2015-10-20"),
+    fechaFinalizacion: null,
+    rol: "RAPERA"
+  },
+  {
+    idAp: artista3.idAp,
+    idGrupoDebut: artista3.idGr,
+    idGr: blackpink.id,
+    fechaInicio: new Date("2017-06-01"),
+    fechaFinalizacion: new Date("2018-06-01"),
+    rol: "VISUAL"
+  },
+
+  // artista4 – debut BTS
+  {
+    idAp: artista4.idAp,
+    idGrupoDebut: artista4.idGr,
+    idGr: bts.id,
+    fechaInicio: new Date("2013-06-13"),
+    fechaFinalizacion: null,
+    rol: "VOCALISTA"
+  },
+
+  // artista5 – debut ITZY
+  {
+    idAp: artista5.idAp,
+    idGrupoDebut: artista5.idGr,
+    idGr: itzy.id,
+    fechaInicio: new Date("2019-02-12"),
+    fechaFinalizacion: null,
+    rol: "LIDER"
+  },
+
+  // artista6 – debut AESPA
+  {
+    idAp: artista6.idAp,
+    idGrupoDebut: artista6.idGr,
+    idGr: aespa.id,
+    fechaInicio: new Date("2020-11-17"),
+    fechaFinalizacion: null,
+    rol: "LIDER"
+  },
+
+  // artista7 – debut RED VELVET
+  {
+    idAp: artista7.idAp,
+    idGrupoDebut: artista7.idGr,
+    idGr: redVelvet.id,
+    fechaInicio: new Date("2014-08-01"),
+    fechaFinalizacion: null,
+    rol: "VOCALISTA"
+  },
+
+  // artista8 – debut SEVENTEEN
+  {
+    idAp: artista8.idAp,
+    idGrupoDebut: artista8.idGr,
+    idGr: seventeen.id,
+    fechaInicio: new Date("2015-05-26"),
+    fechaFinalizacion: null,
+    rol: "LIDER"
+  },
+
+  // SOLISTAS (terminan en su grupo debut)
+
+  {
+    idAp: artista9.idAp,
+    idGrupoDebut: artista9.idGr,
+    idGr: seventeen.id,
+    fechaInicio: new Date("2016-05-09"),
+    fechaFinalizacion: new Date("2021-05-01"),
+    rol: "SOLISTA"
+  },
+  {
+    idAp: artista10.idAp,
+    idGrupoDebut: artista10.idGr,
+    idGr: seventeen.id,
+    fechaInicio: new Date("2017-12-03"),
+    fechaFinalizacion: new Date("2022-01-15"),
+    rol: "SOLISTA"
+  },
+  {
+    idAp: artista11.idAp,
+    idGrupoDebut: artista11.idGr,
+    idGr: seventeen.id,
+    fechaInicio: new Date("2015-10-26"),
+    fechaFinalizacion: new Date("2020-12-31"),
+    rol: "SOLISTA"
+  }
+]
+
+for (const h of historialArtistas) {
+  await prisma.artistaEnGrupo.create({
+    data: h
   })
-  console.log('✅ Historial de artistas creado')
+}
+
+console.log('✅ Historial de artistas creado correctamente')
 //#endregion
-
-
-
-
 
 
 
