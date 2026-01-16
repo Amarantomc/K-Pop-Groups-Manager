@@ -58,25 +58,35 @@ const ListApprentice: React.FC = () => {
   };
 
 
-  const apprenticeColumns: GridColDef[] = [
+  const baseColumns: GridColDef[] = [
     { field: 'name', headerName: 'Nombre Completo', width: 150 },
     { field: 'dateOfBirth', headerName: 'Fecha de Nacimiento', width: 250 },
     { field: 'age', headerName: 'Edad', width: 90 },
     // {field: 'agencyName', headerName: 'Agencia', width: 150},
-    { field: 'trainingLv', headerName: 'Nivel de Entrenamiento', width: 180 },
-    {
-      field: 'evaluate',
-      headerName: 'Evaluación',
-      width: 200,
-      renderCell: (params) => {
-        return (
-          <div className="Evaluation">
-            <Button startIcon={<QuizIcon />} className="evaluate-btn" onClick={() => { setSelectApprenticeToEvaluate(params.row.id); setShowEvaluateModal(true) }}>Evaluar Aprendiz</Button>
-          </div>
-        )
-      }
-    }
+    { field: 'trainingLv', headerName: 'Nivel de Entrenamiento', width: 180 }
   ]
+
+  const evaluateColumn: GridColDef = {
+  field: 'evaluate',
+  headerName: 'Evaluación',
+  width: 200,
+  renderCell: (params) => (
+    <Button
+      startIcon={<QuizIcon />}
+      onClick={() => {
+        setSelectApprenticeToEvaluate(params.row.id);
+        setShowEvaluateModal(true);
+      }}
+    >
+      Evaluar Aprendiz
+    </Button>
+  ),
+};
+
+const apprenticeColumns: GridColDef[] =
+  user?.role === 'admin'
+    ? baseColumns
+    : [...baseColumns, evaluateColumn];
 
   const askDelete = (id: number) => {
     setApprenticeToDelete(id)
@@ -85,6 +95,7 @@ const ListApprentice: React.FC = () => {
   useEffect(
     () => {
       const fetchApprentices = async () => {
+        console.log("userInfo",user)
         try {
           const token = localStorage.getItem('token')
           const response = await fetch('http://localhost:3000/api/apprentice', {
@@ -339,7 +350,7 @@ const ListApprentice: React.FC = () => {
           onExport={handleExportPdf}
           constraints={apprenticeConstraints}
           createEntity="apprentice"
-          showEditButton={true}
+          showEditButton={false}
           userRole={user?.role}
         // onCreateClick={() => setShowCreateModal(true)}
         />

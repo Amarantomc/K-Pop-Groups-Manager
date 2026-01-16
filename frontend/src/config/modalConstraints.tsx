@@ -80,19 +80,7 @@ export const apprenticeConstraints: Constraints = {
 // Artista
 export const artistConstraints: Constraints = {
     id: {editable: false, label: "ID"},
-    name: {
-        editable: true,
-        required: true,
-        type: "string",
-        label: "Nombre Real",
-        validate: (value) => {
-            const valueText = String(value).trim();
-            if (!valueText) return "El nombre es obligatorio";
-            if (valueText.length < 2) return "El nombre debe tener al menos 2 caracteres";
-            return null;
-        }
-    },
-    stageName: {
+    ArtistName: {
         editable: true,
         required: true,
         type: "string",
@@ -102,35 +90,7 @@ export const artistConstraints: Constraints = {
             if (!valueText) return "El nombre artístico es obligatorio";
             return null;
         }
-    },
-    email: {
-        editable: true,
-        required: true,
-        type: "string",
-        label: "Email",
-        validate: (value) => {
-            const valueText = String(value).trim();
-            if (!valueText) return "El email es obligatorio";
-            if (!/^\S+@\S+\.\S+$/.test(valueText)) return "Email inválido";
-            return null;
-        }
-    },
-    phone: {editable: true, type: "string", label: "Teléfono"},
-    birthDate: {editable: false, type: "date", label: "Fecha de Nacimiento"},
-    nationality: {editable: true, type: "string", label: "Nacionalidad"},
-    genre: {editable: true, type: "string", label: "Género Musical"},
-    status: {
-        editable: true,
-        required: true,
-        type: "select",
-        label: "Estado",
-        options: ["active", "inactive", "on_tour", "training"],
-        validate: (value) => {
-            if (!value) return "El estado es obligatorio";
-            return null;
-        }
-    },
-    bio: {editable: true, type: "string", label: "Biografía"}
+    }
 }
 
 // Grupo
@@ -147,24 +107,6 @@ export const groupConstraints: Constraints = {
             if (valueText.length < 2) return "El nombre debe tener al menos 2 caracteres";
             return null;
         }
-    },
-    debutDate: {editable: false, type: "date", label: "Fecha de Debut"},
-    members: {
-        editable: true,
-        type: "number",
-        label: "Número de Miembros",
-        validate: (value) => {
-            const num = Number(value);
-            if (isNaN(num) || num < 1) return "Debe haber al menos 1 miembro";
-            return null;
-        }
-    },
-    status: {
-        editable: true,
-        required: true,
-        type: "select",
-        label: "Estado",
-        options: ["activo", "en_pausa", "disuelto"]
     },
     agencyName: {editable: false, label: "Agencia"}
 }
