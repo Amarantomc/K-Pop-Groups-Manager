@@ -67,7 +67,6 @@ const Requests: React.FC = () => {
       console.error('Error al aprobar solicitud:', error);
     }
   };
-
   // Manejar rechazo de solicitud (Director)
   const handleReject = async (id: number) => {
     try {
@@ -96,7 +95,6 @@ const Requests: React.FC = () => {
       console.error('Error al rechazar solicitud:', error);
     }
   };
-
   // Crear grupo (Manager)
   const handleCreateGroup = async (requestId: number, groupName: string) => {
     try {
@@ -124,7 +122,6 @@ const Requests: React.FC = () => {
       console.error('Error al crear grupo:', error);
     }
   };
-
   const handleOpenContractModal = async () => {
 
     const agencyId = user?.profileData?.agencyId || '';
@@ -152,7 +149,6 @@ const Requests: React.FC = () => {
     });
     setShowContractModal(true);
   };
-
   const handleContractSave = async (formData: any) => {
     try {
       const token = localStorage.getItem('token');
@@ -230,7 +226,6 @@ const Requests: React.FC = () => {
       console.error('Error al negar solicitud:', error);
     }
   };
-
   const fetchAgencyName = async (id: number | string) => {
     if (!id) return '';
     const res = await fetch(`http://localhost:3000/api/agency/${id}`, {
@@ -275,6 +270,32 @@ const Requests: React.FC = () => {
           <span style={{ color: '#2563eb', fontWeight: 600 }}>{members}</span>
         );
       }
+      /*
+       renderCell: (params) => {
+        const albums = params.value || [];
+          if (albums.length === 0) {
+        return (
+          <Typography variant="body2" color="text.secondary" sx={{ width: '100%', py: 1 }}>
+            Sin álbumes
+          </Typography>
+        );
+      }
+        return (
+            <Select
+            value=""
+            displayEmpty
+            sx={{ width: '100%', height: 40 }}
+            renderValue={() => `${albums.length} álbum${albums.length !== 1 ? 'es' : ''}`}
+            >
+            {albums.map((album: any) => (
+                <MenuItem key={album.id} value={album.id}>
+                {album.title}
+                </MenuItem>
+            ))}
+        </Select>
+        );
+    },
+    */
     },
     {
       field: 'roles',
@@ -618,21 +639,28 @@ const Requests: React.FC = () => {
       const members = Array.isArray(newrequest.members) ? newrequest.members : [];
       const apprentices = members
         .filter((m: any) => m.type === 'apprentice' && m.memberId)
-        .map((m: any) => Number(m.memberId));
+        .map((p: any) => {
+          let ids = p.memberId;
+          if (typeof ids === 'string') {
+            ids = ids.split(',').map(Number);
+          }
+          return Array.isArray(ids) && ids.length === 2 ? ids : [null, null];
+        });
       const artists = members
         .filter((p: any) => p.type === 'artist' && p.memberId)
-        .map((p: any) => [
-          Number(p.memberId.apprenticeId ?? p.memberId.ApprenticeId),
-          Number(p.memberId.groupId ?? p.memberId.GroupId)
-        ]);
-
+        .map((p: any) => {
+          let ids = p.memberId;
+          if (typeof ids === 'string') {
+            ids = ids.split(',').map(Number);
+          }
+          return Array.isArray(ids) && ids.length === 3 ? ids : [null, null, null];
+        });
 
       // Adaptar el payload según la estructura requerida
 
       const payload = {
         groupName: newrequest.groupName || newrequest.name,
         idAgency: user?.profileData?.agencyId || newrequest.idAgency || agency.agencyId,
-        roles: Array.isArray(newrequest.roles) ? newrequest.roles : members.map((m: any) => m.role),
         idConcept: newrequest.concept?.id || newrequest.idConcept || newrequest.concept,
         apprentices,
         artists,

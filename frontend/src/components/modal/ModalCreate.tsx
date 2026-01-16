@@ -2,7 +2,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import type { Field } from "../../config/formSource"
 import { formFieldsByEntity, ROLES_GROUPS } from "../../config/formSource"
 import { useAuth } from '../../contexts/auth/AuthContext';
@@ -27,36 +27,131 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
   const [dynamicOptions, setDynamicOptions] = useState<Record<string, any[]>>({})
   const [memberTypes, setMemberTypes] = useState<string[]>([]);
   const [memberOptions, setMemberOptions] = useState<any[][]>([]);
+  const [currentRole, setCurrentRole] = useState<string>(''); // Estado separado para rastrear el rol
+  const wasOpenRef = useRef(false); // Ref para detectar cuando se abre por primera vez
 
 
   useEffect(() => {
-    if (!isOpen) return
+    if (!isOpen) {
+      wasOpenRef.current = false;
+      return;
+    }
+
+    // Solo resetear cuando se abre el modal por primera vez
+    const isFirstOpen = !wasOpenRef.current;
+    if (isFirstOpen) {
+      wasOpenRef.current = true;
+      setCurrentRole('');
+    }
 
     // Obtener campos desde createFields o formFieldsByEntity[createEntity]
     const fields = createFields ?? (createEntity ? formFieldsByEntity[createEntity] : undefined)
     console.log('[ModalCreate] Campos recibidos para el modal:', fields);
     if (!fields || !Array.isArray(fields)) {
-      setFormData({})
-      setErrors({})
-      setDynamicOptions({})
+      if (isFirstOpen) {
+        setFormData({})
+        setErrors({})
+        setDynamicOptions({})
+      }
       return
     }
 
-    // Inicializar formData con campos vacíos
-    const emptyData: any = {}
-    fields.forEach((f) => {
-      const key = (f as any).name ?? (f as any).id
-      if (key) {
-        emptyData[key] = f.type === 'checkbox' ? false : ''
-      }
-    })
-    setFormData(emptyData)
-    setErrors({})
-    setDynamicOptions({})
-    console.log('[ModalCreate] formData inicializado:', emptyData);
+    // Solo resetear formData si es la primera vez que se abre
+    // De lo contrario, preservar los valores existentes
+    if (isFirstOpen) {
+      const emptyData: any = {}
+      fields.forEach((f) => {
+        const key = (f as any).name ?? (f as any).id
+        if (key) {
+          emptyData[key] = f.type === 'checkbox' ? false : ''
+        }
+      })
+      setFormData(emptyData)
+      setErrors({})
+      setDynamicOptions({})
+      console.log('[ModalCreate] formData inicializado:', emptyData);
+    } else {
+      // Si ya estaba abierto, solo asegurarse de que los nuevos campos existan en formData
+      setFormData((prevFormData: any) => {
+        const updatedData: any = { ...prevFormData }
+        fields.forEach((f) => {
+          const key = (f as any).name ?? (f as any).id
+          if (key && !(key in updatedData)) {
+            // Solo agregar si el campo no existe
+            updatedData[key] = f.type === 'checkbox' ? false : ''
+          }
+        })
+        console.log('[ModalCreate] formData actualizado con nuevos campos:', updatedData);
+        return updatedData
+      })
+    }
   }, [isOpen, createEntity, createFields])
 
-  // Efecto para cargar opciones dinámicas de selects con optionsEndpoint
+  // Efecto especial para cargar opciones de username cuando cambia el rol en User
+  useEffect(() => {
+    if (!isOpen || (createEntity !== 'user' && createEntity !== 'User')) return;
+    
+    const roleNorm = currentRole.toLowerCase();
+    console.log('[ModalCreate] Rol cambió a:', currentRole);
+    
+    if (!currentRole) {
+      // Si no hay rol, limpiar las opciones
+      console.log('[ModalCreate] Sin rol seleccionado, limpiando opciones de username');
+      setDynamicOptions(prev => ({ ...prev, username: [] }));
+      return;
+    }
+
+    // Verificar si ya hay opciones en createFields
+    const fields = createFields ?? (createEntity ? formFieldsByEntity[createEntity] : undefined);
+    const usernameField = fields?.find((f: any) => f.name === 'username' || f.id === 'username');
+    
+    if (usernameField && Array.isArray(usernameField.options) && usernameField.options.length > 0) {
+      console.log('[ModalCreate] Opciones de username encontradas en createFields:', usernameField.options.length);
+      setDynamicOptions(prev => ({ ...prev, username: usernameField.options || [] }));
+      return;
+    }
+
+    // Si no hay opciones en createFields, cargar desde la API
+    const headers: Record<string, string> = {};
+    const token = localStorage.getItem('token');
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const loadUsernameOptions = async () => {
+      try {
+        if (roleNorm === 'artist' || roleNorm === 'artista') {
+          console.log('[ModalCreate] Cargando artistas para username desde API...');
+          const resArtist = await fetch('http://localhost:3000/api/artist', { headers });
+          const dataArtist = await resArtist.json();
+          const artists = dataArtist.data || dataArtist;
+          const options = artists
+            .filter((a: any) => a.realName && a.realName.trim() !== '')
+            .map((a: any) => ({ value: a.realName, label: a.realName }));
+          console.log('[ModalCreate] Opciones de artistas cargadas desde API:', options.length);
+          setDynamicOptions(prev => ({ ...prev, username: options }));
+        } else if (roleNorm === 'apprentice' || roleNorm === 'aprendiz') {
+          console.log('[ModalCreate] Cargando aprendices para username desde API...');
+          const resApprentice = await fetch('http://localhost:3000/api/apprentice', { headers });
+          const dataApprentice = await resApprentice.json();
+          const apprentices = dataApprentice.data || dataApprentice;
+          const options = apprentices
+            .filter((a: any) => a.name && a.name.trim() !== '')
+            .map((a: any) => ({ value: a.name, label: a.name }));
+          console.log('[ModalCreate] Opciones de aprendices cargadas desde API:', options.length);
+          setDynamicOptions(prev => ({ ...prev, username: options }));
+        } else {
+          // Para otros roles, limpiar las opciones
+          console.log('[ModalCreate] Rol sin opciones dinámicas, limpiando username');
+          setDynamicOptions(prev => ({ ...prev, username: [] }));
+        }
+      } catch (err) {
+        console.error('[ModalCreate] Error cargando opciones para username:', err);
+      }
+    };
+
+    loadUsernameOptions();
+  }, [currentRole, isOpen, createEntity, createFields]);
+
+  // Efecto para cargar opciones dinámicas de selects con optionsEndpoint (excluyendo username que se maneja arriba)
   useEffect(() => {
     if (!isOpen) return;
     const fields = createFields ?? (createEntity ? formFieldsByEntity[createEntity] : undefined);
@@ -64,42 +159,16 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
 
     fields.forEach(async (f) => {
       if (f.type === 'select' && (f as any).optionsEndpoint) {
+        // Saltar el campo username que se carga en su propio efecto
+        if ((f.name === 'username' || f.id === 'username') && (createEntity === 'user' || createEntity === 'User')) {
+          return;
+        }
+
         const endpoint = (f as any).optionsEndpoint;
         try {
           const headers: Record<string, string> = {};
           const token = localStorage.getItem('token');
           if (token) headers['Authorization'] = `Bearer ${token}`;
-
-          // Lógica especial para el campo username de artista: join artistas + aprendices
-          if ((f.name === 'username' || f.id === 'username') && (createEntity === 'user' || createEntity === 'User')) {
-            console.log('[ModalCreate] Cargando opciones para username según rol:', formData['role'] || formData['rol'] || '');
-            // Detectar si el rol seleccionado es artista o aprendiz
-            const roleValue = formData['role'] || formData['rol'] || '';
-            const roleNorm = String(roleValue).toLowerCase();
-            if (roleNorm === 'artist' || roleNorm === 'artista') {
-              console.log('[ModalCreate] Rol artista detectado, obteniendo artistas para select...');
-              // Traer solo artistas y usar realName como value y label
-              const resArtist = await fetch('http://localhost:3000/api/artist', { headers });
-              const dataArtist = await resArtist.json();
-              const artists = dataArtist.data || dataArtist;
-              const options = artists
-                .filter((a: any) => a.realName && a.realName.trim() !== '')
-                .map((a: any) => ({ value: a.realName, label: a.realName }));
-              setDynamicOptions(prev => ({ ...prev, [f.name || f.id]: options }));
-              return;
-            } else if (roleNorm === 'apprentice' || roleNorm === 'aprendiz') {
-              // Traer solo aprendices y usar id como value y name como label
-              const resApprentice = await fetch('http://localhost:3000/api/apprentice', { headers });
-              const dataApprentice = await resApprentice.json();
-              const apprentices = dataApprentice.data || dataApprentice;
-              const options = apprentices
-                .filter((a: any) => a.name && a.name.trim() !== '')
-                .filter((a: any) => a.id && a.name && a.name.trim() !== '')
-                .map((a: any) => ({ value: a.name, label: a.name }));
-              setDynamicOptions(prev => ({ ...prev, [f.name || f.id]: options }));
-              return;
-            }
-          }
 
           // Lógica normal para otros selects
           const res = await fetch(endpoint, { headers });
@@ -122,13 +191,22 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
         }
       }
     });
-  }, [isOpen, createEntity, createFields, formData]);
+  }, [isOpen, createEntity, createFields]);
 
   if (!isOpen) return null
 
   const handleFieldChange = (key: string, value: any) => {
 
     let updatedFormData = { ...formData, [key]: value };
+
+    // Si el campo es role y es un usuario, actualizar currentRole y limpiar el campo username
+    if ((key === 'role' || key === 'rol') && (createEntity === 'user' || createEntity === 'User')) {
+      console.log('[ModalCreate] Rol cambiado a:', value);
+      updatedFormData.username = '';
+      updatedFormData.name = '';
+      // Actualizar el estado de currentRole para disparar el efecto
+      setCurrentRole(String(value).trim());
+    }
 
     // Si el campo es username, buscar el label en las opciones del campo actual
     if (key === 'username') {
@@ -648,7 +726,59 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
             }
 
             else if (f.type === 'select') {
-              // Usar opciones dinámicas si existen, si no, las del campo
+              // Caso especial: campo username en formulario de usuario
+              // Si el rol es Artista o Aprendiz, mostrar como select; si no, mostrar como text
+              if ((f.name === 'username' || f.id === 'username') && (createEntity === 'user' || createEntity === 'User')) {
+                const roleValue = formData['role'] || formData['rol'] || '';
+                const roleNorm = String(roleValue).toLowerCase();
+                const isSelectableRole = roleNorm === 'artist' || roleNorm === 'artista' || roleNorm === 'apprentice' || roleNorm === 'aprendiz';
+
+                if (!isSelectableRole) {
+                  // Para otros roles (Admin, Manager, Director), mostrar como input text
+                  return (
+                    <div className={`form-group ${errorMessage ? 'form-group-error' : ''}`} key={key}>
+                      <label htmlFor={key}>{f.label}</label>
+                      <input
+                        id={key}
+                        type="text"
+                        value={value ?? ''}
+                        onChange={(e) => handleFieldChange(key, e.target.value)}
+                        placeholder={f.placeholder || 'Ingresa un nombre de usuario'}
+                      />
+                      {errorMessage && <span className="error-message">{errorMessage}</span>}
+                    </div>
+                  );
+                }
+
+                // Para Artista y Aprendiz, mostrar como select
+                // Buscar opciones en dynamicOptions usando 'username' como clave (no 'name')
+                const selectOptions = dynamicOptions['username'] || dynamicOptions[f.name || f.id] || f.options || [];
+                console.log('[ModalCreate] Field username:',f);
+                console.log('[ModalCreate] dynamicOptions["username"]:', dynamicOptions['username']);
+                console.log('[ModalCreate] f.options:', f.options);
+                console.log('[ModalCreate] Opciones finales para username:', selectOptions);
+                return (
+                  <div className={`form-group ${errorMessage ? 'form-group-error' : ''}`} key={key}>
+                    <label htmlFor={key}>{f.label}</label>
+                    <select
+                      id={key}
+                      value={value ?? ''}
+                      onChange={(e) => handleFieldChange(key, e.target.value)}
+                    >
+                      <option value="">-- Seleccionar --</option>
+                      {selectOptions && selectOptions.map((o: any, idx: number) => (
+                        <option key={o.value !== undefined && o.value !== null && o.value !== '' ? String(o.value) : `option-${idx}`}
+                          value={o.value}>
+                          {o.label}
+                        </option>
+                      ))}
+                    </select>
+                    {errorMessage && <span className="error-message">{errorMessage}</span>}
+                  </div>
+                );
+              }
+
+              // Para otros selects normales
               const selectOptions = dynamicOptions[f.name || f.id] || f.options || [];
               return (
                 <div className={`form-group ${errorMessage ? 'form-group-error' : ''}`} key={key}>
