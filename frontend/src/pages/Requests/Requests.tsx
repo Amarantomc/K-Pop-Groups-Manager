@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { IconButton, Tooltip } from '@mui/material';
+import { IconButton, Tooltip, Select, MenuItem, Typography } from '@mui/material';
 import type { GridColDef } from '@mui/x-data-grid';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -67,6 +67,7 @@ const Requests: React.FC = () => {
       console.error('Error al aprobar solicitud:', error);
     }
   };
+
   // Manejar rechazo de solicitud (Director)
   const handleReject = async (id: number) => {
     try {
@@ -95,6 +96,7 @@ const Requests: React.FC = () => {
       console.error('Error al rechazar solicitud:', error);
     }
   };
+
   // Crear grupo (Manager)
   const handleCreateGroup = async (requestId: number, groupName: string) => {
     try {
@@ -122,6 +124,7 @@ const Requests: React.FC = () => {
       console.error('Error al crear grupo:', error);
     }
   };
+
   const handleOpenContractModal = async () => {
 
     const agencyId = user?.profileData?.agencyId || '';
@@ -149,6 +152,7 @@ const Requests: React.FC = () => {
     });
     setShowContractModal(true);
   };
+
   const handleContractSave = async (formData: any) => {
     try {
       const token = localStorage.getItem('token');
@@ -201,6 +205,7 @@ const Requests: React.FC = () => {
       console.error('Error al aceptar solicitud:', error);
     }
   };
+
   const handleDeny = async (requestId: number) => {
     const url =
       user?.role === 'artist'
@@ -226,6 +231,7 @@ const Requests: React.FC = () => {
       console.error('Error al negar solicitud:', error);
     }
   };
+
   const fetchAgencyName = async (id: number | string) => {
     if (!id) return '';
     const res = await fetch(`http://localhost:3000/api/agency/${id}`, {
@@ -235,6 +241,7 @@ const Requests: React.FC = () => {
     const data = await res.json();
     return data?.data?.name || id;
   };
+
   const fetchConceptName = async (id: number | string) => {
     if (!id) return '';
     const res = await fetch(`http://localhost:3000/api/concept/${id}`, {
@@ -257,54 +264,43 @@ const Requests: React.FC = () => {
     //{ field: 'idConcept', headerName: 'ID Concepto', width: 120 },
     { field: 'concept', headerName: 'Concepto', width: 120 },
     {
-      field: 'members',
-      headerName: 'Miembros',
+      field: 'memberRoles',
+      headerName: 'Miembros & Roles',
       width: 220,
       renderCell: (params) => {
-        const members = Array.isArray(params.value)
-          ? params.value.map((m: any) =>
-            m.name ? `${m.name}${m.rol ? ` (${m.rol})` : ''}` : ''
-          ).join(', ')
-          : params.value || '';
+        const members = Array.isArray(params.row.members) ? params.row.members : [];
+        const roles = Array.isArray(params.row.roles) ? params.row.roles : [];
+        
+        if (members.length === 0) {
+          return (
+            <Typography variant="body2" color="text.secondary" sx={{ width: '100%', py: 1 }}>
+              Sin miembros
+            </Typography>
+          );
+        }
+
+        // Crear array de objetos combinando miembros y roles
+        const memberRolesList = members.map((member: any, index: number) => ({
+          name: member.name || member.realName,
+          role: roles[index] || 'Sin rol'
+        }));
+
         return (
-          <span style={{ color: '#2563eb', fontWeight: 600 }}>{members}</span>
-        );
-      }
-      /*
-       renderCell: (params) => {
-        const albums = params.value || [];
-          if (albums.length === 0) {
-        return (
-          <Typography variant="body2" color="text.secondary" sx={{ width: '100%', py: 1 }}>
-            Sin álbumes
-          </Typography>
-        );
-      }
-        return (
-            <Select
+          <Select
             value=""
             displayEmpty
             sx={{ width: '100%', height: 40 }}
-            renderValue={() => `${albums.length} álbum${albums.length !== 1 ? 'es' : ''}`}
-            >
-            {albums.map((album: any) => (
-                <MenuItem key={album.id} value={album.id}>
-                {album.title}
-                </MenuItem>
+            renderValue={() => `${members.length} miembro${members.length !== 1 ? 's' : ''}`}
+          >
+            {memberRolesList.map((item: any, index: number) => (
+              <MenuItem key={index} value={index}>
+                {item.name}
+                <span style={{ marginLeft: '8px', color: '#6b7280', fontSize: '0.875em' }}>
+                  ({item.role})
+                </span>
+              </MenuItem>
             ))}
-        </Select>
-        );
-    },
-    */
-    },
-    {
-      field: 'roles',
-      headerName: 'Roles',
-      width: 220,
-      renderCell: (params) => {
-        const roles = Array.isArray(params.value) ? params.value.join(', ') : params.value || '';
-        return (
-          <span style={{ color: '#10b981', fontWeight: 600 }}>{roles}</span>
+          </Select>
         );
       }
     },
@@ -635,26 +631,19 @@ const Requests: React.FC = () => {
 
 
       console.log('newrequest', newrequest)
-      // Separar miembros en apprentices y artists según el tipo
+      // Separar miembros en apprentices y artists según el tipo, incluyendo los roles
       const members = Array.isArray(newrequest.members) ? newrequest.members : [];
       const apprentices = members
-        .filter((m: any) => m.type === 'apprentice' && m.memberId)
-        .map((p: any) => {
-          let ids = p.memberId;
-          if (typeof ids === 'string') {
-            ids = ids.split(',').map(Number);
-          }
-          return Array.isArray(ids) && ids.length === 2 ? ids : [null, null];
-        });
+        .filter((m: any) => m.type === 'apprentice' && m.memberId && m.role)
+        .map((m: any) => [Number(m.memberId), m.role]);
       const artists = members
-        .filter((p: any) => p.type === 'artist' && p.memberId)
-        .map((p: any) => {
-          let ids = p.memberId;
-          if (typeof ids === 'string') {
-            ids = ids.split(',').map(Number);
-          }
-          return Array.isArray(ids) && ids.length === 3 ? ids : [null, null, null];
-        });
+        .filter((p: any) => p.type === 'artist' && p.memberId && p.role)
+        .map((p: any) => [
+          Number(Array.isArray(p.memberId) ? p.memberId[0] : p.memberId),
+          Number(Array.isArray(p.memberId) ? p.memberId[1] : 0),
+          p.role
+        ]);
+
 
       // Adaptar el payload según la estructura requerida
 
