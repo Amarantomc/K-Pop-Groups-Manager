@@ -185,50 +185,117 @@ const Requests: React.FC = () => {
   // Lógica para aceptar/rechazar solicitud como aprendiz o artista
   const handleAccept = async (requestId: number) => {
     try {
-      console.log(requestId);
-      const response = await fetch(`http://localhost:3000/api/application/${requestId}/apprentice-decision`, {
-        method: 'PATCH',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          apprenticeId: user?.profileData?.apprenticeId || user?.profileData?.IdAp,
-          decision: true,
-          //role: user.role
-        })
-      });
-      console.log(response);
-      if (!response.ok) throw new Error('Error al aceptar solicitud');
-      // Opcional: actualizar estado local o mostrar feedback
-    } catch (error) {
-      console.error('Error al aceptar solicitud:', error);
-    }
-  };
-
-  const handleDeny = async (requestId: number) => {
-    const url =
-      user?.role === 'artist'
+      const isArtist = user?.role === 'artist';
+      const url = isArtist
         ? `http://localhost:3000/api/application/${requestId}/artist-decision`
         : `http://localhost:3000/api/application/${requestId}/apprentice-decision`;
 
-    try {
+      const body: any = {
+        decision: true,
+      };
+
+      if (isArtist) {
+        body.apprenticeId = user?.profileData?.IdAp;
+        body.groupId = user?.profileData?.IdGr || user?.profileData?.groupId;
+      } else {
+        body.apprenticeId = user?.profileData?.apprenticeId || user?.profileData?.IdAp;
+      }
+
+      console.log('handleAccept - user.profileData:', user?.profileData);
+      console.log('handleAccept - body enviado:', body);
+      console.log('handleAccept - URL:', url);
+
       const response = await fetch(url, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          apprenticeId: user?.profileData?.apprenticeId || user?.profileData?.IdAp,
-          groupId: user?.profileData?.IdGr || user?.profileData?.groupId,
-          decision: false,
-        })
+        body: JSON.stringify(body)
       });
+
+      console.log('handleAccept - response status:', response.status);
+
+      if (!response.ok) throw new Error('Error al aceptar solicitud');
+      setSuccessMessage('Solicitud aceptada exitosamente');
+      setOpenSuccess(true);
+      // Recargar solicitudes después de aceptar
+      const token = localStorage.getItem('token');
+      const endpoint = user?.role === 'apprentice' 
+        ? `/api/application?apprenticeId=${user?.id}&agencyId=${user?.agencyId}`
+        : `/api/application?artistId=${user?.id}&agencyId=${user?.agencyId}`;
+      
+      const refreshResponse = await fetch(`http://localhost:3000${endpoint}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      if (refreshResponse.ok) {
+        const data = await refreshResponse.json();
+        const requestsArray = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
+        setRequests(requestsArray);
+      }
+    } catch (error) {
+      console.error('Error al aceptar solicitud:', error);
+      setErrorMessage('Error al aceptar solicitud');
+      setOpenError(true);
+    }
+  };
+
+  const handleDeny = async (requestId: number) => {
+    const isArtist = user?.role === 'artist';
+    const url = isArtist
+      ? `http://localhost:3000/api/application/${requestId}/artist-decision`
+      : `http://localhost:3000/api/application/${requestId}/apprentice-decision`;
+
+    try {
+      const body: any = {
+        decision: false,
+      };
+
+      if (isArtist) {
+        body.apprenticeId = user?.profileData?.IdAp||user?.profileData?.apprenticeId;
+        body.groupId = user?.profileData?.IdGr || user?.profileData?.groupId;
+      } else {
+        body.apprenticeId = user?.profileData?.apprenticeId || user?.profileData?.IdAp;
+      }
+
+      console.log('handleDeny - user.profileData:', user?.profileData);
+      console.log('handleDeny - body enviado:', body);
+      console.log('handleDeny - URL:', url);
+
+      const response = await fetch(url, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body)
+      });
+      
+      console.log('handleDeny - response status:', response.status);
+
       if (!response.ok) throw new Error('Error al negar solicitud');
-      // Opcional: actualizar estado local o mostrar feedback
+      setSuccessMessage('Solicitud rechazada exitosamente');
+      setOpenSuccess(true);
+      // Recargar solicitudes después de rechazar
+      const token = localStorage.getItem('token');
+      const endpoint = user?.role === 'apprentice'
+        ? `/api/application?apprenticeId=${user?.id}&agencyId=${user?.agencyId}`
+        : `/api/application?artistId=${user?.id}&agencyId=${user?.agencyId}`;
+      
+      const refreshResponse = await fetch(`http://localhost:3000${endpoint}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      if (refreshResponse.ok) {
+        const data = await refreshResponse.json();
+        const requestsArray = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
+        setRequests(requestsArray);
+      }
     } catch (error) {
       console.error('Error al negar solicitud:', error);
+      setErrorMessage('Error al rechazar solicitud');
+      setOpenError(true);
     }
   };
 
