@@ -82,7 +82,7 @@ export const enumToOptions = (list: readonly string[]): FieldOption[] => {
 // Usuario (auth)
 export const userFields: Field[] = [
     { id: 'role', name: 'role', label: 'Rol de usuario', type: 'select', options: enumToOptions(ROLE_TYPES), required: true },
-    { id: 'username', name: 'name', label: 'Nombre de usuario', type: 'text', placeholder: 'usuario', required: true },
+    { id: 'username', name: 'name', label: 'Nombre de usuario', type: 'select', required: true, placeholder: 'Selecciona un usuario' },
     { id: 'email', name: 'email', label: 'Correo electrónico', type: 'email', placeholder: 'correo@gmail.com', required: true },
     { id: 'password', name: 'password', label: 'Contraseña', type: 'password', required: true }
 ];

@@ -1,0 +1,60 @@
+-Flujo de albums y canciones
+	.Creacion de albums (Ya esta solo falta ver si un admin puede crear un album , y si lo crea ver como se pasa el idAprendiz y el idGrupo)
+	.Agregar cancion en album(Pendiente)
+-Revisar el flujo de actividades
+	.Poner en prox actividades una lista de los grupos y artistas
+	.Arreglar los iconos
+	.En caso de rechazar o aceptar ya no dar las opciones de los botones aceptar y rechazar
+	.En la creacion de actividades tener en cuenta el caso de no crear una actividad en una fecha pasada o el dia actual(Tambien se puede poner como restriccion que debe ser de 5 dias despues para dar tiempo a que responda el artista)
+	.Tener en cuenta la restriccion de que un grupo o artista no pueden tener varias actividades el mismo dia
+-Arreglar el flujo de solicitud
+-Poner que se muestren en espanol todos los campos
+-Poner bien formateada la fecha y hora
+-Ponerle las columnas a cada entidad en el datatable
+-Filtrar las tablas que sean posibles
+-Ver las posibles restricciones del problema
+-Refactorizar
+Agregar el boton de exportar a las consultas
+No funciona nada en agencia en el admin.Ver xq y ver si en el backend funciona
+Quitar evaluar aprendiz de admin
+Quitar el editar de aprendiz en admin
+En el editar poner nombre Artistico de un artista
+Quiitar eliminar artista
+Actualizar columnas de grupos
+El nombre del concepto  en un grupo
+Ponerle nombre a concepto visual y poder editar el concepto visual de un grupo
+Editar solo nombre y descripcion del concepto
+En Concepto los conceptos asociados a un grupo no se elimina
+Poner boton agregar en listas de popularidad para admin
+Arreglar creacon de premio
+Ver si eliminar un premio con album funciona
+QUitar editar en cancion
+Ver porque lista de popularidad no funciona
+En premios no funciona agergar(le faltan campos, ver cuales piden el backend) ni editar(tiene campos de mas)
+Una cancion no se puede editar
+Arreglar eliminar cancion
+Quitar agregar cancion de admin
+QUitar agregar para album
+QUitar agregar cancion en admin
+Quitar editar de album
+Ver bien la creacion de actividades en el admin(Verlo con el backend)
+Quitar agregar de ingreso
+Editar  monto y descripcion de ingresos
+Editar terminos iniciales y distribucion de contratos
+Quitar agregar de contrato
+VErifficar la eliminacion de contrato
+Quitar el editar de solicitud
+Poner en perfil agencia. Boton de retirarse
+Poner boton en grupo de disolver .Y ver como se hace en el backend
+Filtrar los aprendices por id de agencia para el director y el manager(Esta gente no lo pasan en el backend). Lo mismo para artista y para grupo
+Quitar conceptos y conceptos visuales de director
+Filtrar las canciones para  el director y manager . Solo las de artistas y grupos asociados a su agencia
+Para album en director y manager hay que hacer lo mismo que en canciones. Estos flitros son en el backend
+Filtrar actividades por id de la agencia del direcor . Lo mismo para el manager
+Quitar el agregar actividad para director
+Hacer el filtro en ingreso y contrato para director y manager
+Poner en la captacion en el caso de uso de ofrecer contrato a grupo y artista poner el boton de aceptar o rechazar contrato y en caso de grupo que solo le salga al lider
+En aprendiz en el historial de evaluaciones quitar la columna aprendiz
+En artista filtrar el calendario por las actividades de el como solista y del grupo al que pertenece
+Filtrat para todas las entidades
+Lista de popularidad rol no autorizado para artista(Arreglarlo)

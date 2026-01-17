@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { IconButton, Tooltip } from '@mui/material';
+import { IconButton, Tooltip, Select, MenuItem, Typography } from '@mui/material';
 import type { GridColDef } from '@mui/x-data-grid';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -185,49 +185,117 @@ const Requests: React.FC = () => {
   // Lógica para aceptar/rechazar solicitud como aprendiz o artista
   const handleAccept = async (requestId: number) => {
     try {
-      console.log(requestId);
-      const response = await fetch(`http://localhost:3000/api/application/${requestId}/apprentice-decision`, {
-        method: 'PATCH',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          apprenticeId: user?.profileData?.apprenticeId || user?.profileData?.IdAp,
-          decision: true,
-          //role: user.role
-        })
-      });
-      console.log(response);
-      if (!response.ok) throw new Error('Error al aceptar solicitud');
-      // Opcional: actualizar estado local o mostrar feedback
-    } catch (error) {
-      console.error('Error al aceptar solicitud:', error);
-    }
-  };
-  const handleDeny = async (requestId: number) => {
-    const url =
-      user?.role === 'artist'
+      const isArtist = user?.role === 'artist';
+      const url = isArtist
         ? `http://localhost:3000/api/application/${requestId}/artist-decision`
         : `http://localhost:3000/api/application/${requestId}/apprentice-decision`;
 
-    try {
+      const body: any = {
+        decision: true,
+      };
+
+      if (isArtist) {
+        body.apprenticeId = user?.profileData?.IdAp;
+        body.groupId = user?.profileData?.IdGr || user?.profileData?.groupId;
+      } else {
+        body.apprenticeId = user?.profileData?.apprenticeId || user?.profileData?.IdAp;
+      }
+
+      console.log('handleAccept - user.profileData:', user?.profileData);
+      console.log('handleAccept - body enviado:', body);
+      console.log('handleAccept - URL:', url);
+
       const response = await fetch(url, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          apprenticeId: user?.profileData?.apprenticeId || user?.profileData?.IdAp,
-          groupId: user?.profileData?.IdGr || user?.profileData?.groupId,
-          decision: false,
-        })
+        body: JSON.stringify(body)
       });
+
+      console.log('handleAccept - response status:', response.status);
+
+      if (!response.ok) throw new Error('Error al aceptar solicitud');
+      setSuccessMessage('Solicitud aceptada exitosamente');
+      setOpenSuccess(true);
+      // Recargar solicitudes después de aceptar
+      const token = localStorage.getItem('token');
+      const endpoint = user?.role === 'apprentice' 
+        ? `/api/application?apprenticeId=${user?.id}&agencyId=${user?.agencyId}`
+        : `/api/application?artistId=${user?.id}&agencyId=${user?.agencyId}`;
+      
+      const refreshResponse = await fetch(`http://localhost:3000${endpoint}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      if (refreshResponse.ok) {
+        const data = await refreshResponse.json();
+        const requestsArray = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
+        setRequests(requestsArray);
+      }
+    } catch (error) {
+      console.error('Error al aceptar solicitud:', error);
+      setErrorMessage('Error al aceptar solicitud');
+      setOpenError(true);
+    }
+  };
+
+  const handleDeny = async (requestId: number) => {
+    const isArtist = user?.role === 'artist';
+    const url = isArtist
+      ? `http://localhost:3000/api/application/${requestId}/artist-decision`
+      : `http://localhost:3000/api/application/${requestId}/apprentice-decision`;
+
+    try {
+      const body: any = {
+        decision: false,
+      };
+
+      if (isArtist) {
+        body.apprenticeId = user?.profileData?.IdAp||user?.profileData?.apprenticeId;
+        body.groupId = user?.profileData?.IdGr || user?.profileData?.groupId;
+      } else {
+        body.apprenticeId = user?.profileData?.apprenticeId || user?.profileData?.IdAp;
+      }
+
+      console.log('handleDeny - user.profileData:', user?.profileData);
+      console.log('handleDeny - body enviado:', body);
+      console.log('handleDeny - URL:', url);
+
+      const response = await fetch(url, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body)
+      });
+      
+      console.log('handleDeny - response status:', response.status);
+
       if (!response.ok) throw new Error('Error al negar solicitud');
-      // Opcional: actualizar estado local o mostrar feedback
+      setSuccessMessage('Solicitud rechazada exitosamente');
+      setOpenSuccess(true);
+      // Recargar solicitudes después de rechazar
+      const token = localStorage.getItem('token');
+      const endpoint = user?.role === 'apprentice'
+        ? `/api/application?apprenticeId=${user?.id}&agencyId=${user?.agencyId}`
+        : `/api/application?artistId=${user?.id}&agencyId=${user?.agencyId}`;
+      
+      const refreshResponse = await fetch(`http://localhost:3000${endpoint}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      if (refreshResponse.ok) {
+        const data = await refreshResponse.json();
+        const requestsArray = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
+        setRequests(requestsArray);
+      }
     } catch (error) {
       console.error('Error al negar solicitud:', error);
+      setErrorMessage('Error al rechazar solicitud');
+      setOpenError(true);
     }
   };
 
@@ -240,6 +308,7 @@ const Requests: React.FC = () => {
     const data = await res.json();
     return data?.data?.name || id;
   };
+
   const fetchConceptName = async (id: number | string) => {
     if (!id) return '';
     const res = await fetch(`http://localhost:3000/api/concept/${id}`, {
@@ -262,28 +331,43 @@ const Requests: React.FC = () => {
     //{ field: 'idConcept', headerName: 'ID Concepto', width: 120 },
     { field: 'concept', headerName: 'Concepto', width: 120 },
     {
-      field: 'members',
-      headerName: 'Miembros',
+      field: 'memberRoles',
+      headerName: 'Miembros & Roles',
       width: 220,
       renderCell: (params) => {
-        const members = Array.isArray(params.value)
-          ? params.value.map((m: any) =>
-            m.name ? `${m.name}${m.rol ? ` (${m.rol})` : ''}` : ''
-          ).join(', ')
-          : params.value || '';
+        const members = Array.isArray(params.row.members) ? params.row.members : [];
+        const roles = Array.isArray(params.row.roles) ? params.row.roles : [];
+        
+        if (members.length === 0) {
+          return (
+            <Typography variant="body2" color="text.secondary" sx={{ width: '100%', py: 1 }}>
+              Sin miembros
+            </Typography>
+          );
+        }
+
+        // Crear array de objetos combinando miembros y roles
+        const memberRolesList = members.map((member: any, index: number) => ({
+          name: member.name || member.realName,
+          role: roles[index] || 'Sin rol'
+        }));
+
         return (
-          <span style={{ color: '#2563eb', fontWeight: 600 }}>{members}</span>
-        );
-      }
-    },
-    {
-      field: 'roles',
-      headerName: 'Roles',
-      width: 220,
-      renderCell: (params) => {
-        const roles = Array.isArray(params.value) ? params.value.join(', ') : params.value || '';
-        return (
-          <span style={{ color: '#10b981', fontWeight: 600 }}>{roles}</span>
+          <Select
+            value=""
+            displayEmpty
+            sx={{ width: '100%', height: 40 }}
+            renderValue={() => `${members.length} miembro${members.length !== 1 ? 's' : ''}`}
+          >
+            {memberRolesList.map((item: any, index: number) => (
+              <MenuItem key={index} value={index}>
+                {item.name}
+                <span style={{ marginLeft: '8px', color: '#6b7280', fontSize: '0.875em' }}>
+                  ({item.role})
+                </span>
+              </MenuItem>
+            ))}
+          </Select>
         );
       }
     },
@@ -614,16 +698,17 @@ const Requests: React.FC = () => {
 
 
       console.log('newrequest', newrequest)
-      // Separar miembros en apprentices y artists según el tipo
+      // Separar miembros en apprentices y artists según el tipo, incluyendo los roles
       const members = Array.isArray(newrequest.members) ? newrequest.members : [];
       const apprentices = members
-        .filter((m: any) => m.type === 'apprentice' && m.memberId)
-        .map((m: any) => Number(m.memberId));
+        .filter((m: any) => m.type === 'apprentice' && m.memberId && m.role)
+        .map((m: any) => [Number(m.memberId), m.role]);
       const artists = members
-        .filter((p: any) => p.type === 'artist' && p.memberId)
+        .filter((p: any) => p.type === 'artist' && p.memberId && p.role)
         .map((p: any) => [
-          Number(p.memberId.apprenticeId ?? p.memberId.ApprenticeId),
-          Number(p.memberId.groupId ?? p.memberId.GroupId)
+          Number(Array.isArray(p.memberId) ? p.memberId[0] : p.memberId),
+          Number(Array.isArray(p.memberId) ? p.memberId[1] : 0),
+          p.role
         ]);
 
 
@@ -632,7 +717,6 @@ const Requests: React.FC = () => {
       const payload = {
         groupName: newrequest.groupName || newrequest.name,
         idAgency: user?.profileData?.agencyId || newrequest.idAgency || agency.agencyId,
-        roles: Array.isArray(newrequest.roles) ? newrequest.roles : members.map((m: any) => m.role),
         idConcept: newrequest.concept?.id || newrequest.idConcept || newrequest.concept,
         apprentices,
         artists,

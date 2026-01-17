@@ -92,6 +92,7 @@ const Artist: React.FC = () => {
           dateOfBirth: apprenticeMap[artist.ApprenticeId]?.dateOfBirth || ''
         }));
         setArtistsRows(formattedData);
+        console.log('Artistas cargados:', formattedData);
       } catch (error) {
         console.error('Error al cargar artistas:', error);
       } finally {
@@ -129,12 +130,13 @@ const Artist: React.FC = () => {
     }
   };
 
-  const handleEditSave = async (updatedRow: Artista) => {
+  const handleEditSave = async (updatedRow: any) => {
     try {
       // PUT /api/artist/:apprenticeId&:groupId - Requiere rol Staff
       // Necesitamos los IDs compuestos del artista
       const apprenticeId = updatedRow.ApprenticeId || updatedRow.id;
       const groupId = updatedRow.GroupId || 0;
+      console.log("Fila actualizada",updatedRow)
       
       const response = await fetch(`http://localhost:3000/api/artist/${apprenticeId}&${groupId}`, {
         method: 'PUT',
@@ -142,7 +144,14 @@ const Artist: React.FC = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify(updatedRow)
+        body: JSON.stringify(
+          {
+            ArtistName: updatedRow.ArtistName,
+            DebutDate: updatedRow.DebutDate,
+            Status: updatedRow.Status,
+            id : updatedRow.id
+          }
+        )
       });
 
       if (!response.ok) {
@@ -150,9 +159,21 @@ const Artist: React.FC = () => {
       }
 
       const data = await response.json();
+      console.log("Respuesta de actualización:",data);
       setArtistsRows(prev =>
-        prev.map(artist => artist.id === updatedRow.id ? (data.data || data) : artist)
-      );
+  prev.map(artist =>
+    artist.id === updatedRow.id
+      ? {
+          ...artist, // mantenemos el id y campos necesarios
+          ArtistName: data.data?.ArtistName || updatedRow.ArtistName,
+          Status: data.data?.Status || updatedRow.Status,
+          DebutDate: data.data?.DebutDate || updatedRow.DebutDate,
+          // otros campos que quieras actualizar
+        }
+      : artist
+  )
+);
+      console.log('Artista actualizado:', artistsRows);
       setOpenAccept(true);
     } catch (error) {
       console.error('Error al actualizar artista:', error);
@@ -219,7 +240,8 @@ const Artist: React.FC = () => {
             showEditButton={true}
             showCreateButton={false}
             userRole={user?.role}
-            //constraints={artistConstraints}
+            showDeleteButton={false}
+            constraints={artistConstraints}
             //createEntity="artist"
           />
           <ConfirmDialog 
