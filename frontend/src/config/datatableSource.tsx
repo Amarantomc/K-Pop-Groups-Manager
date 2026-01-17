@@ -34,8 +34,64 @@ export const artistColumns: GridColDef[] = [
 export const groupColumns: GridColDef[] = [
     { field: 'name', headerName: 'Nombre Grupo', width: 200 },
     { field: 'debutDate', headerName: 'Fecha Debut', width: 150 },
-    { field: 'members', headerName: 'No. Miembros', width: 120 },
     { field: 'status', headerName: 'Estado', width: 120 },
+    {field: 'agency',headerName:'Agencia',width:200},
+    {field:'albums',
+        headerName:'Albums',
+        width:200,
+        renderCell:(params) => {
+            const albums = params.value || []
+            if (albums.length === 0) {
+        return (
+        <Typography variant="body2" color="text.secondary" sx={{ width: '100%', py: 1 }}>
+            Sin albums
+        </Typography>
+        );
+    }
+            return(
+                    <Select
+                    value=""
+                    displayEmpty
+                    sx={{ width: '100%', height: 40 }}
+                renderValue={() => `${albums.length} album${albums.length !== 1 ? 's' : ''}`}
+            >
+            {albums.map((album: any) => (
+                <MenuItem key={album.id} value={album.id}>
+                {album.titulo}
+                </MenuItem>
+            ))}
+        </Select>
+            )
+        }
+    },
+    {field:'members',
+        headerName:'Miembros',
+        width:200,
+        renderCell:(params) => {
+            const members = params.value || []
+            if (members.length === 0) {
+        return (
+        <Typography variant="body2" color="text.secondary" sx={{ width: '100%', py: 1 }}>
+            Sin miembros
+        </Typography>
+        );
+    }
+            return(
+                    <Select
+                    value=""
+                    displayEmpty
+                    sx={{ width: '100%', height: 40 }}
+                renderValue={() => `${members.length} miembro${members.length !== 1 ? 's' : ''}`}
+            >
+            {members.map((member: any) => (
+                <MenuItem key={member.id} value={member.id}>
+                {member.artisticName}
+                </MenuItem>
+            ))}
+        </Select>
+            )
+        }
+    }
 ]
 
 // Álbum

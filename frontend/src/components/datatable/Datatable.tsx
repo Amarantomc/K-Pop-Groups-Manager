@@ -25,6 +25,7 @@ interface DataTableProps {
   onCreateSave? : (newRow : any) => void;
   onExport?,
   showEditButton? : boolean,
+  showDeleteButton? : boolean,
   constraints? : Record<string, FieldConstraint>;
   createEntity? : string;
   createFields? : Field[];
@@ -35,7 +36,7 @@ interface DataTableProps {
 }
 
 
-const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , checkboxSelection = false , onDelete, onEditSave, onCreateSave ,onExport, showEditButton = true , constraints, createEntity, createFields, onFieldChange, showCreateButton=true, userRole, rowHeight = 52}) => {
+const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , checkboxSelection = false , onDelete, onEditSave, onCreateSave ,onExport, showEditButton = true , constraints, createEntity, createFields, onFieldChange, showCreateButton=true, userRole, rowHeight = 52,showDeleteButton=true}) => {
   const paginationModel = { page: 0, pageSize: pagesize };
 
    const [editModalOpen, setEditModalOpen] = useState(false);
@@ -84,7 +85,7 @@ const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , c
       return (
         <div className='cellAction'>
             {showEditButton && (<Button startIcon = {<EditIcon/>}className='viewButton' onClick={() => handleEdit(params.row)}>Editar</Button>)}
-            <Button startIcon={<DeleteIcon/>} className='deleteButton' onClick={() => {onDelete && onDelete(params.row.id)}}>Eliminar</Button>
+            {showDeleteButton && (<Button startIcon={<DeleteIcon/>} className='deleteButton' onClick={() => {onDelete && onDelete(params.row.id)}}>Eliminar</Button>)}
         </div>
 
         

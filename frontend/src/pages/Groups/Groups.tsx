@@ -137,86 +137,13 @@ const Groups: React.FC = () => {
                         id : group.id ?? index,
                         name : group.name,
                         debutDate : group.debut,
-                        members : group.memberCount,
+                        members : group.members,
                         status : group.status,
+                        albums : group.albums,
+                        agency : group.agency.name,
                         
-                        IdAgency : group.IdAgency,
                     }))
         setGroups(formattedData);
-        // ============================================
-        // FIN SECCIÓN: BACKEND ENDPOINT
-        // ============================================
-
-        // ============================================
-        // SECCIÓN: DATOS DEMO
-        // ============================================
-
-        /*
-     const mockGroups: Group[] = [
-       {
-         id: 1,
-         name: 'Phoenix',
-         debutDate: '2023-03-15',
-         genre: 'K-Pop',
-         memberCount: 5,
-         agencyName: 'K-Pop Stars Agency',
-         status: 'active',
-         description: 'Grupo de K-Pop con enfoque en performances energéticos y coreografías complejas'
-       },
-       {
-         id: 2,
-         name: 'Starlight',
-         debutDate: '2022-07-22',
-         genre: 'K-Pop',
-         memberCount: 4,
-         agencyName: 'K-Pop Stars Agency',
-         status: 'active',
-         description: 'Girl group conocido por sus conceptos elegantes y vocales poderosos'
-       },
-       {
-         id: 3,
-         name: 'Dreamers',
-         debutDate: '2021-11-08',
-         genre: 'Pop',
-         memberCount: 6,
-         agencyName: 'K-Pop Stars Agency',
-         status: 'active',
-         description: 'Grupo versátil con estilo pop contemporáneo'
-       },
-       {
-         id: 4,
-         name: 'Thunder Squad',
-         debutDate: '2020-05-30',
-         genre: 'Hip-Hop',
-         memberCount: 3,
-         agencyName: 'Global Entertainment',
-         status: 'on_hiatus',
-         description: 'Crew de hip-hop con enfoque en rap y producción'
-       },
-       {
-         id: 5,
-         name: 'Crystal Hearts',
-         debutDate: '2019-02-14',
-         genre: 'R&B',
-         memberCount: 4,
-         agencyName: 'Global Entertainment',
-         status: 'disbanded',
-         description: 'Grupo de R&B disuelto en 2024'
-       }
-     ];
-
-     // Filtrar según rol para la demo
-     let filteredGroups = mockGroups;
-     if (user.role === 'manager' || user.role === 'director') {
-       // Filtrar por agencia (en demo mostramos los de K-Pop Stars Agency)
-       filteredGroups = mockGroups.filter(group => group.agencyName === 'K-Pop Stars Agency');
-     }
-
-     setGroups(filteredGroups);
-     */
-      //============================================
-      //FIN SECCIÓN: DATOS DEMO
-      //============================================ 
 
       } catch (error) {
         console.error('Error al cargar grupos:', error);
@@ -256,10 +183,16 @@ const Groups: React.FC = () => {
       // PUT /api/group/update/:id - Sin autenticación
       const response = await fetch(`http://localhost:3000/api/group/update/${updatedRow.id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
+          headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify(updatedRow)
+        body: JSON.stringify(
+          {name :updatedRow.name,
+          debut :updatedRow.debutDate,
+          status :updatedRow.status,
+          }
+        )
       });
 
       if (!response.ok) {
