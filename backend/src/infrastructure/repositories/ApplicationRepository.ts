@@ -6,7 +6,6 @@ import { Application, Apprentice } from "../../domain";
 import { ApplicationResponseDto } from "../../application/dtos/application(solicitud)/ApplicationResponseDto";
 import type { CreateApplicationDto } from "../../application/dtos/application(solicitud)/CreateApplicationDto";
 import type { UpdateApplicationDto } from "../../application/dtos/application(solicitud)/UpdateApplicationDto";
-import { CreateGroupUseCase } from '../../application/usesCase/group/CreateGroupUseCase';
 import type { ApplicationCreateGroupDTO } from "../../application/dtos/application(solicitud)/ApplicationCreateGroupDTO";
 import type { CreateRolApplicationDto } from "../../application/dtos/application(solicitud)/CreateRolApplicationDto";
 import type { Artist } from "../../domain/entities/Artist";
@@ -416,7 +415,6 @@ export class ApplicationRepository implements IApplicationRepository
     //console.log(groupWithRelations);
     return GroupResponseDTO.toEntity(groupWithRelations);
   }
- 
 
   private async checkCreatorCanCreateApplication(idApprentice: number,idGroup: number | undefined): Promise<void> {
   
@@ -594,7 +592,6 @@ const artists: Array<[number, number, string]> = (data.artists ?? []).map(
       throw new Error(error?.message || "Error creating role application");
     }
   }
-
   
   async create(data: CreateApplicationDto): Promise<Application> {
     const idAgency = Number(data.idAgency);
@@ -668,8 +665,6 @@ const artists: Array<[number, number, string]> = (data.artists ?? []).map(
     return ApplicationResponseDto.toEntity(application);
   }
 
-
-
   async findById(id: string): Promise<Application | null> {
     const application = await this.db.Solicitud.findUnique({
       where: { id: Number(id) },
@@ -706,9 +701,8 @@ const artists: Array<[number, number, string]> = (data.artists ?? []).map(
   
     return ApplicationResponseDto.toEntity(application);
   }
-    
 
-    async update(id: string, data: Partial<UpdateApplicationDto>): Promise<Application> {
+  async update(id: string, data: Partial<UpdateApplicationDto>): Promise<Application> {
         const application = await this.db.Solicitud.update({
           where: { id: Number(id) },
           data: {
@@ -717,10 +711,9 @@ const artists: Array<[number, number, string]> = (data.artists ?? []).map(
           },
         });
         return ApplicationResponseDto.toEntity(application);
-      }
+  }
 
-
-      async delete(id: string): Promise<void> {
+  async delete(id: string): Promise<void> {
         const solicitudId = Number(id);
       
         await this.db.$transaction([
@@ -736,9 +729,9 @@ const artists: Array<[number, number, string]> = (data.artists ?? []).map(
             where: { id: solicitudId },
           }),
         ]);
-      }
+  }
 
-      async findAll(): Promise<Application[]> {
+  async findAll(): Promise<Application[]> {
         const applications = await this.db.Solicitud.findMany({
           include: {
             SolicitudGrupoAprendiz: {
@@ -768,7 +761,7 @@ const artists: Array<[number, number, string]> = (data.artists ?? []).map(
         });
       
         return ApplicationResponseDto.toEntities(applications);
-      }
+  }
 
 
   

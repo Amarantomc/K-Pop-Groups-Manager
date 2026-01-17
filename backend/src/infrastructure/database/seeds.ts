@@ -1779,7 +1779,7 @@ console.log('🎸 Creando lanzamientos de grupos...')
   //#region  APRENDICES SOLICITANDO GRUPOS
   await prisma.aprendizSolicitaGrupo.createMany({
     data: [
-      { idAp: aprendiz1.id, idAg: smEntertainment.id, idSolicitud: solicitud1.id, rol: "LIDER", estado: "APROBADO" },
+      { idAp: aprendiz1.id, idAg: smEntertainment.id, idSolicitud: solicitud1.id, rol: "LIDER", estado: "ACEPTADO" },
       { idAp: aprendiz2.id, idAg: ygEntertainment.id, idSolicitud: solicitud1.id, rol: "VOCALISTA", estado: "PENDIENTE" },
       { idAp: aprendiz7.id, idAg: starshipEntertainment.id, idSolicitud: solicitud1.id, rol: "BATERISTA", estado: "PENDIENTE" },
       { idAp: aprendiz8.id, idAg: hibeEntertainment.id, idSolicitud: solicitud1.id, rol: "RAPERO", estado: "RECHAZADO" },
@@ -1857,10 +1857,10 @@ console.log('🎸 Creando lanzamientos de grupos...')
     data: [
       { idAp: artista16!.idAp, idGr: artista16!.idGr, idAg: ygEntertainment.id, idSolicitud: solicitud1.id, rol: "VOCALISTA", estado: "RECHAZADO" },
 
-      { idAp: artista14!.idAp, idGr: artista14!.idGr, idAg: ygEntertainment.id, idSolicitud: solicitud2.id, rol: "LIDER", estado: "APROBADO" },
+      { idAp: artista14!.idAp, idGr: artista14!.idGr, idAg: ygEntertainment.id, idSolicitud: solicitud2.id, rol: "LIDER", estado: "ACEPTADO" },
 
       { idAp: artista15!.idAp, idGr: artista15!.idGr, idAg: hibeEntertainment.id, idSolicitud: solicitud3.id, rol: "VOCALISTA", estado: "PENDIENTE" },
-      { idAp: artista16!.idAp, idGr: artista16!.idGr, idAg: ygEntertainment.id, idSolicitud: solicitud3.id, rol: "LIDER", estado: "APROBADO" }
+      { idAp: artista16!.idAp, idGr: artista16!.idGr, idAg: ygEntertainment.id, idSolicitud: solicitud3.id, rol: "LIDER", estado: "ACEPTADO" }
 
     ]
   })
@@ -1937,8 +1937,8 @@ main()
     console.log('   - 7 Agencias')
     console.log('   - 7 Conceptos y 7 Conceptos visuales')
     console.log('   - 8 Grupos K-Pop')
-    console.log('   - 12 Aprendices')
-    console.log('   - 8 Artistas')
+    console.log('   - 40 Aprendices')
+    console.log('   - 35 Artistas')
     console.log('   - 16 Contratos (8 individuales + 8 de grupo)')
     console.log('   - 24 Canciones')
     console.log('   - 8 Álbumes')
