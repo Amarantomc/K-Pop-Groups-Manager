@@ -21,11 +21,11 @@ interface CalendarProps {
 }
 
 export const transformDate = (dateStr: string) => {
-  const date = new Date(dateStr)
+   const date = new Date(dateStr)
 
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
+  const year = date.getUTCFullYear()  // <-- Cambiado a UTC
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0');  // <-- UTC
+  const day = String(date.getUTCDate()).padStart(2, '0');  // <-- UTC
 
   return `${year}-${month}-${day}`;
 }
@@ -401,7 +401,7 @@ const Calendar: React.FC<CalendarProps> = ({
                           </p>
                           <p className="activity-datetime">{activity.time}</p>
                         </div>
-                        {isArtist && (
+                        {isArtist && activity.status === 'PENDIENTE' && (
                           <div className="activity-actions">
                             <button className="day-menu-add-button" onClick={() => { onAcept(activity.id); setShowDayMenu(false)}}>
                               <svg
@@ -434,8 +434,17 @@ const Calendar: React.FC<CalendarProps> = ({
                             </button>
                           </div>
                         )}
-
+                                          {isArtist && activity.status !== "PENDIENTE" && (
+                    <div className="activity-status-indicator">
+                      <span className={`status-badge status-${activity.status.toLowerCase()}`}>
+                        {activity.status === "ACEPTADO" ? "✓ Confirmado" : 
+                        activity.status === "RECHAZADO" ? "✗ Rechazado" : 
+                        activity.status}
+                      </span>
+                    </div>
+                        )}
                       </div>
+                      
                     ))}
                   </div>
                   {!isArtist && selectedDateStr && isDateWithinFiveDays(selectedDateStr) && (<button className="day-menu-add-button" onClick={handleAddFromDayMenu}>

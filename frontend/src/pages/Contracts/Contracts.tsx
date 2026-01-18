@@ -64,7 +64,7 @@ const Contracts: React.FC = () => {
 
   // Lógica para mostrar botones de aceptar/rechazar solo al líder de grupo
   let columns = baseColumns;
-  if (user && user.role === 'artist' && user.profileData?.groupId) {
+  if (user && user.role === 'artist') {
     columns = [
       ...baseColumns,
       {
@@ -72,43 +72,71 @@ const Contracts: React.FC = () => {
         headerName: 'Acción Líder',
         width: 220,
         renderCell: (params: any) => {
+          
           // Solo mostrar si el contrato es de grupo, el usuario es líder y el estado es 'negociacion'
-          const isGroupContract = params.row.type === 'Group';
-          const isNegotiation = params.row.status === 'negociacion';
-          const isUserGroupLeader = user.profileData?.groupId && params.row.entityId === user.profileData.groupId && user.permissions.includes('group_leader');
-          if (isGroupContract && isNegotiation && isUserGroupLeader) {
+          // const isGroupContract = params.row.type === 'Group';
+          const isNegotiation = params.row.status === 'Pendiente';
+          // Estilos para botones habilitados vs deshabilitados
+        const acceptButtonStyle = {
+          marginRight: 8,
+          border: 'none',
+          borderRadius: 4,
+          padding: '4px 10px',
+          cursor: isNegotiation ? 'pointer' : 'not-allowed',
+          background: isNegotiation ? '#10b981' : '#d1d5db',
+          color: isNegotiation ? 'white' : '#6b7280',
+          opacity: isNegotiation ? 1 : 0.7
+        };
+        
+        const rejectButtonStyle = {
+          border: 'none',
+          borderRadius: 4,
+          padding: '4px 10px',
+          cursor: isNegotiation ? 'pointer' : 'not-allowed',
+          background: isNegotiation ? '#ef4444' : '#d1d5db',
+          color: isNegotiation ? 'white' : '#6b7280',
+          opacity: isNegotiation ? 1 : 0.7
+        };
+          // const isUserGroupLeader = user.profileData?.groupId && params.row.entityId === user.profileData.groupId && user.permissions.includes('group_leader');
+          //Caso para mostrar el aceptar ,rechazar
             return (
               <>
                 <button
-                  style={{ marginRight: 8, background: '#10b981', color: 'white', border: 'none', borderRadius: 4, padding: '4px 10px', cursor: 'pointer' }}
-                  disabled={processingId === params.row.id}
+                  style={acceptButtonStyle}
+                  disabled={!isNegotiation || processingId === params.row.id}
                   onClick={() => handleAcceptContract(params.row)}
+                  title={!isNegotiation ? "Solo disponible para contratos Pendientes" : ""}
                 >Aceptar</button>
                 <button
-                  style={{ background: '#ef4444', color: 'white', border: 'none', borderRadius: 4, padding: '4px 10px', cursor: 'pointer' }}
-                  disabled={processingId === params.row.id}
+                  style={rejectButtonStyle}
+                  disabled={!isNegotiation || processingId === params.row.id}
                   onClick={() => handleRejectContract(params.row)}
+                  title={!isNegotiation ? "Solo disponible para contratos Pendientes" : ""}
                 >Rechazar</button>
               </>
             );
-          }
-          return null;
         }
       }
     ];
   }
 
   // Funciones para aceptar/rechazar contrato
+  //Falta ver como se actualizan los contratos
   const handleAcceptContract = async (row: any) => {
     setProcessingId(row.id);
     try {
       // Llama al endpoint para aprobar el contrato y la solicitud asociada
-      const response = await fetch(`http://localhost:3000/api/contract/${row.id}/approve`, {
-        method: 'POST',
+      const response = await fetch(`http://localhost:3000/api/contract`, {
+        method: 'PUT',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json'
-        }
+        },
+        body : JSON.stringify(
+          {
+            
+          }
+        )
       });
       if (!response.ok) throw new Error('Error al aprobar el contrato');
       // Actualiza el estado local
@@ -159,6 +187,9 @@ const Contracts: React.FC = () => {
           case 'director':
             endpoint = `/api/contract?agencyId=${user.agencyId}`;
             break;
+          case 'artist':
+            endpoint = `/api/contract?agencyId=${user.agencyId}`
+            break;
           case 'admin':
             endpoint = '/api/contract';
             break;
@@ -182,6 +213,7 @@ const Contracts: React.FC = () => {
 
         const data = await response.json();
         const contractsArray = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
+        console.log(data)
         const formattedContracts = contractsArray.map((contract: any, index: number) => ({
           id: index,
           type: contract.type,
@@ -192,6 +224,7 @@ const Contracts: React.FC = () => {
           initialConditions: contract.initialConditions,
           incomeDistribution: contract.incomeDistribution
         }));
+        console.log(formattedContracts)
         setContracts(formattedContracts);
         // ============================================
         // FIN SECCIÓN: BACKEND ENDPOINT
@@ -379,11 +412,13 @@ const Contracts: React.FC = () => {
   }
 
   // Permitir acceso a artistas (líderes de grupo) para aceptar/rechazar
+  console.log(user)
   if (
     user.role !== 'manager' &&
     user.role !== 'director' &&
     user.role !== 'admin' &&
-    !(user.role === 'artist' && user.profileData?.groupId && user.permissions.includes('group_leader'))
+    user.role !== 'artist'
+    // !(user.role === 'artist' && user.profileData?.groupId && user.permissions.includes('group_leader'))
   ) {
     return (
       <PageLayout title="Contratos" description="No tienes permisos para ver esta página">
