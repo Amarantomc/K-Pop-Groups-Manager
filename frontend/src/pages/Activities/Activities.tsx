@@ -54,6 +54,7 @@ const Activities: React.FC = () => {
           case 'director':
             // Todas las actividades de todos los artistas de la agencia del manager o director
             endpoint = `/api/activity?agencyId=${user.agencyId}`;
+            console.log("endpoint",endpoint)
             break;
 
           case 'admin':
@@ -87,7 +88,8 @@ const Activities: React.FC = () => {
           activityType: activity.activityType,
           date: activity.date,
           place: activity.place,
-          responsible: activity.responsible
+          responsible: activity.responsible,
+          status : activity.status
         }))
         setActivities(formattedData);
         console.log(formattedData)

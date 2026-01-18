@@ -372,6 +372,12 @@ export const MenuByRole: Record<string, MenuSection[]> = {
             ]
         },
         {
+            title:"CONTRATOS",
+            items : [
+                {label:"MIS CONTRATOS",icon : <WorkIcon/>,path: "/artist/contracts"}
+            ]
+        },
+        {
             title: "LISTAS DE POPULARIDAD",
             items: [
                 { label: "Mostrar Listas de Popularidad", icon: <TrendingUpIcon />, path: "/artist/popularity-lists" }
