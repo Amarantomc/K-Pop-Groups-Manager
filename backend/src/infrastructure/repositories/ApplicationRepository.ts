@@ -24,7 +24,6 @@ export class ApplicationRepository implements IApplicationRepository
     @inject(Types.IUnitOfWork) private unitOfWork: UnitOfWork,
   ) {}
 
-
   private get db() {
     return this.unitOfWork.getTransaction();
   }
@@ -32,11 +31,11 @@ export class ApplicationRepository implements IApplicationRepository
   async getApprenticesWhithoutApplication(): Promise<Apprentice[]> {
     const apprentices = await this.db.Aprendiz.findMany({
       where: {
-
         SolicitudGrupo: {
-          none: {
-            estado: "ACEPTADO",
-          },
+          none: { estado: "ACEPTADO" },
+        },
+        Artista: {
+          is: null, // Si no hay artista asociado
         },
       },
     });
@@ -46,44 +45,64 @@ export class ApplicationRepository implements IApplicationRepository
 
   async apprenticeDecisionByApplication(idApplication: number,idApprentice: number,decision: boolean): Promise<void> {
   
-    const solicitud = await this.db.Solicitud.findUnique({
-      where: 
-      { 
+    const solicitud = await this.db.Solicitud.findFirst({
+      where: {
         id: idApplication,
-        estado: "PENDIENTE"
+        estado: "PENDIENTE",
       },
-      select: { idAgencia: true },
     });
   
     if (!solicitud) {
-      throw new Error("Solicitud no encontrada");
+      throw new Error("Solicitud no encontrada o no está pendiente");
     }
   
-    const idAg = solicitud.idAgencia;
-  
-    const solicitudAprendiz = await this.db.AprendizSolicitaGrupo.findUnique({
+    const solicitudAprendiz = await this.db.AprendizSolicitaGrupo.findFirst({
       where: {
-        idAp_idAg_idSolicitud: {
-          idAp: idApprentice,
-          idAg,
-          idSolicitud: idApplication,
-        },
+        idAp: idApprentice,
+        idSolicitud: idApplication,
       },
     });
   
     if (!solicitudAprendiz) {
       throw new Error("El aprendiz no pertenece a esta solicitud");
     }
-  
-    if (solicitudAprendiz.estado !== "PENDIENTE") {
-      throw new Error("Este aprendiz ya fue evaluado");
+
+    if (decision) {
+      const otraAceptada = await this.db.AprendizSolicitaGrupo.findFirst({
+        where: {
+          idAp: idApprentice,
+          estado: "ACEPTADO",
+          idSolicitud: { not: idApplication },
+        },
+      });
+    
+      if (otraAceptada) {
+        throw new Error(
+          "El aprendiz ya tiene otra solicitud aceptada. No puede aceptar dos solicitudes."
+        );
+      }
     }
   
+    // SI ACEPTA → RECHAZAR TODAS LAS DEMÁS
+    if (decision) {
+      await this.db.AprendizSolicitaGrupo.updateMany({
+      where: {
+          idAp: idApprentice,
+          idSolicitud: { not: idApplication },
+        estado: { in: ["ACEPTADO", "PENDIENTE"] },
+      },
+      data: {
+          estado: "RECHAZADO",
+      },
+    });
+    }
+
+    // UPDATE FORZADO DE ESTA SOLICITUD
     await this.db.AprendizSolicitaGrupo.update({
       where: {
         idAp_idAg_idSolicitud: {
           idAp: idApprentice,
-          idAg,
+          idAg: solicitudAprendiz.idAg,
           idSolicitud: idApplication,
         },
       },
@@ -92,27 +111,38 @@ export class ApplicationRepository implements IApplicationRepository
       },
     });
   
-    const [aprendices, artistas] = await Promise.all([
-      this.db.AprendizSolicitaGrupo.findMany({
-        where: { idSolicitud: idApplication },
-        select: { estado: true },
-      }),
-      this.db.ArtistaSolicitaGrupo.findMany({
-        where: { idSolicitud: idApplication },
-        select: { estado: true },
-      }),
-    ]);
+    // REEVALUAR ESTADO GLOBAL
   
-    const estados = [...aprendices, ...artistas].map(e => e.estado);
+    const aprendices = await this.db.AprendizSolicitaGrupo.findMany({
+      where: { idSolicitud: idApplication },
+      select: { estado: true, rol: true },
+    });
   
-    if (estados.length > 0 && estados.every(e => e === "ACEPTADO")) {
+    const artistas = await this.db.ArtistaSolicitaGrupo.findMany({
+      where: { idSolicitud: idApplication },
+      select: { estado: true, rol: true },
+    });
+  
+    const miembros = [...aprendices, ...artistas];
+  
+    const lider = miembros.find(m => m.rol === "LIDER");
+    const resto = miembros.filter(m => m.rol !== "LIDER");
+  
+    // APROBADO
+    if (miembros.length > 0 && miembros.every(m => m.estado === "ACEPTADO")) {
       await this.db.Solicitud.update({
         where: { id: idApplication },
         data: { estado: "APROBADO" },
       });
+      return;
     }
   
-    if (estados.length > 0 && estados.every(e => e === "RECHAZADO")) {
+    // RECHAZADO (solo líder aceptado)
+    if (
+      lider?.estado === "ACEPTADO" &&
+      resto.length > 0 &&
+      resto.every(m => m.estado === "RECHAZADO")
+    ) {
       await this.db.Solicitud.update({
         where: { id: idApplication },
         data: { estado: "RECHAZADO" },
@@ -122,29 +152,21 @@ export class ApplicationRepository implements IApplicationRepository
 
   async artistDecisionByApplication(idApplication: number,idApprentice: number,idGroup: number,decision: boolean): Promise<void> {
   
-    const solicitud = await this.db.Solicitud.findUnique({
-      where: 
-      { 
+    const solicitud = await this.db.Solicitud.findFirst({
+      where: {
         id: idApplication,
-        estado: "PENDIENTE"
+        estado: "PENDIENTE",
       },
-      select: { idAgencia: true },
     });
   
     if (!solicitud) {
-      throw new Error("Solicitud no encontrada");
+      throw new Error("Solicitud no encontrada o no está pendiente");
     }
   
-    const idAg = solicitud.idAgencia;
-  
-    const solicitudArtista = await this.db.ArtistaSolicitaGrupo.findUnique({
+    const solicitudArtista = await this.db.ArtistaSolicitaGrupo.findFirst({
       where: {
-        idAp_idGr_idAg_idSolicitud: {
-          idAp: idApprentice,
-          idGr: idGroup,
-          idAg,
-          idSolicitud: idApplication,
-        },
+        idAp: idApprentice,
+        idSolicitud: idApplication,
       },
     });
   
@@ -152,16 +174,44 @@ export class ApplicationRepository implements IApplicationRepository
       throw new Error("El artista no pertenece a esta solicitud");
     }
   
-    if (solicitudArtista.estado !== "PENDIENTE") {
-      throw new Error("Este artista ya fue evaluado");
+    // CHECK: NO PUEDE TENER OTRA ACEPTADA
+    if (decision) {
+      const otraAceptada = await this.db.ArtistaSolicitaGrupo.findFirst({
+        where: {
+          idAp: idApprentice,
+          estado: "ACEPTADO",
+          idSolicitud: { not: idApplication },
+        },
+      });
+  
+      if (otraAceptada) {
+        throw new Error(
+          "El artista ya tiene otra solicitud aceptada. No puede aceptar dos solicitudes."
+        );
+      }
     }
   
+    // SI ACEPTA → RECHAZAR TODAS LAS DEMÁS
+    if (decision) {
+      await this.db.ArtistaSolicitaGrupo.updateMany({
+        where: {
+          idAp: idApprentice,
+          idSolicitud: { not: idApplication },
+          estado: { in: ["ACEPTADO", "PENDIENTE"] },
+        },
+        data: {
+          estado: "RECHAZADO",
+        },
+      });
+    }
+  
+    // UPDATE FORZADO DE ESTA SOLICITUD
     await this.db.ArtistaSolicitaGrupo.update({
       where: {
         idAp_idGr_idAg_idSolicitud: {
           idAp: idApprentice,
           idGr: idGroup,
-          idAg,
+          idAg: solicitudArtista.idAg,
           idSolicitud: idApplication,
         },
       },
@@ -170,27 +220,37 @@ export class ApplicationRepository implements IApplicationRepository
       },
     });
   
-    const [aprendices, artistas] = await Promise.all([
-      this.db.AprendizSolicitaGrupo.findMany({
-        where: { idSolicitud: idApplication },
-        select: { estado: true },
-      }),
-      this.db.ArtistaSolicitaGrupo.findMany({
-        where: { idSolicitud: idApplication },
-        select: { estado: true },
-      }),
-    ]);
+    // REEVALUAR ESTADO GLOBAL
+    const aprendices = await this.db.AprendizSolicitaGrupo.findMany({
+      where: { idSolicitud: idApplication },
+      select: { estado: true, rol: true },
+    });
   
-    const estados = [...aprendices, ...artistas].map(e => e.estado);
+    const artistas = await this.db.ArtistaSolicitaGrupo.findMany({
+      where: { idSolicitud: idApplication },
+      select: { estado: true, rol: true },
+    });
   
-    if (estados.length > 0 && estados.every(e => e === "ACEPTADO")) {
+    const miembros = [...aprendices, ...artistas];
+  
+    const lider = miembros.find(m => m.rol === "LIDER");
+    const resto = miembros.filter(m => m.rol !== "LIDER");
+  
+    // APROBADO
+    if (miembros.length > 0 && miembros.every(m => m.estado === "ACEPTADO")) {
       await this.db.Solicitud.update({
         where: { id: idApplication },
         data: { estado: "APROBADO" },
       });
+      return;
     }
   
-    if (estados.length > 0 && estados.every(e => e === "RECHAZADO")) {
+    // RECHAZADO (solo líder aceptado)
+    if (
+      lider?.estado === "ACEPTADO" &&
+      resto.length > 0 &&
+      resto.every(m => m.estado === "RECHAZADO")
+    ) {
       await this.db.Solicitud.update({
         where: { id: idApplication },
         data: { estado: "RECHAZADO" },
@@ -248,22 +308,9 @@ export class ApplicationRepository implements IApplicationRepository
       throw new Error("Solicitud no encontrada");
     }
 
-    if(application.estado == "TERMINADA"){
+    if(application.estado == "APROBADO" || application.estado == "RECHAZADO"){
       throw new Error("Solicitud ya aceptada");
-    }
-
-    // Crear grupo
-    const group = await this.db.Grupo.create({
-      data: {
-        nombreCompleto: dto.groupName,
-        fechaDebut: dto.debut,
-        estadoGrupo: "ACTIVO",
-        idConcepto: dto.conceptId,
-        idConceptoVisual: dto.visualConceptId,
-        Nomiembros: dto.memberCount,
-        Agencias: { connect: { id: dto.agencyId } },
-      },
-    });
+    } 
   
     const apprentices = await this.db.AprendizSolicitaGrupo.findMany({
       where: {
@@ -282,10 +329,26 @@ export class ApplicationRepository implements IApplicationRepository
     const totalMembers = apprentices.length + artists.length;
 
     if (totalMembers < 2) {
-     throw new Error("La solicitud no tiene suficientes miembros aceptados. " +
-      "Se requiere al menos 2 personas (aprendices o artistas) para crear un grupo."
-     );
-    }
+      throw new Error("La solicitud no tiene suficientes miembros aceptados. " +
+       "Se requiere al menos 2 personas (aprendices o artistas) para crear un grupo."
+      );
+     }
+
+    // Crear grupo
+    const group = await this.db.Grupo.create({
+      data: {
+        nombreCompleto: dto.groupName,
+        fechaDebut: dto.debut,
+        estadoGrupo: "ACTIVO",
+        idConcepto: dto.conceptId,
+        idConceptoVisual: dto.visualConceptId,
+        Nomiembros: totalMembers,
+        Agencias: { connect: { id: dto.agencyId } },
+      },
+    });
+
+
+    
     //  APRENDICES → ARTISTAS
     for (const a of apprentices) {
   
@@ -401,18 +464,26 @@ export class ApplicationRepository implements IApplicationRepository
   //#endregion
 
 
-    const groupWithRelations = await this.db.Grupo.findUnique({
-      where: { id: group.id },
-      include: {
-        concepto: true,
-        conceptoVisual: true,
-        Agencias: true,
-        Artista: { include: { aprendiz: true } },
-        HistorialArtistas: true,
+  const groupWithRelations = await this.db.Grupo.findUnique({
+    where: { id: group.id },
+    include: {
+      concepto: true,
+      conceptoVisual: true,
+      Agencias: true,
+      HistorialArtistas: {
+        where: { fechaFinalizacion: null },
+        include: {
+          artista: {
+            include: {
+              aprendiz: true,
+            },
+          },
+        },
       },
-    });
-  
-    //console.log(groupWithRelations);
+    },
+  });
+    
+    
     return GroupResponseDTO.toEntity(groupWithRelations);
   }
 
@@ -491,31 +562,31 @@ export class ApplicationRepository implements IApplicationRepository
         throw new Error("Agency or Concept not found");
       }
   
-// NORMALIZAR ARRAYS (forzar rol)
+      // NORMALIZAR ARRAYS (forzar rol)
 
-const apprentices: Array<[number, string]> = (data.apprentices ?? []).map(
-  (a: any) => {
-    // viene como [idAp, rol]
-    if (Array.isArray(a) && a.length === 2) {
-      return [a[0], a[1]];
-    }
+      const apprentices: Array<[number, string]> = (data.apprentices ?? []).map(
+        (a: any) => {
+          // viene como [idAp, rol]
+          if (Array.isArray(a) && a.length === 2) {
+            return [a[0], a[1]];
+          }
 
-    // viene como idAp suelto
-    return [a, "MIEMBRO"];
-  }
-);
+          // viene como idAp suelto
+          return [a, "MIEMBRO"];
+        }
+      );
 
-const artists: Array<[number, number, string]> = (data.artists ?? []).map(
-  (a: any) => {
-    // viene como [idAp, idGr, rol]
-    if (Array.isArray(a) && a.length === 3) {
-      return [a[0], a[1], a[2]];
-    }
+      const artists: Array<[number, number, string]> = (data.artists ?? []).map(
+        (a: any) => {
+          // viene como [idAp, idGr, rol]
+          if (Array.isArray(a) && a.length === 3) {
+            return [a[0], a[1], a[2]];
+          }
 
-    // viene como [idAp, idGr]
-    return [a[0], a[1], "MIEMBRO"];
-  }
-);
+          // viene como [idAp, idGr]
+          return [a[0], a[1], "MIEMBRO"];
+        }
+      );
   
       // AGREGAR CREADOR COMO LÍDER
       if (!data.idGroup) {
@@ -578,22 +649,33 @@ const artists: Array<[number, number, string]> = (data.artists ?? []).map(
         },
   
         include: {
-          AprendizMiembro: true,
-          ArtistaMiembro: true,
-          SolicitudGrupoAprendiz: true,
-          SolicitudGrupoArtista: true,
+          SolicitudGrupoAprendiz: {
+            include: {
+              aprendiz: true,
+            },
+          },
+          SolicitudGrupoArtista: {
+            include: {
+              artista: {
+                include: {
+                  aprendiz: true,
+                },
+              },
+            },
+          },
         },
       });
   
       return ApplicationResponseDto.toEntity(application);
   
     } catch (error: any) {
-      console.error("Error creating role application:", error);
+      //console.error("Error creating role application:", error);
       throw new Error(error?.message || "Error creating role application");
     }
   }
   
   async create(data: CreateApplicationDto): Promise<Application> {
+
     const idAgency = Number(data.idAgency);
     const idConcept = Number(data.idConcept);
   
@@ -616,9 +698,7 @@ const artists: Array<[number, number, string]> = (data.artists ?? []).map(
         idConcepto: idConcept,
         estado: data.status ?? "PENDIENTE",
   
-        // =========================
         // RELACIÓN MIEMBROS
-        // =========================
         AprendizMiembro: {
           connect: data.apprentices.map(([idAp]) => ({
             id: idAp,
@@ -631,9 +711,7 @@ const artists: Array<[number, number, string]> = (data.artists ?? []).map(
           })),
         },
   
-        // =========================
         // SOLICITUDES (CON ROL)
-        // =========================
         SolicitudGrupoAprendiz: {
           create: data.apprentices.map(([idAp, rol]) => ({
             idAp,

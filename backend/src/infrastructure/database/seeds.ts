@@ -1849,7 +1849,7 @@ console.log('🎸 Creando lanzamientos de grupos...')
   //#region  ARTISTAS SOLICITANDO GRUPOS
   const artista14 = await prisma.artista.findUnique({where:{idAp: 14}});
   const artista15 = await prisma.artista.findUnique({where:{idAp: 15}})
-  const artista16 = await prisma.artista.findUnique({where:{idAp: 15}})
+  const artista16 = await prisma.artista.findUnique({where:{idAp: 16}})
 
 
   console.log('⭐ Creando solicitudes de artistas para nuevos grupos...')
