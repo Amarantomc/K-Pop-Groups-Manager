@@ -216,25 +216,30 @@ export class AgencyRepository implements IAgencyRepository {
 	}
 	async getAgencyByApprenticeOrArtist(apprenticeId: number,groupId?: number): Promise<Agency> {
 	  
-		//s CASO ARTISTA
+		// CASO ARTISTA contrato activo (fechaFinalizacion > hoy)
 		if (groupId) {
-		  const contrato = await this.db.contrato.findFirst({
+			const contrato = await this.db.contrato.findFirst({
 			where: {
-			  idAp: apprenticeId,
-			  idGr: groupId,
-			  fechaFinalizacion: null, // contrato activo
+				idAp: apprenticeId,
+				idGr: groupId,
+				fechaFinalizacion: {
+				gt: new Date(),
+				},
+				estado: "ACTIVO"
 			},
 			orderBy: {
-			  fechaInicio: "desc",
+				fechaInicio: "desc",
 			},
 			include: {
-			  agencia: true,
+				Agencia: true,
 			},
-		  });
-	  
-		  if (contrato?.agencia) {
-			return AgencyResponseDTO.toEntity(contrato.agencia);
-		  }
+			});
+		
+			if (!contrato) {
+			throw new Error("El artista no tiene un contrato activo.");
+			}
+		
+			return AgencyResponseDTO.toEntity(contrato.Agencia);
 		}
 	  
 		// CASO APRENDIZ
