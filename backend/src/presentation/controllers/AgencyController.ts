@@ -15,6 +15,7 @@ import { inject, injectable } from "inversify";
 import { Types } from "../../infrastructure/di/Types";
 import type { GroupsWithActiveContractsUseCase } from "../../application/usesCase/agency/GroupsWithActiveContractsUseCase";
 import type { ArtistsWithActiveContractsUseCase } from "../../application/usesCase/agency/ArtistsWithActiveContractsUseCases";
+import type { GetAgencyByApprenticeOrArtistUseCase } from "../../application/usesCase/agency/GetAgencyByApprenticeOrArtistUseCase";
 
 @injectable()
 export class AgencyController {
@@ -29,10 +30,12 @@ constructor(@inject(Types.CreateAgencyUseCase)  private createAgencyUseCase: Cre
 			@inject(Types.UpdateAgencyUseCase)  private updateAgencyUseCase: UpdateAgencyUseCase,
 			@inject(Types.GroupsWithActiveContractsUseCase)  private groupsWithActiveContractsUseCase: GroupsWithActiveContractsUseCase,
 			@inject(Types.ArtistsWithActiveContractsUseCase)  private artistsWithActiveContractsUseCase: ArtistsWithActiveContractsUseCase,
-		
+			@inject(Types.GetAgencyByApprenticeOrArtistUseCase) private getAgencyByApprenticeOrArtistUseCase: GetAgencyByApprenticeOrArtistUseCase,
+
 		) {}
 		
-			
+	
+		
 	async groupsWithActiveContracts(req: Request, res: Response) {
 			try {
 				const { idAgency } = req.params;
@@ -143,6 +146,32 @@ constructor(@inject(Types.CreateAgencyUseCase)  private createAgencyUseCase: Cre
 			res.status(400).json({ success: false, error: error.message });
 		}
 	}
+
+
+
+	async getByApprenticeOrArtist(req: Request, res: Response) {
+		try {
+		  const { apprenticeId, groupId } = req.params;
+	
+		  if (!apprenticeId) {
+			throw new Error("El id del aprendiz/artista es obligatorio");
+		  }
+	
+		  // Convertimos los parámetros a número
+		  const apprenticeIdNum = Number(apprenticeId);
+		  const groupIdNum = groupId && groupId !== "null" ? Number(groupId) : undefined;
+	
+		  const agency = await this.getAgencyByApprenticeOrArtistUseCase.execute(
+			apprenticeIdNum,
+			groupIdNum
+		  );
+	
+		  res.json({ success: true, data: agency });
+		} catch (error: any) {
+		  res.status(400).json({ success: false, error: error.message });
+		}
+	  }
+
 
 	async findAgenciesByFoundation(req: Request, res: Response) {
 		try {

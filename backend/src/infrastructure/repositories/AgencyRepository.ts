@@ -19,6 +19,8 @@ import type { Apprentice, Song, Album, Activity, Contract, Income, Concept } fro
 export class AgencyRepository implements IAgencyRepository {
 	constructor(@inject(Types.PrismaClient) private prisma: any, 
 	@inject(Types.IUnitOfWork) private unitOfWork: UnitOfWork) {}
+
+	
 	
 
 	private get db() {
@@ -70,8 +72,8 @@ export class AgencyRepository implements IAgencyRepository {
 		}
 	  
 		return ArtistResponseDto.toEntities(Array.from(artistMap.values()));
-	  }
-	  async groupsWithActiveContracts(agencyId: number,date: Date | string): Promise<Group[]> {
+	}
+	async groupsWithActiveContracts(agencyId: number,date: Date | string): Promise<Group[]> {
 	  
 		const targetDate = new Date(date);
 	  
@@ -107,7 +109,7 @@ export class AgencyRepository implements IAgencyRepository {
 		}
 	  
 		return GroupResponseDTO.toEntities(Array.from(groupMap.values()));
-	  }
+	}
 	async create(data: CreateAgencyDTO): Promise<Agency> {
 		const agency = await this.db.agencia.create({
 			data: {
@@ -212,6 +214,65 @@ export class AgencyRepository implements IAgencyRepository {
 	
 		await this.db.agencia.delete({ where: { id: numericId } });
 	}
+	async getAgencyByApprenticeOrArtist(apprenticeId: number,groupId?: number): Promise<Agency> {
+	  
+		//s CASO ARTISTA
+		if (groupId) {
+		  const contrato = await this.db.contrato.findFirst({
+			where: {
+			  idAp: apprenticeId,
+			  idGr: groupId,
+			  fechaFinalizacion: null, // contrato activo
+			},
+			orderBy: {
+			  fechaInicio: "desc",
+			},
+			include: {
+			  agencia: true,
+			},
+		  });
+	  
+		  if (contrato?.agencia) {
+			return AgencyResponseDTO.toEntity(contrato.agencia);
+		  }
+		}
+	  
+		// CASO APRENDIZ
+		// Primero chequeamos que no sea artista
+		const artista = await this.db.artista.findFirst({
+			where: {
+			  idAp: apprenticeId,
+			},
+		  });
+		
+		  if (artista) {
+			throw new Error(
+			  `El aprendiz con id ${apprenticeId} ya está registrado como artista`
+			);
+		  }
+		
+		  // Si no es artista, buscamos la agencia activa
+		  const aprendizEnAgencia = await this.db.aprendizEnAgencia.findFirst({
+			where: {
+			  idAp: apprenticeId,
+			  fechaFinalizacion: null,
+			},
+			orderBy: {
+			  fechaInicio: "desc",
+			},
+			include: {
+			  agencia: true,
+			},
+		  });
+		
+		  if (!aprendizEnAgencia) {
+			throw new Error(
+			  `No se encontró ninguna agencia activa para el aprendiz con id ${apprenticeId}`
+			);
+		  }
+		
+		  return AgencyResponseDTO.toEntity(aprendizEnAgencia.agencia);
+	  }
 	groupByAgency(AgencyId: number): Promise<Group[]> {
 		throw new Error("Method not implemented.");
 	}

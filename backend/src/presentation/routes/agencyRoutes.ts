@@ -21,7 +21,9 @@ export class AgencyRoutes {
 			AuthMiddleware.authenticate(),
 			RoleMiddleware.onlyStaff(),
 			(req, res) =>this.agencyController.createAgency(req, res));
+		this.router.get("/by-member/:apprenticeId/:groupId", (req, res) =>this.agencyController.getByApprenticeOrArtist(req, res));
 		this.router.get("/", (req, res) =>this.agencyController.listAgencies(req, res));
+		this.router.get("/by-member/:apprenticeId", (req, res) =>this.agencyController.getByApprenticeOrArtist(req, res));
 		this.router.get("/:id", (req, res) =>this.agencyController.getAgency(req, res));
 		this.router.put("/:id", RoleMiddleware.onlyStaff(), (req, res) =>this.agencyController.updateAgency(req, res));
 		this.router.delete("/:id",
