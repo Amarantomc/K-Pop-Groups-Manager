@@ -197,8 +197,9 @@ import { ArtistsWithActiveContractsUseCase } from "../../application/usesCase/ag
 import { CreateRolApplicationUseCase } from "../../application/usesCase/application(solicitud)/CreateRolApplicationUseCase";
 import { ArtistDecisionByApplicationUseCase } from "../../application/usesCase/apprentice/ArtistDecisionByApplicationUseCase";
 import { ApprenticeDecisionByApplicationUseCase } from "../../application/usesCase/apprentice/ApprenticeDecisionByApplicationUseCase";
-import { GetApprenticesWhithoutApplicationUseCase } from "../../application/usesCase/apprentice/getApprenticesWhithoutApplicationUseCase";
 import { SoloistsArtistWhithoutApplicationUseCase } from "../../application/usesCase/application(solicitud)/SoloistsArtistWhithoutApplicationUseCase";
+import { GetAgencyByApprenticeOrArtistUseCase } from "../../application/usesCase/agency/GetAgencyByApprenticeOrArtistUseCase";
+import { GetApprenticesWhithoutApplicationUseCase } from "../../application/usesCase/apprentice/GetApprenticesWhithoutApplicationUseCase";
  
 const container=new Container()
  
@@ -493,6 +494,10 @@ container.bind<UpdateUserUseCase>(Types.UpdateUserUseCase)
 
   container.bind<CreateAgencyUseCase>(Types.CreateAgencyUseCase)
   .to(CreateAgencyUseCase)
+  .inTransientScope();
+
+  container.bind<GetAgencyByApprenticeOrArtistUseCase>(Types.GetAgencyByApprenticeOrArtistUseCase)
+  .to(GetAgencyByApprenticeOrArtistUseCase)
   .inTransientScope();
 
   container.bind<DeleteAgencyUseCase>(Types.DeleteAgencyUseCase)

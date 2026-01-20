@@ -78,6 +78,8 @@ const Types = {
   GetSoloArtistsProfesionalHistoryUseCase:Symbol.for('GetSoloArtistsProfesionalHistoryUseCase'),
   GroupsWithActiveContractsUseCase: Symbol.for('GroupsWithActiveContractsUseCase'),
   ArtistsWithActiveContractsUseCase: Symbol.for('ArtistsWithActiveContractsUseCase'),
+  GetAgencyByApprenticeOrArtistUseCase: Symbol.for('GetAgencyByApprenticeOrArtistUseCase'),
+
 
 //#endregion
 
@@ -122,6 +124,7 @@ FindActivitiesByArtist :Symbol.for('FindActivitiesByArtist'),
 AddArtistToActivityUseCase:Symbol.for('AddArtistToActivityUseCase'),
 FindActivitiesByGroupUseCase:Symbol.for('FindActivitiesByGroupUseCase'),
 AcceptOrRejectActivityUseCase: Symbol.for('AcceptOrRejectActivityUseCase'),
+
 //#endregion 
 
 
