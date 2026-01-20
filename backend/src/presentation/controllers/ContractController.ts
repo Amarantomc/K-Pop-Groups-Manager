@@ -9,6 +9,7 @@ import type { FindContractByIdUseCase } from "../../application/usesCase/contrac
 import type { GetAllContractUseCase } from "../../application/usesCase/contract/GetAllContractUseCase";
 import type { OfferContractUseCase } from "../../application/usesCase/contract/OfferContractUseCase";
 import type { GroupOfferContractUseCase } from "../../application/usesCase/contract/GroupOfferContractUseCase";
+import type { UpdateContractStatusUseCase } from "../../application/usesCase/contract/UpdateContractStatusUseCase";
 
 @injectable()
 export class ContractController{
@@ -19,6 +20,8 @@ export class ContractController{
                 @inject(Types.GetAllContractsUseCase) private getAllContractsUseCase:GetAllContractUseCase,
                 @inject(Types.OfferContractUseCase) private offerContractUseCase: OfferContractUseCase,
                 @inject(Types.GroupOfferContractUseCase) private groupOfferContractUseCase: GroupOfferContractUseCase,
+                @inject(Types.UpdateContractStatusUseCase) private updateContractStatusUseCase: UpdateContractStatusUseCase,
+
                 ){}
 
 
@@ -142,4 +145,40 @@ export class ContractController{
         })
     }
     }
+
+    async updateStatus(req: Request, res: Response): Promise<void> {
+      try {
+        const { agencyId, groupId } = req.params;
+        const { apprenticeId, status } = req.body;
+  
+        if (!agencyId || !groupId) {
+          throw new Error("agencyId and groupId are required");
+        }
+  
+        if (!status) {
+          throw new Error("status is required");
+        }
+  
+        const contract = await this.updateContractStatusUseCase.execute(
+          Number(agencyId),
+          Number(groupId),
+          apprenticeId !== undefined && apprenticeId !== null
+            ? Number(apprenticeId)
+            : null,
+          status
+        );
+  
+        res.status(200).json({
+          success: true,
+          data: contract,
+        });
+  
+      } catch (error: any) {
+        res.status(400).json({
+          success: false,
+          error: error.message,
+        });
+      }
+    }
+    
 }

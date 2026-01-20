@@ -383,6 +383,18 @@ export class ApplicationRepository implements IApplicationRepository
           rol: a.rol,
         },
       });
+
+      // Actualizar en tabla aprendiz en agencia
+      await this.db.aprendizEnAgencia.updateMany({
+        where:{
+          idAp: a.idAp,
+			    fechaFinalizacion: null,
+        },
+        data:{
+          estado: "ARTISTA",
+          fechaFinalizacion: new Date()
+        }
+      })
   
     }
 

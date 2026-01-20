@@ -9,6 +9,7 @@ import type { Artist } from "../../domain/entities/Artist";
 import { ArtistResponseDto } from "../../application/dtos/artist/ArtistResponseDto";
 import type { Group } from "../../domain/entities/Group";
 import { GroupResponseDTO } from "../../application/dtos/group/GroupResponseDTO";
+import { error } from "console";
 
 @injectable()
 export class ContractRepository implements IContractRepository{
@@ -165,6 +166,97 @@ export class ContractRepository implements IContractRepository{
       })
      } 
        return ContractResponseDto.toEntity(contract,!apprenticeId? "Group":"Artist")
+    }
+
+    async updateStatus(agencyId: number,groupId: number,apprenticeId: number | null,status: string): Promise<Contract> {
+    
+      // CASO 1: CONTRATO ARTISTA
+      if (apprenticeId !== null) {
+        const contrato = await this.db.contrato.findFirst({
+          where: {
+            idAg: agencyId,
+            idGr: groupId,
+            idAp: apprenticeId,
+            estado: "PENDIENTE"
+          },
+          orderBy: {
+            fechaInicio: "desc",
+          },
+          include: {
+            Agencia: true,
+            Artista: {
+              include: {
+                aprendiz: true,
+                grupo: true,
+              },
+            },
+          },
+        });
+    
+        if (!contrato) {
+          throw new Error("Active artist contract not found");
+        }
+    
+        const updated = await this.db.contrato.update({
+          where: {
+            idAg_idAp_idGr_fechaInicio: {
+              idAg: contrato.idAg,
+              idAp: contrato.idAp,
+              idGr: contrato.idGr,
+              fechaInicio: contrato.fechaInicio,
+            },
+          },
+          data: {
+            estado: status,
+          },
+          include: {
+            Agencia: true,
+            Artista: {
+              include: {
+                aprendiz: true,
+                grupo: true,
+              },
+            },
+          },
+        });
+    
+        return ContractResponseDto.toEntity(updated, "Artist");
+      }
+    
+      // CASO 2: CONTRATO DE GRUPO
+      const contratoGrupo = await this.db.contratoGrupo.findFirst({
+        where: {
+          idAg: agencyId,
+          IdGr: groupId,
+          estado: "PENDIENTE"
+        },
+        orderBy: {
+          fechaInicio: "desc",
+        },
+        include: {
+          Agencia: true,
+          Grupo: true,
+        },
+      });
+    
+      if (!contratoGrupo) {
+        throw new Error("Active group contract not found");
+      }
+    
+      const updatedGroup = await this.db.contratoGrupo.update({
+        where: {
+          id: contratoGrupo.id,
+        },
+        data: {
+          estado: status,
+        },
+        include: {
+          Agencia: true,
+          Grupo: true,
+        },
+      });
+    
+      return ContractResponseDto.toEntity(updatedGroup, "Group");
     }
 
     async delete(idC: any): Promise<void> {

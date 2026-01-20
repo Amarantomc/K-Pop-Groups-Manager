@@ -200,6 +200,7 @@ import { ApprenticeDecisionByApplicationUseCase } from "../../application/usesCa
 import { SoloistsArtistWhithoutApplicationUseCase } from "../../application/usesCase/application(solicitud)/SoloistsArtistWhithoutApplicationUseCase";
 import { GetAgencyByApprenticeOrArtistUseCase } from "../../application/usesCase/agency/GetAgencyByApprenticeOrArtistUseCase";
 import { GetApprenticesWhithoutApplicationUseCase } from "../../application/usesCase/apprentice/GetApprenticesWhithoutApplicationUseCase";
+import { UpdateContractStatusUseCase } from "../../application/usesCase/contract/UpdateContractStatusUseCase";
  
 const container=new Container()
  
@@ -1008,6 +1009,11 @@ container.bind<CreateVisualConceptUseCase>(Types.CreateVisualConceptUseCase)
   container.bind<GroupOfferContractUseCase>(Types.GroupOfferContractUseCase)
   .to(GroupOfferContractUseCase)
   .inTransientScope();
+
+  container.bind<UpdateContractStatusUseCase>(Types.UpdateContractStatusUseCase)
+  .to(UpdateContractStatusUseCase)
+  .inTransientScope();
+  
   //#endregion
 
 

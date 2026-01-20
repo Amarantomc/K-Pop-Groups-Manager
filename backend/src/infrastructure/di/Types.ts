@@ -211,6 +211,7 @@ UpdateContractUseCase : Symbol.for('UpdateContractUseCase'),
 DeleteContractUseCase : Symbol.for('DeleteContractUseCase'),
 OfferContractUseCase : Symbol.for('OfferContractUseCase'),
 GroupOfferContractUseCase:Symbol.for('GroupOfferContractUseCase'),
+UpdateContractStatusUseCase: Symbol.for('UpdateContractStatusUseCase'),
 //#endregion
 
 

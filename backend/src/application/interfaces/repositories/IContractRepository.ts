@@ -9,5 +9,6 @@ export interface IContractRepository extends IBaseRepository<Contract,CreateCont
     findByArtist(apprenticeId:number,groupId:number):Promise<Contract[]>;
     offerContract():Promise<Artist[]>; //artistas con estado EN PAUSA
     groupsOfferContract(): Promise<Group[]> //grupos con estado EN PAUSA
+    updateStatus(agencyId: number, groupId: number, apprenticeId:number | null ,status: string): Promise<Contract>;
 
 }
