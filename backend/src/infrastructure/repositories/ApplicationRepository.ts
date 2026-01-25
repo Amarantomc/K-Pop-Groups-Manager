@@ -308,8 +308,8 @@ export class ApplicationRepository implements IApplicationRepository
       throw new Error("Solicitud no encontrada");
     }
 
-    if(application.estado == "VALIDADA" || application.estado == "RECHAZADO"){
-      throw new Error("Solicitud ya aceptada");
+    if(application.estado == "COMPLETADA" || application.estado == "RECHAZADO"){
+      throw new Error("Solicitud rechazada o ya complenada");
     } 
   
     const apprentices = await this.db.AprendizSolicitaGrupo.findMany({
@@ -450,7 +450,7 @@ export class ApplicationRepository implements IApplicationRepository
   //terminar ya con la solicitud 
     await this.db.Solicitud.update({
       where: { id: applicationId },
-      data: { estado: "TERMINADA" },
+      data: { estado: "COMPLETADA" },
     });
 
   //#region Rechazar a los artistas y aprendices en pendiente
