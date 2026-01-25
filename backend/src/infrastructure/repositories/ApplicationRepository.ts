@@ -309,8 +309,11 @@ export class ApplicationRepository implements IApplicationRepository
     }
 
     if(application.estado == "COMPLETADA" || application.estado == "RECHAZADO"){
-      throw new Error("Solicitud rechazada o ya complenada");
-    } 
+      throw new Error("Solicitud rechazada o ya completada");
+    }
+    // if(application.estado == "PENDIENTE"){
+    //   throw new Error("Solicitud en proceso");
+    // }
   
     const apprentices = await this.db.AprendizSolicitaGrupo.findMany({
       where: {
@@ -395,6 +398,35 @@ export class ApplicationRepository implements IApplicationRepository
           fechaFinalizacion: new Date()
         }
       })
+
+      const perfilAprendiz = await this.db.PerfilAprendiz.findUnique({
+        where: { aprendizId: a.idAp },
+      });
+
+      if (!perfilAprendiz) {
+        throw new Error(`Aprendiz ${a.idAp} no tiene PerfilAprendiz`);
+      }
+
+      const userId = perfilAprendiz.userId;
+
+      await this.db.PerfilAprendiz.delete({
+        where: { userId },
+      });
+
+      await this.db.PerfilArtista.create({
+        data: {
+          userId,
+          IdAp: a.idAp,
+          IdGr: group.id,
+        },
+      });
+
+      await this.db.User.update({
+        where: { id: userId },
+        data: {
+          role: "ARTISTA",
+        },
+      });
   
     }
 
