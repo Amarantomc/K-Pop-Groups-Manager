@@ -75,8 +75,13 @@ const DataTable : React.FC<DataTableProps> = ({columns , rows , pagesize = 5 , c
 
   // Guardar nuevo registro en creación
   const handleCreateSave = (data: any) => {
+    console.log('[DataTable] handleCreateSave llamado con data:', data);
     if (onCreateSave) {
+      console.log('[DataTable] Llamando a onCreateSave...');
       onCreateSave(data);
+      console.log('[DataTable] onCreateSave completado');
+    } else {
+      console.error('[DataTable] ERROR: onCreateSave no está definido');
     }
     handleCreateClose();
   };
