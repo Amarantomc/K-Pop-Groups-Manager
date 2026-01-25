@@ -308,7 +308,7 @@ export class ApplicationRepository implements IApplicationRepository
       throw new Error("Solicitud no encontrada");
     }
 
-    if(application.estado == "APROBADO" || application.estado == "RECHAZADO"){
+    if(application.estado == "VALIDADA" || application.estado == "RECHAZADO"){
       throw new Error("Solicitud ya aceptada");
     } 
   
