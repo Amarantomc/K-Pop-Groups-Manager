@@ -4,6 +4,7 @@ export class CreateAwardDto {
     constructor(
       public readonly awardTitle: string,
       public readonly academyName: string,
+      public readonly requirement?: number,
       //public readonly albums?: Album[]
     ) {}
   
@@ -16,6 +17,8 @@ export class CreateAwardDto {
       return new CreateAwardDto(
         body.awardTitle,
         body.academyName,
+        body.requirement
+
       );
     }
   }

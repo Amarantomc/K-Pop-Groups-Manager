@@ -214,7 +214,7 @@ export class AgencyRepository implements IAgencyRepository {
 	
 		await this.db.agencia.delete({ where: { id: numericId } });
 	}
-	async getAgencyByApprenticeOrArtist(apprenticeId: number,groupId?: number): Promise<Agency> {
+	async getAgencyByApprenticeOrArtist(apprenticeId: number,groupId?: number): Promise<Agency | null> {
 	  
 		// CASO ARTISTA contrato activo (fechaFinalizacion > hoy)
 		if (groupId) {
@@ -236,7 +236,8 @@ export class AgencyRepository implements IAgencyRepository {
 			});
 		
 			if (!contrato) {
-			throw new Error("El artista no tiene un contrato activo.");
+			//throw new Error("El artista no tiene un contrato activo.");
+			return null;
 			}
 		
 			return AgencyResponseDTO.toEntity(contrato.Agencia);

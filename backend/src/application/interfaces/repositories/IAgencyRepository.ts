@@ -13,7 +13,7 @@ export interface IAgencyRepository
 	findAll(): Promise<Agency[]>;
 	artistsWithActiveContracts(AgencyId:number,date: Date | string):Promise<Artist[]>;
 	groupsWithActiveContracts(AgencyId:number,date: Date | string):Promise<Group[]>;
-	getAgencyByApprenticeOrArtist(apprenticeId:number, groupId?:number):Promise<Agency>;
+	getAgencyByApprenticeOrArtist(apprenticeId:number, groupId?:number):Promise<Agency | null>;
 	groupByAgency(AgencyId:number):Promise<Group[]>;
 	apprenticeByAgency(AgencyId:number):Promise<Apprentice[]>;
 	artistByAgency(AgencyId:number):Promise<Artist[]>;

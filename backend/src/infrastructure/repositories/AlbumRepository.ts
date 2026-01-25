@@ -70,7 +70,7 @@ export class AlbumRepository implements IAlbumRepository
     if (!album){
       throw new Error('album not found');
     }
-     
+     console.log(album);
     return AlbumResponseDto.toEntity(album);
 }
 
@@ -216,7 +216,7 @@ export class AlbumRepository implements IAlbumRepository
               }
           }
       });
-  
+      console.log(albums);
       return AlbumResponseDto.toEntities(albums);
   }
 

@@ -170,11 +170,22 @@ export class ApprenticeRepository implements IApprenticeRepository {
     }
 
     async findById(id: any): Promise<Apprentice | null> {
-        id = Number(id);
-        const apprentice = await this.db.Aprendiz.findUnique({
-            where: { id }
-        });
-        return apprentice ? ApprenticeResponseDto.toEntity(apprentice) : null;
+      id = Number(id);
+    
+      const apprentice = await this.db.Aprendiz.findFirst({
+        where: {
+          id: id,
+          Artista: {
+            is: null,
+          },
+        },
+      });
+    
+      if (!apprentice) {
+        throw new Error("Es un fucking artista o no existe");
+      }
+    
+      return ApprenticeResponseDto.toEntity(apprentice);
     }
 
     async update(id: string, data: Partial<CreateApprenticeDto>): Promise<Apprentice> {
@@ -261,8 +272,15 @@ export class ApprenticeRepository implements IApprenticeRepository {
       }
 
     async findAll(): Promise<Apprentice[]> {
-        const apprentices = await this.db.Aprendiz.findMany();
-        return ApprenticeResponseDto.toEntities(apprentices);
+      const apprentices = await this.db.Aprendiz.findMany({
+        where: {
+          Artista: {
+            is: null, 
+          },
+        },
+      });
+    
+      return ApprenticeResponseDto.toEntities(apprentices);
     }
 
     async listByAgency(id: number): Promise<Apprentice[]> {

@@ -712,20 +712,20 @@ export class ApplicationRepository implements IApplicationRepository
   
         // RELACIÓN MIEMBROS
         AprendizMiembro: {
-          connect: data.apprentices.map(([idAp]) => ({
+          connect: data.apprentices!.map(([idAp]) => ({
             id: idAp,
           })),
         },
   
         ArtistaMiembro: {
-          connect: data.artists.map(([idAp, idGr]) => ({
+          connect: data.artists!.map(([idAp, idGr]) => ({
             idAp_idGr: { idAp, idGr },
           })),
         },
   
         // SOLICITUDES (CON ROL)
         SolicitudGrupoAprendiz: {
-          create: data.apprentices.map(([idAp, rol]) => ({
+          create: data.apprentices!.map(([idAp, rol]) => ({
             idAp,
             idAg: idAgency,
             rol,
@@ -734,7 +734,7 @@ export class ApplicationRepository implements IApplicationRepository
         },
   
         SolicitudGrupoArtista: {
-          create: data.artists.map(([idAp, idGr, rol]) => ({
+          create: data.artists!.map(([idAp, idGr, rol]) => ({
             idAp,
             idGr,
             idAg: idAgency,

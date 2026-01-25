@@ -118,36 +118,98 @@
     }
 
     async create(data: CreateActivityDto): Promise<Activity> {
-
-        console.log(data);
-        const activity = await this.db.actividad.create({
-          data: {
-            responsable: data.responsible,
-            tipoActividad: data.activityType,
-            tipoEvento: data.eventType,
-            fecha: new Date(data.date),
-            lugar: data.place,
-      
-            Personas: { create: [
-                ...data.artists!.map(([idAp, idGr]) => ({
-                  idAp,
-                  idGr,
-                  aceptado: null, 
-                })),
-
-                ...data.groups!.map((idGrupos) => ({
-                  idGrupos,
-                  aceptado: null, 
-                })),
-              ],
+      const baseDate = new Date(data.date);
+      const to = new Date(baseDate);
+      to.setDate(to.getDate() + 5);
+    
+      const artistIds = data.artists?.map(([idAp]) => idAp) ?? [];
+      const groupIds = data.groups ?? [];
+    
+      const conflicts = await this.db.actividad.findMany({
+        where: {
+          fecha: {
+            gt: baseDate,
+            lte: to,
+          },
+          Personas: {
+            some: {
+              OR: [
+                artistIds.length ? { idAp: { in: artistIds } } : undefined,
+                groupIds.length ? { idGrupos: { in: groupIds } } : undefined,
+              ].filter(Boolean),
             },
           },
-          include: {
-            Personas: true,
+        },
+        include: { Personas: true },
+      });
+    
+      const conflictArtistIds = new Set<number>();
+      const conflictGroupIds = new Set<number>();
+    
+      for (const activity of conflicts) {
+        for (const p of activity.Personas) {
+          if (p.idAp && artistIds.includes(p.idAp)) {
+            conflictArtistIds.add(p.idAp);
+          }
+          if (p.idGrupos && groupIds.includes(p.idGrupos)) {
+            conflictGroupIds.add(p.idGrupos);
+          }
+        }
+      }
+    
+      const conflictedArtists = conflictArtistIds.size
+        ? await this.db.Aprendiz.findMany({
+            where: { id: { in: [...conflictArtistIds] } },
+            select: { nombreCompleto: true },
+          })
+        : [];
+    
+      const conflictedGroups = conflictGroupIds.size
+        ? await this.db.Grupo.findMany({
+            where: { id: { in: [...conflictGroupIds] } },
+            select: { nombre: true },
+          })
+        : [];
+    
+      if (conflictedArtists.length || conflictedGroups.length) {
+        throw new Error(
+          [
+            conflictedArtists.length
+              ? `Artistas: ${conflictedArtists.map((a: { nombreCompleto: any; }) => a.nombreCompleto).join(", ")}`
+              : null,
+            conflictedGroups.length
+              ? `Grupos: ${conflictedGroups.map((g: { nombre: any; }) => g.nombre).join(", ")}`
+              : null,
+          ].filter(Boolean).join(" | ")
+        );
+      }
+    
+      // create normal
+      const activity = await this.db.actividad.create({
+        data: {
+          responsable: data.responsible,
+          tipoActividad: data.activityType,
+          tipoEvento: data.eventType,
+          fecha: baseDate,
+          lugar: data.place,
+          Personas: {
+            create: [
+              ...data.artists!.map(([idAp, idGr]) => ({
+                idAp,
+                idGr,
+                aceptado: null,
+              })),
+              ...data.groups!.map(idGrupos => ({
+                idGrupos,
+                aceptado: null,
+              })),
+            ],
           },
-        });
-      
-        return ActivityResponseDto.toEntity(activity);
+        },
+        include: { Personas: true },
+      });
+    
+      return ActivityResponseDto.toEntity(activity);
     }
 
     async findById(id: string): Promise<Activity | null> {

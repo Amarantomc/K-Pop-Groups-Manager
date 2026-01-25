@@ -56,19 +56,25 @@ export class AwardRepository implements IAwardRepository
         const award= await this.db.Premio.create({
             data:{
                 tituloPremio: data.awardTitle,
-                nombreAcademia: data.academyName
+                nombreAcademia: data.academyName,
+                requisito: data.requirement
             }
         })
         
         
         return AwardResponseDto.toEntity(award)
     }
-    async findById(id: any): Promise<Award| null> {
-         id=(Number)(id)
-        const award=await this.db.Premio.findUnique({
-           where:{id}
-        })
-        return award ? AwardResponseDto.toEntity(award) : null
+    async findById(id: any): Promise<Award | null> {
+      id = Number(id);
+    
+      const award = await this.db.Premio.findUnique({
+        where: { id },
+        include: {
+          Albums: true,
+        },
+      });
+    
+      return award ? AwardResponseDto.toEntity(award) : null;
     }
 
     async update(id: string, data: Partial<UpdateAwardDto>): Promise<Award> {
@@ -99,9 +105,14 @@ export class AwardRepository implements IAwardRepository
           throw new Error(`Error deleting award with id ${id}: ${error}`);
         }
       }
-
-    async findAll(): Promise<Award[]> {
-      const awards = await this.db.Premio.findMany();
-      return AwardResponseDto.toEntities(awards)
-  }
+      
+      async findAll(): Promise<Award[]> {
+        const awards = await this.db.Premio.findMany({
+          include: {
+            Albums: true,
+          },
+        });
+      
+        return AwardResponseDto.toEntities(awards);
+      }
 }
