@@ -379,9 +379,13 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
     console.log('[ModalCreate] handleSubmit - payload final a enviar:', dataToSend);
     console.log('[ModalCreate] onSave callback existe?:', !!onSave);
     if (onSave) {
-      console.log('[ModalCreate] Llamando a onSave...');
-      onSave(dataToSend);
-      console.log('[ModalCreate] onSave completado');
+      try {
+        console.log('[ModalCreate] Llamando a onSave...');
+        onSave(dataToSend);
+        console.log('[ModalCreate] onSave completado exitosamente');
+      } catch (error) {
+        console.error('[ModalCreate] ERROR al ejecutar onSave:', error);
+      }
     } else {
       console.error('[ModalCreate] ERROR: onSave no está definido');
     }
