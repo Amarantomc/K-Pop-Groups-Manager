@@ -185,10 +185,20 @@ const Requests: React.FC = () => {
   // Lógica para aceptar/rechazar solicitud como aprendiz o artista
   const handleAccept = async (requestId: number) => {
     try {
+      console.log('========== INICIO handleAccept ==========');
+      console.log('requestId:', requestId);
+      console.log('user?.role:', user?.role);
+      console.log('user?.id:', user?.id);
+      console.log('user?.profileData:', user?.profileData);
+
       const isArtist = user?.role === 'artist';
+      console.log('isArtist:', isArtist);
+
       const url = isArtist
         ? `http://localhost:3000/api/application/${requestId}/artist-decision`
         : `http://localhost:3000/api/application/${requestId}/apprentice-decision`;
+
+      console.log('URL construida:', url);
 
       const body: any = {
         decision: true,
@@ -197,13 +207,17 @@ const Requests: React.FC = () => {
       if (isArtist) {
         body.apprenticeId = user?.profileData?.IdAp;
         body.groupId = user?.profileData?.IdGr || user?.profileData?.groupId;
+        console.log('Rol: ARTIST - apprenticeId:', body.apprenticeId, '- groupId:', body.groupId);
       } else {
         body.apprenticeId = user?.profileData?.apprenticeId || user?.profileData?.IdAp;
+        console.log('Rol: APPRENTICE - apprenticeId:', body.apprenticeId);
       }
 
-      console.log('handleAccept - user.profileData:', user?.profileData);
-      console.log('handleAccept - body enviado:', body);
-      console.log('handleAccept - URL:', url);
+      console.log('Body final a enviar:', JSON.stringify(body, null, 2));
+      console.log('Headers:', {
+        'Authorization': `Bearer ${localStorage.getItem('token')?.substring(0, 20)}...`,
+        'Content-Type': 'application/json',
+      });
 
       const response = await fetch(url, {
         method: 'PATCH',
@@ -214,30 +228,59 @@ const Requests: React.FC = () => {
         body: JSON.stringify(body)
       });
 
-      console.log('handleAccept - response status:', response.status);
+      console.log('handleAccept - response.status:', response.status);
+      console.log('handleAccept - response.statusText:', response.statusText);
+      console.log('handleAccept - response.ok:', response.ok);
 
-      if (!response.ok) throw new Error('Error al aceptar solicitud');
+      // Leer respuesta del servidor
+      let responseData: any;
+      try {
+        responseData = await response.json();
+        console.log('handleAccept - responseData:', responseData);
+      } catch (e) {
+        console.log('No se pudo parsear respuesta como JSON');
+        const text = await response.text();
+        console.log('Respuesta texto:', text);
+      }
+
+      if (!response.ok) {
+        console.error('Response no fue OK. Status:', response.status);
+        throw new Error(`Error al aceptar solicitud - Status ${response.status}`);
+      }
+
+      console.log('✅ Solicitud aceptada correctamente');
       setSuccessMessage('Solicitud aceptada exitosamente');
       setOpenSuccess(true);
+
       // Recargar solicitudes después de aceptar
       const token = localStorage.getItem('token');
-      const endpoint = user?.role === 'apprentice' 
+      const endpoint = user?.role === 'apprentice'
         ? `/api/application?apprenticeId=${user?.id}&agencyId=${user?.agencyId}`
         : `/api/application?artistId=${user?.id}&agencyId=${user?.agencyId}`;
-      
+
+      console.log('Reloading requests desde endpoint:', endpoint);
+
       const refreshResponse = await fetch(`http://localhost:3000${endpoint}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      
+
+      console.log('refreshResponse.status:', refreshResponse.status);
+
       if (refreshResponse.ok) {
         const data = await refreshResponse.json();
+        console.log('Datos recargados:', data);
         const requestsArray = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
         setRequests(requestsArray);
+        console.log('✅ Solicitudes reloaded correctamente');
       }
+
+      console.log('========== FIN handleAccept EXITOSO ==========');
     } catch (error) {
-      console.error('Error al aceptar solicitud:', error);
+      console.error('❌ Error al aceptar solicitud:', error);
+      console.error('Error stack:', error instanceof Error ? error.stack : 'sin stack');
       setErrorMessage('Error al aceptar solicitud');
       setOpenError(true);
+      console.log('========== FIN handleAccept CON ERROR ==========');
     }
   };
 
@@ -248,20 +291,26 @@ const Requests: React.FC = () => {
       : `http://localhost:3000/api/application/${requestId}/apprentice-decision`;
 
     try {
+      console.log('========== INICIO handleDeny ==========');
+      console.log('requestId:', requestId);
+      console.log('user?.role:', user?.role);
+      console.log('isArtist:', isArtist);
+      console.log('URL construida:', url);
+
       const body: any = {
         decision: false,
       };
 
       if (isArtist) {
-        body.apprenticeId = user?.profileData?.IdAp||user?.profileData?.apprenticeId;
+        body.apprenticeId = user?.profileData?.IdAp || user?.profileData?.apprenticeId;
         body.groupId = user?.profileData?.IdGr || user?.profileData?.groupId;
+        console.log('Rol: ARTIST - apprenticeId:', body.apprenticeId, '- groupId:', body.groupId);
       } else {
         body.apprenticeId = user?.profileData?.apprenticeId || user?.profileData?.IdAp;
+        console.log('Rol: APPRENTICE - apprenticeId:', body.apprenticeId);
       }
 
-      console.log('handleDeny - user.profileData:', user?.profileData);
-      console.log('handleDeny - body enviado:', body);
-      console.log('handleDeny - URL:', url);
+      console.log('Body final a enviar:', JSON.stringify(body, null, 2));
 
       const response = await fetch(url, {
         method: 'PATCH',
@@ -271,31 +320,60 @@ const Requests: React.FC = () => {
         },
         body: JSON.stringify(body)
       });
-      
-      console.log('handleDeny - response status:', response.status);
 
-      if (!response.ok) throw new Error('Error al negar solicitud');
+      console.log('handleDeny - response.status:', response.status);
+      console.log('handleDeny - response.statusText:', response.statusText);
+      console.log('handleDeny - response.ok:', response.ok);
+
+      // Leer respuesta del servidor
+      let responseData: any;
+      try {
+        responseData = await response.json();
+        console.log('handleDeny - responseData:', responseData);
+      } catch (e) {
+        console.log('No se pudo parsear respuesta como JSON');
+        const text = await response.text();
+        console.log('Respuesta texto:', text);
+      }
+
+      if (!response.ok) {
+        console.error('Response no fue OK. Status:', response.status);
+        throw new Error(`Error al negar solicitud - Status ${response.status}`);
+      }
+
+      console.log('✅ Solicitud rechazada correctamente');
       setSuccessMessage('Solicitud rechazada exitosamente');
       setOpenSuccess(true);
+
       // Recargar solicitudes después de rechazar
       const token = localStorage.getItem('token');
       const endpoint = user?.role === 'apprentice'
         ? `/api/application?apprenticeId=${user?.id}&agencyId=${user?.agencyId}`
         : `/api/application?artistId=${user?.id}&agencyId=${user?.agencyId}`;
-      
+
+      console.log('Reloading requests desde endpoint:', endpoint);
+
       const refreshResponse = await fetch(`http://localhost:3000${endpoint}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      
+
+      console.log('refreshResponse.status:', refreshResponse.status);
+
       if (refreshResponse.ok) {
         const data = await refreshResponse.json();
+        console.log('Datos recargados:', data);
         const requestsArray = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
         setRequests(requestsArray);
+        console.log('✅ Solicitudes reloaded correctamente');
       }
+
+      console.log('========== FIN handleDeny EXITOSO ==========');
     } catch (error) {
-      console.error('Error al negar solicitud:', error);
+      console.error('❌ Error al negar solicitud:', error);
+      console.error('Error stack:', error instanceof Error ? error.stack : 'sin stack');
       setErrorMessage('Error al rechazar solicitud');
       setOpenError(true);
+      console.log('========== FIN handleDeny CON ERROR ==========');
     }
   };
 
@@ -337,7 +415,7 @@ const Requests: React.FC = () => {
       renderCell: (params) => {
         const members = Array.isArray(params.row.members) ? params.row.members : [];
         const roles = Array.isArray(params.row.roles) ? params.row.roles : [];
-        
+
         if (members.length === 0) {
           return (
             <Typography variant="body2" color="text.secondary" sx={{ width: '100%', py: 1 }}>
@@ -497,7 +575,18 @@ const Requests: React.FC = () => {
     const fetchRequests = async () => {
       setIsLoading(true);
       try {
-        if (!user) return;
+        console.log('========== INICIO fetchRequests ==========');
+        if (!user) {
+          console.log('No hay usuario, retornando');
+          return;
+        }
+
+        console.log('Usuario actual:', {
+          id: user.id,
+          role: user.role,
+          agencyId: user.agencyId,
+          profileData: user.profileData
+        });
 
         let endpoint = '';
 
@@ -524,57 +613,92 @@ const Requests: React.FC = () => {
             return;
         }
 
+        console.log('Endpoint construido:', endpoint);
+
         // ============================================
         // SECCIÓN: BACKEND ENDPOINT
         // ============================================
 
+        const token = localStorage.getItem('token');
+        console.log('Token presente:', !!token);
+
         const response = await fetch(`http://localhost:3000${endpoint}`, {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${token}`
           }
         });
 
+        console.log('Respuesta del fetch inicial - status:', response.status);
+        console.log('Respuesta del fetch inicial - ok:', response.ok);
+
         if (!response.ok) {
-          throw new Error('Error al obtener solicitudes');
+          throw new Error(`Error al obtener solicitudes - Status ${response.status}`);
         }
 
         const data = await response.json();
-        const requestsArray = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
+        console.log('Data recibida del backend:', data);
 
-        console.log('array de solicitudes', requestsArray)
+        const requestsArray = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
+        console.log('Array de solicitudes extraído:', requestsArray);
+        console.log('Cantidad de solicitudes:', requestsArray.length);
 
         let filteredRequests = requestsArray;
+
         // Filtrar solicitudes según rol y datos del usuario
         if (user.role === 'apprentice') {
+          console.log('Filtrando por APPRENTICE');
+          const apprenticeId = user.profileData?.apprenticeId;
+          console.log('apprenticeId a filtrar:', apprenticeId);
+
           filteredRequests = requestsArray.filter(
-            (req: any) =>
-              Array.isArray(req.apprentices) &&
-              req.apprentices.some((a: any) => a.apprenticeId === Number(user.profileData?.apprenticeId))
+            (req: any) => {
+              const hasApprentices = Array.isArray(req.apprentices);
+              const matches = hasApprentices && req.apprentices.some((a: any) => a.apprenticeId === Number(apprenticeId));
+              console.log(`Solicitud ${req.id}: hasApprentices=${hasApprentices}, matches=${matches}`);
+              return matches;
+            }
           );
         } else if (user.role === 'artist') {
+          console.log('Filtrando por ARTIST');
+          const idAp = user.profileData?.IdAp;
+          const idGr = user.profileData?.IdGr;
+          console.log('idAp a filtrar:', idAp, 'idGr a filtrar:', idGr);
+
           filteredRequests = requestsArray.filter(
-            (req: any) =>
-              Array.isArray(req.artists) &&
-              req.artists.some(
-                (a: any) =>
-                  //console.log(a.idApprentice, user.profileData?.IdAp, a.groupId, user.profileData?.IdGr)
-                  a.idApprentice === Number(user.profileData?.IdAp) &&
-                  a.groupId === Number(user.profileData?.IdGr)
-              )
+            (req: any) => {
+              const hasArtists = Array.isArray(req.artists);
+              const matches = hasArtists && req.artists.some(
+                (a: any) => {
+                  const idApprenticeMatch = a.idApprentice === Number(idAp);
+                  const groupIdMatch = a.groupId === Number(idGr);
+                  console.log(`  Solicitud ${req.id} - Artist: idApprentice=${a.idApprentice} (match=${idApprenticeMatch}), groupId=${a.groupId} (match=${groupIdMatch})`);
+                  return idApprenticeMatch && groupIdMatch;
+                }
+              );
+              console.log(`Solicitud ${req.id}: hasArtists=${hasArtists}, matches=${matches}`);
+              return matches;
+            }
           );
         } else if (user.role === 'manager' || user.role === 'director') {
+          console.log('Filtrando por MANAGER/DIRECTOR');
+          const agencyIdToMatch = user.agencyId || user.profileData?.agencyId;
+          console.log('agencyId a filtrar:', agencyIdToMatch);
+
           filteredRequests = requestsArray.filter(
-            (req: any) =>
-              req.idAgency === Number(user.agencyId) ||
-              req.idAgency === Number(user.profileData?.agencyId)
+            (req: any) => {
+              const matches = req.idAgency === Number(agencyIdToMatch) || req.idAgency === Number(user.profileData?.agencyId);
+              console.log(`Solicitud ${req.id}: idAgency=${req.idAgency}, match=${matches}`);
+              return matches;
+            }
           );
         }
 
-        console.log('solicitudes filtradas:', filteredRequests)
+        console.log('Solicitudes después del filtrado:', filteredRequests.length);
 
         // Obtener nombres de agencia y concepto para cada solicitud
-        //const formattedRequests = await Promise.all(requestsArray.map(async (req: any, index: number) => {
         const formattedRequests = await Promise.all(filteredRequests.map(async (req: any, index: number) => {
+          console.log(`Formateando solicitud ${req.id}...`);
+
           // Obtener nombre de agencia
           let agencyName = req.agency?.name || '';
           if (!agencyName && req.idAgency) {
@@ -587,6 +711,7 @@ const Requests: React.FC = () => {
           if (!conceptName && conceptId) {
             conceptName = await fetchConceptName(conceptId);
           }
+
           // Unir artistas y aprendices, asociar roles
           const artists = Array.isArray(req.artists) ? req.artists : [];
           const apprentices = Array.isArray(req.apprentices) ? req.apprentices : [];
@@ -611,12 +736,14 @@ const Requests: React.FC = () => {
           };
         }));
 
-        console.log('Solicitudes obtenidas del backend:', formattedRequests);
+        console.log('Solicitudes formateadas:', formattedRequests);
+        console.log('Cantidad final de solicitudes:', formattedRequests.length);
         setRequests(formattedRequests);
-
-        //setRequests(formattedData);
+        console.log('✅ fetchRequests completado exitosamente');
+        console.log('========== FIN fetchRequests ==========');
       } catch (error) {
-        console.error('Error al cargar solicitudes:', error);
+        console.error('❌ Error al cargar solicitudes:', error);
+        console.error('Error stack:', error instanceof Error ? error.stack : 'sin stack');
       } finally {
         setIsLoading(false);
       }
@@ -684,17 +811,26 @@ const Requests: React.FC = () => {
     }
   };
 
+  const GetAgencyByMember = async (idAp: number, idGr: number) => {
+
+    const url = user?.role === 'artist' ? `http://localhost:3000/api/agency/by-member/${idAp}/${idGr}
+` : `http://localhost:3000/api/agency/by-member/${idAp}`
+
+    const agency = await fetch(url, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+    const data = await agency.json();
+    console.log('agency data del request', data)
+    return data.data
+  };
+
   const handleCreateSave = async (newrequest: any) => {
     try {
-      const appid = user?.profileData?.IdAp || user?.profileData?.apprenticeId
-      const grid = user?.profileData?.IdGr || user?.profileData?.groupId
-      const url1 = user?.role === 'artist' ? `http://localhost:3000/api/artist/${appid}&${grid}` : `http://localhost:3000/api/application?artistId/${appid}`
-      const agency = await fetch(url1, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
+      const idAp = user?.profileData?.IdAp || user?.profileData?.apprenticeId;
+      const idGr = user?.profileData?.IdGr || user?.profileData?.groupId;
 
 
       console.log('newrequest', newrequest)

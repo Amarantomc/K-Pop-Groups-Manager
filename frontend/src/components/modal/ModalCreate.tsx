@@ -433,6 +433,7 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
       headers: token ? { Authorization: `Bearer ${token}` } : {}
     });
     const data = await res.json();
+    console.log('[ModalCreate] fetchMembers - datos recibidos para tipo', type, ':', data);
     const arr = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
     
     // Debug: log propiedades de cada artista
