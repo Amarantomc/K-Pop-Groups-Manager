@@ -377,7 +377,14 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
     }
 
     console.log('[ModalCreate] handleSubmit - payload final a enviar:', dataToSend);
-    onSave?.(dataToSend);
+    console.log('[ModalCreate] onSave callback existe?:', !!onSave);
+    if (onSave) {
+      console.log('[ModalCreate] Llamando a onSave...');
+      onSave(dataToSend);
+      console.log('[ModalCreate] onSave completado');
+    } else {
+      console.error('[ModalCreate] ERROR: onSave no está definido');
+    }
   }
 
   const handleAddMember = () => {
@@ -427,12 +434,39 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
     });
     const data = await res.json();
     const arr = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
-    const opts = arr.map((item: any) => ({
-      value: type === 'artist'
-        ? [item.apprenticeId ?? item.IdAp, item.groupId ?? item.IdGr]
-        : item.id,
-      label: item.name || item.realName || item.nombre || item.label || item.id
-    }));
+    
+    // Debug: log propiedades de cada artista
+    if (type === 'artist') {
+      arr.forEach((item: any, i: number) => {
+        console.log(`[ModalCreate] Artista ${i}:`, {
+          ApprenticeId: item.ApprenticeId,
+          GroupId: item.GroupId,
+          id: item.id,
+          name: item.name,
+          realName: item.realName,
+          ArtistName: item.ArtistName
+        });
+      });
+    }
+    
+    const opts = arr.map((item: any) => {
+      let value: string;
+      if (type === 'artist') {
+        // Para artistas: usar ApprenticeId (mayúscula) y GroupId (mayúscula)
+        const apprenticeId = item.ApprenticeId ?? item.apprenticeId ?? item.IdAp ?? item.idAp;
+        const groupId = item.GroupId ?? item.groupId ?? item.IdGr ?? item.idGr;
+        value = `${apprenticeId},${groupId}`;
+      } else {
+        value = String(item.id ?? item.IdAp ?? item.apprenticeId ?? '');
+      }
+      
+      return {
+        value,
+        label: item.realName || item.name || item.ArtistName || item.nombreArtistico || item.nombre || item.label || item.id
+      };
+    });
+    
+    console.log('[ModalCreate] fetchMembers - opciones mapeadas:', opts);
     setMemberOptions(prev => {
       const copy = [...prev];
       copy[idx] = opts;
@@ -500,14 +534,20 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
                       </select>
                       {/* Nombre del miembro */}
                       <select
-                        value={member.memberId}
+                        value={member.memberId || ''}
                         onChange={e => handleMemberFieldChange(idx, 'memberId', e.target.value)}
                         style={{ minWidth: 160 }}
                       >
                         <option value="">Selecciona miembro</option>
-                        {(memberOptions[idx] || []).map(opt => (
-                          <option key={opt.value} value={opt.value}>{opt.label}</option>
-                        ))}
+                        {(memberOptions[idx] || []).map((opt, optIdx) => {
+                          const optValue = String(opt.value || '');
+                          const optKey = optValue || `opt-${optIdx}`;
+                          return (
+                            <option key={optKey} value={optValue}>
+                              {opt.label}
+                            </option>
+                          );
+                        })}
                       </select>
                       {/* Rol */}
                       <select

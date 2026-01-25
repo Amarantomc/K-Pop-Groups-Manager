@@ -705,25 +705,52 @@ const Requests: React.FC = () => {
         .map((m: any) => [Number(m.memberId), m.role]);
       const artists = members
         .filter((p: any) => p.type === 'artist' && p.memberId && p.role)
-        .map((p: any) => [
-          Number(Array.isArray(p.memberId) ? p.memberId[0] : p.memberId),
-          Number(Array.isArray(p.memberId) ? p.memberId[1] : 0),
-          p.role
-        ]);
+        .map((p: any) => {
+          // Para artistas, memberId viene como "apprenticeId,groupId" (string)
+          let apprenticeId = 0;
+          let groupId = 0;
+          
+          // Parsear el string "apprenticeId,groupId"
+          if (typeof p.memberId === 'string' && p.memberId.includes(',')) {
+            const parts = p.memberId.split(',');
+            apprenticeId = Number(parts[0]);
+            groupId = Number(parts[1]);
+          } else if (Array.isArray(p.memberId)) {
+            apprenticeId = Number(p.memberId[0]);
+            groupId = Number(p.memberId[1]);
+          } else {
+            // Fallback si no se puede parsear
+            apprenticeId = Number(p.memberId) || 0;
+            groupId = 0;
+          }
+          
+          console.log(`[handleCreateSave] Artist ${p.memberId} parseado como [${apprenticeId}, ${groupId}]`);
+          return [apprenticeId, groupId, p.role];
+        });
 
+      const agencyUser = await GetAgencyByMember(idAp, idGr);
 
-      // Adaptar el payload según la estructura requerida
-
-      const payload = {
+      const payload: any = {
         groupName: newrequest.groupName || newrequest.name,
-        idAgency: user?.profileData?.agencyId || newrequest.idAgency || agency.agencyId,
-        idConcept: newrequest.concept?.id || newrequest.idConcept || newrequest.concept,
-        apprentices,
+        idAgency: agencyUser.id, //user?.profileData?.agencyId || newrequest.idAgency || agency.agencyId,
+        idConcept:  Number(newrequest.concept),
+        apprentices,  
         artists,
-        idApprentice: user?.profileData?.IdAp || user?.profileData?.apprenticeId,
-        idGroup: user?.profileData?.IdGr || user?.profileData?.groupId
+        idApprentice: idAp,
+        idGroup: idGr
       };
-      console.log('payload', payload)
+
+      // Solo incluir apprentices si tiene elementos
+      if (apprentices.length > 0) {
+        payload.apprentices = apprentices;
+      }
+
+      // Solo incluir artists si tiene elementos
+      if (artists.length > 0) {
+        payload.artists = artists;
+      }
+
+      console.log('payload final', payload)
       console.log('user', user)
       const url = user?.role === 'admin' ? 'http://localhost:3000/api/application' : 'http://localhost:3000/api/application/create'
       const response = await fetch(url, {
@@ -735,8 +762,13 @@ const Requests: React.FC = () => {
         body: JSON.stringify(payload)
       });
 
+      console.log('Response status:', response.status);
+      console.log('Response ok:', response.ok);
+
       if (!response.ok) {
-        throw new Error('Error al crear solicitud');
+        const errorData = await response.json();
+        console.error('Error del backend:', errorData);
+        throw new Error(errorData?.error || `Error al crear solicitud (status ${response.status})`);
       }
 
       const data = await response.json();
