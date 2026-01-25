@@ -70,6 +70,7 @@ const ListUsers: React.FC = () => {
     const [userToDelete, setUserToDelete] = useState<number | null>(null);
     const [openError, setOpenError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const [emailError, setEmailError] = useState<string>('');
 
     const userFormFields = useMemo<Field[]>(() => {
         const baseFields = formFieldsByEntity['user'] || [];
@@ -198,6 +199,19 @@ const ListUsers: React.FC = () => {
         } else {
             Object.assign(payload, data);
         }
+
+        // Validar que el email no esté siendo utilizado por otro usuario
+        if (payload.email) {
+            const emailExists = userRows.some(existingUser => 
+                existingUser.email.toLowerCase() === payload.email.toLowerCase()
+            );
+            if (emailExists) {
+                setErrorMessage(`El email "${payload.email}" ya está siendo utilizado por otro usuario`);
+                setOpenError(true);
+                return;
+            }
+        }
+
         // Detectar el rol seleccionado del formulario
         const formRole = (payload.rol || payload.role || '').toLowerCase();
 
@@ -539,6 +553,18 @@ const ListUsers: React.FC = () => {
         // Detectar cambios en el campo 'role' o 'rol'
         if (fieldName === 'role' || fieldName === 'rol') {
             setSelectedRole(String(value || ''));
+        }
+        // Validar email cuando cambia
+        if (fieldName === 'email') {
+            const email = String(value || '').toLowerCase();
+            const emailExists = userRows.some(existingUser => 
+                existingUser.email.toLowerCase() === email
+            );
+            if (emailExists && email) {
+                setEmailError(`El email "${value}" ya está siendo utilizado`);
+            } else {
+                setEmailError('');
+            }
         }
     };
 
