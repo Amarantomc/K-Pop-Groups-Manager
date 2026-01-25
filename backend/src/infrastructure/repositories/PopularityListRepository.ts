@@ -345,20 +345,25 @@ export class PopularityListRepository implements IPopularityListRepository{
 
 
 
-     async create(data: CreatePopularityListDto): Promise<PopularityList> {
-             
-            
-            const popularityList= await this.db.ListaPopularidad.create({
-                data:{
-                    nombre: data.name,
-                    tipoLista: data.listType,
-                    
-                }
-            })
-            
-            
-            return PopularityListResponseDto.toEntity(popularityList)
-        }
+      async create(data: CreatePopularityListDto): Promise<PopularityList> {
+        const popularityList = await this.db.ListaPopularidad.create({
+          data: {
+            nombre: data.name,
+            tipoLista: data.listType,
+            requisito: data.requirement,
+            Canciones: {
+              connect: [], // no hay ids todavía
+            },
+          },
+          include: {
+            Canciones: {
+              include: { cancion: true },
+            },
+          },
+        });
+      
+        return PopularityListResponseDto.toEntity(popularityList);
+      }
 
 
 

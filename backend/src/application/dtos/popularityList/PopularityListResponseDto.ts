@@ -5,7 +5,7 @@ export class PopularityListResponseDto {
         public readonly id: number,
         public readonly name: string,
         public readonly listType: string,
-        public readonly requeriment: number,
+        public readonly requirement: number,
         public readonly songs: { id: number; title: string; position: number , year?: number }[], // array de objetos
     ) {}
 
@@ -14,7 +14,7 @@ export class PopularityListResponseDto {
       popularityList.id,
       popularityList.name,
       popularityList.listType,
-      popularityList.requeriment,
+      popularityList.requirement,
       popularityList.songs,
     );
   }
@@ -34,8 +34,8 @@ export class PopularityListResponseDto {
       id: popularityList.id,
       name: popularityList.nombre,
       listType: popularityList.tipoLista,
-      requeriment: popularityList.requisito,
-      songs,
+      requirement: popularityList.requisito,
+      songs: songs,
     });
   }
 

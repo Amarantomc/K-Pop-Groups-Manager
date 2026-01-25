@@ -9,13 +9,12 @@ export class CreatePopularityListDto {
 	) {}
 
 	static create(body: any): CreatePopularityListDto {
-		console.log(body)
-		if (!body.name || !body.listType) {
+		if (!body.name || !body.listType || !body.requirement) {
 			throw new Error("Missing required fields");
 		}
 		if( !(['Nacional','Internacional'].find(x=> x==body.listType))){
 			throw new Error("Invalid Type");
 		}
-		return new CreatePopularityListDto(body.name, body.listType, body.requeriment);
+		return new CreatePopularityListDto(body.name, body.listType, body.requirement);
 	}
 }

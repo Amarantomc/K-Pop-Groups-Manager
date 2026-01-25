@@ -2,9 +2,9 @@ import type { IUnitOfWork } from "../../interfaces/IUnitOfWork";
 import type { IPopularityListRepository } from "../../interfaces/repositories/IPopularityListRepository";
 import { inject, injectable } from "inversify";
 import { Types } from "../../../infrastructure/di/Types";
-import type { CreatePopularityListDto } from "../../dtos/popularityList/CreatepopularityListDto";
 import { PopularityListResponseDto } from "../../dtos/popularityList/PopularityListResponseDto";
 import PopularityList from '../../../domain/entities/PopularityList';
+import type { CreatePopularityListDto } from "../../dtos/popularityList/CreatePopularityListDto";
 
 @injectable()
 export class CreatePopularityListUseCase{
@@ -25,6 +25,7 @@ export class CreatePopularityListUseCase{
                 popularityList.id,
                 popularityList.name,
                 popularityList.listType,
+                popularityList.requirement,
                 popularityList.songs
             );
         }
