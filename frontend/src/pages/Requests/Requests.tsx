@@ -870,8 +870,6 @@ const Requests: React.FC = () => {
         groupName: newrequest.groupName || newrequest.name,
         idAgency: agencyUser.id, //user?.profileData?.agencyId || newrequest.idAgency || agency.agencyId,
         idConcept:  Number(newrequest.concept),
-        apprentices,  
-        artists,
         idApprentice: idAp,
         idGroup: idGr
       };
