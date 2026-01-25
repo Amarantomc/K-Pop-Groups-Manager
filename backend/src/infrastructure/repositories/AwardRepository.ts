@@ -67,14 +67,38 @@ export class AwardRepository implements IAwardRepository
     async findById(id: any): Promise<Award | null> {
       id = Number(id);
     
-      const award = await this.db.Premio.findUnique({
+      const premio = await this.db.Premio.findUnique({
         where: { id },
         include: {
-          Albums: true,
+          Albums: {
+            include: {
+              album: {
+                include: {
+                  Canciones: true,
+                  Premios: true,
+                  LanzamientoArtista: {
+                    include: {
+                      artista: true,
+                    },
+                  },
+                  LanzamientoGrupo: {
+                    include: {
+                      grupo: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
       });
     
-      return award ? AwardResponseDto.toEntity(award) : null;
+      if (!premio) return null;
+    
+      return AwardResponseDto.toEntity({
+        ...premio,
+        Albums: premio.Albums.map((ap: { album: any; }) => ap.album),
+      });
     }
 
     async update(id: string, data: Partial<UpdateAwardDto>): Promise<Award> {
@@ -105,14 +129,38 @@ export class AwardRepository implements IAwardRepository
           throw new Error(`Error deleting award with id ${id}: ${error}`);
         }
       }
-      
+
       async findAll(): Promise<Award[]> {
-        const awards = await this.db.Premio.findMany({
+        const premios = await this.db.Premio.findMany({
           include: {
-            Albums: true,
+            Albums: {
+              include: {
+                album: {
+                  include: {
+                    Canciones: true,
+                    Premios: true,
+                    LanzamientoArtista: {
+                      include: {
+                        artista: true,
+                      },
+                    },
+                    LanzamientoGrupo: {
+                      include: {
+                        grupo: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
         });
       
-        return AwardResponseDto.toEntities(awards);
+        return AwardResponseDto.toEntities(
+          premios.map((p: { Albums: any[]; }) => ({
+            ...p,
+            Albums: p.Albums.map(ap => ap.album),
+          }))
+        );
       }
 }
