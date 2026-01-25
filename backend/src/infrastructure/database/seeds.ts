@@ -950,6 +950,202 @@ async function main() {
 
 
 
+  //#region  GRUPO DISUELTO CON ARTISTAS SOLISTAS
+  console.log('👥 Creando grupo disuelto con artistas solistas...')
+  const grupoDisuelto = await prisma.grupo.create({
+    data: {
+      nombreCompleto: "Echo Legacy",
+      fechaDebut: new Date("2018-03-15"),
+      estadoGrupo: "INACTIVO",
+      idConcepto: conceptoFantasia.id,
+      idConceptoVisual: visualFantasia.id,
+      Nomiembros: 3,
+      Agencias: { connect: [{ id: cubeEntertainment.id }] }
+    }
+  })
+
+  // Crear aprendices para el grupo disuelto
+  const aprendizEchoLegacy1 = await prisma.aprendiz.create({
+    data: {
+      nombreCompleto: "Yuki Yamamoto",
+      fechaNacimiento: new Date("1999-07-15"),
+      edad: 26,
+      nivelEntrenamiento: 8
+    }
+  })
+  const aprendizEchoLegacy2 = await prisma.aprendiz.create({
+    data: {
+      nombreCompleto: "Joon Park",
+      fechaNacimiento: new Date("2000-02-28"),
+      edad: 25,
+      nivelEntrenamiento: 7
+    }
+  })
+  const aprendizEchoLegacy3 = await prisma.aprendiz.create({
+    data: {
+      nombreCompleto: "Lin Chen",
+      fechaNacimiento: new Date("2001-11-10"),
+      edad: 24,
+      nivelEntrenamiento: 6
+    }
+  })
+
+  // Asignar aprendices a la agencia antes de convertirse en artistas
+  await prisma.aprendizEnAgencia.createMany({
+    data: [
+      { idAp: aprendizEchoLegacy1.id, idAg: cubeEntertainment.id, fechaInicio: new Date("2018-01-01"), fechaFinalizacion: new Date("2018-03-15"), estado: "ARTISTA" },
+      { idAp: aprendizEchoLegacy2.id, idAg: cubeEntertainment.id, fechaInicio: new Date("2018-01-01"), fechaFinalizacion: new Date("2018-03-15"), estado: "ARTISTA" },
+      { idAp: aprendizEchoLegacy3.id, idAg: cubeEntertainment.id, fechaInicio: new Date("2018-01-01"), fechaFinalizacion: new Date("2018-03-15"), estado: "ARTISTA" }
+    ]
+  })
+
+  // Crear artistas que fueron miembros del grupo Echo Legacy
+  const artistaEchoLegacy1 = await prisma.artista.create({
+    data: {
+      idAp: aprendizEchoLegacy1.id,
+      idGr: grupoDisuelto.id,
+      nombreArtistico: "Yuki",
+      fechaDebut: new Date("2018-03-15"),
+      estadoArtista: "ACTIVO"
+    }
+  })
+  const artistaEchoLegacy2 = await prisma.artista.create({
+    data: {
+      idAp: aprendizEchoLegacy2.id,
+      idGr: grupoDisuelto.id,
+      nombreArtistico: "Joon",
+      fechaDebut: new Date("2018-03-15"),
+      estadoArtista: "ACTIVO"
+    }
+  })
+  const artistaEchoLegacy3 = await prisma.artista.create({
+    data: {
+      idAp: aprendizEchoLegacy3.id,
+      idGr: grupoDisuelto.id,
+      nombreArtistico: "Lin",
+      fechaDebut: new Date("2018-03-15"),
+      estadoArtista: "ACTIVO"
+    }
+  })
+
+  // Crear historial: artistas en Echo Legacy (ahora disuelto)
+  await prisma.artistaEnGrupo.createMany({
+    data: [
+      {
+        idAp: artistaEchoLegacy1.idAp,
+        idGrupoDebut: grupoDisuelto.id,
+        idGr: grupoDisuelto.id,
+        fechaInicio: new Date("2018-03-15"),
+        fechaFinalizacion: new Date("2024-05-20"), // Grupo se disolvió
+        rol: "LIDER"
+      },
+      {
+        idAp: artistaEchoLegacy2.idAp,
+        idGrupoDebut: grupoDisuelto.id,
+        idGr: grupoDisuelto.id,
+        fechaInicio: new Date("2018-03-15"),
+        fechaFinalizacion: new Date("2024-05-20"),
+        rol: "VOCALISTA"
+      },
+      {
+        idAp: artistaEchoLegacy3.idAp,
+        idGrupoDebut: grupoDisuelto.id,
+        idGr: grupoDisuelto.id,
+        fechaInicio: new Date("2018-03-15"),
+        fechaFinalizacion: new Date("2024-05-20"),
+        rol: "BAILARIN"
+      }
+    ]
+  })
+
+  // Crear contratos activos para los artistas solistas (ya no en grupo)
+  await prisma.contrato.createMany({
+    data: [
+      {
+        idAg: cubeEntertainment.id,
+        idAp: artistaEchoLegacy1.idAp,
+        idGr: grupoDisuelto.id,
+        fechaInicio: new Date("2024-06-01"),
+        fechaFinalizacion: new Date("2030-06-01"),
+        estado: "ACTIVO",
+        condicionesIniciales: "Contrato de solista como artista independiente, 3 años renovables",
+        distribucionIngresos: "60% agencia, 40% artista"
+      },
+      {
+        idAg: cubeEntertainment.id,
+        idAp: artistaEchoLegacy2.idAp,
+        idGr: grupoDisuelto.id,
+        fechaInicio: new Date("2024-06-01"),
+        fechaFinalizacion: new Date("2030-06-01"),
+        estado: "ACTIVO",
+        condicionesIniciales: "Contrato de solista como artista independiente, 3 años renovables",
+        distribucionIngresos: "60% agencia, 40% artista"
+      },
+      {
+        idAg: cubeEntertainment.id,
+        idAp: artistaEchoLegacy3.idAp,
+        idGr: grupoDisuelto.id,
+        fechaInicio: new Date("2024-06-01"),
+        fechaFinalizacion: new Date("2030-06-01"),
+        estado: "ACTIVO",
+        condicionesIniciales: "Contrato de solista como artista independiente, 3 años renovables",
+        distribucionIngresos: "60% agencia, 40% artista"
+      }
+    ]
+  })
+
+  console.log('✅ Grupo disuelto (Echo Legacy) y 3 artistas solistas con contratos activos creados')
+  
+  // Actualizar arrays directos para aprendices en agencia (Echo Legacy)
+  const aprendizEchoEnAgencia = [
+    { idAp: aprendizEchoLegacy1.id, idAg: cubeEntertainment.id, fechaInicio: new Date("2018-01-01") },
+    { idAp: aprendizEchoLegacy2.id, idAg: cubeEntertainment.id, fechaInicio: new Date("2018-01-01") },
+    { idAp: aprendizEchoLegacy3.id, idAg: cubeEntertainment.id, fechaInicio: new Date("2018-01-01") }
+  ];
+  for (const { idAp, idAg, fechaInicio } of aprendizEchoEnAgencia) {
+    await prisma.aprendiz.update({
+      where: { id: idAp },
+      data: {
+        Agencia: {
+          connect: { idAp_idAg_fechaInicio: { idAp, idAg, fechaInicio } }
+        }
+      }
+    });
+    await prisma.agencia.update({
+      where: { id: idAg },
+      data: {
+        Aprendices: {
+          connect: { idAp_idAg_fechaInicio: { idAp, idAg, fechaInicio } }
+        }
+      }
+    });
+  }
+
+  // Actualizar grupo con agencia en ambas direcciones
+  await prisma.grupo.update({
+    where: { id: grupoDisuelto.id },
+    data: {
+      Agencias: {
+        connect: { id: cubeEntertainment.id }
+      }
+    }
+  });
+  await prisma.agencia.update({
+    where: { id: cubeEntertainment.id },
+    data: {
+      Grupos: {
+        connect: { id: grupoDisuelto.id }
+      }
+    }
+  });
+
+//#endregion
+
+
+
+
+
+
 
 
 
