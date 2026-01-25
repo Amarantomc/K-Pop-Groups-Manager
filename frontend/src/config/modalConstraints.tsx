@@ -206,23 +206,6 @@ export const popularityListConstraints: Constraints = {
             return null;
         }
     },
-    scope: {
-        editable: true,
-        type: "select",
-        label: "Alcance",
-        options: ["national", "international"]
-    },
-    date: {editable: true, type: "date", label: "Fecha"},
-    rank: {
-        editable: true,
-        type: "number",
-        label: "Posición",
-        validate: (value) => {
-            const num = Number(value);
-            if (isNaN(num) || num < 1) return "La posición debe ser mayor a 0";
-            return null;
-        }
-    }
 }
 
 // Concepto
@@ -244,16 +227,7 @@ export const conceptConstraints: Constraints = {
         required: true,
         type: "string",
         label: "Descripción"
-    },
-    category: {editable: true, type: "string", label: "Categoría"},
-    status: {
-        editable: true,
-        type: "select",
-        label: "Estado",
-        options: ["active", "inactive", "in_development", "archived"]
-    },
-    createdAt: {editable: false, type: "date", label: "Fecha de Creación"},
-    agencyName: {editable: false, label: "Agencia"}
+    }
 }
 
 // Concepto Visual

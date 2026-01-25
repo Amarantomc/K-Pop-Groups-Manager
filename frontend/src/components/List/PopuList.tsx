@@ -1,13 +1,75 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import './popuList.css'
-import ExportButton from '../exportButton/ExportButton'
 import React, { useState } from 'react'
+import ModalCreate from '../modal/ModalCreate';
+import Modal from '../modal/Modal';
+import type { Field } from '../../config/formSource';
+import type { FieldConstraint } from '../../config/modalConstraints';
+
 interface PopuListProps{
   charts : any[],
+  onDelete? : (id : number) => void;
+  onEditSave? : (updatedRow : any) => void;
+  onCreateSave? : (newRow : any) => void;
+  createEntity? : string;
+  createFields? : Field[];
+  onFieldChange? : (fieldName: string, value: any) => void;
+  constraints? : Record<string, FieldConstraint>;
 }
-const PopuList : React.FC<PopuListProps>  = ({charts = []}) => {
+const PopuList : React.FC<PopuListProps>  = ({charts = [],onDelete,onEditSave,onCreateSave,createEntity,createFields,onFieldChange,constraints}) => {
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [editingRow, setEditingRow] = useState<any>(null);
   const [selectedChart,setSelectedChart] = useState<any|null>(null)
   const [selectedYear, setSelectedYear] = useState<number>(2025)
+
+    // Abrir modal de edición con datos del usuario seleccionado
+  const handleEdit = (row: any) => {
+    setEditingRow(row);
+    setEditModalOpen(true);
+  };
+
+  const handleEditClick = (e: React.MouseEvent, row: any) => {
+    e.stopPropagation(); // Evita que se active el onClick de la tarjeta
+    handleEdit(row);
+  };
+
+  const handleDelete = (e: React.MouseEvent, id: number) => {
+    e.stopPropagation(); // Evita que se active el onClick de la tarjeta
+    if (onDelete) {
+      onDelete(id);
+    }
+  };
+
+    // Abrir modal de creación
+  const handleCreateOpen = () => {
+    setCreateModalOpen(true);
+  };
+
+  // Guardar nuevo registro en creación
+  const handleCreateSave = (data: any) => {
+    if (onCreateSave) {
+      onCreateSave(data);
+    }
+    handleCreateClose();
+  };
+    // Guardar cambios en edición
+  const handleEditSave = (data: any) => {
+    if (onEditSave && editingRow) {
+      onEditSave({ ...editingRow, ...data });
+    }
+    handleEditClose();
+  };
+   // Cerrar modal de creación
+  const handleCreateClose = () => {
+    setCreateModalOpen(false);
+  };
+    // Cerrar modal de edición
+  const handleEditClose = () => {
+    setEditModalOpen(false);
+    setEditingRow(null);
+  };
+
     const getFilteredSongs = () => {
     if (!selectedChart) return []
     return selectedChart.songs.filter((song) => song.year === selectedYear)
@@ -18,13 +80,52 @@ const PopuList : React.FC<PopuListProps>  = ({charts = []}) => {
     return years.sort((a, b) => b - a)
   }
     return (
-     <div className="popularity-charts-container">
+      <>
+    <div className="popularity-charts-container">
+      <div className="charts-header">
+        <h2>Listas de Popularidad</h2>
+        <button 
+          className="add-button" onClick={handleCreateOpen}
+        >
+          + Nueva Lista
+        </button>
+      </div>
       <div className="charts-grid">
         {charts.map((chart) => (
-          <div key={chart.id} className="chart-card" onClick={() => setSelectedChart(chart)}>
+          <div key={chart.id} className="chart-card" onClick={() => {setSelectedChart(chart);
+            // Obtener años disponibles
+            const years = chart.songs 
+              ? [...new Set(chart.songs.map((song) => song.year))].sort((a, b) => b - a)
+              : [];
+            
+            // Establecer el año más reciente si hay años disponibles
+            setSelectedYear(years.length > 0 ? years[0] : null);
+          } }>
+              <div className="chart-actions">
+                <button 
+                  className="viewButton"
+                  onClick={(e) => handleEditClick(e,chart)}
+                  title="Editar lista"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" 
+                    fill="currentColor"/>
+                  </svg>
+                </button>
+                <button 
+                  className="deleteButton"
+                  onClick={(e) => handleDelete(e, chart.id)}
+                  title="Eliminar lista"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" 
+                    fill="currentColor"/>
+                  </svg>
+                </button>
+              </div>
             <h3 className="chart-name">{chart.name}</h3>
             <p className="chart-description">{chart.description}</p>
-            <div className="chart-preview">Top: {chart.songs[0].title}</div>
+            <div className="chart-preview">Top: {chart.songs[0].title}</div>           
           </div>
         ))}
       </div>
@@ -97,6 +198,27 @@ const PopuList : React.FC<PopuListProps>  = ({charts = []}) => {
         </div>
       )}
     </div>
+           {/* Modal para crear nuevo registro */}
+      <ModalCreate
+        isOpen={createModalOpen}
+        onClose={handleCreateClose}
+        title="Crear nuevo registro"
+        createEntity={createEntity}
+        createFields={createFields}
+        onFieldChange={onFieldChange}
+        onSave={handleCreateSave}
+      />
+
+      {/* Modal para editar registro */}
+      <Modal
+        isOpen={editModalOpen}
+        onClose={handleEditClose}
+        title="Editar registro"
+        data={editingRow || {}}
+        constraints={constraints || {}}
+        onSave={handleEditSave}
+      />
+      </>
     )
 }
 export default PopuList

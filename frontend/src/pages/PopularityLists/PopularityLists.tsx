@@ -1,16 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react';
-import type { GridColDef } from '@mui/x-data-grid';
-import DataTable from '../../components/datatable/Datatable';
 import PageLayout from '../../components/pageLayout/PageLayout';
 import ModalCreate from '../../components/modal/ModalCreate';
 import Modal from '../../components/modal/Modal';
 import ConfirmDialog from '../../components/confirmDialog/ConfirmDialog';
 import { useAuth } from '../../contexts/auth/AuthContext';
 import { popularityListFields } from '../../config/formSource';
-import { popularityListConstraints } from '../../config/modalConstraints';
-import { popularityListColumns } from '../../config/datatableSource';
 import PopuList from '../../components/List/PopuList';
+import { popularityListConstraints } from '../../config/modalConstraints';
 
 const PopularityLists: React.FC = () => {
   const { user } = useAuth();
@@ -23,56 +20,6 @@ const PopularityLists: React.FC = () => {
   const [openAccept, setOpenAccept] = useState(false);
   const [openError, setOpenError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-
-  // Columnas del DataTable
-  const baseColumns: GridColDef[] = [
-    { field: 'listName', headerName: 'Nombre de Lista', width: 200 },
-    { field: 'artistName', headerName: 'Artista', width: 150 },
-    { field: 'groupName', headerName: 'Grupo', width: 150 },
-    { field: 'position', headerName: 'Posición', width: 100 },
-    { field: 'votes', headerName: 'Votos', width: 120 },
-    { field: 'platform', headerName: 'Plataforma', width: 150 },
-    {
-      field: 'updatedAt',
-      headerName: 'Última Actualización',
-      width: 150,
-      valueFormatter: (params) => {
-        return new Date(params).toLocaleDateString('es-ES');
-      }
-    },
-    {
-      field: 'trend',
-      headerName: 'Tendencia',
-      width: 120,
-      renderCell: (params) => {
-        const trendColors: Record<string, string> = {
-          'up': '#10b981',
-          'down': '#ef4444',
-          'stable': '#6b7280',
-          'new': '#3b82f6'
-        };
-        return (
-          <span style={{
-            color: trendColors[params.value] || '#6b7280',
-            fontWeight: 600
-          }}>
-            {params.value === 'up' ? '↑ Subiendo' :
-              params.value === 'down' ? '↓ Bajando' :
-                params.value === 'stable' ? '→ Estable' :
-                  params.value === 'new' ? '★ Nuevo' : params.value}
-          </span>
-        );
-      }
-    }
-  ];
-
-  // Agregar columnas adicionales para admin
-  const columns: GridColDef[] = user?.role === 'admin'
-    ? [
-      ...baseColumns,
-      { field: 'agencyName', headerName: 'Agencia', width: 150 }
-    ]
-    : baseColumns;
 
   useEffect(() => {
     const fetchPopularityLists = async () => {
@@ -141,7 +88,7 @@ const PopularityLists: React.FC = () => {
     if (popularityListToDelete === null) return;
 
     try {
-      const response = await fetch(`http://localhost:3000/api/popularity-lists/${popularityListToDelete}`, {
+      const response = await fetch(`http://localhost:3000/api/populist/${popularityListToDelete}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -166,7 +113,7 @@ const PopularityLists: React.FC = () => {
 
   const handleEditSave = async (updatedRow: any) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/popularity-lists/${updatedRow.id}`, {
+      const response = await fetch(`http://localhost:3000/api/populist/${updatedRow.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -204,7 +151,7 @@ const PopularityLists: React.FC = () => {
         const headers: Record<string, string> = { 'Content-Type': 'application/json' };
         if (token) headers['Authorization'] = `Bearer ${token}`;
 
-        const url = `${API_BASE}/api/popularity-lists`;
+        const url = `${API_BASE}/api/populist`;
         const res = await fetch(url, {
           method: 'POST',
           headers,
@@ -217,7 +164,10 @@ const PopularityLists: React.FC = () => {
             const txt = await res.text();
             try { const j = JSON.parse(txt); msg = j?.message || j?.error || txt || msg; }
             catch { msg = txt || msg; }
-          } catch (e) { }
+          } catch (error) { 
+            setErrorMessage(error instanceof Error ? error.message : 'Error al actualizar agencia');
+            setOpenError(true);
+          }
           console.error('Error al crear lista de popularidad:', msg);
           return;
         }
@@ -288,21 +238,12 @@ const PopularityLists: React.FC = () => {
         </div>
       ) : (
         <>
-          {/* <DataTable
-            columns={popularityListColumns}
-            rows={popularityListsRows}
-            pagesize={10}
-            onDelete={askDelete}
-            onEditSave={handleEditSave}
-            onCreateSave={handleCreateSave}
-            showEditButton={true}
-            constraints={popularityListConstraints}
-            createEntity="popularityList"
-            userRole={user?.role}
-            // onCreateClick={() => setShowCreateModal(true)}
-          /> */}
-          <PopuList charts={popularityListsRows}>
-
+          <PopuList charts={popularityListsRows} 
+          createEntity='popularityList' 
+          onCreateSave={handleCreateSave}
+          onDelete={askDelete}
+          onEditSave={handleEditSave}
+          constraints={popularityListConstraints}>
           </PopuList>
           <ModalCreate
             isOpen={showCreateModal}
