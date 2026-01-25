@@ -413,9 +413,16 @@ export class PopularityListRepository implements IPopularityListRepository{
 
           async delete(id: string): Promise<void> {
             try {
-              await this.db.ListaPopularidad.delete({
-                where: { id: Number(id) },
+              const listId = Number(id);
+          
+              await this.db.CancionEnListaDePopularidad.deleteMany({
+                where: { idLista: listId },
               });
+          
+              await this.db.ListaPopularidad.delete({
+                where: { id: listId },
+              });
+          
             } catch (error) {
               throw new Error(`Error deleting popularity list with id ${id}: ${error}`);
             }
