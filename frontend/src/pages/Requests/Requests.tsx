@@ -50,7 +50,7 @@ const Requests: React.FC = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          status: 'APROBADA',
+          status: 'VALIDADA',
         })
       });
 
@@ -60,7 +60,7 @@ const Requests: React.FC = () => {
 
       // Actualizar estado local
       setRequests(prev =>
-        prev.map(req => req.id === id ? { ...req, status: 'Aprobado' } : req)
+        prev.map(req => req.id === id ? { ...req, status: 'VALIDADA' } : req)
       );
       console.log('Solicitud aprobada exitosamente:', id);
     } catch (error) {
@@ -397,6 +397,169 @@ const Requests: React.FC = () => {
     return data?.data?.name || id;
   };
 
+  const askDelete = (id: number) => {
+    setRequestToDelete(id);
+    setOpenConfirm(true);
+  };
+
+  const handleDelete = async () => {
+    if (requestToDelete === null) return;
+
+    try {
+      const response = await fetch(`http://localhost:3000/api/application/${requestToDelete}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al eliminar solicitud');
+      }
+
+      setRequests(prev => prev.filter(req => req.id !== requestToDelete));
+      setOpenAccept(true);
+    } catch (error) {
+      console.error('Error al eliminar solicitud:', error);
+      setErrorMessage(error instanceof Error ? error.message : 'Error al eliminar solicitud');
+      setOpenError(true);
+    } finally {
+      setOpenConfirm(false);
+      setRequestToDelete(null);
+    }
+  };
+
+  const handleEditSave = async (updatedRow: Request) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/application/${updatedRow.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(updatedRow)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al actualizar solicitud');
+      }
+
+      const data = await response.json();
+      setRequests(prev =>
+        prev.map(req => req.id === updatedRow.id ? (data.data || data) : req)
+      );
+      setOpenAccept(true);
+    } catch (error) {
+      console.error('Error al actualizar solicitud:', error);
+      setErrorMessage(error instanceof Error ? error.message : 'Error al actualizar solicitud');
+      setOpenError(true);
+    }
+  };
+
+  const GetAgencyByMember = async (idAp: number, idGr: number) => {
+
+    const url = user?.role === 'artist' ? `http://localhost:3000/api/agency/by-member/${idAp}/${idGr}
+    ` : `http://localhost:3000/api/agency/by-member/${idAp}`
+
+    const agency = await fetch(url, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+    const data = await agency.json();
+    console.log('agency data del request', data)
+    return data.data
+  };
+
+  const handleCreateSave = async (newrequest: any) => {
+    try {
+      const idAp = user?.profileData?.IdAp || user?.profileData?.apprenticeId;
+      const idGr = user?.profileData?.IdGr || user?.profileData?.groupId;
+
+
+      console.log('newrequest', newrequest)
+      // Separar miembros en apprentices y artists según el tipo, incluyendo los roles
+      const members = Array.isArray(newrequest.members) ? newrequest.members : [];
+      const apprentices = members
+        .filter((m: any) => m.type === 'apprentice' && m.memberId && m.role)
+        .map((m: any) => [Number(m.memberId), m.role]);
+      const artists = members
+        .filter((p: any) => p.type === 'artist' && p.memberId && p.role)
+        .map((p: any) => {
+          // Para artistas, memberId viene como "apprenticeId,groupId" (string)
+          let apprenticeId = 0;
+          let groupId = 0;
+          
+          // Parsear el string "apprenticeId,groupId"
+          if (typeof p.memberId === 'string' && p.memberId.includes(',')) {
+            const parts = p.memberId.split(',');
+            apprenticeId = Number(parts[0]);
+            groupId = Number(parts[1]);
+          } else if (Array.isArray(p.memberId)) {
+            apprenticeId = Number(p.memberId[0]);
+            groupId = Number(p.memberId[1]);
+          } else {
+            // Fallback si no se puede parsear
+            apprenticeId = Number(p.memberId) || 0;
+            groupId = 0;
+          }
+          
+          console.log(`[handleCreateSave] Artist ${p.memberId} parseado como [${apprenticeId}, ${groupId}]`);
+          return [apprenticeId, groupId, p.role];
+        });
+
+      const agencyUser = await GetAgencyByMember(idAp, idGr);
+
+      const payload: any = {
+        groupName: newrequest.groupName || newrequest.name,
+        idAgency: agencyUser.id, //user?.profileData?.agencyId || newrequest.idAgency || agency.agencyId,
+        idConcept:  Number(newrequest.concept),
+        idApprentice: idAp,
+        idGroup: idGr
+      };
+
+      // Solo incluir apprentices si tiene elementos
+      if (apprentices.length > 0) {
+        payload.apprentices = apprentices;
+      }
+
+      // Solo incluir artists si tiene elementos
+      if (artists.length > 0) {
+        payload.artists = artists;
+      }
+
+      console.log('payload final', payload)
+      console.log('user', user)
+      const url = user?.role === 'admin' ? 'http://localhost:3000/api/application' : 'http://localhost:3000/api/application/create'
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(payload)
+      });
+
+      console.log('Response status:', response.status);
+      console.log('Response ok:', response.ok);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Error del backend:', errorData);
+        throw new Error(errorData?.error || `Error al crear solicitud (status ${response.status})`);
+      }
+
+      const data = await response.json();
+      setRequests(prev => [...prev, (data.data || data)]);
+      setOpenAccept(true);
+    } catch (error) {
+      console.error('Error al crear solicitud:', error);
+      setErrorMessage(error instanceof Error ? error.message : 'Error al crear solicitud');
+      setOpenError(true);
+    }
+  };
+
   // Columnas del DataTable
   const baseColumns: GridColDef[] = [
     //{ field: 'id', headerName: 'ID', width: 70 },
@@ -465,7 +628,7 @@ const Requests: React.FC = () => {
 
       // Director: botones de aprobar/rechazar
       if (user?.role === 'director') {
-        const isValidate = request.status === 'VALIDADA';
+        const isValidate = request.status === 'APROBADO';
         return (
           <div style={{ display: 'flex', gap: '8px' }}>
             <Tooltip title="Aprobar solicitud">
@@ -503,7 +666,7 @@ const Requests: React.FC = () => {
       // Manager: botón de crear grupo
       if (user?.role === 'manager') {
         const isCompleted = request.status === 'COMPLETADA';
-        const isApproved = request.status === 'APROBADA';
+        const isApproved = request.status === 'VALIDADA';
 
         return (
           <Tooltip title={
@@ -751,169 +914,6 @@ const Requests: React.FC = () => {
 
     fetchRequests();
   }, [user]);
-
-  const askDelete = (id: number) => {
-    setRequestToDelete(id);
-    setOpenConfirm(true);
-  };
-
-  const handleDelete = async () => {
-    if (requestToDelete === null) return;
-
-    try {
-      const response = await fetch(`http://localhost:3000/api/application/${requestToDelete}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al eliminar solicitud');
-      }
-
-      setRequests(prev => prev.filter(req => req.id !== requestToDelete));
-      setOpenAccept(true);
-    } catch (error) {
-      console.error('Error al eliminar solicitud:', error);
-      setErrorMessage(error instanceof Error ? error.message : 'Error al eliminar solicitud');
-      setOpenError(true);
-    } finally {
-      setOpenConfirm(false);
-      setRequestToDelete(null);
-    }
-  };
-
-  const handleEditSave = async (updatedRow: Request) => {
-    try {
-      const response = await fetch(`http://localhost:3000/api/application/${updatedRow.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify(updatedRow)
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al actualizar solicitud');
-      }
-
-      const data = await response.json();
-      setRequests(prev =>
-        prev.map(req => req.id === updatedRow.id ? (data.data || data) : req)
-      );
-      setOpenAccept(true);
-    } catch (error) {
-      console.error('Error al actualizar solicitud:', error);
-      setErrorMessage(error instanceof Error ? error.message : 'Error al actualizar solicitud');
-      setOpenError(true);
-    }
-  };
-
-  const GetAgencyByMember = async (idAp: number, idGr: number) => {
-
-    const url = user?.role === 'artist' ? `http://localhost:3000/api/agency/by-member/${idAp}/${idGr}
-` : `http://localhost:3000/api/agency/by-member/${idAp}`
-
-    const agency = await fetch(url, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-    const data = await agency.json();
-    console.log('agency data del request', data)
-    return data.data
-  };
-
-  const handleCreateSave = async (newrequest: any) => {
-    try {
-      const idAp = user?.profileData?.IdAp || user?.profileData?.apprenticeId;
-      const idGr = user?.profileData?.IdGr || user?.profileData?.groupId;
-
-
-      console.log('newrequest', newrequest)
-      // Separar miembros en apprentices y artists según el tipo, incluyendo los roles
-      const members = Array.isArray(newrequest.members) ? newrequest.members : [];
-      const apprentices = members
-        .filter((m: any) => m.type === 'apprentice' && m.memberId && m.role)
-        .map((m: any) => [Number(m.memberId), m.role]);
-      const artists = members
-        .filter((p: any) => p.type === 'artist' && p.memberId && p.role)
-        .map((p: any) => {
-          // Para artistas, memberId viene como "apprenticeId,groupId" (string)
-          let apprenticeId = 0;
-          let groupId = 0;
-          
-          // Parsear el string "apprenticeId,groupId"
-          if (typeof p.memberId === 'string' && p.memberId.includes(',')) {
-            const parts = p.memberId.split(',');
-            apprenticeId = Number(parts[0]);
-            groupId = Number(parts[1]);
-          } else if (Array.isArray(p.memberId)) {
-            apprenticeId = Number(p.memberId[0]);
-            groupId = Number(p.memberId[1]);
-          } else {
-            // Fallback si no se puede parsear
-            apprenticeId = Number(p.memberId) || 0;
-            groupId = 0;
-          }
-          
-          console.log(`[handleCreateSave] Artist ${p.memberId} parseado como [${apprenticeId}, ${groupId}]`);
-          return [apprenticeId, groupId, p.role];
-        });
-
-      const agencyUser = await GetAgencyByMember(idAp, idGr);
-
-      const payload: any = {
-        groupName: newrequest.groupName || newrequest.name,
-        idAgency: agencyUser.id, //user?.profileData?.agencyId || newrequest.idAgency || agency.agencyId,
-        idConcept:  Number(newrequest.concept),
-        idApprentice: idAp,
-        idGroup: idGr
-      };
-
-      // Solo incluir apprentices si tiene elementos
-      if (apprentices.length > 0) {
-        payload.apprentices = apprentices;
-      }
-
-      // Solo incluir artists si tiene elementos
-      if (artists.length > 0) {
-        payload.artists = artists;
-      }
-
-      console.log('payload final', payload)
-      console.log('user', user)
-      const url = user?.role === 'admin' ? 'http://localhost:3000/api/application' : 'http://localhost:3000/api/application/create'
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify(payload)
-      });
-
-      console.log('Response status:', response.status);
-      console.log('Response ok:', response.ok);
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Error del backend:', errorData);
-        throw new Error(errorData?.error || `Error al crear solicitud (status ${response.status})`);
-      }
-
-      const data = await response.json();
-      setRequests(prev => [...prev, (data.data || data)]);
-      setOpenAccept(true);
-    } catch (error) {
-      console.error('Error al crear solicitud:', error);
-      setErrorMessage(error instanceof Error ? error.message : 'Error al crear solicitud');
-      setOpenError(true);
-    }
-  };
 
   if (!user) {
     return <div>Cargando...</div>;
