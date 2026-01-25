@@ -72,7 +72,7 @@ export type IncomeType = typeof INCOME_TYPES[number];
 export const REQUEST_STATUS = ['Aprobado', 'Rechazado', 'En Espera', 'Finalizado'] as const;
 export type RequestStatus = typeof REQUEST_STATUS[number];
 
-export const LIST_SCOPE = ['national', 'international'] as const;
+export const LIST_SCOPE = ['Nacional', 'Internacional'] as const;
 export type ListScope = typeof LIST_SCOPE[number];
 
 export const enumToOptions = (list: readonly string[]): FieldOption[] => {
@@ -142,7 +142,8 @@ export const awardFields: Field[] = [
 // Lista de Popularidad
 export const popularityListFields: Field[] = [
     { id: 'name', name: 'name', label: 'Nombre Lista', type: 'text' },
-    { id: 'scope', name: 'scope', label: 'Ámbito', type: 'select', options: enumToOptions(LIST_SCOPE) },
+    { id: 'listType', name: 'listType', label: 'Ámbito', type: 'select', options: enumToOptions(LIST_SCOPE) },
+    {id:'requirement',name:'requirement',label:'Requsito',type:'number',min:10000}
 ];
 
 // Concepto

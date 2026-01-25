@@ -281,3 +281,40 @@
     min-width: 600px;
   }
 }
+
+.add-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #ec4899 0%, #a855f7 100%);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+}
+.add-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
+}
+.viewButton{
+    padding: 6px 8px;
+    border-radius: 6px;
+    color: blue;
+    border: 1px solid rgba(15,23,42,0.06);
+    background: #fff;
+    cursor: pointer;
+    font-weight: 600;
+}
+.deleteButton{
+    padding: 6px 8px;
+    border-radius: 6px;
+    color: #b91c1c;
+    border: 1px solid rgba(220, 20, 60, 0.08);
+    background: #fff;
+    cursor: pointer;
+    font-weight: 600;
+}
