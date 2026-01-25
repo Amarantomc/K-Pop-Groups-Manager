@@ -931,17 +931,6 @@ async function main() {
         estado: "FINALIZADO",
         condicionesIniciales: "Contrato corto para promoción experimental",
         distribucionIngresos: "55% agencia, 45% artista"
-      },
-      //Creados por mi
-      {
-        idAg: pledisEntertainment.id,
-        idAp: 33, // JUNSU - ITZY
-        idGr: 2,
-        fechaInicio: new Date("2024-01-15"),
-        fechaFinalizacion: new Date("2028-10-15"),
-        estado: "ACTIVO",
-        condicionesIniciales: "Contrato largo para promoción",
-        distribucionIngresos: "55% agencia, 45% artista"
       }
     ]
   });
@@ -2270,16 +2259,17 @@ main()
     console.log('   - 1 Usuario administrador')
     console.log('   - 7 Agencias')
     console.log('   - 7 Conceptos y 7 Conceptos visuales')
-    console.log('   - 8 Grupos K-Pop')
-    console.log('   - 40 Aprendices')
-    console.log('   - 35 Artistas')
-    console.log('   - 16 Contratos (8 individuales + 8 de grupo)')
+    console.log('   - 9 Grupos K-Pop (8 activos + 1 disuelto)')
+    console.log('   - 43 Aprendices')
+    console.log('   - 38 Artistas')
+    console.log('   - 19+ Contratos (11 individuales + 8 de grupo)')
     console.log('   - 24 Canciones')
     console.log('   - 8 Álbumes')
     console.log('   - 4 Premios')
     console.log('   - 4 Listas de popularidad')
     console.log('   - 18+ Actividades con ingresos')
     console.log('   - 3 Solicitudes de formación de grupos')
+    console.log('   - 3 Artistas solistas con contratos activos (ex-miembros de Echo Legacy)')
     console.log('   - Y mucho más...')
   })
   .catch((e) => {

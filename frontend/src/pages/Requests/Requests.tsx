@@ -577,7 +577,6 @@ const Requests: React.FC = () => {
       width: 220,
       renderCell: (params) => {
         const members = Array.isArray(params.row.members) ? params.row.members : [];
-        const roles = Array.isArray(params.row.roles) ? params.row.roles : [];
 
         if (members.length === 0) {
           return (
@@ -587,11 +586,12 @@ const Requests: React.FC = () => {
           );
         }
 
-        // Crear array de objetos combinando miembros y roles
-        const memberRolesList = members.map((member: any, index: number) => ({
-          name: member.name || member.realName,
-          role: roles[index] || 'Sin rol'
+        // Extraer nombre y rol de cada miembro (artista o aprendiz)
+        const membersList = members.map((member: any) => ({
+          name: member.name || member.realName || 'Sin nombre',
+          role: member.role ||member.rol|| 'Sin rol'
         }));
+        console.log("membersList", membersList);
 
         return (
           <Select
@@ -600,12 +600,9 @@ const Requests: React.FC = () => {
             sx={{ width: '100%', height: 40 }}
             renderValue={() => `${members.length} miembro${members.length !== 1 ? 's' : ''}`}
           >
-            {memberRolesList.map((item: any, index: number) => (
+            {membersList.map((item: any, index: number) => (
               <MenuItem key={index} value={index}>
-                {item.name}
-                <span style={{ marginLeft: '8px', color: '#6b7280', fontSize: '0.875em' }}>
-                  ({item.role})
-                </span>
+                {item.name} - {item.role}
               </MenuItem>
             ))}
           </Select>
@@ -729,9 +726,45 @@ const Requests: React.FC = () => {
     }
   };
 
-  // Agregar columna de acciones solo para director y manager
+  // Columna de estado de artista/aprendiz
+  const statusColumn: GridColDef = {
+    field: 'artistapprenticeStatus',
+    headerName: 'Estado Individual',
+    width: 150,
+    sortable: false,
+    renderCell: (params) => {
+      const request = params.row as any;
+      const members = Array.isArray(request.members) ? request.members : [];
+      
+      // Buscar el miembro que coincida con el usuario logueado
+      let userStatus = '';
+      let foundMember: any = null;
+      
+      
+      const apprenticeId = user.profileData?.apprenticeId || user.id;
+      const idAp = user.profileData?.IdAp;
+      const idGr = user.profileData?.IdGr;
+      foundMember = user.role==='apprentice' ? 
+       members.find((m: any) => m.apprenticeId === Number(apprenticeId)) 
+      :members.find((m: any) => m.idApprentice === Number(idAp) && m.groupId === Number(idGr)); ;
+      if (foundMember) {
+          userStatus = foundMember.status
+          console.log(`Aprendiz ${apprenticeId} en solicitud ${request.id}:`, { status: userStatus });
+          console.log(`Artista ${idAp}-${idGr} en solicitud ${request.id}:`, { status: userStatus });
+      }
+   
+      
+      if (!foundMember) {
+        console.log(`Miembro no encontrado en solicitud ${request.id}. Members:`, members);
+      }
+      
+      return userStatus || '-';
+    }
+  };
+
+  // Agregar columna de acciones y estado según rol
   const columns = user?.role === 'director' || user?.role === 'manager' || user?.role === 'apprentice' || user?.role === 'artist'
-    ? [...baseColumns, actionsColumn]
+    ? [...baseColumns, actionsColumn, ...(user?.role === 'apprentice' || user?.role === 'artist' ? [statusColumn] : [])]
     : baseColumns;
 
   useEffect(() => {
@@ -791,9 +824,6 @@ const Requests: React.FC = () => {
           }
         });
 
-        console.log('Respuesta del fetch inicial - status:', response.status);
-        console.log('Respuesta del fetch inicial - ok:', response.ok);
-
         if (!response.ok) {
           throw new Error(`Error al obtener solicitudes - Status ${response.status}`);
         }
@@ -803,7 +833,6 @@ const Requests: React.FC = () => {
 
         const requestsArray = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
         console.log('Array de solicitudes extraído:', requestsArray);
-        console.log('Cantidad de solicitudes:', requestsArray.length);
 
         let filteredRequests = requestsArray;
 
@@ -875,14 +904,14 @@ const Requests: React.FC = () => {
             conceptName = await fetchConceptName(conceptId);
           }
 
-          // Unir artistas y aprendices, asociar roles
+          // Unir artistas y aprendices
           const artists = Array.isArray(req.artists) ? req.artists : [];
           const apprentices = Array.isArray(req.apprentices) ? req.apprentices : [];
-          const roles = Array.isArray(req.roles) ? req.roles : [];
-          const members = [...artists, ...apprentices].map((member, idx) => ({
-            ...member,
-            rol: roles[idx] || ''
-          }));
+          const members = [...artists, ...apprentices];
+          
+          console.log("artists solicitud", artists);
+          console.log("apprentices solicitud", apprentices);
+          console.log("members solicitud", members);
 
           return {
             id: req.id || index,
@@ -892,7 +921,6 @@ const Requests: React.FC = () => {
             date: transformDate(req.date) || '',
             concept: conceptName,
             members,
-            roles,
             idAgency: req.agencyId || '',
             status: req.status || '',
             type: req.type || '',
