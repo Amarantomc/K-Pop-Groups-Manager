@@ -119,18 +119,25 @@
 
     async create(data: CreateActivityDto): Promise<Activity> {
       const baseDate = new Date(data.date);
+      baseDate.setHours(0, 0, 0, 0);
+    
+      // rango ±5 días
+      const from = new Date(baseDate);
+      from.setDate(from.getDate() - 5);
+      from.setHours(0, 0, 0, 0);
+    
       const to = new Date(baseDate);
       to.setDate(to.getDate() + 5);
+      to.setHours(23, 59, 59, 999);
     
       const artistIds = data.artists?.map(([idAp]) => idAp) ?? [];
       const groupIds = data.groups ?? [];
     
+      // Buscar conflictos primero
       const conflicts = await this.db.actividad.findMany({
         where: {
-          fecha: {
-            gt: baseDate,
-            lte: to,
-          },
+          fecha: { gte: from, lte: to },
+          estado: { not: "CANCELADA" },
           Personas: {
             some: {
               OR: [
@@ -146,45 +153,36 @@
       const conflictArtistIds = new Set<number>();
       const conflictGroupIds = new Set<number>();
     
-      for (const activity of conflicts) {
-        for (const p of activity.Personas) {
-          if (p.idAp && artistIds.includes(p.idAp)) {
-            conflictArtistIds.add(p.idAp);
-          }
-          if (p.idGrupos && groupIds.includes(p.idGrupos)) {
-            conflictGroupIds.add(p.idGrupos);
-          }
+      for (const act of conflicts) {
+        for (const p of act.Personas) {
+          if (p.idAp && artistIds.includes(p.idAp)) conflictArtistIds.add(p.idAp);
+          if (p.idGrupos && groupIds.includes(p.idGrupos)) conflictGroupIds.add(p.idGrupos);
         }
       }
     
-      const conflictedArtists = conflictArtistIds.size
-        ? await this.db.Aprendiz.findMany({
-            where: { id: { in: [...conflictArtistIds] } },
-            select: { nombreCompleto: true },
-          })
-        : [];
+      // Lanzar error simple si hay conflictos
+      if (conflictArtistIds.size || conflictGroupIds.size) {
+        const artists = conflictArtistIds.size
+          ? await this.db.Aprendiz.findMany({
+              where: { id: { in: [...conflictArtistIds] } },
+              select: { nombreCompleto: true },
+            })
+          : [];
     
-      const conflictedGroups = conflictGroupIds.size
-        ? await this.db.Grupo.findMany({
-            where: { id: { in: [...conflictGroupIds] } },
-            select: { nombre: true },
-          })
-        : [];
+        const groups = conflictGroupIds.size
+          ? await this.db.Grupo.findMany({
+              where: { id: { in: [...conflictGroupIds] } },
+              select: { nombreCompleto: true },
+            })
+          : [];
     
-      if (conflictedArtists.length || conflictedGroups.length) {
-        throw new Error(
-          [
-            conflictedArtists.length
-              ? `Artistas: ${conflictedArtists.map((a: { nombreCompleto: any; }) => a.nombreCompleto).join(", ")}`
-              : null,
-            conflictedGroups.length
-              ? `Grupos: ${conflictedGroups.map((g: { nombre: any; }) => g.nombre).join(", ")}`
-              : null,
-          ].filter(Boolean).join(" | ")
-        );
+        throw new Error([
+          artists.length ? `Artistas con conflicto: ${artists.map((a: { nombreCompleto: any; }) => a.nombreCompleto).join(", ")}` : null,
+          groups.length ? `Grupos con conflicto: ${groups.map((g: { nombreCompleto: any; }) => g.nombreCompleto).join(", ")}` : null,
+        ].filter(Boolean).join(" | "));
       }
     
-      // create normal
+      // Crear actividad solo si no hay conflictos
       const activity = await this.db.actividad.create({
         data: {
           responsable: data.responsible,
@@ -192,21 +190,26 @@
           tipoEvento: data.eventType,
           fecha: baseDate,
           lugar: data.place,
+      
           Personas: {
             create: [
-              ...data.artists!.map(([idAp, idGr]) => ({
+              ...(data.artists ?? []).map(([idAp, idGr]) => ({
                 idAp,
-                idGr,
+                idGr: idGr ?? null,
                 aceptado: null,
               })),
-              ...data.groups!.map(idGrupos => ({
+      
+              ...(data.groups ?? []).map(idGrupos => ({
                 idGrupos,
                 aceptado: null,
               })),
             ],
           },
         },
-        include: { Personas: true },
+      
+        include: {
+          Personas: true,
+        },
       });
     
       return ActivityResponseDto.toEntity(activity);

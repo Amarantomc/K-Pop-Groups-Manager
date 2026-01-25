@@ -2,6 +2,7 @@
 import type { Prisma } from '@prisma/client';
 import { PrismaClient } from '../../generated/prisma'
 import * as bcrypt from 'bcrypt'
+import { Aprendiz } from '../../generated/prisma/index';
 
 const prisma = new PrismaClient()
 
@@ -575,7 +576,7 @@ async function main() {
         idGr: nct127.id,
         nombreArtistico: "Taeyong",
         fechaDebut: new Date("2016-07-07"),
-        estadoArtista: "PAUSA"
+        estadoArtista: "EN PAUSA"
       }
     })
     const artista2 = await prisma.artista.create({
@@ -602,7 +603,7 @@ async function main() {
         idGr: bts.id,
         nombreArtistico: "V",
         fechaDebut: new Date("2013-06-13"),
-        estadoArtista: "PAUSA"
+        estadoArtista: "EN PAUSA"
       }
     })
     const artista5 = await prisma.artista.create({
@@ -638,7 +639,7 @@ async function main() {
         idGr: seventeen.id,
         nombreArtistico: "S.Coups",
         fechaDebut: new Date("2015-05-26"),
-        estadoArtista: "PAUSA"
+        estadoArtista: "EN PAUSA"
       }
     })
     const artista9 = await prisma.artista.create({
@@ -656,7 +657,7 @@ async function main() {
         idGr: seventeen.id,
         nombreArtistico: "RPV",
         fechaDebut: new Date("2017-12-03"),
-        estadoArtista: "ACTIVO"
+        estadoArtista: "EN PAUSA"
       }
     })
     const artista11 = await prisma.artista.create({
@@ -807,6 +808,143 @@ async function main() {
       }
     ]
   })
+
+
+  await prisma.contrato.createMany({
+    data: [
+      // ===== ARTISTAS ACTIVOS =====
+      {
+        idAg: smEntertainment.id,
+        idAp: Number(artistasNuevosData[0]!.aprendiz.id), // MINJU - NCT127
+        idGr: artistasNuevosData[0]!.grupo.id,
+        fechaInicio: new Date("2023-01-15"),
+        fechaFinalizacion: new Date("2030-01-14"),
+        estado: "ACTIVO",
+        condicionesIniciales: "Contrato debut por 7 años con opción a renovación automática",
+        distribucionIngresos: "65% agencia, 35% artista"
+      },
+      {
+        idAg: smEntertainment.id,
+        idAp: Number(artistasNuevosData[1]!.aprendiz.id), // HAERIN - NCT127
+        idGr: artistasNuevosData[1]!.grupo.id,
+        fechaInicio: new Date("2023-02-01"),
+        fechaFinalizacion: new Date("2029-02-01"),
+        estado: "ACTIVO",
+        condicionesIniciales: "Contrato estándar idol trainee → artista",
+        distribucionIngresos: "70% agencia, 30% artista"
+      },
+      {
+        idAg: ygEntertainment.id,
+        idAp: Number(artistasNuevosData[2]!.aprendiz.id), // SEOJUN - BLACKPINK
+        idGr: artistasNuevosData[2]!.grupo.id,
+        fechaInicio: new Date("2023-03-01"),
+        fechaFinalizacion: new Date("2030-03-01"),
+        estado: "ACTIVO",
+        condicionesIniciales: "Contrato exclusivo con enfoque internacional",
+        distribucionIngresos: "60% agencia, 40% artista"
+      },
+      {
+        idAg: jypEntertainment.id,
+        idAp: Number(artistasNuevosData[4]!.aprendiz.id), // MINSEOK - TWICE
+        idGr: artistasNuevosData[4]!.grupo.id,
+        fechaInicio: new Date("2023-04-05"),
+        fechaFinalizacion: new Date("2028-04-05"),
+        estado: "ACTIVO",
+        condicionesIniciales: "Contrato de grupo.id con cláusula de actividades en solitario",
+        distribucionIngresos: "65% agencia, 35% artista"
+      },
+      {
+        idAg: hibeEntertainment.id,
+        idAp: Number(artistasNuevosData[6]!.aprendiz.id), // MINHO - BTS
+        idGr: artistasNuevosData[6]!.grupo.id,
+        fechaInicio: new Date("2023-05-01"),
+        fechaFinalizacion: new Date("2032-05-01"),
+        estado: "ACTIVO",
+        condicionesIniciales: "Contrato premium con enfoque global",
+        distribucionIngresos: "50% agencia, 50% artista"
+      },
+  
+      // ===== CONTRATOS PENDIENTES =====
+  
+      {
+        idAg: smEntertainment.id,
+        idAp: Number(artistasNuevosData[8]!.aprendiz.id), // KYUNGSOO - ITZY
+        idGr: artistasNuevosData[8]!.grupo.id,
+        fechaInicio: new Date("2023-06-01"),
+        fechaFinalizacion: new Date("2030-06-01"),
+        estado: "PENDIENTE",
+        condicionesIniciales: "Contrato enviado, pendiente de firma del artista",
+        distribucionIngresos: "65% agencia, 35% artista"
+      },
+      {
+        idAg: smEntertainment.id,
+        idAp: Number(artistasNuevosData[10]!.aprendiz.id), // TAEMIN - AESPA
+        idGr: artistasNuevosData[10]!.grupo.id,
+        fechaInicio: new Date("2023-07-01"),
+        fechaFinalizacion: new Date("2029-07-01"),
+        estado: "PENDIENTE",
+        condicionesIniciales: "Contrato sujeto a revisión legal",
+        distribucionIngresos: "60% agencia, 40% artista"
+      },
+  
+      // ===== CONTRATOS RESCINDIDOS =====
+  
+      {
+        idAg: ygEntertainment.id,
+        idAp: Number(artistasNuevosData[18]!.aprendiz.id), // MINA - BLACKPINK (INACTIVO)
+        idGr: artistasNuevosData[18]!.grupo.id,
+        fechaInicio: new Date("2023-11-01"),
+        fechaFinalizacion: new Date("2024-06-01"),
+        estado: "RESCINDIDO",
+        condicionesIniciales: "Contrato rescindido por incumplimiento de agenda",
+        distribucionIngresos: "60% agencia, 40% artista"
+      },
+      {
+        idAg: jypEntertainment.id,
+        idAp: Number(artistasNuevosData[20]!.aprendiz.id), // JIHWAN - TWICE (INACTIVO)
+        idGr: artistasNuevosData[20]!.grupo.id,
+        fechaInicio: new Date("2023-12-01"),
+        fechaFinalizacion: new Date("2024-03-01"),
+        estado: "RESCINDIDO",
+        condicionesIniciales: "Rescisión anticipada por decisión mutua",
+        distribucionIngresos: "65% agencia, 35% artista"
+      },
+  
+      // ===== CONTRATOS FINALIZADOS =====
+  
+      {
+        idAg: smEntertainment.id,
+        idAp: Number(artistasNuevosData[22]!.aprendiz.id), // SEULGI - ITZY
+        idGr: artistasNuevosData[22]!.grupo.id,
+        fechaInicio: new Date("2024-01-01"),
+        fechaFinalizacion: new Date("2024-12-31"),
+        estado: "FINALIZADO",
+        condicionesIniciales: "Contrato temporal por proyecto especial",
+        distribucionIngresos: "70% agencia, 30% artista"
+      },
+      {
+        idAg: pledisEntertainment.id,
+        idAp: Number(artistasNuevosData[23]!.aprendiz.id), // JUNSU - ITZY
+        idGr: artistasNuevosData[23]!.grupo.id,
+        fechaInicio: new Date("2024-01-15"),
+        fechaFinalizacion: new Date("2024-10-15"),
+        estado: "FINALIZADO",
+        condicionesIniciales: "Contrato corto para promoción experimental",
+        distribucionIngresos: "55% agencia, 45% artista"
+      },
+      //Creados por mi
+      {
+        idAg: pledisEntertainment.id,
+        idAp: 33, // JUNSU - ITZY
+        idGr: 2,
+        fechaInicio: new Date("2024-01-15"),
+        fechaFinalizacion: new Date("2028-10-15"),
+        estado: "ACTIVO",
+        condicionesIniciales: "Contrato largo para promoción",
+        distribucionIngresos: "55% agencia, 45% artista"
+      }
+    ]
+  });
   console.log('✅ Contratos individuales creados')
 //#endregion
 

@@ -89,6 +89,29 @@ export class ActivityResponseDto {
     });
   }
 
+
+  // static toEntity(activity: any): Activity {
+  //   return new Activity({
+  //     id: activity.id,
+  //     responsible: activity.responsable,
+  //     activityType: activity.tipoActividad,
+  //     eventType: activity.tipoEvento,
+  //     date: activity.fecha,
+  //     place: activity.lugar,
+  //     status: activity.estado,
+  
+  //     artists: activity.Personas
+  //       ?.filter((p: { idAp: any; }) => p.idAp)
+  //       .map((p: { Aprendiz: { id: any; nombreCompleto: any; }; idGr: any; }) => ({
+  //         id: p.Aprendiz.id,
+  //         name: p.Aprendiz.nombreCompleto,
+  //         groupId: p.idGr,
+  //       })) ?? [],
+  
+  //     incomes: [],
+  //   });
+  // }
+
   static fromEntities(activities: Activity[]): ActivityResponseDto[] {
     return activities.map(activity => this.fromEntity(activity));
   }
