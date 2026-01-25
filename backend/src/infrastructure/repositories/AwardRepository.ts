@@ -102,16 +102,37 @@ export class AwardRepository implements IAwardRepository
     }
 
     async update(id: string, data: Partial<UpdateAwardDto>): Promise<Award> {
-        const award = await this.db.Premio.update({
-          where: { id: Number(id) },
-          data: {
-            nombreAcademia:data.academyName,
-            tituloPremio:data.awardTitle,
+      const premio = await this.db.Premio.update({
+        where: { id: Number(id) },
+        data: {
+          nombreAcademia: data.academyName,
+          tituloPremio: data.awardTitle,
+        },
+        include: {
+          Albums: {
+            include: {
+              album: {
+                include: {
+                  Canciones: true,
+                  Premios: true,
+                  LanzamientoArtista: {
+                    include: { artista: true },
+                  },
+                  LanzamientoGrupo: {
+                    include: { grupo: true },
+                  },
+                },
+              },
+            },
           },
-        });
-      
-        return AwardResponseDto.toEntity(award);
-      }
+        },
+      });
+    
+      return AwardResponseDto.toEntity({
+        ...premio,
+        Albums: premio.Albums.map((ap: { album: any; }) => ap.album),
+      });
+    }
 
       async delete(id: string): Promise<void> {
         const numericId = Number(id);

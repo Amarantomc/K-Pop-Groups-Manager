@@ -8,10 +8,7 @@ import { AwardResponseDto } from "../../dtos/award/AwardResposeDto";
 export class UpdateAwardUseCase {
   constructor(@inject(Types.IAwardRepository) private awardRepository: IAwardRepository) {}
 
-  async execute(
-    AwardId: string,
-    data: Partial<CreateAwardDto>
-  ): Promise<AwardResponseDto> {
+  async execute(AwardId: string,data: Partial<CreateAwardDto>): Promise<AwardResponseDto> {
 
     const award = await this.awardRepository.findById(AwardId);
 
@@ -23,8 +20,8 @@ export class UpdateAwardUseCase {
 
     return new AwardResponseDto(
       updatedAward.id,
-      updatedAward.awardTitle,
       updatedAward.academyName,
+      updatedAward.awardTitle,
       updatedAward.albums
     );
   }
