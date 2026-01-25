@@ -51,14 +51,27 @@ export class ConceptRepository implements IConceptRepository
         });
       
         return ConceptResponseDto.toEntity(concept);
+    }
+
+      async delete(id: string): Promise<void> {
+        const conceptoId = Number(id);
+      
+        const defaultConcept = await this.db.Concepto.create({
+          data: {
+            nombre: "SIN_CONCEPTO",
+            descripcion: "Concepto por defecto del sistema",
+          },
+        });
+      
+        await this.db.Grupo.updateMany({
+          where: { idConcepto: conceptoId },
+          data: { idConcepto: defaultConcept.id },
+        });
+      
+        await this.db.Concepto.delete({
+          where: { id: conceptoId },
+        });
       }
-   async delete(id: string): Promise<void> {
-     
-      await this.db.Concepto.delete({
-        where: { id: Number(id) },
-      });
-     
-  }
 
     async findAll(): Promise<Concept[]> {
       const concepts = await this.db.Concepto.findMany();
