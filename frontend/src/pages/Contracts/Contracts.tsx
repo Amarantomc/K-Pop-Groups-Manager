@@ -182,14 +182,10 @@ const Contracts: React.FC = () => {
 
         switch (user.role) {
           case 'manager':
-            endpoint = `/api/contract?agencyId=${user.agencyId}`;
-            break;
           case 'director':
             endpoint = `/api/contract?agencyId=${user.agencyId}`;
             break;
           case 'artist':
-            endpoint = `/api/contract?agencyId=${user.agencyId}`
-            break;
           case 'admin':
             endpoint = '/api/contract';
             break;
@@ -214,7 +210,25 @@ const Contracts: React.FC = () => {
         const data = await response.json();
         const contractsArray = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
         console.log(data)
-        const formattedContracts = contractsArray.map((contract: any, index: number) => ({
+        
+        let filteredContracts = contractsArray;
+
+        // Filtrar contratos según rol
+        if (user.role === 'artist') {
+          console.log('Filtrando contratos para artista');
+          const artistIdAp = user.profileData?.IdAp;
+          const artistIdGr = user.profileData?.IdGr;
+          console.log('Datos del artista - IdAp:', artistIdAp, 'IdGr:', artistIdGr);
+          
+          filteredContracts = contractsArray.filter((contract: any) => {
+            const contractIdAp = contract.idAp || contract.artist?.idAp;
+            const contractIdGr = contract.idGr || contract.artist?.idGr;
+            console.log('Contrato - idAp:', contractIdAp, 'idGr:', contractIdGr);
+            return contractIdAp === artistIdAp && contractIdGr === artistIdGr;
+          });
+        }
+
+        const formattedContracts = filteredContracts.map((contract: any, index: number) => ({
           id: index,
           type: contract.type,
           entityName: contract.type === 'Artist' ? contract.artist?.ArtistName : contract.group?.name,
