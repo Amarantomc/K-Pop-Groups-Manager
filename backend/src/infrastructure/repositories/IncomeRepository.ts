@@ -20,44 +20,40 @@ export class IncomeRepository implements IIncomeRepository
     return this.unitOfWork.getTransaction();
   }
     
-  async create(data: CreateIncomeDto): Promise<Income> {
+      async create(data: CreateIncomeDto): Promise<Income> {
 
-    const actividad = await this.db.actividad.findUnique({
-      where: { id: data.idActivity },
-      select: { fecha: true }
-    });
-  
-    if (!actividad) {
-      throw new Error("Actividad asociada no encontrada");
-    }
-  
-    const income = await this.db.ingreso.create({
-      data: {
-        idAct: data.idActivity,
-        descripcion: data.description,
-        monto: data.amount,
-        fecha: actividad.fecha
-      }
-    });
-  
-    return IncomeResponseDto.toEntity(income);
-  }
-    async findById(id: any): Promise<Income | null> {
-        id = Number(id);
+        const actividad = await this.db.actividad.findUnique({
+          where: { id: data.idActivity },
+          select: { fecha: true }
+        });
       
-        const incomes = await this.db.Ingreso.findMany();
-
-        const incomesEntity = IncomeResponseDto.toEntities(incomes)
-
-        const income = incomesEntity.find( inc => Number(inc.idIncome) === Number(id));
-        
-
-        if(!income){
-            throw new Error("Income not found");
+        if (!actividad) {
+          throw new Error("Actividad asociada no encontrada");
         }
-        
-        return income 
-        
+      
+        const income = await this.db.ingreso.create({
+          data: {
+            idAct: data.idActivity,
+            descripcion: data.description,
+            monto: data.amount,
+            fecha: actividad.fecha
+          }
+        });
+      
+        return IncomeResponseDto.toEntity(income);
+      }
+
+      
+      async findById(id: string): Promise<Income | null> {
+        const income = await this.db.Ingreso.findFirst({
+          where: { idIng: Number(id) },
+          include: {
+            actividad: { select: { responsable: true } }
+          }
+        });
+      
+        if (!income) return null;
+        return IncomeResponseDto.toEntity(income);
       }
     
 
@@ -119,8 +115,15 @@ export class IncomeRepository implements IIncomeRepository
         }
       }
 
-    async findAll(): Promise<Income[]> {
-      const incomes = await this.db.Ingreso.findMany();
-      return IncomeResponseDto.toEntities(incomes)
-  }
+      async findAll(): Promise<Income[]> {
+        const incomes = await this.db.Ingreso.findMany({
+          include: {
+            actividad: {
+              select: { responsable: true } // o el campo que quieras mostrar como "activityName"
+            }
+          }
+        });
+      
+        return IncomeResponseDto.toEntities(incomes);
+      }
 }

@@ -1,5 +1,6 @@
 import { isDate } from "util/types";
 import { Income } from "../../../domain";
+import { activityColumns } from '../../../../../frontend/src/config/datatableSource';
 
 export class IncomeResponseDto {
   constructor(
@@ -8,6 +9,8 @@ export class IncomeResponseDto {
     public readonly description: string,
     public readonly amount: number,
     public readonly date: Date|string,
+    public readonly activityName?: string,
+
   ) {}
 
   // ---- FROM ENTITY → DTO ----
@@ -18,6 +21,7 @@ export class IncomeResponseDto {
       income.description,
       income.amount,
       isDate(income.date) ? income.date:new Date(income.date),
+      income.activityName
     );
   }
 
@@ -29,6 +33,7 @@ export class IncomeResponseDto {
       description: data.descripcion,
       amount: data.monto,
       date: new Date(data.fecha),
+      activityName: data.actividad?.responsable || null // ← aquí va el nombre real
     });
   }
 

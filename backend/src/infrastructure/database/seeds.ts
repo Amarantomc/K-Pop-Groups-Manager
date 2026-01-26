@@ -863,6 +863,7 @@ async function main() {
         condicionesIniciales: "Contrato premium con enfoque global",
         distribucionIngresos: "50% agencia, 50% artista"
       },
+     
   
       // ===== CONTRATOS PENDIENTES =====
   
@@ -931,6 +932,17 @@ async function main() {
         estado: "FINALIZADO",
         condicionesIniciales: "Contrato corto para promoción experimental",
         distribucionIngresos: "55% agencia, 45% artista"
+      },
+      //miossss
+      {
+        idAg: hibeEntertainment.id,
+        idAp: 33, 
+        idGr: 2,
+        fechaInicio: new Date("2024-09-02"),
+        fechaFinalizacion: new Date("2030-09-02"),
+        estado: "ACTIVO",
+        condicionesIniciales: "Contrato premium con enfoque global para artista especial",
+        distribucionIngresos: "50% agencia, 50% artista"
       }
     ]
   });

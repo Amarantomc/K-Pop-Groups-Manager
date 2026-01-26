@@ -6,6 +6,8 @@ export default class Income {
     readonly amount: number;
     readonly description: string;
     readonly date: Date | string;
+    readonly activityName?: string;
+
     //readonly responsible: string;
 
     constructor(attrs: {
@@ -14,6 +16,7 @@ export default class Income {
         amount: number;
         description: string;
         date: Date | string;
+        activityName: string;
         //responsible: string;
     }) {
         this.idIncome = attrs.idIncome;
@@ -21,6 +24,7 @@ export default class Income {
         this.amount = attrs.amount;
         this.description = attrs.description;
         this.date = attrs.date;
+        this.activityName = attrs.activityName;
         //this.responsible = attrs.responsible;
     }
 }
