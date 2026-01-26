@@ -25,7 +25,7 @@ export class SongRepository implements ISongRepository{
         productor: data.producer,
         fechaLanzamiento: new Date(data.releaseDate),
         Albums: data.albumIds ? {
-          connect: data.albumIds.map(id => ({ id }))
+          connect: data.albumIds?.map(id => ({ id }))
         } : undefined
       },
       include: {
@@ -40,23 +40,19 @@ export class SongRepository implements ISongRepository{
     return SongResponseDto.toEntity(created);
     }
     async findById(id: string): Promise<Song | null> {
-      
-      const found = await this.db.cancion.findUnique({
-      where: { id: Number(id)  },
-      include: {
-        Albums: {
-          include: {
-            grupo: true
-          }
-        },
-        ListaDePopularidad: {
-          include: {
-            listaPopularidad: true
+      const idSong = Number(id);
+      const song = await this.db.cancion.findUnique({
+        where: { id: idSong },
+        include: {
+          Albums: true, // solo trae lo que realmente existe
+          ListaDePopularidad: {
+            include: { listaPopularidad: true }
           }
         }
-      }
-    });
-    return found ? SongResponseDto.toEntity(found) : null;
+      });
+    
+      if (!song) return null;
+      return SongResponseDto.toEntity(song);
     }
     async update(id: string, data: Partial<CreateSongDto>): Promise<Song> {
        const song= await this.db.cancion.update({
@@ -81,10 +77,41 @@ export class SongRepository implements ISongRepository{
        })
        return SongResponseDto.toEntity(song);
     }
+
     async delete(id: string): Promise<void> {
-       await this.db.cancion.delete({
-      where: { id:Number(id)  }
-    });
+      const songId = Number(id);
+    
+      // Traer SOLO los ids de los álbumes (nada de include loco)
+      const song = await this.db.cancion.findUnique({
+        where: { id: songId },
+        select: {
+          Albums: {
+            select: { id: true }
+          }
+        }
+      });
+    
+      // Romper relación many-to-many
+      if (song?.Albums.length) {
+        await this.db.cancion.update({
+          where: { id: songId },
+          data: {
+            Albums: {
+              disconnect: song.Albums.map((a: { id: any; }) => ({ id: a.id }))
+            }
+          }
+        });
+      }
+    
+      // Limpiar tabla explícita
+      await this.db.cancionEnListaDePopularidad.deleteMany({
+        where: { idCa: songId }
+      });
+    
+      // Borrar la canción
+      await this.db.cancion.delete({
+        where: { id: songId }
+      });
     }
 
     async findAll(): Promise<Song[]> {

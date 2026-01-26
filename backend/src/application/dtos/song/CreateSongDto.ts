@@ -4,7 +4,7 @@ export class CreateSongDto {
     public readonly gender: string,
     public readonly producer: string,
     public releaseDate: string|Date,
-    public readonly albumIds: number[]
+    public readonly albumIds?: number[]
   ) {}
 
   static Create(body: any): CreateSongDto {

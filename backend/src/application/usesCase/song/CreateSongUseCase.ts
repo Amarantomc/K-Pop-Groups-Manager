@@ -17,11 +17,19 @@ export class CreateSongUseCase {
   async execute(command: CreateSongDto): Promise<SongResponseDto> {
     try {
       await this.unitOfWork.beginTransaction();
-      const id= command.albumIds[0]
-      const album = await this.albumRepository.findById(id?.toString()!)
-      command.releaseDate= album ? album.releaseDate:command.releaseDate
+  
+      if (command.albumIds && command.albumIds.length > 0) {
+        const id = command.albumIds[0];
+  
+        const album = await this.albumRepository.findById(id!.toString());
+  
+        if (album) {
+          command.releaseDate = album.releaseDate;
+        }
+      }
+  
       const song = await this.songRepository.create(command);
-
+  
       await this.unitOfWork.commit();
       return SongResponseDto.fromEntity(song);
     } catch (error) {
