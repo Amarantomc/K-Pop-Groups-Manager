@@ -22,7 +22,7 @@ export class ContractFactory {
     switch(contractType){
         case ContractType.Artist:
             return new Contract({agency:agency,
-                artist:artist,
+                artist:artist!,
                 type:ContractType.Artist,
                 startDate:startDate,
                 initialCondition:initialCondition,
@@ -33,11 +33,11 @@ export class ContractFactory {
             })
         case ContractType.Group:
             return new Contract({agency:agency,
-                group:group,
-                idGroupContract:idGroupContract,
+                group:group!,
+                idGroupContract:idGroupContract!,
                 type:ContractType.Group,
                 startDate:startDate,
-                initialCondition:initialCondition,
+                initialCondition:initialCondition!,
                 incomeDistribution:incomeDistribution,
                 status:status as ContractStatus,
                 completationDate:undefined,

@@ -7,6 +7,7 @@ import { AgencyResponseDTO } from "../agency/AgencyResponseDTO";
 import { ArtistResponseDto } from "../artist/ArtistResponseDto";
 import { GroupResponseDTO } from "../group/GroupResponseDTO";
 
+
 export class ContractResponseDto {
   constructor(
     public readonly type: string,
@@ -70,13 +71,14 @@ export class ContractResponseDto {
   }
 
   static toEntity(contract:any,type:string):Contract{
-    
     const agency=AgencyResponseDTO.toEntity(contract.Agencia);
     if(type===ContractType.Artist){
         const artist=ArtistResponseDto.toEntity(contract.Artista)
         return ContractFactory.create(agency,type,contract.fechaInicio,contract.condicionesIniciales,contract.distribucionIngresos,contract.estado,artist)
     }else {
-        const group =GroupResponseDTO.toEntitySimple(contract.Grupo,agency)
+        console.log(contract.grupo.id);
+        const group =GroupResponseDTO.toEntity(contract.grupo)
+        //console.log(group);
         return ContractFactory.create(agency,type,contract.fechaInicio,contract.condicionesIniciales,contract.distribucionIngresos,contract.estado,undefined,group,contract.id)
     }
         

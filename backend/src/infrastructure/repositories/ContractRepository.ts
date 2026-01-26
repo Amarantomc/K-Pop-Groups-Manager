@@ -9,7 +9,7 @@ import type { Artist } from "../../domain/entities/Artist";
 import { ArtistResponseDto } from "../../application/dtos/artist/ArtistResponseDto";
 import type { Group } from "../../domain/entities/Group";
 import { GroupResponseDTO } from "../../application/dtos/group/GroupResponseDTO";
-import { error } from "console";
+import { error, group } from "console";
 
 @injectable()
 export class ContractRepository implements IContractRepository{
@@ -281,21 +281,58 @@ export class ContractRepository implements IContractRepository{
        
     }
 
-    async  findAll(): Promise<Contract[]> {
-        const artistContracts = await this.db.contrato.findMany({
+    async findAll(): Promise<Contract[]> {
+      // Contratos de artista
+      const artistContracts = await this.db.contrato.findMany({
+        include: {
+          Agencia: true,
+          Artista: {
+            include: { aprendiz: true }
+          }
+        }
+      });
+    
+      // Contratos de grupo
+      const groupContracts = await this.db.contratoGrupo.findMany({
+        include: {
+          Agencia: true,
+          Grupo: {
             include: {
-                Agencia: true,
-                Artista: true
+              Agencias: true,
+              concepto: true,
+              conceptoVisual: true,
+              HistorialArtistas: {
+                where: { fechaFinalizacion: null },
+                include: { artista: { include: { aprendiz: true } } }
+              },
+              Lanzamiento: { include: { album: true } },
+              Actividades: {
+                include: {
+                  actividad: {
+                    include: {
+                      Personas: { include: { artista: true } },
+                      Ingreso: true
+                    }
+                  }
+                }
+              }
             }
-        });
-        const groupContracts = await this.db.contratoGrupo.findMany({
-            include: {
-                Agencia: true,
-                Grupo: true
-            }
-        });
-        artistContracts.push(...groupContracts)
-        return ContractResponseDto.toEntities(artistContracts);
+          }
+        }
+      });
+      
+      
+      const groupContractsArray = groupContracts.map((gc: { Grupo: any; }) => ({
+        ...gc,
+        grupo: gc.Grupo // aquí convertimos el objeto en array
+      }));
+
+      // Unimos todo en un solo array
+      const contracts = [...artistContracts, ...groupContractsArray];
+
+      // Llamamos al toEntities que siempre recibe un array
+      return ContractResponseDto.toEntities(contracts);
+    
     }
 
     async findByArtist(apprenticeId: number, groupId: number): Promise<Contract[]> {
