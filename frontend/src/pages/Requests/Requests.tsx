@@ -741,16 +741,15 @@ const Requests: React.FC = () => {
       let foundMember: any = null;
       
       
-      const apprenticeId = user.profileData?.apprenticeId || user.id;
-      const idAp = user.profileData?.IdAp;
-      const idGr = user.profileData?.IdGr;
-      foundMember = user.role==='apprentice' ? 
+      const apprenticeId = user?.profileData?.apprenticeId || user.id;
+      const idAp = user?.profileData?.IdAp;
+      const idGr = user?.profileData?.IdGr;
+      foundMember = user?.role==='apprentice' ? 
        members.find((m: any) => m.apprenticeId === Number(apprenticeId)) 
       :members.find((m: any) => m.idApprentice === Number(idAp) && m.groupId === Number(idGr)); ;
       if (foundMember) {
           userStatus = foundMember.status
-          console.log(`Aprendiz ${apprenticeId} en solicitud ${request.id}:`, { status: userStatus });
-          console.log(`Artista ${idAp}-${idGr} en solicitud ${request.id}:`, { status: userStatus });
+
       }
    
       

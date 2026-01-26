@@ -49,9 +49,9 @@ const albumColumns: GridColDef[] = [
     { field: 'songs'
         , headerName: 'Canciones'
         , width: 200,
-         renderCell:(params) => {
+        renderCell:(params) => {
             const songs = params.value || []
-             if (songs.length === 0) {
+            if (songs.length === 0) {
         return (
           <Typography variant="body2" color="text.secondary" sx={{ width: '100%', py: 1 }}>
             Sin canciones
@@ -59,7 +59,7 @@ const albumColumns: GridColDef[] = [
         );
       }
             return(
-                     <Select
+                    <Select
                     value=""
                     displayEmpty
                     sx={{ width: '100%', height: 40 }}
@@ -79,7 +79,7 @@ const albumColumns: GridColDef[] = [
       width:200,
         renderCell:(params) => {
             const awards = params.value || []
-             if (awards.length === 0) {
+            if (awards.length === 0) {
         return (
           <Typography variant="body2" color="text.secondary" sx={{ width: '100%', py: 1 }}>
             Sin premios
@@ -87,7 +87,7 @@ const albumColumns: GridColDef[] = [
         );
       }
             return(
-                     <Select
+                    <Select
                     value=""
                     displayEmpty
                     sx={{ width: '100%', height: 40 }}
@@ -102,7 +102,11 @@ const albumColumns: GridColDef[] = [
             )
         }
     },
-    {
+]
+
+  // Agregar columna de agencia solo para admin
+  const columns = user?.role === 'artist'
+    ? [...albumColumns, {
           field: 'accion',
           headerName: 'Acción',
           flex: 1,
@@ -111,12 +115,7 @@ const albumColumns: GridColDef[] = [
               Agregar Canción
             </Button>
           ),
-        },
-]
-
-  // Agregar columna de agencia solo para admin
-  const columns = user?.role === 'admin'
-    ? [...albumColumns, { field: 'agencyName', headerName: 'Agencia', width: 150 }]
+        }]
     : albumColumns;
 
   useEffect(() => {
@@ -420,6 +419,7 @@ const albumColumns: GridColDef[] = [
             constraints={albumConstraints}
             createEntity="album"
             userRole={user?.role}
+            showCreateButton = {user?.role !== 'admin'}
           // onCreateClick={() => setShowCreateModal(true)}
           />
           <ConfirmDialog

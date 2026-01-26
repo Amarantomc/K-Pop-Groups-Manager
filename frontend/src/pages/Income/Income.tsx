@@ -347,6 +347,7 @@ const Income: React.FC = () => {
             constraints={incomeConstraints}
             createEntity="income"
             userRole={user?.role}
+            showCreateButton={false}
             // onCreateClick={() => setShowCreateModal(true)}
           />
           <ModalCreate

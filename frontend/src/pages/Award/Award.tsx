@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react';
-import type { GridColDef } from '@mui/x-data-grid';
 import DataTable from '../../components/datatable/Datatable';
 import PageLayout from '../../components/pageLayout/PageLayout';
 import ModalCreate from '../../components/modal/ModalCreate';
@@ -29,55 +28,6 @@ const Award: React.FC = () => {
     setAwardToDelete(id);
     setOpenConfirm(true);
   };
-
-  // Columnas del DataTable
-  const baseColumns: GridColDef[] = [
-    { field: 'awardName', headerName: 'Premio', width: 200 },
-    { field: 'category', headerName: 'Categoría', width: 180 },
-    { field: 'recipientName', headerName: 'Ganador', width: 180 },
-    { field: 'recipientType', headerName: 'Tipo', width: 120 },
-    {
-      field: 'awardDate',
-      headerName: 'Fecha de Premio',
-      width: 150,
-      valueFormatter: (params) => {
-        return new Date(params).toLocaleDateString('es-ES');
-      }
-    },
-    { field: 'event', headerName: 'Evento', width: 180 },
-    {
-      field: 'importance',
-      headerName: 'Importancia',
-      width: 120,
-      renderCell: (params) => {
-        const importanceColors: Record<string, string> = {
-          'major': '#ef4444',
-          'intermediate': '#f59e0b',
-          'minor': '#3b82f6',
-          'nomination': '#6b7280'
-        };
-        return (
-          <span style={{
-            color: importanceColors[params.value] || '#6b7280',
-            fontWeight: 600
-          }}>
-            {params.value === 'major' ? 'Mayor' :
-              params.value === 'intermediate' ? 'Intermedio' :
-                params.value === 'minor' ? 'Menor' :
-                  params.value === 'nomination' ? 'Nominación' : params.value}
-          </span>
-        );
-      }
-    }
-  ];
-
-  // Agregar columnas adicionales para admin
-  const columns: GridColDef[] = user?.role === 'admin'
-    ? [
-      ...baseColumns,
-      { field: 'agencyName', headerName: 'Agencia', width: 150 }
-    ]
-    : baseColumns;
 
   useEffect(() => {
     const fetchAwards = async () => {
@@ -117,8 +67,8 @@ const Award: React.FC = () => {
         console.log(data);
         const formattedData = data.data.map((award: any, index: number) => ({
           id: award.id ?? index,
-          title: award.awardTitle,
-          academy: award.academyName,
+          awardTitle: award.awardTitle,
+          academyName: award.academyName,
           albums : award.albums
         }));
         console.log(formattedData);
@@ -196,6 +146,9 @@ const Award: React.FC = () => {
     if (data instanceof FormData) {
       data.forEach((v, k) => { payload[k] = v; });
     } else Object.assign(payload, data);
+       if (payload.requirement !== undefined) {
+  payload.requirement = Number(payload.requirement);
+}
 
     (async () => {
       try {

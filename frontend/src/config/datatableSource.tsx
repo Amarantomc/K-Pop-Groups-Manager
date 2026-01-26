@@ -252,8 +252,8 @@ export const songColumns: GridColDef[] = [
 
 // Premio
 export const prizeColumns: GridColDef[] = [
-    { field: 'title', headerName: 'Título Premio', width: 250 },
-    { field: 'academy', headerName: 'Nombre Academia', width: 200 },
+    { field: 'awardTitle', headerName: 'Título Premio', width: 250 },
+    { field: 'academyName', headerName: 'Nombre Academia', width: 200 },
     {   field:'albums',
         headerName:'Álbumes',
         width:200,
@@ -275,7 +275,7 @@ export const prizeColumns: GridColDef[] = [
             >
             {albums.map((album: any) => (
                 <MenuItem key={album.id} value={album.id}>
-                {album.title}
+                {album.titulo}
                 </MenuItem>
             ))}
         </Select>
