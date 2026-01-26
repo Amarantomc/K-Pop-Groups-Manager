@@ -503,9 +503,11 @@ const Profile: React.FC = () => {
                     <button className="button-change-password" onClick={() => { setShowPasswordForm(true); setShowUserForm(false); }}>
                       Cambiar contraseña
                     </button>
-                    <button className="button-withdraw" onClick={() => setOpenConfirmWithdraw(true)}>
-                      Retirar
-                    </button>
+                    {(user.role === 'artist' || user.rol === 'artista') && (
+                      <button className="button-withdraw" onClick={() => setOpenConfirmWithdraw(true)}>
+                        Retirar
+                      </button>
+                    )}
                     <button className="button-delete-profile" onClick={() => setOpenConfirmDelete(true)}>
                       Eliminar perfil
                     </button>

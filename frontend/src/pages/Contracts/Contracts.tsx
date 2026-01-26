@@ -219,19 +219,27 @@ const Contracts: React.FC = () => {
             // Artista ve contratos donde está involucrado (individuales o de grupo)
             const artistIdAp = user.profileData?.IdAp;
             const artistIdGr = user.profileData?.IdGr;
+            console.log('Filtrando contratos para artista - IdAp:', artistIdAp, 'IdGr:', artistIdGr);
 
             filteredContracts = contractsArray.filter((contract: any) => {
               // Contratos individuales del artista
               const isIndividualContract = (
-                (contract.idAp === Number(artistIdAp) || contract.artist?.idAp === Number(artistIdAp)) &&
-                (contract.idGr === Number(artistIdGr) || contract.artist?.idGr === Number(artistIdGr))
+                contract.type === 'Artist' &&
+                contract.artist?.ApprenticeId === Number(artistIdAp) &&
+                contract.artist?.GroupId === Number(artistIdGr)
               );
-
-              // Contratos de grupo donde el artista está en el grupo
+              
+              // Contratos de grupo donde el artista está en ese grupo
               const isGroupContract = (
                 contract.type === 'Group' &&
-                (contract.idGr === Number(artistIdGr) || contract.group?.id === Number(artistIdGr))
+                Array.isArray(contract.group?.members) &&
+                contract.group.members.some((member: any) => 
+                  member.apprenticeId === Number(artistIdAp) && 
+                  member.groupId === Number(artistIdGr)
+                )
               );
+              
+              console.log('Contrato:', contract.type, 'Individual:', isIndividualContract, 'Group:', isGroupContract);
               return isIndividualContract || isGroupContract;
             });
             break;
