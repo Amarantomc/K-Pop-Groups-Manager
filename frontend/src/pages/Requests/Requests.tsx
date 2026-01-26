@@ -970,7 +970,7 @@ const Requests: React.FC = () => {
           onEditSave={handleEditSave}
           onCreateSave={handleCreateSave}
           showCreateButton={user.role === 'admin' || user.role === 'apprentice' || user.role === 'artist'}
-          showEditButton={user.role === 'manager' || user.role === 'director' || user.role === 'admin'}
+          showEditButton={false}
           constraints={requestConstraints}
           createEntity="request"
           userRole={user?.role}
