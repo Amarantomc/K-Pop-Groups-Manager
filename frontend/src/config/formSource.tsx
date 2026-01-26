@@ -135,15 +135,16 @@ export const songFields: Field[] = [
 
 // Premio
 export const awardFields: Field[] = [
-    { id: 'title', name: 'title', label: 'Título Premio', type: 'text' },
-    { id: 'academy', name: 'academy', label: 'Nombre Academia', type: 'text' },
+    { id: 'awardTitle', name: 'awardTitle', label: 'Título Premio', type: 'text' },
+    { id: 'academyName', name: 'academyName', label: 'Nombre Academia', type: 'text' },
+    {id:'requirement',name:'requirement',label:'Requisito',type:'number',min:1000000}
 ];
 
 // Lista de Popularidad
 export const popularityListFields: Field[] = [
     { id: 'name', name: 'name', label: 'Nombre Lista', type: 'text' },
     { id: 'listType', name: 'listType', label: 'Ámbito', type: 'select', options: enumToOptions(LIST_SCOPE) },
-    {id:'requirement',name:'requirement',label:'Requsito',type:'number',min:10000}
+    {id:'requirement',name:'requirement',label:'Requisito',type:'number',min:10000}
 ];
 
 // Concepto

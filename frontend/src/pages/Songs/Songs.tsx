@@ -107,7 +107,7 @@ const Songs: React.FC = () => {
   const handleDelete = async () => {
     if (songToDelete === null) return;
     try {
-      const response = await fetch(`http://localhost:3000/api/songs/${songToDelete}`, {
+      const response = await fetch(`http://localhost:3000/api/song/${songToDelete}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -170,7 +170,7 @@ const Songs: React.FC = () => {
         const headers: Record<string, string> = { 'Content-Type': 'application/json' };
         if (token) headers['Authorization'] = `Bearer ${token}`;
 
-        const url = `${API_BASE}/api/songs`;
+        const url = `${API_BASE}/api/song`;
         const res = await fetch(url, {
           method: 'POST',
           headers,
@@ -204,7 +204,7 @@ const Songs: React.FC = () => {
 
   const handleFormSubmit = async (formData: Record<string, any>) => {
     try {
-      const response = await fetch('http://localhost:3000/api/songs', {
+      const response = await fetch('http://localhost:3000/api/song', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -303,10 +303,11 @@ const Songs: React.FC = () => {
             onEditSave={handleEditSave}
             onCreateSave={handleCreateSave}
             onExport={handleExportPdf}
-            showEditButton={true}
+            showEditButton={false}
             constraints={songConstraints}
             createEntity="song"
             userRole={user?.role}
+            showCreateButton={user?.role !== 'admin' }
           // onCreateClick={() => setShowCreateModal(true)}
           />
         </>
