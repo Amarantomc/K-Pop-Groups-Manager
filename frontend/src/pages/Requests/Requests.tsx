@@ -7,6 +7,7 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import DataTable from '../../components/datatable/Datatable';
 import ConfirmDialog from '../../components/confirmDialog/ConfirmDialog';
 import PageLayout from '../../components/pageLayout/PageLayout';
+import ModalCreate from '../../components/modal/ModalCreate';
 import { useAuth } from '../../contexts/auth/AuthContext';
 import { requestConstraints } from '../../config/modalConstraints';
 import { transformDate } from '../../components/calendar/Calendar';
@@ -39,6 +40,8 @@ const Requests: React.FC = () => {
   const [openSuccess, setOpenSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [groupID, setGroupID] = useState<any>('');
+  const [successContext, setSuccessContext] = useState<string | null>(null);
+  const [createdGroup, setCreatedGroup] = useState<any | null>(null);
 
   // Manejar aprobación de solicitud (Director)
   const handleApprove = async (id: number) => {
@@ -117,16 +120,27 @@ const Requests: React.FC = () => {
         throw new Error('Error al crear grupo');
       }
 
-      await response.json();
-
-      // Actualizar estado local
-      setRequests(prev =>
-        prev.map(req => req.id === requestId ? { ...req, status: 'COMPLETADA' } : req)
-      );
-
+      const result = await response.json();
+      const createdGroupData = result.data || result;
+      
       console.log('Grupo creado exitosamente:', groupName, 'para solicitud:', requestId);
+      console.log('Datos del grupo:', createdGroupData);
+      
+      // Guardar datos del grupo creado
+      setCreatedGroup(createdGroupData);
+      setGroupID(createdGroupData.id);
+      
+      // Actualizar solicitudes
+      await loadAndFormatRequests();
+      
+      // Mostrar confirm dialog de éxito
+      setSuccessMessage('Grupo creado exitosamente');
+      setSuccessContext('group');
+      setOpenAccept(true);
     } catch (error) {
       console.error('Error al crear grupo:', error);
+      setErrorMessage(error instanceof Error ? error.message : 'Error al crear grupo');
+      setOpenError(true);
     }
   };
 
@@ -179,11 +193,15 @@ const Requests: React.FC = () => {
         body: JSON.stringify(payload),
       });
       if (!response.ok) throw new Error('Error al ofrecer contrato');
+      
+      console.log('Contrato guardado exitosamente');
       setSuccessMessage('Contrato ofrecido exitosamente');
-      setOpenSuccess(true);
+      setSuccessContext('contract');
       setShowContractModal(false);
+      setOpenAccept(true);
     } catch (error) {
-      setErrorMessage('Error al ofrecer contrato');
+      console.error('Error al guardar contrato:', error);
+      setErrorMessage(error instanceof Error ? error.message : 'Error al ofrecer contrato');
       setOpenError(true);
     }
   };
@@ -279,6 +297,20 @@ const Requests: React.FC = () => {
         const apprentices = Array.isArray(req.apprentices) ? req.apprentices : [];
         const members = [...artists, ...apprentices];
 
+        // Calcular estado individual del usuario
+        let statusindividual = '';
+        const apprenticeId = user.profileData?.apprenticeId || user.id;
+        const idAp = user.profileData?.IdAp;
+        const idGr = user.profileData?.IdGr;
+        
+        const foundMember = user.role === 'apprentice' ?
+          members.find((m: any) => m.apprenticeId === Number(apprenticeId))
+          : members.find((m: any) => m.idApprentice === Number(idAp) && m.groupId === Number(idGr));
+        
+        if (foundMember) {
+          statusindividual = foundMember.status || '';
+        }
+
         return {
           id: req.id || index,
           entityName: req.artist?.name || req.apprentice?.name || '',
@@ -290,6 +322,7 @@ const Requests: React.FC = () => {
           idAgency: req.agencyId || '',
           status: req.status || '',
           type: req.type || '',
+          statusindividual,
         };
       }));
 
@@ -646,14 +679,113 @@ const Requests: React.FC = () => {
     },
     //{ field: 'idAgency', headerName: 'ID Agencia', width: 120 },
     { field: 'agency', headerName: 'Agencia', width: 150 },
-    { field: 'status', headerName: 'Estado', width: 120 }
+    {
+      field: 'status',
+      headerName: 'Estado',
+      width: 130,
+      renderCell: (params) => {
+        const status = params.value;
+
+        // Definir color según estado
+        const getStatusColor = (status: string) => {
+          switch (status?.toUpperCase()) {
+            case 'PENDIENTE':
+              return '#F59E0B'; // Amarillo
+            case 'ACEPTADO':
+            case 'APROBADO':
+              return '#10B981'; // Verde
+            case 'RECHAZADO':
+            case 'RECHAZADA':
+              return '#EF4444'; // Rojo
+            case 'VALIDADA':
+            case 'COMPLETADA':
+              return '#3B82F6'; // Azul
+            default:
+              return '#6B7280'; // Gris
+          }
+        };
+
+        return (
+          <span style={{
+            color: getStatusColor(status),
+            fontWeight: '700',
+            fontSize: '14px',
+            letterSpacing: '0.5px',
+            textTransform: 'uppercase'
+          }}>
+            {status || '-'}
+          </span>
+        );
+      }
+    }
   ];
+
+  // Columna de estado de artista/aprendiz
+  const statusColumn: GridColDef = {
+    field: 'statusindividual',
+    headerName: 'Estado Individual',
+    width: 150,
+    sortable: false,
+    renderCell: (params) => {
+      const request = params.row as any;
+      const members = Array.isArray(request.members) ? request.members : [];
+
+      // Buscar el miembro que coincida con el usuario logueado
+      let userStatus = '';
+      let foundMember: any = null;
+
+      const apprenticeId = user?.profileData?.apprenticeId || user.id;
+      const idAp = user?.profileData?.IdAp;
+      const idGr = user?.profileData?.IdGr;
+      foundMember = user?.role === 'apprentice' ?
+        members.find((m: any) => m.apprenticeId === Number(apprenticeId))
+        : members.find((m: any) => m.idApprentice === Number(idAp) && m.groupId === Number(idGr));
+      if (foundMember) {
+        userStatus = foundMember.status
+      }
+
+      if (!foundMember) {
+        console.log(`Miembro no encontrado en solicitud ${request.id}. Members:`, members);
+      }
+
+      // Definir color según estado
+      const getStatusColor = (status: string) => {
+        switch (status?.toUpperCase()) {
+          case 'PENDIENTE':
+            return '#F59E0B'; // Amarillo
+          case 'ACEPTADO':
+          case 'APROBADO':
+            return '#10B981'; // Verde
+          case 'RECHAZADO':
+          case 'RECHAZADA':
+            return '#EF4444'; // Rojo
+          case 'VALIDADA':
+          case 'COMPLETADA':
+            return '#3B82F6'; // Azul
+          default:
+            return '#6B7280'; // Gris
+        }
+      };
+
+      return (
+        <span style={{
+          color: getStatusColor(userStatus),
+          fontWeight: '700',
+          fontSize: '14px',
+          letterSpacing: '0.5px',
+          textTransform: 'uppercase'
+        }}>
+          {userStatus || '-'}
+        </span>
+      );
+    }
+  };
 
   // Columna de gestión según rol
   const actionsColumn: GridColDef = {
     field: 'requestActions',
     headerName: 'Gestión',
-    width: 150,
+    width: 130,
     sortable: false,
     renderCell: (params) => {
       const request = params.row as Request;
@@ -726,7 +858,7 @@ const Requests: React.FC = () => {
 
       // Aprendiz y Artista: boton para que los miembros acepten la solicitud
       if (user?.role === 'apprentice' || user?.role === 'artist') {
-        const isPending = params.row.status === 'PENDIENTE';
+        const isPending = params.row.statusindividual === 'PENDIENTE' ;
 
         return (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-start' }}>
@@ -758,41 +890,6 @@ const Requests: React.FC = () => {
       }
 
       return null;
-    }
-  };
-
-  // Columna de estado de artista/aprendiz
-  const statusColumn: GridColDef = {
-    field: 'artistapprenticeStatus',
-    headerName: 'Estado Individual',
-    width: 150,
-    sortable: false,
-    renderCell: (params) => {
-      const request = params.row as any;
-      const members = Array.isArray(request.members) ? request.members : [];
-
-      // Buscar el miembro que coincida con el usuario logueado
-      let userStatus = '';
-      let foundMember: any = null;
-
-
-      const apprenticeId = user?.profileData?.apprenticeId || user.id;
-      const idAp = user?.profileData?.IdAp;
-      const idGr = user?.profileData?.IdGr;
-      foundMember = user?.role === 'apprentice' ?
-        members.find((m: any) => m.apprenticeId === Number(apprenticeId))
-        : members.find((m: any) => m.idApprentice === Number(idAp) && m.groupId === Number(idGr));;
-      if (foundMember) {
-        userStatus = foundMember.status
-
-      }
-
-
-      if (!foundMember) {
-        console.log(`Miembro no encontrado en solicitud ${request.id}. Members:`, members);
-      }
-
-      return userStatus || '-';
     }
   };
 
@@ -849,11 +946,23 @@ const Requests: React.FC = () => {
       />
       <ConfirmDialog
         title="¡Éxito!"
-        message="Operación realizada correctamente"
+        message={successMessage || 'Operación realizada correctamente'}
         open={openAccept}
         type="success"
-        onCancel={() => setOpenAccept(false)}
-        onConfirm={() => setOpenAccept(false)}
+        onCancel={() => {
+          setOpenAccept(false);
+          if (successContext === 'group') {
+            handleOpenContractModal();
+            setSuccessContext(null);
+          }
+        }}
+        onConfirm={() => {
+          setOpenAccept(false);
+          if (successContext === 'group') {
+            handleOpenContractModal();
+            setSuccessContext(null);
+          }
+        }}
         confirmText="Aceptar"
         showDeleteButton={false}
       />
@@ -867,6 +976,15 @@ const Requests: React.FC = () => {
         confirmText="Aceptar"
         showDeleteButton={false}
       />
+      {showContractModal && (
+        <ModalCreate
+          isOpen={showContractModal}
+          onClose={() => setShowContractModal(false)}
+          title="Registrar Contrato"
+          createEntity="contract"
+          onSave={handleContractSave}
+        />
+      )}
     </PageLayout>
   );
 };
