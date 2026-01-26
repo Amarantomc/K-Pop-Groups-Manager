@@ -175,21 +175,28 @@ export const songConstraints: Constraints = {
 // Premio
 export const awardConstraints: Constraints = {
     id: {editable: false, label: "ID"},
-    name: {
+    awardTitle: {
         editable: true,
         required: true,
         type: "string",
-        label: "Nombre del Premio",
+        label: "Título Premio",
         validate: (value) => {
             const valueText = String(value).trim();
             if (!valueText) return "El nombre del premio es obligatorio";
             return null;
         }
     },
-    category: {editable: true, type: "string", label: "Categoría"},
-    awardDate: {editable: true, type: "date", label: "Fecha de Premiación"},
-    artistName: {editable: false, label: "Artista"},
-    groupName: {editable: false, label: "Grupo"}
+    academyName: {
+        editable: true,
+        required: true,
+        type: "string",
+        label: "Nombre Academia",
+        validate: (value) => {
+            const valueText = String(value).trim();
+            if (!valueText) return "El nombre de la academia es obligatorio";
+            return null;
+        }
+    }
 }
 
 // Lista de Popularidad
@@ -274,16 +281,7 @@ export const incomeConstraints: Constraints = {
             return null;
         }
     },
-    type: {
-        editable: true,
-        required: true,
-        type: "select",
-        label: "Tipo",
-        options: ["ventas", "concierto", "publicidad", "otros"]
-    },
-    date: {editable: true, type: "date", label: "Fecha"},
     description: {editable: true, type: "string", label: "Descripción"},
-    agencyName: {editable: false, label: "Agencia"}
 }
 
 // Solicitud
@@ -306,18 +304,8 @@ export const requestConstraints: Constraints = {
 // Contrato
 export const contractConstraints: Constraints = {
     id: {editable: false, label: "ID"},
-    startDate: {editable: true, required: true, type: "date", label: "Fecha de Inicio"},
-    endDate: {editable: true, type: "date", label: "Fecha de Fin"},
-    terms: {editable: true, required: true, type: "string", label: "Términos"},
-    status: {
-        editable: true,
-        required: true,
-        type: "select",
-        label: "Estado",
-        options: ["activo", "en_renovacion", "finalizado", "rescindido"]
-    },
-    artistName: {editable: false, label: "Artista"},
-    agencyName: {editable: false, label: "Agencia"}
+    initialConditions: {editable: true, required: true, type: "string", label: "Términos iniciales"},
+    incomeDistribution: {editable:true,required:true,type:"string",label:"Distribución de Ingresos"}
 }
 
 // Evaluación

@@ -7,12 +7,14 @@ import ModalCreate from "../modal/ModalCreate";
 import ConfirmDialog from "../confirmDialog/ConfirmDialog";
 import { useEffect } from "react";
 import { data } from "react-router-dom";
+import { MenuItem, Select } from "@mui/material";
 interface CalendarProps {
   title?: string,
   description?: string,
   activitiesTest: any[],
   onExport?: any,
   isArtist?: boolean,
+  isAdmin? : boolean,
   onAcept?: any,
   onCancel?: any,
   onUpdateDate?: any,
@@ -35,6 +37,7 @@ const Calendar: React.FC<CalendarProps> = ({
   activitiesTest = [],
   onExport,
   isArtist,
+  isAdmin,
   onAcept,
   onCancel,
   onUpdateDate,
@@ -399,6 +402,21 @@ const Calendar: React.FC<CalendarProps> = ({
                             {activity.responsible}
                             {activity.place && ` · ${activity.place}`}
                           </p>
+                             {/* Mostrar artistas participantes */}
+                              {activity.artists && activity.artists.length > 0 && (
+                                <div className="activity-artists">
+                                  <div className="artists-list">
+                                    <Select value="" displayEmpty sx={{ width: '100%', height: 40 }}
+                                    renderValue={() => `${activity.artists.length} Artista${activity.artists.length !== 1 ? 's' : ''}`}>
+                                      {activity.artists.map((artist: any, index: number) => (
+                                        <MenuItem key={index}>
+                                          {artist.artistName}
+                                        </MenuItem>
+                                    ))}
+                                    </Select>
+                                  </div>
+                                </div>
+                              )}
                           <p className="activity-datetime">{activity.time}</p>
                         </div>
                         {isArtist && activity.status === 'PENDIENTE' && (
@@ -447,7 +465,7 @@ const Calendar: React.FC<CalendarProps> = ({
                       
                     ))}
                   </div>
-                  {!isArtist && selectedDateStr && isDateWithinFiveDays(selectedDateStr) && (<button className="day-menu-add-button" onClick={handleAddFromDayMenu}>
+                  {!isArtist && !isAdmin && selectedDateStr && isDateWithinFiveDays(selectedDateStr) && (<button className="day-menu-add-button" onClick={handleAddFromDayMenu}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="18"
@@ -466,7 +484,7 @@ const Calendar: React.FC<CalendarProps> = ({
               ) : (
                 <div className="day-menu-empty">
                   <p>No hay actividades programadas para este día</p>
-                  {!isArtist && selectedDateStr && isDateWithinFiveDays(selectedDateStr) && (<button className="day-menu-add-button" onClick={handleAddFromDayMenu}>
+                  {!isArtist && !isAdmin &&  selectedDateStr && isDateWithinFiveDays(selectedDateStr) && (<button className="day-menu-add-button" onClick={handleAddFromDayMenu}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="18"
@@ -496,7 +514,7 @@ const Calendar: React.FC<CalendarProps> = ({
           title="Agregar Actividad"
           createEntity="activity"
           onSave={handleCreate}
-          clickedDate={clickedDate} // <-- AGREGA ESTA LÍNEA
+          clickedDate={clickedDate}
         >
         </ModalCreate>
       )}

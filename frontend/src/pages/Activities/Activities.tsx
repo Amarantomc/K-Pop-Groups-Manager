@@ -81,10 +81,11 @@ const Activities: React.FC = () => {
         }
 
         const data = await response.json();
-        console.log(data.data)
+        console.log("Data",data.data)
         const formattedData = data.data.map((activity: any, index: number) => ({
           id: activity.id ?? index,
           eventType: activity.eventType,
+          artists : activity.artists,
           activityType: activity.activityType,
           date: activity.date,
           place: activity.place,
@@ -92,7 +93,7 @@ const Activities: React.FC = () => {
           status : activity.status
         }))
         setActivities(formattedData);
-        console.log(formattedData)
+        console.log("FormatedData",formattedData)
 
         // ============================================
         // FIN SECCIÓN: BACKEND ENDPOINT
@@ -391,7 +392,8 @@ const Activities: React.FC = () => {
                 <Calendar
                   activitiesTest={activities}
                   onExport={() => console.log("Exportando")}
-                  isArtist={true}
+                  isArtist = {true}
+                  isAdmin = {false}
                   onAcept={askConfirm}
                   onCancel={askCancelled}
                 />
@@ -407,6 +409,7 @@ const Activities: React.FC = () => {
                     activitiesTest={activities}
                     onExport={handleExportPdf}
                     isArtist={false}
+                    isAdmin = {user?.role === 'admin'}
                     onUpdateDate={updateDate}
                     onCreateActivity={handleCreateSaveActivity}
                     clickedDate={clickedDate ?? undefined}

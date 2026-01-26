@@ -69,7 +69,7 @@ const PopuList : React.FC<PopuListProps>  = ({charts = [],onDelete,onEditSave,on
     setEditModalOpen(false);
     setEditingRow(null);
   };
-
+    const getSongs = (chart: any) => Array.isArray(chart?.songs) ? chart.songs : [];
     const getFilteredSongs = () => {
     if (!selectedChart) return []
     return selectedChart.songs.filter((song) => song.year === selectedYear)
@@ -125,7 +125,9 @@ const PopuList : React.FC<PopuListProps>  = ({charts = [],onDelete,onEditSave,on
               </div>
             <h3 className="chart-name">{chart.name}</h3>
             <p className="chart-description">{chart.description}</p>
-            <div className="chart-preview">Top: {chart.songs[0].title}</div>           
+            <div className="chart-preview">{getSongs(chart).length > 0
+    ? `Top: ${getSongs(chart)[0].title}`
+    : 'Sin canciones registradas'}</div>           
           </div>
         ))}
       </div>

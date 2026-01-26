@@ -144,6 +144,9 @@ const PopularityLists: React.FC = () => {
     if (data instanceof FormData) {
       data.forEach((v, k) => { payload[k] = v; });
     } else Object.assign(payload, data);
+    if (payload.requirement !== undefined) {
+  payload.requirement = Number(payload.requirement);
+}
 
     (async () => {
       try {
