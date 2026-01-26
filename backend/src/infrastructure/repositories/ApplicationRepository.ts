@@ -129,7 +129,7 @@ export class ApplicationRepository implements IApplicationRepository
     const resto = miembros.filter(m => m.rol !== "LIDER");
   
     // APROBADO
-    if (miembros.length > 0 && miembros.every(m => m.estado === "ACEPTADO")) {
+    if (miembros.length > 0 && miembros.every(m => m.estado !== "PENDIENTE")) {
       await this.db.Solicitud.update({
         where: { id: idApplication },
         data: { estado: "APROBADO" },
