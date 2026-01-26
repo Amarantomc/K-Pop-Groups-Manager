@@ -374,7 +374,7 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         {
             title:"CONTRATOS",
             items : [
-                {label:"MIS CONTRATOS",icon : <WorkIcon/>,path: "/artist/contracts"}
+                {label:"Mis Contratos",icon : <WorkIcon/>,path: "/artist/contracts"}
             ]
         },
         {

@@ -100,7 +100,7 @@ const Requests: React.FC = () => {
   // Crear grupo (Manager)
   const handleCreateGroup = async (requestId: number, groupName: string) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/createGroup/${requestId}`, {
+      const response = await fetch(`http://localhost:3000/api/application/createGroup/${requestId}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
