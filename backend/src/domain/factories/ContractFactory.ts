@@ -25,11 +25,10 @@ export class ContractFactory {
                 artist:artist!,
                 type:ContractType.Artist,
                 startDate:startDate,
-                initialCondition:initialCondition,
+                initialCondition:initialCondition!,
                 incomeDistribution:incomeDistribution,
                 status:status as ContractStatus,
                 completationDate:undefined,
-
             })
         case ContractType.Group:
             return new Contract({agency:agency,

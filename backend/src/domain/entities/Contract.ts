@@ -15,6 +15,7 @@ export default class Contract {
   readonly status: ContractStatus | string;
   readonly initialConditions: string;
   readonly type: ContractType;
+  //readonly id?: number
 
   constructor(attrs: {
     agency: Agency;
@@ -27,6 +28,7 @@ export default class Contract {
     incomeDistribution: string;
     status: ContractStatus | string;
     initialConditions: string;
+    //id: number
   }) {
     this.agency = attrs.agency;
     this.artist = attrs.artist;
@@ -38,5 +40,6 @@ export default class Contract {
     this.incomeDistribution = attrs.incomeDistribution;
     this.status = attrs.status;
     this.initialConditions = attrs.initialConditions;
+    //this.id = attrs.id
   }
 }

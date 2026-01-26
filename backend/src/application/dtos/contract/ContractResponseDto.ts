@@ -1,12 +1,106 @@
-import type { Agency } from "../../../domain/entities/Agency";
-import Contract from "../../../domain/entities/Contract";
-import  { Group } from "../../../domain/entities/Group";
+// import type { Agency } from "../../../domain/entities/Agency";
+// import Contract from "../../../domain/entities/Contract";
+// import  { Group } from "../../../domain/entities/Group";
+// import { ContractType } from "../../../domain/enums/ContractType";
+// import { ContractFactory } from "../../../domain/factories/ContractFactory";
+// import { AgencyResponseDTO } from "../agency/AgencyResponseDTO";
+// import { ArtistResponseDto } from "../artist/ArtistResponseDto";
+// import { GroupResponseDTO } from "../group/GroupResponseDTO";
+
+import type { Contract } from "../../../domain";
 import { ContractType } from "../../../domain/enums/ContractType";
 import { ContractFactory } from "../../../domain/factories/ContractFactory";
 import { AgencyResponseDTO } from "../agency/AgencyResponseDTO";
 import { ArtistResponseDto } from "../artist/ArtistResponseDto";
 import { GroupResponseDTO } from "../group/GroupResponseDTO";
 
+
+// export class ContractResponseDto {
+//   constructor(
+//     public readonly type: string,
+//     public readonly agency: AgencyResponseDTO,
+//     public readonly startDate: string,
+//     public readonly status: string,
+//     public readonly initialConditions: string,
+//     public readonly incomeDistribution: string,
+//     public readonly artist?:ArtistResponseDto,
+//     public readonly group?:GroupResponseDTO,
+//     public readonly completionDate?: string | null,
+//     //public readonly id?: number
+  
+//   ) {}
+
+//   static fromEntity(contract: Contract): ContractResponseDto {
+//     const agency=AgencyResponseDTO.fromEntity(contract.agency);
+//     const baseData = {
+//       type: contract.type,
+//       agency:agency,
+//       startDate: contract.startDate.toString(),
+//       status: contract.status,
+//       initialConditions: contract.initialConditions,
+//       incomeDistribution: contract.incomeDistribution,
+//       completionDate: contract.completionDate?.toString()||undefined,
+//     };
+    
+
+//     if (contract.type === ContractType.Artist) {
+//       const artist=ArtistResponseDto.fromEntity(contract.artist!)
+//       return new ContractResponseDto(
+//         baseData.type,
+//         baseData.agency,
+//         baseData.startDate,
+//         baseData.status,
+//         baseData.initialConditions,
+//         baseData.incomeDistribution,
+//         artist,
+//         undefined,
+//         baseData.completionDate,
+//       );
+//     }
+
+//     else {
+//       const group=GroupResponseDTO.fromEntity(contract.group!)
+//       return new ContractResponseDto(
+//         baseData.type,
+//         baseData.agency,
+//         baseData.startDate,
+//         baseData.status,
+//         baseData.initialConditions,
+//         baseData.incomeDistribution,
+//         undefined,
+//         group,
+//         baseData.completionDate,
+//         //contract.id
+//       );
+//     }
+ 
+//   }
+
+//   static toEntity(contract:any,type:string):Contract{
+//     const agency=AgencyResponseDTO.toEntity(contract.Agencia);
+//     if(type===ContractType.Artist){
+//         const artist=ArtistResponseDto.toEntity(contract.Artista)
+//         return ContractFactory.create(agency,type,contract.fechaInicio,contract.condicionesIniciales,contract.distribucionIngresos,contract.estado,artist)
+//     }else {
+//         console.log(contract.grupo.id);
+//         const group =GroupResponseDTO.toEntity(contract.grupo)
+//         //console.log(group);
+//         return ContractFactory.create(agency,type,contract.fechaInicio,contract.condicionesIniciales,contract.distribucionIngresos,contract.estado,undefined,group,contract.id)
+//     }
+        
+//     }
+  
+
+//   static fromEntities(contracts: Contract[]): ContractResponseDto[] {
+//     return contracts.map(c => this.fromEntity(c));
+//   }
+
+//   static toEntities(contracts: any): Contract[] {
+//     return contracts.map((c:any) => this.toEntity(c,c.Artista? "Artist": "Group"));
+//   }
+
+   
+// }
 
 export class ContractResponseDto {
   constructor(
@@ -16,28 +110,29 @@ export class ContractResponseDto {
     public readonly status: string,
     public readonly initialConditions: string,
     public readonly incomeDistribution: string,
-    public readonly artist?:ArtistResponseDto,
-    public readonly group?:GroupResponseDTO,
+    public readonly artist?: ArtistResponseDto,
+    public readonly group?: GroupResponseDTO,
     public readonly completionDate?: string | null,
-  
+    public readonly id?: number, // <-- agregamos el id aquí
+
   ) {}
 
   static fromEntity(contract: Contract): ContractResponseDto {
-    const agency=AgencyResponseDTO.fromEntity(contract.agency);
+    const agency = AgencyResponseDTO.fromEntity(contract.agency);
+
     const baseData = {
       type: contract.type,
-      agency:agency,
+      agency,
       startDate: contract.startDate.toString(),
       status: contract.status,
       initialConditions: contract.initialConditions,
       incomeDistribution: contract.incomeDistribution,
-      completionDate: contract.completionDate?.toString()||undefined,
-      
+      completionDate: contract.completionDate?.toString() || undefined,
+      id: contract.idGroupContract, // <-- tomamos el id
     };
-    
 
     if (contract.type === ContractType.Artist) {
-      const artist=ArtistResponseDto.fromEntity(contract.artist!)
+      const artist = ArtistResponseDto.fromEntity(contract.artist!);
       return new ContractResponseDto(
         baseData.type,
         baseData.agency,
@@ -48,12 +143,10 @@ export class ContractResponseDto {
         artist,
         undefined,
         baseData.completionDate,
-        
+        contract.idGroupContract,           // <-- pasamos el id aquí
       );
-    }
-
-    else {
-      const group=GroupResponseDTO.fromEntity(contract.group!)
+    } else {
+      const group = GroupResponseDTO.fromEntity(contract.group!);
       return new ContractResponseDto(
         baseData.type,
         baseData.agency,
@@ -64,34 +157,48 @@ export class ContractResponseDto {
         undefined,
         group,
         baseData.completionDate,
-        
+        baseData.id
       );
     }
- 
   }
 
-  static toEntity(contract:any,type:string):Contract{
-    const agency=AgencyResponseDTO.toEntity(contract.Agencia);
-    if(type===ContractType.Artist){
-        const artist=ArtistResponseDto.toEntity(contract.Artista)
-        return ContractFactory.create(agency,type,contract.fechaInicio,contract.condicionesIniciales,contract.distribucionIngresos,contract.estado,artist)
-    }else {
-        console.log(contract.grupo.id);
-        const group =GroupResponseDTO.toEntity(contract.grupo)
-        //console.log(group);
-        return ContractFactory.create(agency,type,contract.fechaInicio,contract.condicionesIniciales,contract.distribucionIngresos,contract.estado,undefined,group,contract.id)
+  static toEntity(contract: any, type: string): Contract {
+    const agency = AgencyResponseDTO.toEntity(contract.Agencia);
+
+    if (type === ContractType.Artist) {
+      const artist = ArtistResponseDto.toEntity(contract.Artista);
+      return ContractFactory.create(
+        agency,
+        type,
+        contract.fechaInicio,
+        contract.condicionesIniciales,
+        contract.distribucionIngresos,
+        contract.estado,
+        artist,
+      );
+    } else {
+      const group = GroupResponseDTO.toEntity(contract.grupo);
+      return ContractFactory.create(
+        agency,
+        type,
+        contract.fechaInicio,
+        contract.condicionesIniciales,
+        contract.distribucionIngresos,
+        contract.estado,
+        undefined,
+        group,
+        contract.id, // <-- pasamos el id del contrato de grupo
+      );
     }
-        
-    }
-  
+  }
 
   static fromEntities(contracts: Contract[]): ContractResponseDto[] {
     return contracts.map(c => this.fromEntity(c));
   }
 
-  static toEntities(contracts: any): Contract[] {
-    return contracts.map((c:any) => this.toEntity(c,c.Artista? "Artist": "Group"));
+  static toEntities(contracts: any[]): Contract[] {
+    return contracts.map((c: any) =>
+      this.toEntity(c, c.Artista ? ContractType.Artist : ContractType.Group)
+    );
   }
-
-   
 }
