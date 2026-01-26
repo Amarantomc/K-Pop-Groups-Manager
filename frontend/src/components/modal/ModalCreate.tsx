@@ -293,7 +293,20 @@ const ModalCreate: React.FC<ModalCreateProps> = ({ isOpen, onClose, title, creat
       // normalize to date-only for comparison
       parsed.setHours(0, 0, 0, 0);
       today.setHours(0, 0, 0, 0);
-      if (parsed.getTime() > today.getTime()) return { ok: false, msg: `${f.label || f.name} no puede ser una fecha futura` };
+        if (f.dateRule === 'no-future' && parsed > today) {
+        return { ok: false, msg: `${f.label} no puede ser una fecha futura` };
+    }
+
+    if (f.dateRule === 'no-past' && parsed < today) {
+        return { ok: false, msg: `${f.label} no puede ser una fecha pasada` };
+    }
+    if (f.validate) {
+        const customError = f.validate(s, formData); // values = formValues
+        if (customError) {
+            return { ok: false, msg: customError };
+        }
+    }
+      // if (parsed.getTime() > today.getTime()) return { ok: false, msg: `${f.label || f.name} no puede ser una fecha futura` };
     }
 
     return { ok: true };

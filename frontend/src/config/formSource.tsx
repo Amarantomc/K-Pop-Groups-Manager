@@ -6,6 +6,11 @@ export type FieldOption = {
     label: string;
 };
 
+export type DateRule =
+    | 'no-future'   // no permite fechas futuras
+    | 'no-past'     // no permite fechas pasadas
+
+
 export type Field = {
     id: string;
     name: string;
@@ -28,6 +33,8 @@ export type Field = {
     multiple?: boolean; // para selects múltiples
     dependsOn?: string; // nombre del campo del que depende para cargar opciones dinámicas
     addButtonLabel?: string; // etiqueta para el botón de agregar en campos de tipo 'group'
+    dateRule?: DateRule; // regla de validación para campos de tipo fecha
+    validate?: (value: any, formValues: Record<string, any>) => string | null;
 };
 
 // Enums y utilidades para convertirlos a opciones del select
@@ -234,8 +241,30 @@ export const requestFields: Field[] = [
 
 // Contrato
 export const contractFields: Field[] = [
-    { id: 'startDate', name: 'startDate', label: 'Fecha Inicio', type: 'date', required: true },
-    { id: 'endDate', name: 'endDate', label: 'Fecha Finalización', type: 'date' },
+    { id: 'startDate', name: 'startDate', label: 'Fecha Inicio', type: 'date', required: true , dateRule: 'no-past'},
+    { id: 'endDate', name: 'endDate', label: 'Fecha Finalización', type: 'date' ,required: true, dateRule: 'no-past',
+        validate: (endDate, values) => {
+            if (!endDate || !values.startDate) return null;
+
+            const start = new Date(values.startDate);
+            const end = new Date(endDate);
+
+            // ❌ Fin antes que inicio
+            if (end < start) {
+                return 'La fecha de finalización no puede ser menor que la fecha de inicio';
+            }
+
+            // ⏱️ Diferencia mínima de 90 días
+            const diffDays =
+                (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24);
+
+            if (diffDays < 90) {
+                return 'El contrato debe tener una duración mínima de 90 días';
+            }
+
+            return null; // ✅ válido
+        },
+    },
     { id: 'value', name: 'value', label: 'Valor', type: 'text', required: true, placeholder: 'Monto del contrato' },
     { id: 'terms', name: 'terms', label: 'Términos', type: 'textarea', required: true, placeholder: 'Condiciones del contrato' },
 ];

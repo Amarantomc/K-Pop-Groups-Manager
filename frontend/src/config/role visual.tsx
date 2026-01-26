@@ -38,12 +38,12 @@ export const MenuByRole: Record<string, MenuSection[]> = {
                 { label: "Inicio", icon: <DashboardIcon />, path: "/admin/dashboard" }
             ]
         },
-       {
-            title: "PageExample",
-            items: [
-                { label: "Example", icon: <DashboardIcon />, path: "/admin/overview" }
-            ]
-        },
+    //    {
+    //         title: "PageExample",
+    //         items: [
+    //             { label: "Example", icon: <DashboardIcon />, path: "/admin/overview" }
+    //         ]
+    //     },
         {
             title: "CONSULTAS",
             items: [
