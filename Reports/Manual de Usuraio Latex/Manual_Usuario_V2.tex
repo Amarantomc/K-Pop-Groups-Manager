@@ -1,0 +1,2023 @@
+\documentclass[12pt,a4paper,spanish,oneside]{report}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{amssymb}
+\usepackage{setspace}
+\usepackage{parskip}
+
+\graphicspath{{images/}}
+
+\geometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm}
+\setlength{\headheight}{14.5pt}
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\thepage}
+\lhead{\textit{Manual de Usuario - K-POP World}}
+\cfoot{\small Manual de Usuario - K-POP World \textbf{V2.0}}
+
+\title{\textbf{MANUAL DE USUARIO} \\[0.5cm] \Large Sistema de Gestión de Agencias de K-Pop}
+\author{Equipo de Desarrollo}
+\date{16 de Enero de 2026 \\ Versión 2.0}
+
+\begin{document}
+
+% Portada personalizada
+\begin{titlepage}
+    \centering
+    \vspace*{0.5cm}
+    
+    {\fontsize{26}{31}\selectfont \textbf{MANUAL DE USUARIO}}
+    
+    \vspace{1cm}
+    
+    {\fontsize{28}{33}\selectfont \textbf{K-POP World}}
+    
+    \vspace{1.5cm}
+    
+    % Logo de la aplicación
+    \includegraphics[width=0.35\textwidth]{../KPopWorld logo.png}
+    
+    \vspace{1.5cm}
+    
+    {\Large \textcolor{gray}{Sistema de Gestión de Agencias de K-Pop}}
+    
+    \vspace{0.5cm}
+    
+    \vspace{1cm}
+    
+    {\large \textbf{Equipo de Desarrollo Responsable}}
+    
+    \vspace{0.3cm}
+    
+    {\normalsize \textbf{Equipo \#1}}
+    
+    \vspace{0.5cm}
+    
+    \begin{tabular}{l}
+        \textit{Ronald Provance Valladares} \quad (C-312) \quad @Ron\_1301 \\
+        \textit{Agustín Alberto Carbajal Romero} \quad (C-312) \quad @lil\_agus03 \\
+        \textit{Daniel Amaranto Mares García} \quad (C-312) \quad @amarantomc \\
+        \textit{Dylan Ramsés Cabrera Morales} \quad (C-312) \quad @dylan2108 \\
+        \textit{Sheila Roque Alemán} \quad (C-312) \quad @Luminara03
+    \end{tabular}
+    
+    \vspace{3cm}
+    
+    \vfill
+    
+    \vspace{0.5cm}
+    
+\end{titlepage}
+
+\newpage
+
+\tableofcontents
+\newpage
+
+\chapter{Introducción}
+
+Bienvenido al \textbf{Sistema de Gestión de Agencias de K-Pop}. Esta guía te ayudará a utilizar todas las funcionalidades del sistema para administrar tu agencia de música K-Pop.
+
+\vspace{0.3cm}
+
+Este manual ha sido diseñado para proporcionar instrucciones detalladas, ejemplos prácticos y solución de problemas para todos los usuarios del sistema, independientemente de su nivel de experiencia técnica.
+
+\section{¿Qué puedes hacer con este sistema?}
+
+\begin{itemize}
+    \item[\checkmark] Gestionar información de agencias, grupos y artistas
+    \item[\checkmark] Administrar aprendices y su progreso de evaluación
+    \item[\checkmark] Organizar grupos musicales y sus miembros
+    \item[\checkmark] Catalogar álbumes y canciones
+    \item[\checkmark] Registrar actividades (conciertos, ensayos, grabaciones)
+    \item[\checkmark] Administrar contratos entre entidades
+    \item[\checkmark] Registrar premios ganados
+    \item[\checkmark] Controlar ingresos y distribuciones
+    \item[\checkmark] Generar reportes y estadísticas
+\end{itemize}
+
+\section{Requisitos Previos}
+
+\begin{itemize}
+    \item Navegador web moderno (Chrome, Firefox, Safari, Edge)
+    \item Conexión a internet
+    \item Cuenta de usuario activa
+    \item Credenciales de acceso proporcionadas
+\end{itemize}
+
+\section{Requerimientos Técnicos}
+
+\subsection{Requerimientos de Máquina (Cliente)}
+
+\begin{table}[H]
+\centering
+\caption{Especificaciones Mínimas de Máquina Cliente}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Componente} & \textbf{Especificación Mínima} \\
+\hline
+Procesador & Intel Core i3 o equivalente (2 GHz+) \\
+\hline
+Memoria RAM & 4 GB mínimo (8 GB recomendado) \\
+\hline
+Disco Duro & 500 MB de espacio libre \\
+\hline
+Conexión & Ancho de banda mínimo: 5 Mbps \\
+\hline
+Pantalla & Resolución 1024x768 mínima (1920x1080 recomendado) \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Requerimientos de Red}
+
+\begin{itemize}
+    \item Conexión IPv4 o IPv6 estable
+    \item Puertos abiertos: 80 (HTTP), 443 (HTTPS)
+    \item Firewall: Permitir tráfico HTTPS
+    \item DNS: Debe resolver nombres de dominio
+    \item Latencia: Máximo 150ms recomendado
+\end{itemize}
+
+\section{Requerimientos de Software}
+
+\subsection{Software Requerido en Servidor}
+
+\begin{table}[H]
+\centering
+\caption{Software Requerido en Servidor}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Software} & \textbf{Versión Mínima} & \textbf{Propósito} \\
+\hline
+Node.js & 18.0+ & Runtime de backend \\
+\hline
+npm & 8.0+ & Gestor de paquetes \\
+\hline
+PostgreSQL & 12.0+ & Base de datos \\
+\hline
+Git & 2.25+ & Control de versiones \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Software Requerido en Cliente}
+
+\begin{itemize}
+    \item \textbf{Navegador Web}: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+
+    \item \textbf{PDF Reader}: Adobe Reader o navegador nativo (para exportaciones)
+    \item \textbf{Oficina}: Excel o LibreOffice (para importar/exportar CSV)
+\end{itemize}
+
+\section{Procedimiento de Instalación}
+
+\subsection{Instalación en Servidor}
+
+\subsubsection{Paso 1: Clonar el Repositorio}
+
+\begin{verbatim}
+git clone https://github.com/your-repo/kpop-system.git
+cd kpop-system
+\end{verbatim}
+
+\subsubsection{Paso 2: Instalar Dependencias Backend}
+
+\begin{verbatim}
+cd backend
+npm install
+\end{verbatim}
+
+\subsubsection{Paso 3: Configurar Variables de Entorno}
+
+Crear archivo \texttt{.env} en la carpeta \texttt{backend}:
+
+\begin{verbatim}
+NODE_ENV=production
+PORT=3000
+DATABASE_URL=postgresql://user:password@localhost:5432/kpop_db
+JWT_SECRET=your-secret-key-here
+REFRESH_TOKEN_SECRET=your-refresh-secret
+JWT_EXPIRATION=24h
+CORS_ORIGIN=https://your-domain.com
+\end{verbatim}
+
+\subsubsection{Paso 4: Configurar Base de Datos}
+
+\begin{verbatim}
+# Ejecutar migraciones de Prisma
+npx prisma migrate deploy
+
+# Llenar datos iniciales (opcional)
+npx prisma db seed
+\end{verbatim}
+
+\subsubsection{Paso 5: Instalar Dependencias Frontend}
+
+\begin{verbatim}
+cd ../frontend
+npm install
+npm run build
+\end{verbatim}
+
+\subsubsection{Paso 6: Iniciar la Aplicación}
+
+\begin{verbatim}
+# Terminal 1 - Backend
+cd backend
+npm run dev
+
+# Terminal 2 - Frontend (en producción usa nginx/apache)
+cd frontend
+npm run dev
+\end{verbatim}
+
+\subsection{Instalación en Cliente (Local Development)}
+
+Para desarrolladores que quieran contribuir:
+
+\begin{enumerate}
+    \item Clonar repositorio como se describe arriba
+    \item Instalar Node.js y PostgreSQL
+    \item Seguir pasos 2-5 de ``Instalación en Servidor''
+    \item Acceder a \url{http://localhost:5173} para frontend
+    \item API disponible en \url{http://localhost:3000/api}
+\end{enumerate}
+
+\subsection{Verificación de Instalación}
+
+\begin{enumerate}
+    \item Acceder a la URL del sistema en navegador
+    \item Verificar que aparece pantalla de login
+    \item Intentar login con credenciales de prueba
+    \item Verificar que se carga el dashboard correctamente
+\end{enumerate}
+
+\chapter{Conceptos Básicos}
+
+\section{Introducción}
+
+El sistema K-POP World gestiona agencias, grupos, artistas, aprendices y todas las actividades relacionadas con la industria del K-pop. Esta sección describe los conceptos fundamentales necesarios para trabajar en el sistema.
+
+\section{Entidades Principales}
+
+\subsection{Agencia}
+
+Una \textbf{Agencia} es la entidad empresarial principal que gestiona múltiples grupos, artistas y aprendices.
+
+\textbf{Información almacenada:}
+\begin{itemize}
+\item Nombre (único en el sistema)
+\item Dirección física
+\item Fecha de fundación
+\item Estado (Activa o Inactiva)
+\item Número de grupos bajo su gestión
+\item Total de aprendices registrados
+\item Total de ingresos generados
+\end{itemize}
+
+\textbf{Validaciones:}
+\begin{itemize}
+\item El nombre debe ser único
+\item La fecha de fundación no puede ser futura
+\item La dirección debe estar completa
+\end{itemize}
+
+\subsection{Grupo}
+
+Un \textbf{Grupo} es un conjunto de artistas que actúan juntos bajo la dirección de una agencia.
+
+\textbf{Información almacenada:}
+\begin{itemize}
+\item Nombre (único)
+\item Fecha de debut
+\item Agencia responsable
+\item Número de miembros (1 a 20 artistas)
+\item Concepto visual o temático
+\item Estado (Activo/Inactivo)
+\item Relación con álbumes y actividades
+\end{itemize}
+
+\textbf{Validaciones:}
+\begin{itemize}
+\item Nombre único en el sistema
+\item Número de miembros entre 1 y 20
+\item Fecha de debut no puede ser futura
+\item Mínimo un artista registrado antes de activar
+\end{itemize}
+
+\subsection{Artista}
+
+Un \textbf{Artista} es un profesional que forma parte de un grupo y es visible para el público. Solo pueden crearse artistas a partir de aprendices graduados.
+
+\textbf{Información almacenada:}
+\begin{itemize}
+\item Nombre artístico
+\item Aprendiz graduado vinculado (referencia)
+\item Grupo actual del artista
+\item Fecha de debut en el grupo
+\item Estado actual en el grupo (Activo/Inactivo/Suspendido)
+\item Premios recibidos
+\item Ingresos personales
+\end{itemize}
+
+\textbf{Restricción Crítica:}
+\begin{quote}
+\textbf{Solo se pueden vincular aprendices con estado GRADUADO como nuevos artistas.}
+\end{quote}
+
+\subsection{Aprendiz}
+
+Un \textbf{Aprendiz} (Trainee) es un nuevo talento que está en proceso de formación en una agencia.
+
+\textbf{Información almacenada:}
+\begin{itemize}
+\item Nombre completo
+\item Fecha de nacimiento (edades de 15 a 50 años)
+\item Agencia asignada
+\item Estado actual (Activo, Inactivo, Graduado, Suspendido)
+\item Nivel de entrenamiento
+\item Historial de evaluaciones
+\end{itemize}
+
+\textbf{Validaciones de Edad:}
+\begin{itemize}
+\item \textbf{Edad mínima:} 15 años
+\item \textbf{Edad máxima:} 50 años
+\item Validación automática basada en fecha de nacimiento
+\end{itemize}
+
+\textbf{Estados de Aprendiz:}
+\begin{table}[H]
+\centering
+\caption{Estados de Aprendiz}
+\begin{tabular}{|l|p{7cm}|}
+\hline
+\textbf{Estado} & \textbf{Descripción} \\
+\hline
+ACTIVO & En entrenamiento regular \\
+\hline
+INACTIVO & Temporalmente sin actividades \\
+\hline
+GRADUADO & Completó entrenamiento, listo para artista \\
+\hline
+SUSPENDIDO & Entrenamiento pausado por bajo desempeño \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Álbum}
+
+Un \textbf{Álbum} es una producción discográfica que contiene un conjunto de canciones de un grupo.
+
+\textbf{Información almacenada:}
+\begin{itemize}
+\item Título del álbum
+\item Grupo responsable
+\item Fecha de lanzamiento
+\item Número de canciones
+\item Productor musical
+\item Copias vendidas
+\item Premios recibidos
+\end{itemize}
+
+\subsection{Canción}
+
+Una \textbf{Canción} es una composición musical que forma parte de un álbum.
+
+\textbf{Información almacenada:}
+\begin{itemize}
+\item Título
+\item Álbum al que pertenece
+\item Duración (en minutos)
+\item Artistas destacados
+\item Total de reproducciones
+\item Posición en charts (si aplica)
+\end{itemize}
+
+\subsection{Actividad}
+
+Una \textbf{Actividad} es cualquier evento o actividad que realiza un grupo o artista.
+
+\textbf{Tipos de Actividades:}
+\begin{itemize}
+\item CONCIERTO (Concert) - Presentación en vivo
+\item ENSAYO (Rehearsal) - Práctica del grupo
+\item GRABACIÓN (Recording) - Sesión de grabación
+\item EVENTO (Event) - Evento especial o promocional
+\item PRESENTACIÓN (Presentation) - Presentación televisiva
+\end{itemize}
+
+\textbf{Información almacenada:}
+\begin{itemize}
+\item Tipo de actividad
+\item Responsable de la organización
+\item Fecha y hora
+\item Lugar/Ubicación
+\item Participantes (artistas/grupos involucrados)
+\item Estado (Pendiente, Realizada, Cancelada)
+\end{itemize}
+
+\textbf{Validación Crítica:}
+\begin{quote}
+\textbf{El sistema impide conflictos de horarios} - no se pueden programar dos actividades del mismo grupo en el mismo horario.
+\end{quote}
+
+\subsection{Contrato}
+
+Un \textbf{Contrato} es un acuerdo vinculante entre dos o más partes (agencia, artista, grupo, etc.).
+
+\textbf{Información almacenada:}
+\begin{itemize}
+\item Tipo de contrato (ARTIST, GROUP, APPRENTICE)
+\item Partes involucradas (2 o más entidades)
+\item Fecha de inicio
+\item Fecha de término
+\item Condiciones especiales
+\item Distribución de ingresos
+\item Estado del contrato
+\end{itemize}
+
+\textbf{Estados de Contrato:}
+\begin{itemize}
+\item ACTIVO - Contrato vigente
+\item COMPLETADO - Plazo expirado
+\item CANCELADO - Terminación anticipada
+\item SUSPENDIDO - Pausa temporal
+\end{itemize}
+
+\textbf{Validaciones:}
+\begin{itemize}
+\item La fecha de término debe ser $\geq$ fecha de inicio
+\item Las partes no pueden ser las mismas
+\item Los contratos activos se actualizan automáticamente
+\end{itemize}
+
+\subsection{Premio}
+
+Un \textbf{Premio} es un reconocimiento otorgado a un grupo o artista por sus logros.
+
+\textbf{Información almacenada:}
+\begin{itemize}
+\item Nombre del premio
+\item Categoría (Mejor Grupo, Mejor Canción, etc.)
+\item Grupo o artista ganador
+\item Fecha de la ceremonia
+\item Evento o ceremonia donde fue otorgado
+\end{itemize}
+
+\subsection{Ingreso}
+
+Un \textbf{Ingreso} es un registro de dinero generado por actividades o ventas.
+
+\textbf{Fuentes de Ingreso:}
+\begin{itemize}
+\item Streaming (YouTube, Spotify, Apple Music)
+\item Conciertos (venta de entradas)
+\item Merchandising (venta de productos)
+\item Endorsements (patrocinios)
+\item Otros
+\end{itemize}
+
+\textbf{Información almacenada:}
+\begin{itemize}
+\item Tipo de ingreso
+\item Monto (\$)
+\item Grupo o artista responsable
+\item Fecha del ingreso
+\item Descripción detallada
+\item Responsable del registro
+\item Distribución automática según contrato
+\end{itemize}
+
+\section{Sistema de Evaluación de Aprendices}
+
+\textbf{Introducción}
+
+El sistema de evaluación es crítico para determinar el progreso de cada aprendiz en el programa de entrenamiento. Las evaluaciones son registradas por los managers y el sistema calcula automáticamente el promedio de las últimas 5 evaluaciones para determinar cambios de estado.
+
+\subsection{Puntaje de Evaluación}
+
+Cada evaluación debe incluir un puntaje entre 0 y 100 que refleja el desempeño del aprendiz.
+
+\begin{table}[H]
+\centering
+\caption{Escala de Puntaje de Evaluación}
+\begin{tabular}{|c|p{8cm}|}
+\hline
+\textbf{Rango} & \textbf{Interpretación} \\
+\hline
+90-100 & Excelente desempeño \\
+\hline
+80-89 & Muy bueno \\
+\hline
+70-79 & Bueno \\
+\hline
+60-69 & Satisfactorio \\
+\hline
+40-59 & Necesita mejorar \\
+\hline
+0-39 & Desempeño insuficiente \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Cálculo Automático del Promedio}
+
+El sistema mantiene un historial de todas las evaluaciones y calcula automáticamente el promedio de las últimas 5 evaluaciones. Este promedio determina automáticamente el estado del aprendiz.
+
+\subsection{Transiciones de Estado Automáticas}
+
+El sistema actualiza automáticamente el estado del aprendiz según el promedio de sus últimas 5 evaluaciones:
+
+\subsubsection{Caso 1: Promedio $\geq$ 80 - TRANSICIÓN A GRADUADO}
+
+\begin{quote}
+Cuando un aprendiz alcanza un promedio de 80 o superior, el sistema automáticamente:
+
+\begin{enumerate}
+    \item Cambia su estado a GRADUADO
+    \item Crea un nuevo Usuario del sistema con rol ARTISTA
+    \item Envía notificación al aprendiz sobre su graduación
+    \item Registra la fecha de graduación
+    \item Prepara para vinculación como Artista en un Grupo
+\end{enumerate}
+\end{quote}
+
+\textbf{Implicación:} Una vez graduado, el aprendiz puede ser promovido a Artista y vinculado a un grupo.
+
+\subsubsection{Caso 2: Promedio 40-79 - PERMANECE ACTIVO}
+
+\begin{quote}
+Cuando el promedio está entre 40 y 79:
+
+\begin{enumerate}
+    \item El estado permanece como ACTIVO
+    \item Continúa en el programa de entrenamiento
+    \item Se recomienda enfoque en áreas débiles
+    \item El sistema registra la observación en su expediente
+\end{enumerate}
+\end{quote}
+
+\textbf{Implicación:} El aprendiz debe continuar mejorando para alcanzar la meta de graduación.
+
+\subsubsection{Caso 3: Promedio $< 40$ - TRANSICIÓN A SUSPENDIDO}
+
+\begin{quote}
+Cuando el promedio cae por debajo de 40:
+
+\begin{enumerate}
+    \item El sistema cambia su estado a SUSPENDIDO
+    \item Se pausa temporalmente el entrenamiento
+    \item Se envía notificación al supervisor/manager
+    \item Se abre una sesión de revisión
+    \item El aprendiz puede ser reactivado después de demostrar mejora
+\end{enumerate}
+\end{quote}
+
+\textbf{Implicación:} El aprendiz requiere intervención y un plan de recuperación.
+
+\subsection{Procedimiento: Evaluar un Aprendiz}
+
+\begin{enumerate}
+    \item Accede al módulo de \textbf{Gestión de Aprendices}
+    \item Busca el aprendiz usando nombre o filtros
+    \item Haz clic en el botón \textbf{"Evaluar"} en la fila del aprendiz
+    \item Se abre el formulario de evaluación
+    \item Ingresa el puntaje (0-100)
+    \item Opcionalmente agrega comentarios sobre el desempeño
+    \item Haz clic en \textbf{"Guardar Evaluación"}
+    \item El sistema calcula automáticamente el promedio
+    \item Si corresponde, el estado se actualiza automáticamente
+    \item Recibes confirmación de la evaluación guardada
+\end{enumerate}
+
+\subsection{Visualización del Historial}
+
+Para cada aprendiz, puedes ver:
+\begin{itemize}
+    \item Todas las evaluaciones realizadas (con fechas)
+    \item El puntaje de cada evaluación
+    \item El promedio actual de últimas 5
+    \item Los comentarios del evaluador
+    \item La fecha en que cambió de estado (si aplica)
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\caption{Información de Agencia}
+\begin{tabular}{|l|p{7cm}|}
+\hline
+\textbf{Información Almacenada} & \textbf{Descripción} \\
+\hline
+Nombre de la agencia & Denominación oficial \\
+\hline
+Dirección & Ubicación física \\
+\hline
+Fecha de fundación & Cuándo se creó \\
+\hline
+Estado & Activa/Inactiva \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Grupo}
+
+Un conjunto de artistas que trabajan juntos bajo el mismo proyecto musical. Cada grupo pertenece a una agencia.
+
+\begin{table}[H]
+\centering
+\caption{Información de Grupo}
+\begin{tabular}{|l|p{7cm}|}
+\hline
+\textbf{Información Almacenada} & \textbf{Descripción} \\
+\hline
+Nombre del grupo & Denominación artística \\
+\hline
+Fecha de debut & Primer lanzamiento \\
+\hline
+Estado & Activo/Inactivo \\
+\hline
+Número de miembros & Cantidad de artistas \\
+\hline
+Conceptos visuales & Temas asociados \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Aprendiz}
+
+Una persona en entrenamiento para convertirse en artista profesional dentro de una agencia.
+
+\begin{table}[H]
+\centering
+\caption{Información de Aprendiz}
+\begin{tabular}{|l|p{7cm}|}
+\hline
+\textbf{Información Almacenada} & \textbf{Descripción} \\
+\hline
+Nombre completo & Identificación \\
+\hline
+Fecha de nacimiento & Para cálculo de edad \\
+\hline
+Agencia & A qué agencia pertenece \\
+\hline
+Estado de entrenamiento & ACTIVO, INACTIVO, GRADUADO \\
+\hline
+Evaluaciones & Historial de desempeño \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Artista}
+
+Una persona que forma parte activa de un grupo. Cada artista es un aprendiz graduado.
+
+\subsection{Álbum}
+
+Una colección de canciones lanzadas por un grupo.
+
+\subsection{Canción}
+
+Una composición musical individual dentro de un álbum.
+
+\subsection{Actividad}
+
+Cualquier evento o actividad en la que participa un grupo o artista (conciertos, ensayos, grabaciones).
+
+\subsection{Contrato}
+
+Acuerdo formal entre la agencia y artistas/grupos que especifica derechos, obligaciones y vigencia.
+
+\chapter{Autenticación}
+
+\section{Login al Sistema}
+
+\subsection{Paso 1: Acceder a la Página de Login}
+
+\begin{enumerate}
+    \item Abre tu navegador web
+    \item Dirígete a la URL del sistema: \url{https://kpop-manager.example.com}
+    \item Verás la pantalla de login
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{manual_img-000.png}
+\caption{Pantalla de Login del Sistema K-POP World}
+\label{fig:login_screen}
+\end{figure}
+
+\subsection{Paso 2: Ingresar Credenciales}
+
+\begin{table}[H]
+\centering
+\caption{Campos de Login}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Campo} & \textbf{Descripción} \\
+\hline
+Email & Tu correo registrado \\
+\hline
+Contraseña & Tu contraseña segura \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{enumerate}
+    \item Ingresa tu email en el campo ``Email''
+    \item Ingresa tu contraseña en el campo ``Contraseña''
+    \item Haz clic en ``Ingresar''
+\end{enumerate}
+
+\subsection{Paso 3: Validación}
+
+\begin{itemize}
+    \item[$\checkmark$] Si las credenciales son correctas $\rightarrow$ Acceso al sistema
+    \item[$\times$] Si son incorrectas $\rightarrow$ Verás un mensaje de error
+\end{itemize}
+
+\section{Errores Comunes de Login}
+
+\begin{table}[H]
+\centering
+\caption{Errores de Autenticación}
+\begin{tabular}{|l|p{3cm}|p{4cm}|}
+\hline
+\textbf{Error} & \textbf{Causa} & \textbf{Solución} \\
+\hline
+Email o contraseña incorrectos & Credenciales inválidas & Verifica mayúsculas/minúsculas \\
+\hline
+Usuario no existe & Email no registrado & Contacta al administrador \\
+\hline
+Cuenta desactivada & Usuario fue deshabilitado & Contacta al administrador \\
+\hline
+Demasiados intentos fallidos & Múltiples intentos & Espera 15 minutos \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Gestión de Contraseña}
+
+\subsection{Cambiar Contraseña}
+
+\begin{enumerate}
+    \item Haz clic en tu \textbf{perfil} (esquina superior derecha)
+    \item Selecciona \textbf{``Cambiar Contraseña''}
+    \item Ingresa:
+    \begin{itemize}
+        \item Contraseña actual
+        \item Nueva contraseña (mín. 8 caracteres)
+        \item Confirmar nueva contraseña
+    \end{itemize}
+    \item Haz clic en \textbf{``Guardar''}
+\end{enumerate}
+
+\subsection{Recuperar Contraseña}
+
+\begin{enumerate}
+    \item En la página de login, haz clic en \textbf{``¿Olvidó su contraseña?''}
+    \item Ingresa tu email
+    \item Recibirás un link de recuperación
+    \item Sigue las instrucciones en el email
+    \item Crea una nueva contraseña
+\end{enumerate}
+
+\section{Cerrar Sesión}
+
+\begin{enumerate}
+    \item Haz clic en tu \textbf{perfil} (esquina superior derecha)
+    \item Selecciona \textbf{``Cerrar Sesión''}
+    \item Se cerrará tu sesión automáticamente
+\end{enumerate}
+
+\chapter{Módulo: Gestión de Agencias}
+
+\section{Descripción}
+
+El módulo de Gestión de Agencias permite administrar la información de tu organización de K-Pop.
+
+\section{Propósito}
+
+\begin{itemize}
+    \item Mantener datos actualizados de la agencia
+    \item Registrar nueva información corporativa
+    \item Gestionar múltiples agencias (si aplica)
+    \item Visualizar información global de la agencia
+\end{itemize}
+
+\section{Roles Permitidos}
+
+\begin{table}[H]
+\centering
+\caption{Acceso por Rol - Agencias}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Rol} & \textbf{Permisos} \\
+\hline
+ADMIN & Acceso total \\
+\hline
+DIRECTOR & Lectura y actualización \\
+\hline
+MANAGER & Lectura \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Procedimiento 1: Ver Lista de Agencias}
+
+\subsection{Objetivo}
+
+Visualizar todas las agencias registradas en el sistema.
+
+\subsection{Pasos}
+
+\begin{enumerate}
+    \item En el menú principal, haz clic en \textbf{``Agencias''}
+    \item Se abrirá una pantalla con tabla de agencias
+    \item Verás las siguientes columnas:
+\end{enumerate}
+
+\begin{table}[H]
+\centering
+\caption{Columnas de Listado de Agencias}
+\begin{tabular}{|l|p{6cm}|}
+\hline
+\textbf{Columna} & \textbf{Descripción} \\
+\hline
+ID & Identificador único \\
+\hline
+Nombre & Nombre de la agencia \\
+\hline
+Dirección & Ubicación física \\
+\hline
+Fecha Fundación & Cuándo se creó \\
+\hline
+Estado & Activa/Inactiva \\
+\hline
+Acciones & Botones de editar/ver \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{manual_img-001.png}
+\caption{Lista de Agencias Registradas en el Sistema}
+\label{fig:agency_list}
+\end{figure}
+
+\section{Procedimiento 2: Crear Nueva Agencia}
+
+\subsection{Objetivo}
+
+Registrar una nueva agencia en el sistema.
+
+\subsection{Prerequisitos}
+
+Ser usuario con rol ADMIN.
+
+\subsection{Pasos}
+
+\begin{enumerate}
+    \item En el módulo Agencias, haz clic en \textbf{``+ Nueva Agencia''}
+    \item Se abrirá un formulario con los siguientes campos:
+\end{enumerate}
+
+\begin{table}[H]
+\centering
+\caption{Campos para Crear Agencia}
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{Campo} & \textbf{Obligatorio} & \textbf{Tipo} & \textbf{Restricción} \\
+\hline
+Nombre & Sí & Texto & Máx. 255 caracteres \\
+\hline
+Dirección & No & Texto & Máx. 500 caracteres \\
+\hline
+Fecha de Fundación & No & Fecha & Debe ser fecha pasada \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{manual_img-003.png}
+\caption{Formulario para Crear Nueva Agencia}
+\label{fig:create_agency}
+\end{figure}
+
+\subsection{Ejemplo de Datos}
+
+\begin{verbatim}
+Nombre: YG Entertainment
+Dirección: Calle Principal 123, Seúl, Corea del Sur
+Fecha Fundación: 1996-08-06
+\end{verbatim}
+
+\subsection{Validaciones}
+
+\begin{itemize}
+    \item El nombre no puede estar vacío
+    \item El nombre debe ser único (no repetir)
+    \item La fecha de fundación no puede ser futura
+\end{itemize}
+
+\begin{enumerate}
+    \setcounter{enumi}{2}
+    \item Completa cada campo requerido
+    \item Haz clic en \textbf{``Guardar''}
+    \item Verás un mensaje de confirmación: ``Agencia creada exitosamente''
+\end{enumerate}
+
+\chapter{Módulo: Gestión de Aprendices}
+
+\section{Descripción}
+
+Gestión de aprendices es el módulo donde registras y administras a las personas en entrenamiento para convertirse en artistas.
+
+\section{Propósito}
+
+\begin{itemize}
+    \item Registrar nuevos aprendices
+    \item Seguimiento del progreso
+    \item Registrar evaluaciones
+    \item Rastrear estado de entrenamiento
+    \item Promover a artista cuando sean competentes
+\end{itemize}
+
+\section{Roles Permitidos}
+
+\begin{table}[H]
+\centering
+\caption{Acceso por Rol - Aprendices}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Rol} & \textbf{Permisos} \\
+\hline
+ADMIN & Acceso total \\
+\hline
+MANAGER & Crear, leer, actualizar \\
+\hline
+DIRECTOR & Crear, leer, actualizar \\
+\hline
+APPRENTICE & Solo ver su perfil \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Procedimiento 1: Registrar Nuevo Aprendiz}
+
+\subsection{Objetivo}
+
+Ingresa un nuevo aprendiz al programa de entrenamiento.
+
+\subsection{Pasos}
+
+\begin{enumerate}
+    \item En el menú, ve a \textbf{``Aprendices''}
+    \item Haz clic en \textbf{``+ Nuevo Aprendiz''}
+    \item Completa el formulario:
+\end{enumerate}
+
+\begin{table}[H]
+\centering
+\caption{Campos para Registrar Aprendiz}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Campo} & \textbf{Obligatorio} & \textbf{Restricción} \\
+\hline
+Nombre & Sí & 2-255 caracteres \\
+\hline
+Fecha Nacimiento & Sí & 15-50 años de edad \\
+\hline
+Agencia & Sí & Una agencia del sistema \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{manual_img-005.png}
+\caption{Formulario para Registrar Nuevo Aprendiz}
+\label{fig:register_apprentice}
+\end{figure}
+
+\subsection{Validaciones}
+
+\begin{itemize}
+    \item Nombre mínimo 2 caracteres
+    \item Edad mínima: 15 años
+    \item Edad máxima: 50 años
+    \item Agencia debe existir en el sistema
+\end{itemize}
+
+\subsection{Ejemplo}
+
+\begin{verbatim}
+Nombre: Kim Min-jae
+Fecha de Nacimiento: 2005-03-15 (Edad: 20 años) OK
+Agencia: YG Entertainment
+\end{verbatim}
+
+\begin{enumerate}
+    \setcounter{enumi}{3}
+    \item Haz clic en \textbf{``Registrar''}
+    \item Verás confirmación: ``Aprendiz registrado exitosamente''
+    \item El estado inicial será: \textbf{ACTIVO}
+\end{enumerate}
+
+\section{Procedimiento 2: Evaluar Aprendiz}
+
+\subsection{Objetivo}
+
+Registrar evaluación periódica del progreso del aprendiz.
+
+\subsection{Prerequisitos}
+
+\begin{itemize}
+    \item Rol MANAGER o DIRECTOR
+    \item Aprendiz en estado ACTIVO
+\end{itemize}
+
+\subsection{Pasos}
+
+\begin{enumerate}
+    \item Ve a \textbf{``Aprendices''}
+    \item Busca el aprendiz a evaluar
+    \item Haz clic en \textbf{``Evaluar''} (botón azul)
+    \item Se abre formulario de evaluación:
+\end{enumerate}
+
+\begin{table}[H]
+\centering
+\caption{Campos de Evaluación}
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{Campo} & \textbf{Tipo} & \textbf{Rango} & \textbf{Descripción} \\
+\hline
+Puntaje & Número & 0-100 & Calificación general \\
+\hline
+Comentarios & Texto & Máx. 1000 & Observaciones \\
+\hline
+Áreas Fuertes & Texto & Máx. 500 & Fortalezas \\
+\hline
+Áreas a Mejorar & Texto & Máx. 500 & Aspectos por trabajar \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{manual_img-007.png}
+\caption{Formulario de Evaluación de Aprendiz}
+\label{fig:evaluate_apprentice}
+\end{figure}
+
+\begin{enumerate}
+    \setcounter{enumi}{4}
+    \item Completa los campos
+    \item Haz clic en \textbf{``Registrar Evaluación''}
+\end{enumerate}
+
+\subsection{Sistema Automático de Progreso}
+
+El sistema analiza automáticamente el promedio de últimas 5 evaluaciones:
+
+\begin{itemize}
+    \item \textbf{Promedio >= 80 puntos} $\rightarrow$ Estado: GRADUADO
+    \begin{itemize}
+        \item Se crea automáticamente Usuario como ARTIST
+        \item Recibe credenciales de acceso
+        \item Se notifica al aprendiz
+    \end{itemize}
+    
+    \item \textbf{Promedio 40-79 puntos} $\rightarrow$ Estado: ACTIVO
+    \begin{itemize}
+        \item Continúa en entrenamiento
+        \item Se programan nuevas sesiones
+    \end{itemize}
+    
+    \item \textbf{Promedio < 40 puntos} $\rightarrow$ Estado: SUSPENDIDO
+    \begin{itemize}
+        \item Se pausa entrenamiento
+        \item Se notifica a supervisores
+        \item Requiere revisión para continuar
+    \end{itemize}
+\end{itemize}
+
+\chapter{Conversión de Aprendiz a Artista}
+
+\section{Introducción}
+
+Cuando un aprendiz alcanza un promedio de evaluación de 80 o superior en sus últimas 5 evaluaciones, el sistema automáticamente lo marca como GRADUADO. En ese momento, puede ser convertido a ARTISTA para vincularlo a un grupo musical.
+
+\section{Requisitos Previos}
+
+\begin{itemize}
+\item El aprendiz debe estar en estado GRADUADO
+\item El aprendiz debe tener un promedio final $\geq$ 80
+\item Rol MANAGER o DIRECTOR
+\end{itemize}
+
+\section{Proceso de Conversión}
+
+\subsection{Paso 1: Acceder a la Lista de Aprendices}
+
+\begin{enumerate}
+\item Inicia sesión en el sistema
+\item Desde el menú principal, ve a \textbf{``Aprendices''}
+\item Se muestra lista de todos los aprendices registrados
+\item Filtra por estado para ver solo los GRADUADOS
+\end{enumerate}
+
+\subsection{Paso 2: Seleccionar Aprendiz Graduado}
+
+\begin{enumerate}
+\item Busca el aprendiz graduado que deseas convertir a artista
+\item Haz clic en su nombre o en el botón \textbf{``Ver Detalles''}
+\item Se abre la página de perfil del aprendiz mostrando:
+\begin{itemize}
+\item Nombre completo
+\item Promedio de evaluación (debe mostrar $\geq$ 80)
+\item Estado: \textbf{GRADUADO}
+\item Fecha de graduación
+\item Historial de evaluaciones
+\end{itemize}
+\end{enumerate}
+
+\subsection{Paso 3: Convertir a Artista}
+
+\begin{enumerate}
+\item En la página de detalles del aprendiz graduado
+\item Haz clic en botón \textbf{``Convertir a Artista''} (botón verde)
+\item Se abre formulario con campos requeridos:
+
+\begin{table}[H]
+\centering
+\caption{Campos para Conversión a Artista}
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{Campo} & \textbf{Tipo} & \textbf{Requerido} & \textbf{Descripción} \\
+\hline
+Nombre Artístico & Texto & SÍ & Nombre profesional del artista \\
+\hline
+Grupo & Selección & NO & Grupo al que se vinculará (opcional) \\
+\hline
+Fecha Debut & Fecha & NO & Fecha debut como artista \\
+\hline
+Concepto Visual & Texto & NO & Descripción visual/estilo \\
+\hline
+\end{tabular}
+\end{table}
+
+\item Completa el formulario:
+\begin{itemize}
+\item \textbf{Nombre Artístico:} Ingresa el nombre que usará públicamente
+\item \textbf{Grupo (Opcional):} Si deseas vincularlo a un grupo, selecciona de la lista
+\item \textbf{Fecha Debut:} Ingresa la fecha en que debutará como artista
+\item \textbf{Concepto Visual:} Describe el estilo visual asociado
+\end{itemize}
+\end{enumerate}
+
+\subsection{Paso 4: Confirmar Conversión}
+
+\begin{enumerate}
+\item Revisa que todos los datos sean correctos
+\item Haz clic en botón \textbf{``Confirmar Conversión''}
+\item El sistema muestra mensaje: \textbf{``Artista creado exitosamente''}
+\item El nuevo artista aparece en el módulo de Artistas
+\item El aprendiz se convierte en artista y mantiene su historial
+\end{enumerate}
+
+\section{Información Creada Automáticamente}
+
+Al convertir un aprendiz a artista, el sistema automáticamente:
+
+\begin{itemize}
+\item Crea un nuevo registro de ARTISTA vinculado al aprendiz
+\item Crea un Usuario del sistema (si no existía) con rol ARTIST
+\item Asigna email: \texttt{nombreartistico@kpop.local}
+\item Genera contraseña temporal aleatoria (notificada al usuario)
+\item Copia el historial de evaluaciones al perfil de artista
+\item Registra la fecha de conversión en auditoría
+\item Notifica al artista por email sobre su nueva cuenta
+\end{itemize}
+
+\section{Cambio de Estado después de Conversión}
+
+Una vez convertido a artista:
+
+\begin{table}[H]
+\centering
+\caption{Estado del Artista después de Conversión}
+\begin{tabular}{|l|p{8cm}|}
+\hline
+\textbf{Estado} & \textbf{Significado} \\
+\hline
+ACTIVO & Listo para participar en grupos y actividades \\
+\hline
+En Grupo & Vinculado a un grupo musical (si se especificó) \\
+\hline
+Independiente & No vinculado a grupo (puede agregarse después) \\
+\hline
+\end{tabular}
+\end{table}
+
+\chapter{Módulo: Gestión de Grupos}
+
+\section{Descripción}
+
+Gestión de Grupos permite crear y administrar los grupos musicales de K-Pop.
+
+\section{Propósito}
+
+\begin{itemize}
+    \item Crear nuevos grupos
+    \item Administrar miembros
+    \item Asociar conceptos visuales
+    \item Rastrear estado y actividades
+    \item Gestionar debut y lanzamientos
+\end{itemize}
+
+\section{Roles Permitidos}
+
+\begin{table}[H]
+\centering
+\caption{Acceso por Rol - Grupos}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Rol} & \textbf{Permisos} \\
+\hline
+ADMIN & Acceso total \\
+\hline
+MANAGER & Crear, leer, actualizar \\
+\hline
+DIRECTOR & Crear, leer, actualizar \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Procedimiento 1: Crear Nuevo Grupo}
+
+\subsection{Objetivo}
+
+Registrar un nuevo grupo en el sistema.
+
+\subsection{Pasos}
+
+\begin{enumerate}
+    \item Ve a \textbf{``Grupos''}
+    \item Haz clic en \textbf{``+ Nuevo Grupo''}
+    \item Completa formulario:
+\end{enumerate}
+
+\begin{table}[H]
+\centering
+\caption{Campos para Crear Grupo}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Campo} & \textbf{Obligatorio} & \textbf{Restricción} \\
+\hline
+Nombre & Sí & 1-255, único en sistema \\
+\hline
+Fecha Debut & Sí & Anterior a hoy \\
+\hline
+Agencia & Sí & Una agencia del sistema \\
+\hline
+Número Miembros & No & 1-20 \\
+\hline
+Concepto Visual & No & Seleccionar del listado \\
+\hline
+Estado & Sí & ACTIVE/INACTIVE \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{manual_img-009.png}
+\caption{Formulario para Crear Nuevo Grupo}
+\label{fig:create_group}
+\end{figure}
+
+\subsection{Ejemplo}
+
+\begin{verbatim}
+Nombre: NewJeans
+Fecha Debut: 2022-08-01
+Agencia: HYBE
+Número Miembros: 5
+Concepto Visual: Y2K Modern
+Estado: ACTIVE
+\end{verbatim}
+
+\begin{enumerate}
+    \setcounter{enumi}{3}
+    \item Haz clic en \textbf{``Crear Grupo''}
+    \item Confirmación: ``Grupo creado exitosamente''
+\end{enumerate}
+
+\section{Procedimiento 2: Agregar Miembros a Grupo}
+
+\subsection{Objetivo}
+
+Vincular artistas a un grupo.
+
+\subsection{Pasos}
+
+\begin{enumerate}
+    \item Ve a la lista de Grupos
+    \item Haz clic en \textbf{nombre del grupo}
+    \item Se abre perfil del grupo
+    \item Baja hasta sección \textbf{``Miembros''}
+    \item Haz clic en \textbf{``+ Agregar Miembro''}
+    \item Selecciona artista de la lista
+    \item Haz clic en checkbox del artista
+    \item Haz clic en \textbf{``Agregar''}
+    \item Confirmación: ``Artista añadido al grupo''
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{manual_img-010.png}
+\caption{Agregando Miembros a un Grupo}
+\label{fig:add_group_members}
+\end{figure}
+
+\chapter{Módulos Adicionales}
+
+\section{Módulo: Gestión de Álbumes}
+
+\subsection{Descripción}
+
+Permite registrar lanzamientos discográficos de grupos.
+
+\subsection{Procedimiento: Crear Nuevo Álbum}
+
+\begin{enumerate}
+    \item Ve a \textbf{``Álbumes''}
+    \item Haz clic en \textbf{``+ Nuevo Álbum''}
+    \item Completa:
+    \begin{itemize}
+        \item Título (obligatorio)
+        \item Grupo (obligatorio)
+        \item Fecha Lanzamiento (obligatorio)
+    \end{itemize}
+    \item Haz clic en \textbf{``Crear Álbum''}
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{manual_img-012.png}
+\caption{Lista de Álbumes de los Grupos}
+\label{fig:albums_list}
+\end{figure}
+
+\section{Módulo: Gestión de Canciones}
+
+\subsection{Descripción}
+
+Registro de composiciones musicales individuales.
+
+\subsection{Procedimiento: Crear Nueva Canción}
+
+\begin{enumerate}
+    \item Ve a \textbf{``Canciones''}
+    \item Haz clic en \textbf{``+ Nueva Canción''}
+    \item Completa:
+    \begin{itemize}
+        \item Título (obligatorio)
+        \item Álbum (obligatorio)
+        \item Duración (opcional)
+        \item Artistas Destacados (opcional)
+    \end{itemize}
+    \item Haz clic en \textbf{``Guardar''}
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{manual_img-013.png}
+\caption{Listado de Canciones en Álbumes}
+\label{fig:songs_list}
+\end{figure}
+
+\section{Módulo: Gestión de Actividades}
+
+\subsection{Descripción}
+
+Registro de eventos, conciertos, ensayos y actividades.
+
+\subsection{Procedimiento: Crear Nueva Actividad}
+
+\begin{enumerate}
+    \item Ve a \textbf{``Actividades''}
+    \item Haz clic en \textbf{``+ Nueva Actividad''}
+    \item Completa:
+    \begin{itemize}
+        \item Tipo (CONCERT, REHEARSAL, RECORDING, EVENT)
+        \item Responsable (obligatorio)
+        \item Fecha (obligatorio)
+        \item Lugar (obligatorio)
+        \item Participantes (opcional)
+    \end{itemize}
+    \item Haz clic en \textbf{``Crear Actividad''}
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{manual_img-014.png}
+\caption{Calendario de Actividades y Eventos}
+\label{fig:activities_calendar}
+\end{figure}
+
+\section{Módulo: Gestión de Contratos}
+
+\subsection{Descripción}
+
+Administración de acuerdos formales entre agencia y artistas/grupos.
+
+\subsection{Procedimiento: Crear Nuevo Contrato}
+
+\begin{enumerate}
+    \item Ve a \textbf{``Contratos''}
+    \item Haz clic en \textbf{``+ Nuevo Contrato''}
+    \item Completa:
+    \begin{itemize}
+        \item Tipo (ARTIST, GROUP, APPRENTICE)
+        \item Parte 1 (obligatorio)
+        \item Parte 2 (obligatorio)
+        \item Fecha Inicio (obligatorio)
+        \item Fecha Fin (opcional)
+        \item Estado (obligatorio)
+    \end{itemize}
+    \item Haz clic en \textbf{``Guardar''}
+\end{enumerate}
+
+\chapter{Búsquedas, Filtros y Reportes}
+
+\section{Búsqueda General}
+
+En cualquier módulo con tabla de datos:
+
+\begin{enumerate}
+    \item Ubica el campo \textbf{``Buscar''} (parte superior izquierda)
+    \item Escribe lo que buscas (nombre, email, etc.)
+    \item Presiona Enter o espera 500ms
+    \item Resultados se filtran automáticamente
+\end{enumerate}
+
+\section{Filtros Avanzados}
+
+En módulos principales:
+
+\begin{enumerate}
+    \item Haz clic en \textbf{``Filtros''} (icono de embudo)
+    \item Se abre panel con opciones
+    \item Selecciona criterios
+    \item Haz clic en \textbf{``Aplicar''}
+\end{enumerate}
+
+\section{Generar Reporte}
+
+\begin{enumerate}
+    \item Ve a módulo deseado
+    \item Haz clic en \textbf{``Generar Reporte''} (icono de documento)
+    \item Selecciona formato: PDF, Excel, CSV
+    \item Selecciona período: Este mes, Últimos 3 meses, etc.
+    \item Haz clic en \textbf{``Descargar''}
+\end{enumerate}
+
+\chapter{Preguntas Frecuentes}
+
+\section{FAQs}
+
+\begin{enumerate}
+    \item \textbf{¿Olvidé mi contraseña, qué hago?}
+    
+    Haz clic en ``¿Olvidó su contraseña?'' en login y sigue las instrucciones de email.
+    
+    \item \textbf{¿Puedo editar un dato de un grupo ya creado?}
+    
+    Sí, haz clic en ``Editar'' en la fila del grupo y actualiza los campos.
+    
+    \item \textbf{¿Qué pasa si un aprendiz llega a 80 puntos?}
+    
+    El sistema automáticamente lo promueve a ARTISTA y crea su usuario.
+    
+    \item \textbf{¿Cuántas veces puedo evaluar un aprendiz?}
+    
+    Las veces que necesites, el sistema mantiene histórico y calcula promedio.
+    
+    \item \textbf{¿Puedo eliminar un grupo?}
+    
+    Sí (rol ADMIN), pero se eliminarán relaciones asociadas. Se solicita confirmación.
+    
+    \item \textbf{¿Cómo veo ingresos por grupo?}
+    
+    Ve a ``Ingresos'', usa filtro por Grupo deseado.
+    
+    \item \textbf{¿Puedo cambiar el rol de un usuario?}
+    
+    Sí, como ADMIN, edita el usuario y selecciona nuevo rol.
+    
+    \item \textbf{¿Cuál es el tiempo de sesión?}
+    
+    24 horas, después se cierra automáticamente.
+    
+    \item \textbf{¿Puedo tener dos usuarios con el mismo email?}
+    
+    No, email es único en el sistema.
+    
+    \item \textbf{¿Dónde descargo reportes?}
+    
+    En cada módulo hay botón ``Generar Reporte'' que descarga en PDF/Excel.
+\end{enumerate}
+
+\chapter{Solución de Problemas}
+
+\section{Problema: No puedo ingresar al sistema}
+
+\subsection{Causa posible}
+
+Credenciales incorrectas o cuenta desactivada.
+
+\subsection{Solución}
+
+\begin{enumerate}
+    \item Verifica que email sea correcto (sin espacios)
+    \item Verifica que contraseña sea correcta (sensible a mayúsculas)
+    \item Si no recuerdas, usa ``Recuperar Contraseña''
+    \item Si aún no funciona, contacta a administrador
+\end{enumerate}
+
+\section{Problema: Recibo error ``No tienes permisos''}
+
+\subsection{Causa posible}
+
+Tu rol no tiene acceso a esta función.
+
+\subsection{Solución}
+
+\begin{enumerate}
+    \item Verifica tu rol actual (perfil → información)
+    \item Si necesitas más permisos, contacta a administrador
+    \item Revisa tabla de permisos
+\end{enumerate}
+
+\section{Problema: No veo los datos que debería}
+
+\subsection{Causa posible}
+
+Filtros activos o datos pertenecen a otra agencia.
+
+\subsection{Solución}
+
+\begin{enumerate}
+    \item Haz clic en ``Filtros''
+    \item Haz clic en ``Limpiar todos los filtros''
+    \item Haz clic en ``Aplicar''
+    \item Datos deberían aparecer
+\end{enumerate}
+
+\section{Problema: El sistema va lento}
+
+\subsection{Causa posible}
+
+Conexión lenta o servidor ocupado.
+
+\subsection{Solución}
+
+\begin{enumerate}
+    \item Verifica tu conexión de internet
+    \item Recarga la página (F5)
+    \item Si persiste, intenta más tarde
+    \item Contacta a administrador si el problema continúa
+\end{enumerate}
+
+\chapter{Glosario de Términos}
+
+\begin{description}
+    \item[Agencia:] Organización que gestiona grupos y artistas de K-Pop
+    
+    \item[Álbum:] Colección de canciones lanzadas por un grupo
+    
+    \item[Aprendiz:] Persona en entrenamiento para convertirse en artista
+    
+    \item[Artista:] Aprendiz graduado que forma parte activa de un grupo
+    
+    \item[Canción:] Composición musical individual
+    
+    \item[Concepto:] Tema visual o artístico de un grupo
+    
+    \item[Contrato:] Acuerdo formal entre entidades
+    
+    \item[Debut:] Primera presentación oficial de grupo o artista
+    
+    \item[Director:] Rol administrativo de nivel ejecutivo
+    
+    \item[Distribución:] Reparto de ganancias entre partes
+    
+    \item[Duración:] Longitud en minutos de una canción
+    
+    \item[Estado:] Condición actual de un registro (Activo/Inactivo)
+    
+    \item[Evaluación:] Calificación periódica del progreso
+    
+    \item[Graduado:] Aprendiz que completó entrenamiento exitosamente
+    
+    \item[Grupo:] Conjunto de artistas que trabajan juntos
+    
+    \item[Ingreso:] Dinero generado por actividades
+    
+    \item[Manager:] Rol de gestor de operaciones
+    
+    \item[Merchandising:] Productos vendidos (posters, ropa, etc.)
+    
+    \item[Miembro:] Artista que pertenece a un grupo
+    
+    \item[Popularidad:] Ranking de éxito (charts, listas)
+    
+    \item[Premio:] Reconocimiento ganado en competencia
+    
+    \item[Reproducciones:] Cantidad de veces que se escucha una canción
+    
+    \item[Rol:] Posición/función de un usuario en el sistema
+    
+    \item[Streaming:] Reproducción de música desde plataformas (Spotify, etc.)
+    
+    \item[Suspendido:] Aprendiz pausado temporalmente
+\end{description}
+
+\chapter{Tabla Completa de Permisos}
+
+\begin{longtable}{|l|c|c|c|c|c|c|}
+\hline
+\textbf{Funcionalidad} & \textbf{ADMIN} & \textbf{DIRECTOR} & \textbf{MANAGER} & \textbf{STAFF} & \textbf{ARTIST} & \textbf{APPRENTICE} \\
+\hline
+\endhead
+\hline
+\endfoot
+Ver Agencias & R & R & R & R & - & - \\
+\hline
+Crear Agencia & C & - & - & - & - & - \\
+\hline
+Editar Agencia & U & U & - & - & - & - \\
+\hline
+Eliminar Agencia & D & - & - & - & - & - \\
+\hline
+Ver Aprendices & R & R & R & R & - & R* \\
+\hline
+Crear Aprendiz & C & C & C & - & - & - \\
+\hline
+Editar Aprendiz & U & U & U & - & - & - \\
+\hline
+Evaluar Aprendiz & C & C & C & - & - & - \\
+\hline
+Ver Artistas & R & R & R & R & R & - \\
+\hline
+Crear Artista & C & C & C & - & - & - \\
+\hline
+Ver Grupos & R & R & R & R & R & R \\
+\hline
+Crear Grupo & C & C & C & - & - & - \\
+\hline
+Editar Grupo & U & U & U & - & - & - \\
+\hline
+Ver Álbumes & R & R & R & R & R & R \\
+\hline
+Crear Álbum & C & C & C & - & - & - \\
+\hline
+Ver Canciones & R & R & R & R & R & R \\
+\hline
+Crear Canción & C & C & C & - & - & - \\
+\hline
+Ver Actividades & R & R & R & R & R & R \\
+\hline
+Crear Actividad & C & C & C & C & - & - \\
+\hline
+Ver Contratos & R & R & R & R & - & - \\
+\hline
+Crear Contrato & C & C & C & - & - & - \\
+\hline
+Ver Premios & R & R & R & R & R & - \\
+\hline
+Registrar Premio & C & C & C & - & - & - \\
+\hline
+Ver Ingresos & R & R & R & - & - & - \\
+\hline
+Registrar Ingreso & C & C & C & - & - & - \\
+\hline
+Ver Usuarios & R & R & - & - & - & - \\
+\hline
+Crear Usuario & C & - & - & - & - & - \\
+\hline
+Editar Usuario & U & U & - & - & - & - \\
+\hline
+Eliminar Usuario & D & - & - & - & - & - \\
+\hline
+Generar Reportes & R & R & R & R & - & - \\
+\hline
+\end{longtable}
+
+\textbf{Leyenda:}
+\begin{itemize}
+    \item R = Lectura
+    \item C = Crear
+    \item U = Actualizar
+    \item D = Eliminar
+    \item * = Solo su propio perfil
+    \item - = Sin acceso
+\end{itemize}
+
+\chapter{Gestión del Perfil}
+
+\section{Introducción}
+
+Cada usuario del sistema puede acceder a su perfil personal para ver y editar su información, cambiar contraseña y realizar otras operaciones de cuenta.
+
+\section{Acceder al Perfil}
+
+\subsection{Pasos}
+
+\begin{enumerate}
+\item En la parte superior derecha de la pantalla, haz clic en tu nombre/avatar
+\item Se abre menú desplegable con opciones:
+\begin{itemize}
+\item \textbf{Mi Perfil} - Ver información personal
+\item \textbf{Cambiar Contraseña} - Modificar contraseña
+\item \textbf{Preferencias} - Configuración de cuenta
+\item \textbf{Cerrar Sesión} - Salir del sistema
+\end{itemize}
+\end{enumerate}
+
+\section{Ver Información del Perfil}
+
+\subsection{Procedimiento}
+
+\begin{enumerate}
+\item Haz clic en \textbf{``Mi Perfil''}
+\item Se muestra página con tu información:
+\begin{itemize}
+\item Nombre completo
+\item Email
+\item Rol en el sistema
+\item Agencia asignada
+\item Fecha de creación de cuenta
+\item Último acceso
+\end{itemize}
+\item Puedes ver tu historial de:
+\begin{itemize}
+\item Evaluaciones realizadas (si eres aprendiz)
+\item Actividades donde participaste
+\item Grupos a los que perteneces
+\item Ingresos registrados
+\end{itemize}
+\end{enumerate}
+
+\section{Cambiar Contraseña}
+
+\subsection{Requisitos de Contraseña}
+
+Las contraseñas deben cumplir con:
+
+\begin{table}[H]
+\centering
+\caption{Requisitos de Contraseña}
+\begin{tabular}{|l|p{7cm}|}
+\hline
+\textbf{Requisito} & \textbf{Descripción} \\
+\hline
+Longitud mínima & 8 caracteres \\
+\hline
+Mayúsculas & Al menos 1 letra mayúscula (A-Z) \\
+\hline
+Minúsculas & Al menos 1 letra minúscula (a-z) \\
+\hline
+Números & Al menos 1 número (0-9) \\
+\hline
+Símbolos & Al menos 1 carácter especial (!@\#\$\%\&*) \\
+\hline
+Diferente & Debe ser diferente a la anterior \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Procedimiento}
+
+\begin{enumerate}
+\item Haz clic en tu nombre/avatar (parte superior derecha)
+\item Selecciona \textbf{``Cambiar Contraseña''}
+\item Se abre formulario con campos:
+\begin{itemize}
+\item \textbf{Contraseña Actual:} Ingresa tu contraseña actual para verificación
+\item \textbf{Nueva Contraseña:} Ingresa la nueva contraseña
+\item \textbf{Confirmar Nueva Contraseña:} Repite la nueva contraseña
+\end{itemize}
+\item Validación de requisitos se muestra en tiempo real (con checkmarks [OK])
+\item Haz clic en \textbf{``Cambiar Contraseña''}
+\item Sistema confirma: \textbf{``Contraseña cambiada exitosamente''}
+\item Se cierra sesión automáticamente para seguridad
+\item Debes volver a ingresar con nueva contraseña
+\end{enumerate}
+
+\subsection{Si Olvidas tu Contraseña}
+
+\begin{enumerate}
+\item En la página de Login, haz clic en \textbf{``¿Olvidaste tu contraseña?''}
+\item Ingresa tu email asociado a la cuenta
+\item Sistema envía enlace de recuperación por email
+\item Abre el email y haz clic en el enlace (válido por 1 hora)
+\item Se abre formulario para establecer nueva contraseña
+\item Sigue los requisitos de contraseña mencionados arriba
+\item Haz clic en \textbf{``Restablecer Contraseña''}
+\item Ya puedes acceder con la nueva contraseña
+\end{enumerate}
+
+\section{Eliminar Cuenta}
+
+\subsection{Advertencia}
+
+\begin{quote}
+\textbf{ACCIÓN IRREVERSIBLE:} Eliminar tu cuenta borrará TODA tu información del sistema de manera permanente. Esta acción no puede ser revertida.
+\end{quote}
+
+\subsection{Procedimiento}
+
+\begin{enumerate}
+\item Accede a tu perfil (haz clic en tu nombre)
+\item Baja hasta el final de la página
+\item Haz clic en \textbf{``Eliminar Cuenta''} (botón rojo)
+\item El sistema te pide confirmación:
+\begin{quote}
+``¿Estás seguro de que deseas eliminar tu cuenta? Esta acción es irreversible.''
+\end{quote}
+\item Ingresa tu contraseña para confirmar (medida de seguridad)
+\item Haz clic en \textbf{``Sí, eliminar permanentemente''}
+\item Tu cuenta es eliminada y eres desconectado del sistema
+\item Se envía email de confirmación de eliminación
+\end{enumerate}
+
+\chapter{Gestión de Solicitudes}
+
+\section{Introducción}
+
+La sección de Solicitudes permite hacer consultas especializadas a datos del sistema. Aquí puedes filtrar, buscar y generar listas específicas de artistas, grupos, aprendices y actividades.
+
+\section{Acceder a Solicitudes}
+
+\begin{enumerate}
+\item Desde el menú principal, selecciona \textbf{``Solicitudes''}
+\item Se muestra lista de consultas disponibles por rol
+\end{enumerate}
+
+\section{Seis Consultas Especializadas}
+
+\subsection{Solicitud 1: Artistas por Agencia}
+
+\textbf{Objetivo:} Listar todos los artistas que pertenecen a una agencia específica.
+
+\textbf{Pasos:}
+\begin{enumerate}
+\item Ve a Solicitudes → \textbf{``Artistas por Agencia''}
+\item Selecciona la agencia del dropdown
+\item Haz clic en \textbf{``Buscar''}
+\item Se muestran resultados con:
+\begin{itemize}
+\item Nombre artístico
+\item Grupo actual
+\item Fecha debut
+\item Premios totales
+\end{itemize}
+\item Puedes exportar resultados en Excel o PDF
+\end{enumerate}
+
+\subsection{Solicitud 2: Aprendices por Estado de Evaluación}
+
+\textbf{Objetivo:} Identificar aprendices que están cerca de graduarse o en riesgo.
+
+\textbf{Pasos:}
+\begin{enumerate}
+\item Ve a Solicitudes → \textbf{``Aprendices por Evaluación''}
+\item Selecciona filtros:
+\begin{itemize}
+\item Rango de promedio (ej: 70-79, 40-59, < 40)
+\item Estado (ACTIVO, SUSPENDIDO, GRADUADO)
+\item Agencia
+\end{itemize}
+\item Haz clic en \textbf{``Filtrar''}
+\item Resultados muestran:
+\begin{itemize}
+\item Nombre del aprendiz
+\item Promedio actual
+\item Última evaluación (fecha y puntaje)
+\item Recomendación de acción (Graduación pendiente, Intervención requerida, etc.)
+\end{itemize}
+\end{enumerate}
+
+\subsection{Solicitud 3: Ingresos por Período}
+
+\textbf{Objetivo:} Generar reporte de ingresos en un rango de fechas.
+
+\textbf{Pasos:}
+\begin{enumerate}
+\item Ve a Solicitudes → \textbf{``Ingresos por Período''}
+\item Selecciona:
+\begin{itemize}
+\item Fecha inicio (calendar picker)
+\item Fecha fin
+\item Grupo/Artista (opcional, para filtrar)
+\item Tipo de ingreso (Streaming, Conciertos, Merchandising, etc.)
+\end{itemize}
+\item Haz clic en \textbf{``Generar Reporte''}
+\item Se muestra tabla con:
+\begin{itemize}
+\item Fecha de ingreso
+\item Monto
+\item Responsable
+\item Grupo/Artista
+\item Distribución realizada
+\end{itemize}
+\item Puedes ver total en la parte inferior
+\end{enumerate}
+
+\subsection{Solicitud 4: Contratos Vigentes}
+
+\textbf{Objetivo:} Ver todos los contratos activos del sistema.
+
+\textbf{Pasos:}
+\begin{enumerate}
+\item Ve a Solicitudes → \textbf{``Contratos Vigentes''}
+\item Se muestran solo contratos con estado ACTIVO
+\item Información mostrada:
+\begin{itemize}
+\item Tipo de contrato
+\item Partes involucradas
+\item Fecha inicio y fin
+\item Días restantes hasta vencimiento
+\item Porcentaje de vigencia completado
+\end{itemize}
+\item Puedes hacer clic en cada contrato para ver detalles completos
+\end{enumerate}
+
+\subsection{Solicitud 5: Actividades Próximas}
+
+\textbf{Objetivo:} Ver actividades programadas en los próximos 30 días.
+
+\textbf{Pasos:}
+\begin{enumerate}
+\item Ve a Solicitudes → \textbf{``Actividades Próximas''}
+\item Se muestran automáticamente actividades de:
+\begin{itemize}
+\item Hoy hasta 30 días en el futuro
+\item Ordenadas por fecha ascendente
+\end{itemize}
+\item Para cada actividad se muestra:
+\begin{itemize}
+\item Tipo (Concierto, Ensayo, Grabación, etc.)
+\item Fecha y hora
+\item Lugar
+\item Grupo/Artista responsable
+\item Participantes
+\item Estado
+\item Contador de días (``En 3 días'', ``Mañana'', etc.)
+\end{itemize}
+\item Puedes filtrar por tipo de actividad
+\end{enumerate}
+
+\subsection{Solicitud 6: Premios Ganados}
+
+\textbf{Objetivo:} Listar todos los premios registrados por grupo o artista.
+
+\textbf{Pasos:}
+\begin{enumerate}
+\item Ve a Solicitudes → \textbf{``Premios Ganados''}
+\item Selecciona filtros:
+\begin{itemize}
+\item Grupo o Artista
+\item Rango de fecha
+\item Categoría (opcional)
+\end{itemize}
+\item Haz clic en \textbf{``Buscar''}
+\item Se muestra lista con:
+\begin{itemize}
+\item Nombre del premio
+\item Categoría
+\item Fecha otorgado
+\item Ceremonia/Evento
+\item Grupo/Artista ganador
+\end{itemize}
+\item Ordenados por fecha más reciente primero
+\end{enumerate}
+
+\end{document}

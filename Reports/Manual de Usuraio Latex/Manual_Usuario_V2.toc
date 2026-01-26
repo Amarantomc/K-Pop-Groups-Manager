@@ -1,0 +1,164 @@
+\babel@toc {spanish}{}\relax 
+\contentsline {chapter}{\numberline {1}Introducción}{5}{chapter.1}%
+\contentsline {section}{\numberline {1.1}¿Qué puedes hacer con este sistema?}{5}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Requisitos Previos}{5}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Requerimientos Técnicos}{6}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}Requerimientos de Máquina (Cliente)}{6}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}Requerimientos de Red}{6}{subsection.1.3.2}%
+\contentsline {section}{\numberline {1.4}Requerimientos de Software}{6}{section.1.4}%
+\contentsline {subsection}{\numberline {1.4.1}Software Requerido en Servidor}{6}{subsection.1.4.1}%
+\contentsline {subsection}{\numberline {1.4.2}Software Requerido en Cliente}{6}{subsection.1.4.2}%
+\contentsline {section}{\numberline {1.5}Procedimiento de Instalación}{7}{section.1.5}%
+\contentsline {subsection}{\numberline {1.5.1}Instalación en Servidor}{7}{subsection.1.5.1}%
+\contentsline {subsubsection}{Paso 1: Clonar el Repositorio}{7}{section*.2}%
+\contentsline {subsubsection}{Paso 2: Instalar Dependencias Backend}{7}{section*.3}%
+\contentsline {subsubsection}{Paso 3: Configurar Variables de Entorno}{7}{section*.4}%
+\contentsline {subsubsection}{Paso 4: Configurar Base de Datos}{7}{section*.5}%
+\contentsline {subsubsection}{Paso 5: Instalar Dependencias Frontend}{7}{section*.6}%
+\contentsline {subsubsection}{Paso 6: Iniciar la Aplicación}{7}{section*.7}%
+\contentsline {subsection}{\numberline {1.5.2}Instalación en Cliente (Local Development)}{8}{subsection.1.5.2}%
+\contentsline {subsection}{\numberline {1.5.3}Verificación de Instalación}{8}{subsection.1.5.3}%
+\contentsline {chapter}{\numberline {2}Conceptos Básicos}{9}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Introducción}{9}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Entidades Principales}{9}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Agencia}{9}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Grupo}{10}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}Artista}{10}{subsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.2.4}Aprendiz}{10}{subsection.2.2.4}%
+\contentsline {subsection}{\numberline {2.2.5}Álbum}{11}{subsection.2.2.5}%
+\contentsline {subsection}{\numberline {2.2.6}Canción}{12}{subsection.2.2.6}%
+\contentsline {subsection}{\numberline {2.2.7}Actividad}{12}{subsection.2.2.7}%
+\contentsline {subsection}{\numberline {2.2.8}Contrato}{12}{subsection.2.2.8}%
+\contentsline {subsection}{\numberline {2.2.9}Premio}{13}{subsection.2.2.9}%
+\contentsline {subsection}{\numberline {2.2.10}Ingreso}{13}{subsection.2.2.10}%
+\contentsline {section}{\numberline {2.3}Sistema de Evaluación de Aprendices}{14}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Puntaje de Evaluación}{14}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Cálculo Automático del Promedio}{14}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.3}Transiciones de Estado Automáticas}{14}{subsection.2.3.3}%
+\contentsline {subsubsection}{Caso 1: Promedio $\geq $ 80 - TRANSICIÓN A GRADUADO}{15}{section*.8}%
+\contentsline {subsubsection}{Caso 2: Promedio 40-79 - PERMANECE ACTIVO}{15}{section*.9}%
+\contentsline {subsubsection}{Caso 3: Promedio $< 40$ - TRANSICIÓN A SUSPENDIDO}{15}{section*.10}%
+\contentsline {subsection}{\numberline {2.3.4}Procedimiento: Evaluar un Aprendiz}{15}{subsection.2.3.4}%
+\contentsline {subsection}{\numberline {2.3.5}Visualización del Historial}{16}{subsection.2.3.5}%
+\contentsline {subsection}{\numberline {2.3.6}Grupo}{16}{subsection.2.3.6}%
+\contentsline {subsection}{\numberline {2.3.7}Aprendiz}{16}{subsection.2.3.7}%
+\contentsline {subsection}{\numberline {2.3.8}Artista}{17}{subsection.2.3.8}%
+\contentsline {subsection}{\numberline {2.3.9}Álbum}{17}{subsection.2.3.9}%
+\contentsline {subsection}{\numberline {2.3.10}Canción}{17}{subsection.2.3.10}%
+\contentsline {subsection}{\numberline {2.3.11}Actividad}{17}{subsection.2.3.11}%
+\contentsline {subsection}{\numberline {2.3.12}Contrato}{17}{subsection.2.3.12}%
+\contentsline {chapter}{\numberline {3}Autenticación}{18}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Login al Sistema}{18}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Paso 1: Acceder a la Página de Login}{18}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}Paso 2: Ingresar Credenciales}{18}{subsection.3.1.2}%
+\contentsline {subsection}{\numberline {3.1.3}Paso 3: Validación}{19}{subsection.3.1.3}%
+\contentsline {section}{\numberline {3.2}Errores Comunes de Login}{19}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Gestión de Contraseña}{19}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Cambiar Contraseña}{19}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Recuperar Contraseña}{19}{subsection.3.3.2}%
+\contentsline {section}{\numberline {3.4}Cerrar Sesión}{20}{section.3.4}%
+\contentsline {chapter}{\numberline {4}Módulo: Gestión de Agencias}{21}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Descripción}{21}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Propósito}{21}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Roles Permitidos}{21}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Procedimiento 1: Ver Lista de Agencias}{21}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Objetivo}{21}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Pasos}{21}{subsection.4.4.2}%
+\contentsline {section}{\numberline {4.5}Procedimiento 2: Crear Nueva Agencia}{22}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}Objetivo}{22}{subsection.4.5.1}%
+\contentsline {subsection}{\numberline {4.5.2}Prerequisitos}{22}{subsection.4.5.2}%
+\contentsline {subsection}{\numberline {4.5.3}Pasos}{22}{subsection.4.5.3}%
+\contentsline {subsection}{\numberline {4.5.4}Ejemplo de Datos}{23}{subsection.4.5.4}%
+\contentsline {subsection}{\numberline {4.5.5}Validaciones}{23}{subsection.4.5.5}%
+\contentsline {chapter}{\numberline {5}Módulo: Gestión de Aprendices}{24}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Descripción}{24}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Propósito}{24}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Roles Permitidos}{24}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Procedimiento 1: Registrar Nuevo Aprendiz}{24}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}Objetivo}{24}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}Pasos}{25}{subsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.4.3}Validaciones}{25}{subsection.5.4.3}%
+\contentsline {subsection}{\numberline {5.4.4}Ejemplo}{25}{subsection.5.4.4}%
+\contentsline {section}{\numberline {5.5}Procedimiento 2: Evaluar Aprendiz}{26}{section.5.5}%
+\contentsline {subsection}{\numberline {5.5.1}Objetivo}{26}{subsection.5.5.1}%
+\contentsline {subsection}{\numberline {5.5.2}Prerequisitos}{26}{subsection.5.5.2}%
+\contentsline {subsection}{\numberline {5.5.3}Pasos}{26}{subsection.5.5.3}%
+\contentsline {subsection}{\numberline {5.5.4}Sistema Automático de Progreso}{27}{subsection.5.5.4}%
+\contentsline {chapter}{\numberline {6}Conversión de Aprendiz a Artista}{28}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Introducción}{28}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Requisitos Previos}{28}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Proceso de Conversión}{28}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}Paso 1: Acceder a la Lista de Aprendices}{28}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.2}Paso 2: Seleccionar Aprendiz Graduado}{28}{subsection.6.3.2}%
+\contentsline {subsection}{\numberline {6.3.3}Paso 3: Convertir a Artista}{29}{subsection.6.3.3}%
+\contentsline {subsection}{\numberline {6.3.4}Paso 4: Confirmar Conversión}{29}{subsection.6.3.4}%
+\contentsline {section}{\numberline {6.4}Información Creada Automáticamente}{29}{section.6.4}%
+\contentsline {section}{\numberline {6.5}Cambio de Estado después de Conversión}{30}{section.6.5}%
+\contentsline {chapter}{\numberline {7}Módulo: Gestión de Grupos}{31}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Descripción}{31}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Propósito}{31}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Roles Permitidos}{31}{section.7.3}%
+\contentsline {section}{\numberline {7.4}Procedimiento 1: Crear Nuevo Grupo}{31}{section.7.4}%
+\contentsline {subsection}{\numberline {7.4.1}Objetivo}{31}{subsection.7.4.1}%
+\contentsline {subsection}{\numberline {7.4.2}Pasos}{31}{subsection.7.4.2}%
+\contentsline {subsection}{\numberline {7.4.3}Ejemplo}{32}{subsection.7.4.3}%
+\contentsline {section}{\numberline {7.5}Procedimiento 2: Agregar Miembros a Grupo}{33}{section.7.5}%
+\contentsline {subsection}{\numberline {7.5.1}Objetivo}{33}{subsection.7.5.1}%
+\contentsline {subsection}{\numberline {7.5.2}Pasos}{33}{subsection.7.5.2}%
+\contentsline {chapter}{\numberline {8}Módulos Adicionales}{34}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Módulo: Gestión de Álbumes}{34}{section.8.1}%
+\contentsline {subsection}{\numberline {8.1.1}Descripción}{34}{subsection.8.1.1}%
+\contentsline {subsection}{\numberline {8.1.2}Procedimiento: Crear Nuevo Álbum}{34}{subsection.8.1.2}%
+\contentsline {section}{\numberline {8.2}Módulo: Gestión de Canciones}{35}{section.8.2}%
+\contentsline {subsection}{\numberline {8.2.1}Descripción}{35}{subsection.8.2.1}%
+\contentsline {subsection}{\numberline {8.2.2}Procedimiento: Crear Nueva Canción}{35}{subsection.8.2.2}%
+\contentsline {section}{\numberline {8.3}Módulo: Gestión de Actividades}{36}{section.8.3}%
+\contentsline {subsection}{\numberline {8.3.1}Descripción}{36}{subsection.8.3.1}%
+\contentsline {subsection}{\numberline {8.3.2}Procedimiento: Crear Nueva Actividad}{36}{subsection.8.3.2}%
+\contentsline {section}{\numberline {8.4}Módulo: Gestión de Contratos}{37}{section.8.4}%
+\contentsline {subsection}{\numberline {8.4.1}Descripción}{37}{subsection.8.4.1}%
+\contentsline {subsection}{\numberline {8.4.2}Procedimiento: Crear Nuevo Contrato}{37}{subsection.8.4.2}%
+\contentsline {chapter}{\numberline {9}Búsquedas, Filtros y Reportes}{38}{chapter.9}%
+\contentsline {section}{\numberline {9.1}Búsqueda General}{38}{section.9.1}%
+\contentsline {section}{\numberline {9.2}Filtros Avanzados}{38}{section.9.2}%
+\contentsline {section}{\numberline {9.3}Generar Reporte}{38}{section.9.3}%
+\contentsline {chapter}{\numberline {10}Preguntas Frecuentes}{39}{chapter.10}%
+\contentsline {section}{\numberline {10.1}FAQs}{39}{section.10.1}%
+\contentsline {chapter}{\numberline {11}Solución de Problemas}{40}{chapter.11}%
+\contentsline {section}{\numberline {11.1}Problema: No puedo ingresar al sistema}{40}{section.11.1}%
+\contentsline {subsection}{\numberline {11.1.1}Causa posible}{40}{subsection.11.1.1}%
+\contentsline {subsection}{\numberline {11.1.2}Solución}{40}{subsection.11.1.2}%
+\contentsline {section}{\numberline {11.2}Problema: Recibo error ``No tienes permisos''}{40}{section.11.2}%
+\contentsline {subsection}{\numberline {11.2.1}Causa posible}{40}{subsection.11.2.1}%
+\contentsline {subsection}{\numberline {11.2.2}Solución}{40}{subsection.11.2.2}%
+\contentsline {section}{\numberline {11.3}Problema: No veo los datos que debería}{40}{section.11.3}%
+\contentsline {subsection}{\numberline {11.3.1}Causa posible}{40}{subsection.11.3.1}%
+\contentsline {subsection}{\numberline {11.3.2}Solución}{41}{subsection.11.3.2}%
+\contentsline {section}{\numberline {11.4}Problema: El sistema va lento}{41}{section.11.4}%
+\contentsline {subsection}{\numberline {11.4.1}Causa posible}{41}{subsection.11.4.1}%
+\contentsline {subsection}{\numberline {11.4.2}Solución}{41}{subsection.11.4.2}%
+\contentsline {chapter}{\numberline {12}Glosario de Términos}{42}{chapter.12}%
+\contentsline {chapter}{\numberline {13}Tabla Completa de Permisos}{44}{chapter.13}%
+\contentsline {chapter}{\numberline {14}Gestión del Perfil}{46}{chapter.14}%
+\contentsline {section}{\numberline {14.1}Introducción}{46}{section.14.1}%
+\contentsline {section}{\numberline {14.2}Acceder al Perfil}{46}{section.14.2}%
+\contentsline {subsection}{\numberline {14.2.1}Pasos}{46}{subsection.14.2.1}%
+\contentsline {section}{\numberline {14.3}Ver Información del Perfil}{46}{section.14.3}%
+\contentsline {subsection}{\numberline {14.3.1}Procedimiento}{46}{subsection.14.3.1}%
+\contentsline {section}{\numberline {14.4}Cambiar Contraseña}{47}{section.14.4}%
+\contentsline {subsection}{\numberline {14.4.1}Requisitos de Contraseña}{47}{subsection.14.4.1}%
+\contentsline {subsection}{\numberline {14.4.2}Procedimiento}{47}{subsection.14.4.2}%
+\contentsline {subsection}{\numberline {14.4.3}Si Olvidas tu Contraseña}{48}{subsection.14.4.3}%
+\contentsline {section}{\numberline {14.5}Eliminar Cuenta}{48}{section.14.5}%
+\contentsline {subsection}{\numberline {14.5.1}Advertencia}{48}{subsection.14.5.1}%
+\contentsline {subsection}{\numberline {14.5.2}Procedimiento}{48}{subsection.14.5.2}%
+\contentsline {chapter}{\numberline {15}Gestión de Solicitudes}{49}{chapter.15}%
+\contentsline {section}{\numberline {15.1}Introducción}{49}{section.15.1}%
+\contentsline {section}{\numberline {15.2}Acceder a Solicitudes}{49}{section.15.2}%
+\contentsline {section}{\numberline {15.3}Seis Consultas Especializadas}{49}{section.15.3}%
+\contentsline {subsection}{\numberline {15.3.1}Solicitud 1: Artistas por Agencia}{49}{subsection.15.3.1}%
+\contentsline {subsection}{\numberline {15.3.2}Solicitud 2: Aprendices por Estado de Evaluación}{50}{subsection.15.3.2}%
+\contentsline {subsection}{\numberline {15.3.3}Solicitud 3: Ingresos por Período}{50}{subsection.15.3.3}%
+\contentsline {subsection}{\numberline {15.3.4}Solicitud 4: Contratos Vigentes}{51}{subsection.15.3.4}%
+\contentsline {subsection}{\numberline {15.3.5}Solicitud 5: Actividades Próximas}{51}{subsection.15.3.5}%
+\contentsline {subsection}{\numberline {15.3.6}Solicitud 6: Premios Ganados}{51}{subsection.15.3.6}%

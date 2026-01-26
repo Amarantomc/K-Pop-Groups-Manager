@@ -1,0 +1,577 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex.fmt)
+ restricted \write18 enabled.
+entering extended mode
+(Informe_Tecnico_V2.tex
+LaTeX2e <2023-11-01> patch level 1
+L3 programming layer <2024-01-04>
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/base\report.cls
+Document Class: report 2023/05/17 v1.4n Standard LaTeX document class
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/base\size12.clo))
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/base\fontenc.sty)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/base\inputenc.sty)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/babel\babel.sty
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/babel\txtbabel.def)
+*************************************
+* Local config file bblopts.cfg used
+*
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/arabi\bblopts.cfg)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/babel-spanish\spanish.l
+df
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/babel/locale/es\babel
+-spanish.tex)))
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.sty
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.sty
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphics.c
+fg)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdftex.def
+)))
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/booktabs\booktabs.sty)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/tools\array.sty)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/tools\longtable.sty)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.sty
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/iftex\ifvtex.sty
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty))
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.cfg))
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/fancyhdr\fancyhdr.sty)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hyperref.sty
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/infwarerr\infwarerr.s
+ty)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/kvsetkeys\kvsetkeys.sty
+)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/kvdefinekeys\kvdefine
+keys.sty)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pdfescape\pdfescape.s
+ty
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/ltxcmds\ltxcmds.sty)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pdftexcmds\pdftexcmds
+.sty))
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/hycolor\hycolor.sty)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/letltxmacro\letltxmacro
+.sty)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/auxhook\auxhook.sty)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\nameref.sty
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/refcount\refcount.sty)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/gettitlestring\gettit
+lestring.sty
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/kvoptions\kvoptions.sty
+)))
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/etoolbox\etoolbox.sty)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/intcalc\intcalc.sty)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/bitset\bitset.sty
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/bigintcalc\bigintcalc
+.sty))
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/base\atbegshi-ltx.sty))
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hpdftex.def
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/base\atveryend-ltx.sty)
+
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/rerunfilecheck\rerunfil
+echeck.sty
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/uniquecounter\uniquec
+ounter.sty)))
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/xcolor\xcolor.sty
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx)
+) (C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/listings\listings.sty
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstmisc.sty)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/listings\listings.cfg))
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/float\float.sty)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/pgf/frontendlayer\tikz.
+sty
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/pgf/basiclayer\pgf.sty
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/pgf/utilities\pgfrcs.st
+y
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfutil
+-common.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfutil
+-latex.def)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfrcs.
+code.tex
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf\pgf.revision.tex)
+))
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/pgf/basiclayer\pgfcore.
+sty
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/pgf/systemlayer\pgfsys.
+sty
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfsy
+s.code.tex
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfkeys
+.code.tex
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfkeys
+libraryfiltered.code.tex))
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgf.c
+fg)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfsy
+s-pdftex.def
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfsy
+s-common-pdf.def)))
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfsy
+ssoftpath.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfsy
+sprotocol.code.tex))
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+e.code.tex
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmath.code
+.tex
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathutil.
+code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathparse
+r.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.basic.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.trigonometric.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.random.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.comparison.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.base.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.round.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.misc.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.integerarithmetics.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathcalc.
+code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfloat
+.code.tex))
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfint.code.
+tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+epoints.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+epathconstruct.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+epathusage.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+escopes.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+egraphicstate.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+etransformations.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+equick.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+eobjects.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+epathprocessing.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+earrows.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+eshade.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+eimage.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+eexternal.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+elayers.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+etransparency.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+epatterns.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+erdf.code.tex)))
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmodule
+shapes.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmodule
+plot.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/pgf/compatibility\pgfco
+mp-version-0-65.sty)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/pgf/compatibility\pgfco
+mp-version-1-18.sty))
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/pgf/utilities\pgffor.st
+y
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/pgf/utilities\pgfkeys.s
+ty
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfkeys
+.code.tex))
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/pgf/math\pgfmath.sty
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmath.code
+.tex))
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgffor.
+code.tex))
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tik
+z\tikz.code.tex
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/libraries\pgflibr
+aryplothandlers.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmodule
+matrix.code.tex)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tik
+z/libraries\tikzlibrarytopaths.code.tex)))
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amssymb.sty
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amsfonts.sty))
+ (C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/setspace\setspace.sty)
+ (C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/parskip\parskip.sty)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstlang1.sty)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstlang1.sty)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdf
+tex.def) (Informe_Tecnico_V2.aux)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mk
+ii
+[Loading MPS to PDF converter (version 2006.09.02).]
+)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-b
+ase.sty
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sys.c
+fg))
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+(Informe_Tecnico_V2.out) (Informe_Tecnico_V2.out)
+
+LaTeX Font Warning: Font shape `T1/cmr/m/n' in size <26> not available
+(Font)              size <24.88> substituted on input line 55.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/bx/n' in size <26> not available
+(Font)              size <24.88> substituted on input line 55.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/n' in size <28> not available
+(Font)              size <29.86> substituted on input line 59.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/bx/n' in size <28> not available
+(Font)              size <29.86> substituted on input line 59.
+
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd)
+[1{C:/Users/TIGER/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map} <../KPopWor
+ld logo.png>] (Informe_Tecnico_V2.toc
+pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
+been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.37 ...ine {5.11}Tabla: Premio}{14}{section.5.11}
+                                                  % [1] [2] [3]) [4]
+Cap\'{\i }tulo 1.
+[5]
+Cap\'{\i }tulo 2.
+[6]
+Cap\'{\i }tulo 3.
+[7]
+Cap\'{\i }tulo 4.
+[8] (C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/base\t1cmtt.fd)
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/base\ts1cmtt.fd)
+[9] [10]
+Cap\'{\i }tulo 5.
+
+Overfull \hbox (12.04988pt too wide) in paragraph at lines 270--291
+ [][] 
+
+Overfull \hbox (30.81474pt too wide) in paragraph at lines 298--317
+ [][] 
+
+Overfull \hbox (19.0676pt too wide) in paragraph at lines 324--343
+ [][] 
+[11
+pdfTeX warning (ext4): destination with the same identifier (name{table.5.1}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.344 
+      
+pdfTeX warning (ext4): destination with the same identifier (name{table.5.2}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.344 
+      ]
+Overfull \hbox (12.04988pt too wide) in paragraph at lines 350--371
+ [][] 
+
+Overfull \hbox (39.85138pt too wide) in paragraph at lines 378--399
+ [][] 
+
+Overfull \hbox (48.76173pt too wide) in paragraph at lines 406--427
+ [][] 
+[12
+pdfTeX warning (ext4): destination with the same identifier (name{table.5.3}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.428 
+      
+pdfTeX warning (ext4): destination with the same identifier (name{table.5.4}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.428 
+      
+pdfTeX warning (ext4): destination with the same identifier (name{table.5.5}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.428 
+      ]
+Overfull \hbox (39.10721pt too wide) in paragraph at lines 434--453
+ [][] 
+
+Overfull \hbox (30.34956pt too wide) in paragraph at lines 460--481
+ [][] 
+
+Overfull \hbox (16.53894pt too wide) in paragraph at lines 488--513
+ [][] 
+[13
+pdfTeX warning (ext4): destination with the same identifier (name{table.5.6}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.514 
+      
+pdfTeX warning (ext4): destination with the same identifier (name{table.5.7}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.514 
+      
+pdfTeX warning (ext4): destination with the same identifier (name{table.5.8}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.514 
+      ]
+Overfull \hbox (18.15804pt too wide) in paragraph at lines 546--567
+ [][] 
+[14
+pdfTeX warning (ext4): destination with the same identifier (name{table.5.9}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.600 
+      
+pdfTeX warning (ext4): destination with the same identifier (name{table.5.10}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.600 
+      
+pdfTeX warning (ext4): destination with the same identifier (name{table.5.11}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.600 
+      ] [15
+pdfTeX warning (ext4): destination with the same identifier (name{table.5.12}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.631 
+      ]
+Overfull \hbox (90.21771pt too wide) in paragraph at lines 637--658
+ [][] 
+[16
+pdfTeX warning (ext4): destination with the same identifier (name{figure.5.1}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.685 
+      
+pdfTeX warning (ext4): destination with the same identifier (name{table.5.13}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.685 
+       <./images/informe_i_img-001.png (PNG copy)>] [17
+pdfTeX warning (ext4): destination with the same identifier (name{table.5.14}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.738 \chapter
+              {Especificaci├│n T├®cnica}
+pdfTeX warning (ext4): destination with the same identifier (name{table.5.15}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.738 \chapter
+              {Especificaci├│n T├®cnica}
+pdfTeX warning (ext4): destination with the same identifier (name{table.5.16}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.738 \chapter
+              {Especificaci├│n T├®cnica}]
+Cap\'{\i }tulo 6.
+[18
+pdfTeX warning (ext4): destination with the same identifier (name{table.6.1}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.786 \end{itemize}
+                   ] [19]
+Cap\'{\i }tulo 7.
+[20
+pdfTeX warning (ext4): destination with the same identifier (name{table.7.1}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.852 
+      ]
+Overfull \hbox (99.17628pt too wide) in paragraph at lines 860--935
+ [][] 
+[21
+pdfTeX warning (ext4): destination with the same identifier (name{table.7.2}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.936 
+      ] [22
+pdfTeX warning (ext4): destination with the same identifier (name{table.7.3}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.946 \item \textbf
+                   {Director:} Acceso de lectura a todos, escritura en ├írea...
+] [23]
+Cap\'{\i }tulo 8.
+[24
+pdfTeX warning (ext4): destination with the same identifier (name{table.8.1}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.1036 \end{verbatim}
+                     ] [25]
+Cap\'{\i }tulo 9.
+
+Overfull \hbox (0.67555pt too wide) in paragraph at lines 1085--1098
+ [][] 
+
+Underfull \hbox (badness 6927) in paragraph at lines 1137--1137
+[]|\T1/cmr/m/n/12 Cada gru-po de-be te-ner
+[26
+pdfTeX warning (ext4): destination with the same identifier (name{table.9.1}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.1141 
+       
+pdfTeX warning (ext4): destination with the same identifier (name{table.9.2}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.1141 
+       ] [27
+pdfTeX warning (ext4): destination with the same identifier (name{table.9.3}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.1142 \chapter
+               {Flujos de Negocio}]
+Cap\'{\i }tulo 10.
+[28] [29]
+Cap\'{\i }tulo 11.
+
+Underfull \hbox (badness 1603) in paragraph at lines 1232--1233
+[]|\T1/cmr/bx/n/12 Resultado Es-pe-ra-
+
+Underfull \hbox (badness 10000) in paragraph at lines 1238--1238
+[]|\T1/cmr/m/n/12 Crear usua-rio con
+
+Underfull \hbox (badness 5756) in paragraph at lines 1240--1241
+[]|\T1/cmr/m/n/12 Status 201, usua-rio
+
+Underfull \hbox (badness 6708) in paragraph at lines 1246--1246
+[]|\T1/cmr/m/n/12 Crear apren-diz con
+
+Underfull \hbox (badness 6708) in paragraph at lines 1248--1248
+[]|\T1/cmr/m/n/12 Crear apren-diz con
+
+Underfull \hbox (badness 1082) in paragraph at lines 1248--1249
+[]|\T1/cmr/m/n/12 Status 201, apren-diz
+[30] [31
+pdfTeX warning (ext4): destination with the same identifier (name{table.11.1}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.1253 \chapter
+               {Conclusiones}]
+Cap\'{\i }tulo 12.
+[32]
+Ap\'{e}ndice A.
+[33] [34
+pdfTeX warning (ext4): destination with the same identifier (name{table.Alph1.1
+}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.1343 \chapter
+               {Flujos de Negocio}]
+Ap\'{e}ndice B.
+[35] [36] [37
+pdfTeX warning (ext4): destination with the same identifier (name{figure.Alph2.
+1}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.1430 \item \textbf
+                    {Acci├│n 2:} Manager hace clic en bot├│n "Evaluar" <./image
+s/informe_tecnico_img-000.png (PNG copy)>] [38] [39] [40
+pdfTeX warning (ext4): destination with the same identifier (name{table.Alph2.1
+}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.1558 \chapter
+               {Gu├¡a de Mantenimiento}]
+Ap\'{e}ndice C.
+[41] [42] [43]
+Underfull \hbox (badness 2790) in paragraph at lines 1735--1735
+[]|\T1/cmr/m/n/12 PostgreSQL no es-tß
+
+Underfull \hbox (badness 1881) in paragraph at lines 1737--1738
+[]|\T1/cmr/m/n/12 Generar nue-vo to-ken, ve-ri-fi-car
+
+Underfull \hbox (badness 2932) in paragraph at lines 1745--1746
+[]|\T1/cmr/m/n/12 Actualizar CORS_ORIGIN en
+
+Overfull \hbox (3.25563pt too wide) in paragraph at lines 1731--1748
+ [][] 
+[44
+pdfTeX warning (ext4): destination with the same identifier (name{table.Alph3.1
+}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.1793 \item U
+              tilizar secretos diferentes para cada ambiente (dev/prod)]
+[45]
+Ap\'{e}ndice D.
+[46] [47] [48] [49] [50
+pdfTeX warning (ext4): destination with the same identifier (name{table.Alph4.1
+}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.2074 \end{document}
+                     ] (Informe_Tecnico_V2.aux)
+
+LaTeX Font Warning: Size substitutions with differences
+(Font)              up to 1.86pt have occurred.
+
+ )
+(see the transcript file for additional information) <C:\Users\TIGER\AppData\Lo
+cal\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1200.pk> <C:\Users\TIGER\AppD
+ata\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm0600.pk> <C:\Users\TIGE
+R\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tctt1200.pk> <C:\User
+s\TIGER\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ectt1200.pk> <C
+:\Users\TIGER\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1728.
+pk> <C:\Users\TIGER\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecb
+x1095.pk> <C:\Users\TIGER\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi6
+00\ecrm1095.pk> <C:\Users\TIGER\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/e
+c/dpi600\ecrm1200.pk> <C:\Users\TIGER\AppData\Local\MiKTeX\fonts/pk/ljfour/jkna
+ppen/ec/dpi600\ecti1200.pk> <C:\Users\TIGER\AppData\Local\MiKTeX\fonts/pk/ljfou
+r/jknappen/ec/dpi600\ecbx1200.pk> <C:\Users\TIGER\AppData\Local\MiKTeX\fonts/pk
+/ljfour/jknappen/ec/dpi600\ecbx1440.pk> <C:\Users\TIGER\AppData\Local\MiKTeX\fo
+nts/pk/ljfour/jknappen/ec/dpi600\ecrm1728.pk> <C:\Users\TIGER\AppData\Local\MiK
+TeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx2986.pk> <C:\Users\TIGER\AppData\Loc
+al\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx2488.pk><C:/Users/TIGER/AppDat
+a/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Users/TIG
+ER/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/U
+sers/TIGER/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.
+pfb><C:/Users/TIGER/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/c
+m/cmsy8.pfb><C:/Users/TIGER/AppData/Local/Programs/MiKTeX/fonts/type1/public/am
+sfonts/symbols/msam10.pfb>
+Output written on Informe_Tecnico_V2.pdf (51 pages, 878314 bytes).
+Transcript written on Informe_Tecnico_V2.log.
