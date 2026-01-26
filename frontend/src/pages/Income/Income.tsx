@@ -58,11 +58,6 @@ const Income: React.FC = () => {
     }
   ];
 
-  // Agregar columna de agencia solo para admin
-  const columns = user?.role === 'admin'
-    ? [...baseColumns, { field: 'responsible', headerName: 'Agencia', width: 150 }]
-    : baseColumns;
-
   useEffect(() => {
     const fetchIncomes = async () => {
       setIsLoading(true);
@@ -99,30 +94,17 @@ const Income: React.FC = () => {
           throw new Error('Error al obtener ingresos');
         }
         const data = await response.json();
-        const ingresos = (data.data || data);
+        console.log(data.data)
 
-        // Consulta actividades
-        const activitiesRes = await fetch('http://localhost:3000/api/activity', {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'application/json'
-          }
-        });
-        if (!activitiesRes.ok) {
-          throw new Error('Error al obtener actividades');
-        }
-        const activitiesData = await activitiesRes.json();
-        const actividades = activitiesData.data || activitiesData;
-        const normalized = ingresos.map((income: any) => {
-          const actividad = actividades.find((act: any) => act.id === income.idActivity);
-          return {
-            ...income,
-            id: income.idIncome ?? income.id,
-            eventType: actividad?.eventType || 'Tipo desconocido',
-            responsible: actividad?.responsible || 'No asignado'
-          };
-        });
-        setIncomes(normalized);
+        const formattedData = data.data.map((income: any, index: number) => ({
+            id: income.idIncome ?? index,
+            eventType : income.eventType,
+            idActivity : income.idActivity,
+            description : income.description,
+            date : income.date,
+            amount : income.amount
+          }))
+        setIncomes(formattedData);
         // ============================================
         // FIN SECCIÓN: BACKEND ENDPOINT
         // ============================================
@@ -336,7 +318,7 @@ const Income: React.FC = () => {
       ) : (
         <>
           <DataTable
-            columns={columns}
+            columns={baseColumns}
             rows={incomes}
             pagesize={10}
             onDelete={askDelete}

@@ -13,10 +13,11 @@ interface PopuListProps{
   onCreateSave? : (newRow : any) => void;
   createEntity? : string;
   createFields? : Field[];
+  showCreateButton : boolean;
   onFieldChange? : (fieldName: string, value: any) => void;
   constraints? : Record<string, FieldConstraint>;
 }
-const PopuList : React.FC<PopuListProps>  = ({charts = [],onDelete,onEditSave,onCreateSave,createEntity,createFields,onFieldChange,constraints}) => {
+const PopuList : React.FC<PopuListProps>  = ({charts = [],onDelete,onEditSave,onCreateSave,createEntity,createFields,onFieldChange,constraints,showCreateButton}) => {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [editingRow, setEditingRow] = useState<any>(null);
@@ -84,11 +85,14 @@ const PopuList : React.FC<PopuListProps>  = ({charts = [],onDelete,onEditSave,on
     <div className="popularity-charts-container">
       <div className="charts-header">
         <h2>Listas de Popularidad</h2>
-        <button 
-          className="add-button" onClick={handleCreateOpen}
-        >
-          + Nueva Lista
-        </button>
+                {showCreateButton && (
+            <button 
+              className="add-button" 
+              onClick={handleCreateOpen}
+            >
+              + Nueva Lista
+            </button>
+          )}
       </div>
       <div className="charts-grid">
         {charts.map((chart) => (

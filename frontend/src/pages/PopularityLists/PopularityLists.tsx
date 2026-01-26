@@ -37,6 +37,9 @@ const PopularityLists: React.FC = () => {
           case 'admin':
             endpoint = '/api/populist';
             break;
+          case 'artist':
+            endpoint = '/api/populist'
+            break;
           default:
             console.error('Rol no autorizado:', user.role);
             return;
@@ -246,7 +249,8 @@ const PopularityLists: React.FC = () => {
           onCreateSave={handleCreateSave}
           onDelete={askDelete}
           onEditSave={handleEditSave}
-          constraints={popularityListConstraints}>
+          constraints={popularityListConstraints}
+          showCreateButton = {user?.role === 'admin'}>
           </PopuList>
           <ModalCreate
             isOpen={showCreateModal}

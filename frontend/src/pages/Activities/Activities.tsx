@@ -409,7 +409,7 @@ const Activities: React.FC = () => {
                     activitiesTest={activities}
                     onExport={handleExportPdf}
                     isArtist={false}
-                    isAdmin = {user?.role === 'admin'}
+                    isAdmin = {user?.role === 'admin'|| user?.role === 'director'}
                     onUpdateDate={updateDate}
                     onCreateActivity={handleCreateSaveActivity}
                     clickedDate={clickedDate ?? undefined}

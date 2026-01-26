@@ -174,18 +174,6 @@ export const MenuByRole: Record<string, MenuSection[]> = {
                 { label: "Mostrar Grupos", icon: <PeopleIcon />, path: "/director/group" }
             ]
         },
-         {
-            title: "CONCEPTO",
-            items: [
-                { label: "Mostrar Conceptos", icon: <LightbulbIcon />, path: "/director/concept" }
-            ]
-        },
-        {
-            title: "CONCEPTO VISUAL",
-            items: [
-                { label: "Mostrar Conceptos Visuales", icon: <PaletteIcon />, path: "/director/concept-visual" }
-            ]
-        },
         {
             title: "LISTAS DE POPULARIDAD",
             items: [
