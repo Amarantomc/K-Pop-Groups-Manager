@@ -30,7 +30,6 @@ export class CreateIncomeUseCase{
             );
         }
         catch(error){
-            console.log(error);
             await this.unitOfWork.rollback();
             throw error;
         }

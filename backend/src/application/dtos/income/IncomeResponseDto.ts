@@ -9,7 +9,7 @@ export class IncomeResponseDto {
     public readonly description: string,
     public readonly amount: number,
     public readonly date: Date|string,
-    public readonly activityType?: string,
+    public readonly eventType?: string,
 
   ) {}
 
@@ -21,7 +21,7 @@ export class IncomeResponseDto {
       income.description,
       income.amount,
       isDate(income.date) ? income.date:new Date(income.date),
-      income.activityType
+      income.eventType
     );
   }
 
@@ -33,7 +33,7 @@ export class IncomeResponseDto {
       description: data.descripcion,
       amount: Number(data.monto),
       date: new Date(data.fecha),
-      activityType: data.actividad?.tipoActividad || null // <- solo tipoActividad
+      eventType: data.actividad?.tipoEvento || null // <- solo tipoActividad
     });
   }
 

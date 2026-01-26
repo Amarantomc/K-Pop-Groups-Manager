@@ -27,7 +27,7 @@ export class UpdateIncomeUseCase {
       updatedIncome.description,
       updatedIncome.amount,
       new Date(updatedIncome.date),
-      updatedIncome.activityType
+      updatedIncome.eventType
     );
   }
 }
