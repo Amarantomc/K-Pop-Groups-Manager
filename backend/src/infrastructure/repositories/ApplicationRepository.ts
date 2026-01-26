@@ -127,27 +127,75 @@ export class ApplicationRepository implements IApplicationRepository
   
     const lider = miembros.find(m => m.rol === "LIDER");
     const resto = miembros.filter(m => m.rol !== "LIDER");
-  
+    
+    const solicitudes = await this.db.Solicitud.findMany({
+      include: {
+        SolicitudGrupoAprendiz: true,
+        SolicitudGrupoArtista: true,
+      },
+    });
+
     // APROBADO
-    if (miembros.length > 0 && miembros.every(m => m.estado !== "PENDIENTE")) {
-      await this.db.Solicitud.update({
-        where: { id: idApplication },
-        data: { estado: "APROBADO" },
-      });
-      return;
+    // if (miembros.length > 0 && miembros.every(m => m.estado !== "PENDIENTE")) {
+    //   await this.db.Solicitud.update({
+    //     where: { id: idApplication },
+    //     data: { estado: "APROBADO" },
+    //   });
+    //   return;
+    // }
+
+    for (const solicitud of solicitudes) {
+      const miembros = [
+        ...solicitud.SolicitudGrupoAprendiz,
+        ...solicitud.SolicitudGrupoArtista,
+      ];
+    
+      if (
+        miembros.length > 0 &&
+        miembros.every(m => m.estado !== "PENDIENTE")
+      ) {
+        await this.db.Solicitud.update({
+          where: { id: solicitud.id },
+          data: { estado: "APROBADO" },
+        });
+      }
     }
   
     // RECHAZADO (solo líder aceptado)
-    if (
-      lider?.estado === "ACEPTADO" &&
-      resto.length > 0 &&
-      resto.every(m => m.estado === "RECHAZADO")
-    ) {
-      await this.db.Solicitud.update({
-        where: { id: idApplication },
-        data: { estado: "RECHAZADO" },
-      });
+    
+    // if (
+    //   lider?.estado === "ACEPTADO" &&
+    //   resto.length > 0 &&
+    //   resto.every(m => m.estado === "RECHAZADO")
+    // ) {
+    //   await this.db.Solicitud.update({
+    //     where: { id: idApplication },
+    //     data: { estado: "RECHAZADO" },
+    //   });
+    // }
+
+    for (const solicitud of solicitudes) {
+      const miembros = [
+        ...solicitud.SolicitudGrupoAprendiz,
+        ...solicitud.SolicitudGrupoArtista,
+      ];
+    
+      const lider = miembros.find(m => m.rol === "LIDER");
+      const resto = miembros.filter(m => m.rol !== "LIDER");
+    
+      if (
+        lider?.estado === "ACEPTADO" &&
+        resto.length > 0 &&
+        resto.every(m => m.estado === "RECHAZADO")
+      ) {
+        await this.db.Solicitud.update({
+          where: { id: solicitud.id },
+          data: { estado: "RECHAZADO" },
+        });
+      }
     }
+
+
   }
 
   async artistDecisionByApplication(idApplication: number,idApprentice: number,idGroup: number,decision: boolean): Promise<void> {
