@@ -682,7 +682,7 @@ const Requests: React.FC = () => {
     {
       field: 'status',
       headerName: 'Estado',
-      width: 130,
+      width: 140,
       renderCell: (params) => {
         const status = params.value;
 
