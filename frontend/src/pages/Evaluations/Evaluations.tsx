@@ -31,7 +31,6 @@ const Evaluations: React.FC = () => {
 
   // Columnas del DataTable
   const columns: GridColDef[] = [
-    { field: 'apprentice', headerName: 'Aprendiz', width: 180 },
     { field: 'agency', headerName: 'Agencia', width: 180 },
     {
       field: 'score',
@@ -55,9 +54,6 @@ const Evaluations: React.FC = () => {
       field: 'evaluationDate',
       headerName: 'Fecha de Evaluación',
       width: 150,
-      valueFormatter: (params: { value: string }) => {
-        return new Date(params.value).toLocaleDateString('es-ES');
-      }
     }
   ];
 

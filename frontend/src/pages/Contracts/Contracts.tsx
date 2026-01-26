@@ -72,49 +72,49 @@ const Contracts: React.FC = () => {
         headerName: 'Acción Líder',
         width: 220,
         renderCell: (params: any) => {
-          
+
           // Solo mostrar si el contrato es de grupo, el usuario es líder y el estado es 'negociacion'
           // const isGroupContract = params.row.type === 'Group';
           const isNegotiation = params.row.status === 'Pendiente';
           // Estilos para botones habilitados vs deshabilitados
-        const acceptButtonStyle = {
-          marginRight: 8,
-          border: 'none',
-          borderRadius: 4,
-          padding: '4px 10px',
-          cursor: isNegotiation ? 'pointer' : 'not-allowed',
-          background: isNegotiation ? '#10b981' : '#d1d5db',
-          color: isNegotiation ? 'white' : '#6b7280',
-          opacity: isNegotiation ? 1 : 0.7
-        };
-        
-        const rejectButtonStyle = {
-          border: 'none',
-          borderRadius: 4,
-          padding: '4px 10px',
-          cursor: isNegotiation ? 'pointer' : 'not-allowed',
-          background: isNegotiation ? '#ef4444' : '#d1d5db',
-          color: isNegotiation ? 'white' : '#6b7280',
-          opacity: isNegotiation ? 1 : 0.7
-        };
+          const acceptButtonStyle = {
+            marginRight: 8,
+            border: 'none',
+            borderRadius: 4,
+            padding: '4px 10px',
+            cursor: isNegotiation ? 'pointer' : 'not-allowed',
+            background: isNegotiation ? '#10b981' : '#d1d5db',
+            color: isNegotiation ? 'white' : '#6b7280',
+            opacity: isNegotiation ? 1 : 0.7
+          };
+
+          const rejectButtonStyle = {
+            border: 'none',
+            borderRadius: 4,
+            padding: '4px 10px',
+            cursor: isNegotiation ? 'pointer' : 'not-allowed',
+            background: isNegotiation ? '#ef4444' : '#d1d5db',
+            color: isNegotiation ? 'white' : '#6b7280',
+            opacity: isNegotiation ? 1 : 0.7
+          };
           // const isUserGroupLeader = user.profileData?.groupId && params.row.entityId === user.profileData.groupId && user.permissions.includes('group_leader');
           //Caso para mostrar el aceptar ,rechazar
-            return (
-              <>
-                <button
-                  style={acceptButtonStyle}
-                  disabled={!isNegotiation || processingId === params.row.id}
-                  onClick={() => handleAcceptContract(params.row)}
-                  title={!isNegotiation ? "Solo disponible para contratos Pendientes" : ""}
-                >Aceptar</button>
-                <button
-                  style={rejectButtonStyle}
-                  disabled={!isNegotiation || processingId === params.row.id}
-                  onClick={() => handleRejectContract(params.row)}
-                  title={!isNegotiation ? "Solo disponible para contratos Pendientes" : ""}
-                >Rechazar</button>
-              </>
-            );
+          return (
+            <>
+              <button
+                style={acceptButtonStyle}
+                disabled={!isNegotiation || processingId === params.row.id}
+                onClick={() => handleAcceptContract(params.row)}
+                title={!isNegotiation ? "Solo disponible para contratos Pendientes" : ""}
+              >Aceptar</button>
+              <button
+                style={rejectButtonStyle}
+                disabled={!isNegotiation || processingId === params.row.id}
+                onClick={() => handleRejectContract(params.row)}
+                title={!isNegotiation ? "Solo disponible para contratos Pendientes" : ""}
+              >Rechazar</button>
+            </>
+          );
         }
       }
     ];
@@ -132,9 +132,9 @@ const Contracts: React.FC = () => {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json'
         },
-        body : JSON.stringify(
+        body: JSON.stringify(
           {
-            
+
           }
         )
       });
@@ -178,26 +178,11 @@ const Contracts: React.FC = () => {
       try {
         if (!user) return;
 
-        let endpoint = '';
-
-        switch (user.role) {
-          case 'manager':
-          case 'director':
-            endpoint = `/api/contract?agencyId=${user.agencyId}`;
-            break;
-          case 'artist':
-          case 'admin':
-            endpoint = '/api/contract';
-            break;
-          default:
-            console.error('Rol no autorizado:', user.role);
-            return;
-        }
 
         // ============================================
         // SECCIÓN: BACKEND ENDPOINT
         // ============================================
-        const response = await fetch(`http://localhost:3000${endpoint}`, {
+        const response = await fetch(`http://localhost:3000/api/contract`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
@@ -209,24 +194,52 @@ const Contracts: React.FC = () => {
 
         const data = await response.json();
         const contractsArray = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
-        console.log(data)
-        
-        let filteredContracts = contractsArray;
+        console.log('contractsArray',contractsArray)
 
+        let filteredContracts = contractsArray;
+    
         // Filtrar contratos según rol
-        if (user.role === 'artist') {
-          console.log('Filtrando contratos para artista');
-          const artistIdAp = user.profileData?.IdAp;
-          const artistIdGr = user.profileData?.IdGr;
-          console.log('Datos del artista - IdAp:', artistIdAp, 'IdGr:', artistIdGr);
-          
-          filteredContracts = contractsArray.filter((contract: any) => {
-            const contractIdAp = contract.idAp || contract.artist?.idAp;
-            const contractIdGr = contract.idGr || contract.artist?.idGr;
-            console.log('Contrato - idAp:', contractIdAp, 'idGr:', contractIdGr);
-            return contractIdAp === artistIdAp && contractIdGr === artistIdGr;
-          });
+        switch (user.role) {
+          case 'admin':
+            break;
+          case 'manager':
+          case 'director':
+            // Manager y Director ven todos los contratos (Artist y Group) de su agencia
+            const agencyIdToMatch = user.agencyId || user.profileData?.agencyId;
+            console.log('AgencyId a buscar:', agencyIdToMatch);
+            
+            filteredContracts = contractsArray.filter((contract: any) => {
+              const contractAgencyId = contract.agency?.id;
+              console.log('Contrato - type:', contract.type, 'agencyId:', contractAgencyId, 'Match:', contractAgencyId === Number(agencyIdToMatch) || contractAgencyId === agencyIdToMatch);
+              return contractAgencyId === Number(agencyIdToMatch) || contractAgencyId === agencyIdToMatch;
+            });
+            console.log('Contratos filtrados para manager/director:', filteredContracts);
+            break;
+          case 'artist':
+            // Artista ve contratos donde está involucrado (individuales o de grupo)
+            const artistIdAp = user.profileData?.IdAp;
+            const artistIdGr = user.profileData?.IdGr;
+
+            filteredContracts = contractsArray.filter((contract: any) => {
+              // Contratos individuales del artista
+              const isIndividualContract = (
+                (contract.idAp === Number(artistIdAp) || contract.artist?.idAp === Number(artistIdAp)) &&
+                (contract.idGr === Number(artistIdGr) || contract.artist?.idGr === Number(artistIdGr))
+              );
+
+              // Contratos de grupo donde el artista está en el grupo
+              const isGroupContract = (
+                contract.type === 'Group' &&
+                (contract.idGr === Number(artistIdGr) || contract.group?.id === Number(artistIdGr))
+              );
+              return isIndividualContract || isGroupContract;
+            });
+            break;
+          default:
+            console.error('Rol no reconocido:', user.role);
+            return;
         }
+        console.log('filtrados roles',filteredContracts)
 
         const formattedContracts = filteredContracts.map((contract: any, index: number) => ({
           id: index,
@@ -238,7 +251,9 @@ const Contracts: React.FC = () => {
           initialConditions: contract.initialConditions,
           incomeDistribution: contract.incomeDistribution
         }));
-        console.log(formattedContracts)
+
+        console.log('formattedContracts',formattedContracts)
+
         setContracts(formattedContracts);
         // ============================================
         // FIN SECCIÓN: BACKEND ENDPOINT
@@ -425,8 +440,7 @@ const Contracts: React.FC = () => {
     return <div>Cargando...</div>;
   }
 
-  // Permitir acceso a artistas (líderes de grupo) para aceptar/rechazar
-  console.log(user)
+  // Permitir acceso a artistas (líderes de grupo) para aceptar/rechaz
   if (
     user.role !== 'manager' &&
     user.role !== 'director' &&
