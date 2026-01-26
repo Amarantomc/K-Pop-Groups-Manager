@@ -351,6 +351,16 @@ const AppRouter: React.FC = () => {
           <Income />
         </ProtectedRoute>
       } />
+      <Route path="/artist/group" element={
+        <ProtectedRoute allowedRoles={['artist']}>
+          <Groups />
+        </ProtectedRoute>
+      } />
+      <Route path="/artist/concept" element={
+        <ProtectedRoute allowedRoles={['artist']}>
+          <Concept />
+        </ProtectedRoute>
+      } />
       <Route path="/artist/contracts" element={
         <ProtectedRoute allowedRoles={['artist']}>
           <Contracts />

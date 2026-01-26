@@ -1,0 +1,705 @@
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                    ESQUEMA DE BASE DE DATOS - PRISMA                          ║
+║                                                                               ║
+║                         K-POP GROUPS MANAGER                                 ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════════════════════
+1. USER
+═══════════════════════════════════════════════════════════════════════════════
+
+ATRIBUTOS:
+  - id: Int (Clave Primaria - autoincrement)
+  - name: String
+  - email: String (Única)
+  - password: String
+  - role: String
+
+RELACIONES:
+  - perfilManager: PerfilManager (1 a 0-1)
+  - perfilDirector: PerfilDirector (1 a 0-1)
+  - perfilAprendiz: PerfilAprendiz (1 a 0-1)
+  - perfilArtista: PerfilArtista (1 a 0-1)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+2. PERFILMANAGER
+═══════════════════════════════════════════════════════════════════════════════
+
+ATRIBUTOS:
+  - userId: Int (Clave Primaria, Clave Foránea)
+  - agenciaId: Int (Clave Foránea)
+
+CLAVES PRIMARIAS:
+  - PK: userId
+
+CLAVES FORÁNEAS:
+  - FK: userId → User(id) [Cascade Delete]
+  - FK: agenciaId → Agencia(id)
+
+RELACIONES:
+  - usuario: User (N a 1)
+  - agencia: Agencia (N a 1)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+3. PERFILDIRECTOR
+═══════════════════════════════════════════════════════════════════════════════
+
+ATRIBUTOS:
+  - userId: Int (Clave Primaria, Clave Foránea)
+  - agenciaId: Int (Clave Foránea)
+
+CLAVES PRIMARIAS:
+  - PK: userId
+
+CLAVES FORÁNEAS:
+  - FK: userId → User(id) [Cascade Delete]
+  - FK: agenciaId → Agencia(id)
+
+RELACIONES:
+  - usuario: User (N a 1)
+  - agencia: Agencia (N a 1)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+4. PERFILAPRENDIZ
+═══════════════════════════════════════════════════════════════════════════════
+
+ATRIBUTOS:
+  - userId: Int (Clave Primaria, Clave Foránea)
+  - aprendizId: Int (Clave Foránea, Única)
+
+CLAVES PRIMARIAS:
+  - PK: userId
+
+CLAVES FORÁNEAS:
+  - FK: userId → User(id) [Cascade Delete]
+  - FK: aprendizId → Aprendiz(id)
+
+RELACIONES:
+  - usuario: User (N a 1)
+  - aprendiz: Aprendiz (N a 1)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+5. PERFILARTISTA
+═══════════════════════════════════════════════════════════════════════════════
+
+ATRIBUTOS:
+  - userId: Int (Clave Primaria, Clave Foránea)
+  - IdAp: Int (Clave Foránea)
+  - IdGr: Int (Clave Foránea)
+
+CLAVES PRIMARIAS:
+  - PK: userId
+
+CLAVES FORÁNEAS:
+  - FK: userId → User(id) [Cascade Delete]
+  - FK: (IdAp, IdGr) → Artista(idAp, idGr)
+
+RESTRICCIONES ÚNICAS:
+  - (IdAp, IdGr) - Combinación única
+
+RELACIONES:
+  - usuario: User (N a 1)
+  - artista: Artista (N a 1)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+6. AGENCIA
+═══════════════════════════════════════════════════════════════════════════════
+
+ATRIBUTOS:
+  - id: Int (Clave Primaria - autoincrement)
+  - nombre: String
+  - ubicacion: String
+  - fechaFundacion: DateTime
+
+CLAVES PRIMARIAS:
+  - PK: id
+
+RELACIONES:
+  - Contrato: Contrato (1 a N)
+  - Aprendices: AprendizEnAgencia (1 a N)
+  - Evaluaciones: EvaluacionAprendiz (1 a N)
+  - SolicitudesAprendiz: AprendizSolicitaGrupo (1 a N)
+  - SolicitudesArtistas: ArtistaSolicitaGrupo (1 a N)
+  - Grupos: Grupo (1 a N)
+  - Managers: PerfilManager (1 a N)
+  - Directores: PerfilDirector (1 a N)
+  - ContratosGrupo: ContratoGrupo (1 a N)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+7. APRENDIZ
+═══════════════════════════════════════════════════════════════════════════════
+
+ATRIBUTOS:
+  - id: Int (Clave Primaria - autoincrement)
+  - idSolicitud: Int (Clave Foránea - Opcional)
+  - nombreCompleto: String
+  - fechaNacimiento: DateTime (Default: now())
+  - edad: Int
+  - nivelEntrenamiento: Int
+
+CLAVES PRIMARIAS:
+  - PK: id
+
+CLAVES FORÁNEAS:
+  - FK: idSolicitud → Solicitud(id)
+
+RELACIONES:
+  - Agencia: AprendizEnAgencia (1 a N)
+  - Evaluacion: EvaluacionAprendiz (1 a N)
+  - Artista: Artista (1 a 0-1)
+  - SolicitudGrupo: AprendizSolicitaGrupo (1 a N)
+  - Perfil: PerfilAprendiz (1 a 0-1)
+  - AprendizEnSolicitud: Solicitud (N a 1)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+8. ACTIVIDAD
+═══════════════════════════════════════════════════════════════════════════════
+
+ATRIBUTOS:
+  - id: Int (Clave Primaria - autoincrement)
+  - responsable: String
+  - lugar: String
+  - fecha: DateTime (Default: now())
+  - tipoActividad: String
+  - tipoEvento: String
+  - estado: String (Default: "PENDIENTE")
+
+CLAVES PRIMARIAS:
+  - PK: id
+
+RELACIONES:
+  - Personas: PersonasEnActividad (1 a N)
+  - Ingreso: Ingreso (1 a N)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+9. INGRESO
+═══════════════════════════════════════════════════════════════════════════════
+
+ATRIBUTOS:
+  - idIng: Int (Clave Primaria - autoincrement)
+  - idAct: Int (Clave Primaria, Clave Foránea)
+  - monto: Decimal
+  - fecha: DateTime (Default: now())
+  - descripcion: String
+
+CLAVES PRIMARIAS:
+  - PK: (idIng, idAct)
+
+CLAVES FORÁNEAS:
+  - FK: idAct → Actividad(id) [Cascade Delete]
+
+RELACIONES:
+  - actividad: Actividad (N a 1)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+10. CONCEPTO
+═══════════════════════════════════════════════════════════════════════════════
+
+ATRIBUTOS:
+  - id: Int (Clave Primaria - autoincrement)
+  - nombre: String
+  - descripcion: String
+
+CLAVES PRIMARIAS:
+  - PK: id
+
+RELACIONES:
+  - Grupo: Grupo (1 a N)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+11. CONCEPTOVISUAL
+═══════════════════════════════════════════════════════════════════════════════
+
+ATRIBUTOS:
+  - id: Int (Clave Primaria - autoincrement)
+  - imagen: String
+
+CLAVES PRIMARIAS:
+  - PK: id
+
+RELACIONES:
+  - Grupo: Grupo (1 a N)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+12. GRUPO
+═══════════════════════════════════════════════════════════════════════════════
+
+ATRIBUTOS:
+  - id: Int (Clave Primaria - autoincrement)
+  - nombreCompleto: String
+  - fechaDebut: DateTime
+  - estadoGrupo: String
+  - idConcepto: Int (Clave Foránea)
+  - idConceptoVisual: Int (Clave Foránea)
+  - Nomiembros: Int
+
+CLAVES PRIMARIAS:
+  - PK: id
+
+CLAVES FORÁNEAS:
+  - FK: idConcepto → Concepto(id)
+  - FK: idConceptoVisual → ConceptoVisual(id)
+
+RELACIONES:
+  - concepto: Concepto (N a 1)
+  - conceptoVisual: ConceptoVisual (N a 1)
+  - Actividades: PersonasEnActividad (1 a N)
+  - Artista: Artista (1 a N)
+  - HistorialArtistas: ArtistaEnGrupo (1 a N)
+  - Lanzamiento: GrupoLanzaAlbum (1 a N)
+  - Agencias: Agencia (N a M)
+  - Contratos: ContratoGrupo (1 a N)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+13. ALBUM
+═══════════════════════════════════════════════════════════════════════════════
+
+ATRIBUTOS:
+  - id: Int (Clave Primaria - autoincrement)
+  - titulo: String
+  - fechaLanzamiento: DateTime (Default: now())
+  - productor: String
+  - NoCanciones: Int
+  - NoCopiasVendidas: Int
+
+CLAVES PRIMARIAS:
+  - PK: id
+
+RELACIONES:
+  - Canciones: Cancion (1 a N)
+  - Premios: AlbumPremiado (1 a N)
+  - LanzamientoArtista: ArtistaLanzaAlbum (1 a N)
+  - LanzamientoGrupo: GrupoLanzaAlbum (1 a N)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+14. ARTISTA
+═══════════════════════════════════════════════════════════════════════════════
+
+ATRIBUTOS:
+  - idAp: Int (Clave Primaria, Clave Foránea)
+  - idGr: Int (Clave Primaria, Clave Foránea)
+  - idSolicitud: Int (Clave Foránea - Opcional)
+  - nombreArtistico: String
+  - fechaDebut: DateTime
+  - estadoArtista: String
+
+CLAVES PRIMARIAS:
+  - PK: (idAp, idGr)
+
+CLAVES FORÁNEAS:
+  - FK: idGr → Grupo(id)
+  - FK: idAp → Aprendiz(id)
+  - FK: idSolicitud → Solicitud(id)
+
+RELACIONES:
+  - grupo: Grupo (N a 1)
+  - aprendiz: Aprendiz (N a 1)
+  - Contrato: Contrato (1 a N)
+  - HistorialGrupos: ArtistaEnGrupo (1 a N)
+  - Actividades: PersonasEnActividad (1 a N)
+  - Lanzamientos: ArtistaLanzaAlbum (1 a N)
+  - SolicitudGrupo: ArtistaSolicitaGrupo (1 a N)
+  - Perfil: PerfilArtista (1 a 0-1)
+  - ArtistaEnSolicutud: Solicitud (N a 1)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+15. SOLICITUD
+═══════════════════════════════════════════════════════════════════════════════
+
+ATRIBUTOS:
+  - id: Int (Clave Primaria - autoincrement)
+  - nombreGrupo: String
+  - idConcepto: Int
+  - idAgencia: Int
+  - fechaSolicitud: DateTime (Default: now())
+  - estado: String
+
+CLAVES PRIMARIAS:
+  - PK: id
+
+RELACIONES:
+  - AprendizMiembro: Aprendiz (1 a N)
+  - ArtistaMiembro: Artista (1 a N)
+  - SolicitudGrupoAprendiz: AprendizSolicitaGrupo (1 a N)
+  - SolicitudGrupoArtista: ArtistaSolicitaGrupo (1 a N)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+16. LISTAPOPULARIDAD
+═══════════════════════════════════════════════════════════════════════════════
+
+ATRIBUTOS:
+  - id: Int (Clave Primaria - autoincrement)
+  - nombre: String
+  - tipoLista: String
+  - requisito: Int (Default: 1000000)
+
+CLAVES PRIMARIAS:
+  - PK: id
+
+RELACIONES:
+  - Canciones: CancionEnListaDePopularidad (1 a N)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+17. CANCION
+═══════════════════════════════════════════════════════════════════════════════
+
+ATRIBUTOS:
+  - id: Int (Clave Primaria - autoincrement)
+  - titulo: String
+  - genero: String
+  - productor: String
+  - fechaLanzamiento: DateTime
+  - reproducciones: Int (Default: 0)
+
+CLAVES PRIMARIAS:
+  - PK: id
+
+RELACIONES:
+  - ListaDePopularidad: CancionEnListaDePopularidad (1 a N)
+  - Albums: Album (N a M)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+18. PREMIO
+═══════════════════════════════════════════════════════════════════════════════
+
+ATRIBUTOS:
+  - id: Int (Clave Primaria - autoincrement)
+  - tituloPremio: String
+  - nombreAcademia: String
+  - requisito: Int (Default: 1000000)
+
+CLAVES PRIMARIAS:
+  - PK: id
+
+RELACIONES:
+  - Albums: AlbumPremiado (1 a N)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+19. CONTRATO
+═══════════════════════════════════════════════════════════════════════════════
+
+ATRIBUTOS:
+  - idAg: Int (Clave Primaria, Clave Foránea)
+  - idAp: Int (Clave Primaria, Clave Foránea)
+  - idGr: Int (Clave Primaria, Clave Foránea)
+  - fechaInicio: DateTime (Clave Primaria)
+  - fechaFinalizacion: DateTime (Opcional)
+  - estado: String
+  - condicionesIniciales: String
+  - distribucionIngresos: String
+
+CLAVES PRIMARIAS:
+  - PK: (idAg, idAp, idGr, fechaInicio)
+
+CLAVES FORÁNEAS:
+  - FK: (idAp, idGr) → Artista(idAp, idGr) [Cascade Delete]
+  - FK: idAg → Agencia(id) [Cascade Delete]
+
+
+═══════════════════════════════════════════════════════════════════════════════
+20. CONTRATOGRUPO
+═══════════════════════════════════════════════════════════════════════════════
+
+ATRIBUTOS:
+  - id: Int (Clave Primaria - autoincrement)
+  - idAg: Int (Clave Foránea)
+  - IdGr: Int (Clave Foránea)
+  - fechaInicio: DateTime
+  - fechaFinalizacion: DateTime (Opcional)
+  - estado: String
+  - condicionesIniciales: String
+  - distribucionIngresos: String
+
+CLAVES PRIMARIAS:
+  - PK: id
+
+CLAVES FORÁNEAS:
+  - FK: idAg → Agencia(id) [Cascade Delete]
+  - FK: IdGr → Grupo(id) [Cascade Delete]
+
+
+═══════════════════════════════════════════════════════════════════════════════
+21. ARTISTAENGRUPO
+═══════════════════════════════════════════════════════════════════════════════
+
+ATRIBUTOS:
+  - idAp: Int (Clave Primaria, Clave Foránea)
+  - idGrupoDebut: Int (Clave Primaria, Clave Foránea)
+  - idGr: Int (Clave Primaria, Clave Foránea)
+  - fechaInicio: DateTime (Clave Primaria)
+  - fechaFinalizacion: DateTime (Opcional)
+  - rol: String
+
+CLAVES PRIMARIAS:
+  - PK: (idAp, idGrupoDebut, idGr, fechaInicio)
+
+CLAVES FORÁNEAS:
+  - FK: (idAp, idGrupoDebut) → Artista(idAp, idGr)
+  - FK: idGr → Grupo(id)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+22. ALBUMPREEMIADO
+═══════════════════════════════════════════════════════════════════════════════
+
+ATRIBUTOS:
+  - idAlb: Int (Clave Primaria, Clave Foránea)
+  - idPremio: Int (Clave Primaria, Clave Foránea)
+  - año: Int
+
+CLAVES PRIMARIAS:
+  - PK: (idAlb, idPremio)
+
+CLAVES FORÁNEAS:
+  - FK: idAlb → Album(id)
+  - FK: idPremio → Premio(id)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+23. CANCIONEENLISTADELOPULARIDAD
+═══════════════════════════════════════════════════════════════════════════════
+
+ATRIBUTOS:
+  - idCa: Int (Clave Primaria, Clave Foránea)
+  - idLista: Int (Clave Primaria, Clave Foránea)
+  - posicion: Int
+  - año: Int
+
+CLAVES PRIMARIAS:
+  - PK: (idCa, idLista)
+
+CLAVES FORÁNEAS:
+  - FK: idCa → Cancion(id)
+  - FK: idLista → ListaPopularidad(id)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+24. APRENDIZIENAGENCIA
+═══════════════════════════════════════════════════════════════════════════════
+
+ATRIBUTOS:
+  - idAp: Int (Clave Primaria, Clave Foránea)
+  - idAg: Int (Clave Primaria, Clave Foránea)
+  - fechaInicio: DateTime (Clave Primaria)
+  - fechaFinalizacion: DateTime (Opcional)
+  - estado: String (Default: "en entrenamiento")
+
+CLAVES PRIMARIAS:
+  - PK: (idAp, idAg, fechaInicio)
+
+CLAVES FORÁNEAS:
+  - FK: idAp → Aprendiz(id) [Cascade Delete]
+  - FK: idAg → Agencia(id) [Cascade Delete]
+
+
+═══════════════════════════════════════════════════════════════════════════════
+25. EVALUACIONAPRENDIZ
+═══════════════════════════════════════════════════════════════════════════════
+
+ATRIBUTOS:
+  - idAp: Int (Clave Primaria, Clave Foránea)
+  - idAg: Int (Clave Primaria, Clave Foránea)
+  - fechaEvaluacion: DateTime (Clave Primaria)
+  - evaluacion: Int
+
+CLAVES PRIMARIAS:
+  - PK: (idAp, idAg, fechaEvaluacion)
+
+CLAVES FORÁNEAS:
+  - FK: idAp → Aprendiz(id) [Cascade Delete]
+  - FK: idAg → Agencia(id) [Cascade Delete]
+
+
+═══════════════════════════════════════════════════════════════════════════════
+26. PERSONASENACTIVIDAD
+═══════════════════════════════════════════════════════════════════════════════
+
+ATRIBUTOS:
+  - id: Int (Clave Primaria - autoincrement)
+  - idAp: Int (Clave Foránea - Opcional)
+  - idGr: Int (Clave Foránea - Opcional)
+  - idAct: Int (Clave Foránea)
+  - idGrupos: Int (Clave Foránea - Opcional)
+  - aceptado: Boolean (Opcional)
+
+CLAVES PRIMARIAS:
+  - PK: id
+
+CLAVES FORÁNEAS:
+  - FK: (idAp, idGr) → Artista(idAp, idGr)
+  - FK: idAct → Actividad(id)
+  - FK: idGrupos → Grupo(id)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+27. ARTISTALANZAALBUM
+═══════════════════════════════════════════════════════════════════════════════
+
+ATRIBUTOS:
+  - idAp: Int (Clave Primaria, Clave Foránea)
+  - idGr: Int (Clave Primaria, Clave Foránea)
+  - idAlb: Int (Clave Primaria, Clave Foránea)
+
+CLAVES PRIMARIAS:
+  - PK: (idAp, idGr, idAlb)
+
+CLAVES FORÁNEAS:
+  - FK: (idAp, idGr) → Artista(idAp, idGr)
+  - FK: idAlb → Album(id)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+28. GRUPOZALANZAALBUM
+═══════════════════════════════════════════════════════════════════════════════
+
+ATRIBUTOS:
+  - idGr: Int (Clave Primaria, Clave Foránea)
+  - idAlb: Int (Clave Primaria, Clave Foránea)
+
+CLAVES PRIMARIAS:
+  - PK: (idGr, idAlb)
+
+CLAVES FORÁNEAS:
+  - FK: idGr → Grupo(id)
+  - FK: idAlb → Album(id)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+29. APRENDIZSOLICITAGRUPO
+═══════════════════════════════════════════════════════════════════════════════
+
+ATRIBUTOS:
+  - idAp: Int (Clave Primaria, Clave Foránea)
+  - idAg: Int (Clave Primaria, Clave Foránea)
+  - idSolicitud: Int (Clave Primaria, Clave Foránea)
+  - rol: String
+  - estado: String
+
+CLAVES PRIMARIAS:
+  - PK: (idAp, idAg, idSolicitud)
+
+CLAVES FORÁNEAS:
+  - FK: idAp → Aprendiz(id)
+  - FK: idAg → Agencia(id)
+  - FK: idSolicitud → Solicitud(id)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+30. ARTISTASOLICITAGRUPO
+═══════════════════════════════════════════════════════════════════════════════
+
+ATRIBUTOS:
+  - idAp: Int (Clave Primaria, Clave Foránea)
+  - idGr: Int (Clave Primaria, Clave Foránea)
+  - idAg: Int (Clave Primaria, Clave Foránea)
+  - idSolicitud: Int (Clave Primaria, Clave Foránea)
+  - rol: String
+  - estado: String
+
+CLAVES PRIMARIAS:
+  - PK: (idAp, idGr, idAg, idSolicitud)
+
+CLAVES FORÁNEAS:
+  - FK: (idAp, idGr) → Artista(idAp, idGr)
+  - FK: idAg → Agencia(id)
+  - FK: idSolicitud → Solicitud(id)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+RESUMEN DE ENTIDADES
+═══════════════════════════════════════════════════════════════════════════════
+
+Total de Entidades: 30
+
+ENTIDADES PRINCIPALES:
+  1. User (Usuario del sistema)
+  2. Agencia
+  3. Aprendiz
+  4. Artista
+  5. Grupo
+  6. Album
+  7. Actividad
+  8. Solicitud
+  9. Concepto
+  10. ConceptoVisual
+  11. Cancion
+  12. Premio
+  13. ListaPopularidad
+  14. Ingreso
+
+ENTIDADES DE RELACIÓN/COMPOSICIÓN:
+  15. PerfilManager
+  16. PerfilDirector
+  17. PerfilAprendiz
+  18. PerfilArtista
+  19. Contrato (Artista-Agencia)
+  20. ContratoGrupo (Grupo-Agencia)
+  21. ArtistaEnGrupo
+  22. AlbumPreemiado
+  23. CancionEnListaDePopularidad
+  24. AprendizEnAgencia
+  25. EvaluacionAprendiz
+  26. PersonasEnActividad
+  27. ArtistaLanzaAlbum
+  28. GrupoLanzaAlbum
+  29. AprendizSolicitaGrupo
+  30. ArtistaSolicitaGrupo
+
+
+═══════════════════════════════════════════════════════════════════════════════
+NOTAS IMPORTANTES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. La base de datos utiliza PostgreSQL como gestor.
+
+2. Las claves foráneas con "Cascade Delete" eliminarán registros dependientes
+   cuando se elimine el registro padre:
+   - PerfilManager.userId → User(id)
+   - PerfilDirector.userId → User(id)
+   - PerfilAprendiz.userId → User(id)
+   - PerfilArtista.userId → User(id)
+   - Ingreso.idAct → Actividad(id)
+   - Contrato.(idAp, idGr) → Artista(idAp, idGr)
+   - Contrato.idAg → Agencia(id)
+   - ContratoGrupo.idAg → Agencia(id)
+   - ContratoGrupo.IdGr → Grupo(id)
+   - AprendizEnAgencia.idAp → Aprendiz(id)
+   - AprendizEnAgencia.idAg → Agencia(id)
+   - EvaluacionAprendiz.idAp → Aprendiz(id)
+   - EvaluacionAprendiz.idAg → Agencia(id)
+
+3. Las entidades de relación que conforman relaciones muchos a muchos son:
+   - AlbumPreemiado (Album-Premio)
+   - CancionEnListaDePopularidad (Cancion-ListaPopularidad)
+   - AprendizEnAgencia (Aprendiz-Agencia)
+   - ArtistaEnGrupo (Artista-Grupo)
+   - ArtistaLanzaAlbum (Artista-Album)
+   - GrupoLanzaAlbum (Grupo-Album)
+   - AprendizSolicitaGrupo (Aprendiz-Solicitud)
+   - ArtistaSolicitaGrupo (Artista-Solicitud)
+
+4. Las claves primarias compuestas permiten registros múltiples con validaciones
+   en fechas para controlar el historial temporal de las relaciones.
+
+5. Los valores por defecto establecidos:
+   - User.role, Actividad.estado, AprendizEnAgencia.estado: Valores predeterminados
+   - Aprendiz.fechaNacimiento, Actividad.fecha, Album.fechaLanzamiento,
+     Solicitud.fechaSolicitud, Cancion.reproducciones, etc.

@@ -38,12 +38,12 @@ export const MenuByRole: Record<string, MenuSection[]> = {
                 { label: "Inicio", icon: <DashboardIcon />, path: "/admin/dashboard" }
             ]
         },
-    //    {
-    //         title: "PageExample",
-    //         items: [
-    //             { label: "Example", icon: <DashboardIcon />, path: "/admin/overview" }
-    //         ]
-    //     },
+        //    {
+        //         title: "PageExample",
+        //         items: [
+        //             { label: "Example", icon: <DashboardIcon />, path: "/admin/overview" }
+        //         ]
+        //     },
         {
             title: "CONSULTAS",
             items: [
@@ -239,7 +239,7 @@ export const MenuByRole: Record<string, MenuSection[]> = {
                 { label: "Inicio", icon: <DashboardIcon />, path: "/manager/dashboard" }
             ]
         },
-         {
+        {
             title: "CONSULTAS",
             items: [
                 { label: "Consultas Especializadas", icon: <AssessmentIcon />, path: "/manager/queries" }
@@ -360,9 +360,29 @@ export const MenuByRole: Record<string, MenuSection[]> = {
             ]
         },
         {
-            title:"CONTRATOS",
-            items : [
-                {label:"Mis Contratos",icon : <WorkIcon/>,path: "/artist/contracts"}
+            title: "GRUPO ",
+            items: [
+                { label: "Mostrar Grupos", icon: <PeopleIcon />, path: "/artist/group" }
+            ]
+        },
+        {
+            title: "CONCEPTO",
+            items: [
+                { label: "Mostrar Conceptos", icon: <LightbulbIcon />, path: "/artist/concept" }
+            ]
+        },
+        /*
+        {
+            title: "CONCEPTO VISUAL",
+            items: [
+                { label: "Mostrar Conceptos Visuales", icon: <PaletteIcon />, path: "/artist/concept-visual" }
+            ]
+        },
+        */
+        {
+            title: "CONTRATOS",
+            items: [
+                { label: "Mis Contratos", icon: <WorkIcon />, path: "/artist/contracts" }
             ]
         },
         {
@@ -379,7 +399,7 @@ export const MenuByRole: Record<string, MenuSection[]> = {
         },
         {
             title: "ÁLBUM",
-            items: [ 
+            items: [
                 { label: "Mostrar Álbumes", icon: <AlbumIcon />, path: "/artist/albums" }
             ]
         },

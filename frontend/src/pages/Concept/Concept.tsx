@@ -54,6 +54,9 @@ const Concept: React.FC = () => {
           case 'director':
             endpoint = `/api/concept?agencyId=${user.agencyId}`;
             break;
+          case 'artist':
+            endpoint = '/api/concept';
+            break;
           case 'admin':
             endpoint = '/api/concept';
             break;
@@ -264,7 +267,7 @@ const Concept: React.FC = () => {
     setOpenError(true);
   }
 };
-  if (!user || (user.role !== 'manager' && user.role !== 'director' && user.role !== 'admin')) {
+  if (!user || (user.role !== 'manager' && user.role !== 'director' && user.role !== 'admin' && user.role !== 'artist')) {
     return (
       <PageLayout title="Conceptos" description="No tienes permisos para ver esta página">
         <div style={{ textAlign: 'center', padding: '40px' }}>
@@ -280,7 +283,9 @@ const Concept: React.FC = () => {
       description={
         user.role === 'admin' ? 'Vista global de todos los conceptos del sistema' :
           user.role === 'director' ? 'Todos los conceptos de tu agencia' :
-            'Gestiona los conceptos de tu agencia'
+            user.role === 'manager' ? 'Gestiona los conceptos de tu agencia' :
+              user.role === 'artist' ? 'Visualiza los conceptos disponibles' :
+                'Gestión de conceptos'
       }
     >
       {isLoading ? (

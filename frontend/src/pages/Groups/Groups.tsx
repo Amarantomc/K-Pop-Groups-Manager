@@ -105,27 +105,12 @@ const Groups: React.FC = () => {
       try {
         if (!user) return;
 
-        let endpoint = '';
-
-        switch (user.role) {
-          case 'manager':
-          case 'director':
-            endpoint = `/api/group?agencyId=${user.agencyId}`;
-            break;
-          case 'admin':
-            endpoint = '/api/group';
-            break;
-          default:
-            console.error('Rol no autorizado:', user.role);
-            return;
-        }
-
         // ============================================
         // SECCIÓN: BACKEND ENDPOINT
         // Descomenta esta sección para usar el backend real
         // ============================================
         // GET /api/group - No requiere autenticación según documentación
-        const response = await fetch(`http://localhost:3000${endpoint}`);
+        const response = await fetch(`http://localhost:3000/api/group`);
 
         if (!response.ok) {
           throw new Error('Error al obtener grupos');
@@ -133,7 +118,45 @@ const Groups: React.FC = () => {
 
         const data = await response.json();
         console.log(data)
-        const formattedData = data.data.map((group : any , index : number) => ({
+        const groupsArray = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
+
+        let filteredGroups = groupsArray;
+
+        // Filtrar grupos según rol
+        switch (user.role) {
+          case 'admin':
+            // Admin ve todos los grupos
+            break;
+          case 'manager':
+          case 'director':
+            // Manager y Director ven solo los grupos de su agencia
+            const agencyIdToMatch = user.agencyId || user.profileData?.agencyId;
+            filteredGroups = groupsArray.filter((group: any) => {
+              const groupAgencyId = group.agency?.id;
+              return groupAgencyId === Number(agencyIdToMatch) || groupAgencyId === agencyIdToMatch;
+            });
+            break;
+          case 'artist':
+            // Artista ve solo los grupos en los que está como miembro
+            const artistIdAp = user.profileData?.IdAp;
+            const artistIdGr = user.profileData?.IdGr;
+
+            filteredGroups = groupsArray.filter((group: any) => {
+              // Verificar si el artista está en los miembros del grupo
+              const isMember = Array.isArray(group.members) && 
+                group.members.some((member: any) => 
+                  member.apprenticeId === Number(artistIdAp) && 
+                  member.groupId === Number(artistIdGr)
+                );
+              return isMember;
+            });
+            break;
+          default:
+            console.error('Rol no reconocido:', user.role);
+            return;
+        }
+
+        const formattedData = filteredGroups.map((group : any , index : number) => ({
                         id : group.id ?? index,
                         name : group.name,
                         debutDate : group.debut,
@@ -323,7 +346,7 @@ const Groups: React.FC = () => {
     return <div>Cargando...</div>;
   }
 
-  if (user.role !== 'manager' && user.role !== 'director' && user.role !== 'admin') {
+  if (user.role !== 'manager' && user.role !== 'director' && user.role !== 'admin' && user.role !== 'artist') {
     return (
       <PageLayout title="Grupos" description="No tienes permisos para ver esta página">
         <div style={{ textAlign: 'center', padding: '40px' }}>
@@ -340,7 +363,8 @@ const Groups: React.FC = () => {
         user.role === 'manager' ? 'Administra todos los grupos de tu agencia' :
           user.role === 'director' ? 'Supervisa todos los grupos de la agencia' :
             user.role === 'admin' ? 'Vista global de todos los grupos del sistema' :
-              'Gestión de grupos'
+              user.role === 'artist' ? 'Visualiza los grupos disponibles' :
+                'Gestión de grupos'
       }
     >
       {isLoading ? (
