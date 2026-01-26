@@ -424,7 +424,7 @@ export class ApplicationRepository implements IApplicationRepository
       await this.db.User.update({
         where: { id: userId },
         data: {
-          role: "ARTISTA",
+          role: "Artist",
         },
       });
   
