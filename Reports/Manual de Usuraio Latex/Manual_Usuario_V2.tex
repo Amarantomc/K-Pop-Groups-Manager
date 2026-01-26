@@ -87,11 +87,14 @@
 
 \chapter{Introducción}
 
-Bienvenido al \textbf{Sistema de Gestión de Agencias de K-Pop}. Esta guía te ayudará a utilizar todas las funcionalidades del sistema para administrar tu agencia de música K-Pop.
+El presente manual de usuario describe el funcionamiento del sistema web de gestión
+de agencias y grupos de K-pop, cuyo objetivo es facilitar la administración de información relacionada con agencias de entretenimiento, grupos musicales, artistas, aprendices,actividades, contratos y producción musical.
 
 \vspace{0.3cm}
 
-Este manual ha sido diseñado para proporcionar instrucciones detalladas, ejemplos prácticos y solución de problemas para todos los usuarios del sistema, independientemente de su nivel de experiencia técnica.
+El documento está dirigido a usuarios finales del sistema, tales como administradores,
+directores de agencia, managers, artistas y aprendices, y proporciona una guía práctica
+para el uso correcto de las funcionalidades disponibles según el rol asignado.
 
 \section{¿Qué puedes hacer con este sistema?}
 
@@ -206,10 +209,6 @@ Crear archivo \texttt{.env} en la carpeta \texttt{backend}:
 NODE_ENV=production
 PORT=3000
 DATABASE_URL=postgresql://user:password@localhost:5432/kpop_db
-JWT_SECRET=your-secret-key-here
-REFRESH_TOKEN_SECRET=your-refresh-secret
-JWT_EXPIRATION=24h
-CORS_ORIGIN=https://your-domain.com
 \end{verbatim}
 
 \subsubsection{Paso 4: Configurar Base de Datos}
@@ -217,9 +216,6 @@ CORS_ORIGIN=https://your-domain.com
 \begin{verbatim}
 # Ejecutar migraciones de Prisma
 npx prisma migrate deploy
-
-# Llenar datos iniciales (opcional)
-npx prisma db seed
 \end{verbatim}
 
 \subsubsection{Paso 5: Instalar Dependencias Frontend}

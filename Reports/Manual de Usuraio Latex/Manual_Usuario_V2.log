@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.10.15)  16 JAN 2026 23:04
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.10.15)  26 JAN 2026 07:08
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -529,11 +529,25 @@ l.48 ... {2.3.11}Actividad}{17}{subsection.2.3.11}
 
  [4]
 Cap\'{\i }tulo 1.
+
+! LaTeX Error: Unicode character ^^B (U+0002)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.91 ...facilitar la administraci贸n de informa^^B
+                                                  ci贸n relacionada con agen...
+
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
 [5
 
 ]
 LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 1
-89.
+92.
  (C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/base\t1cmtt.fd
 File: t1cmtt.fd 2023/04/13 v2.5m Standard LaTeX font definitions
 )
@@ -542,13 +556,13 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.1.1}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.192 \end{verbatim}
+l.195 \end{verbatim}
                     
 pdfTeX warning (ext4): destination with the same identifier (name{table.1.2}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.192 \end{verbatim}
+l.195 \end{verbatim}
                     ] [7] [8]
 Cap\'{\i }tulo 2.
 [9
@@ -558,37 +572,37 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.2.1}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.400 \item T
+l.396 \item T
              铆tulo] [12] [13] [14
 pdfTeX warning (ext4): destination with the same identifier (name{table.2.2}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.549     \item C
+l.545     \item C
                  ambia su estado a GRADUADO] [15] [16
 pdfTeX warning (ext4): destination with the same identifier (name{table.2.3}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.681 
+l.677 
       
 pdfTeX warning (ext4): destination with the same identifier (name{table.2.4}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.681 
+l.677 
       ] [17
 pdfTeX warning (ext4): destination with the same identifier (name{table.2.5}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.702 \chapter
+l.698 \chapter
               {Autenticaci贸n}]
 Cap\'{\i }tulo 3.
 <images/manual_img-000.png, id=919, 1371.1225pt x 770.88pt>
 File: images/manual_img-000.png Graphic file (type png)
 <use images/manual_img-000.png>
-Package pdftex.def Info: images/manual_img-000.png  used on input line 716.
+Package pdftex.def Info: images/manual_img-000.png  used on input line 712.
 (pdftex.def)             Requested size: 364.19667pt x 204.75273pt.
 [18
 
@@ -597,16 +611,16 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.3.1})
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.739     \item I
+l.735     \item I
                  ngresa tu contrase帽a en el campo ``Contrase帽a''
 pdfTeX warning (ext4): destination with the same identifier (name{table.3.1}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.739     \item I
+l.735     \item I
                  ngresa tu contrase帽a en el campo ``Contrase帽a'' <./images/ma
 nual_img-000.png (PNG copy)>]
-Underfull \hbox (badness 10000) in paragraph at lines 759--760
+Underfull \hbox (badness 10000) in paragraph at lines 755--756
 []|\T1/cmr/m/n/12 Verifica ma-y鷖-cu-
  []
 
@@ -615,7 +629,7 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.3.2}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.794 \end{enumerate}
+l.790 \end{enumerate}
                      ] [20]
 Cap\'{\i }tulo 4.
 [21
@@ -625,43 +639,43 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.4.1}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.849 \end{enumerate}
+l.845 \end{enumerate}
                      ]
 <images/manual_img-001.png, id=960, 1371.1225pt x 770.88pt>
 File: images/manual_img-001.png Graphic file (type png)
 <use images/manual_img-001.png>
-Package pdftex.def Info: images/manual_img-001.png  used on input line 875.
+Package pdftex.def Info: images/manual_img-001.png  used on input line 871.
 (pdftex.def)             Requested size: 432.48051pt x 243.14607pt.
  [22
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.2}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.912 
+l.908 
       
 pdfTeX warning (ext4): destination with the same identifier (name{figure.4.1}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.912 
+l.908 
        <./images/manual_img-001.png (PNG copy)>]
 <images/manual_img-003.png, id=971, 1371.1225pt x 770.88pt>
 File: images/manual_img-003.png Graphic file (type png)
 <use images/manual_img-003.png>
-Package pdftex.def Info: images/manual_img-003.png  used on input line 915.
+Package pdftex.def Info: images/manual_img-003.png  used on input line 911.
 (pdftex.def)             Requested size: 409.71692pt x 230.3483pt.
  [23
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.3}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.943 \chapter
+l.939 \chapter
               {M贸dulo: Gesti贸n de Aprendices}
 pdfTeX warning (ext4): destination with the same identifier (name{figure.4.2}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.943 \chapter
+l.939 \chapter
               {M贸dulo: Gesti贸n de Aprendices} <./images/manual_img-003.png (P
 NG copy)>]
 Cap\'{\i }tulo 5.
@@ -672,43 +686,43 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.5.1}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.989     \item H
+l.985     \item H
                  az clic en \textbf{``+ Nuevo Aprendiz''}]
 <images/manual_img-005.png, id=987, 1371.1225pt x 770.88pt>
 File: images/manual_img-005.png Graphic file (type png)
 <use images/manual_img-005.png>
-Package pdftex.def Info: images/manual_img-005.png  used on input line 1011.
+Package pdftex.def Info: images/manual_img-005.png  used on input line 1007.
 (pdftex.def)             Requested size: 409.71692pt x 230.3483pt.
  [25
 pdfTeX warning (ext4): destination with the same identifier (name{table.5.2}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.1038 \end{enumerate}
+l.1034 \end{enumerate}
                       
 pdfTeX warning (ext4): destination with the same identifier (name{figure.5.1}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.1038 \end{enumerate}
+l.1034 \end{enumerate}
                        <./images/manual_img-005.png (PNG copy)>]
 <images/manual_img-007.png, id=998, 1371.1225pt x 770.88pt>
 File: images/manual_img-007.png Graphic file (type png)
 <use images/manual_img-007.png>
-Package pdftex.def Info: images/manual_img-007.png  used on input line 1082.
+Package pdftex.def Info: images/manual_img-007.png  used on input line 1078.
 (pdftex.def)             Requested size: 409.71692pt x 230.3483pt.
  [26
 pdfTeX warning (ext4): destination with the same identifier (name{table.5.3}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.1086 
+l.1082 
        ] [27
 pdfTeX warning (ext4): destination with the same identifier (name{figure.5.2}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.1119 \chapter
+l.1115 \chapter
                {Conversi贸n de Aprendiz a Artista} <./images/manual_img-007.png
  (PNG copy)>]
 Cap\'{\i }tulo 6.
@@ -719,13 +733,13 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.6.1}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.1214 \item N
+l.1210 \item N
               otifica al artista por email sobre su nueva cuenta] [30
 pdfTeX warning (ext4): destination with the same identifier (name{table.6.2}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.1237 \chapter
+l.1233 \chapter
                {M贸dulo: Gesti贸n de Grupos}]
 Cap\'{\i }tulo 7.
 [31
@@ -735,43 +749,43 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.7.1}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.1282     \item C
+l.1278     \item C
                   ompleta formulario:]
 <images/manual_img-009.png, id=1055, 1371.1225pt x 770.88pt>
 File: images/manual_img-009.png Graphic file (type png)
 <use images/manual_img-009.png>
-Package pdftex.def Info: images/manual_img-009.png  used on input line 1309.
+Package pdftex.def Info: images/manual_img-009.png  used on input line 1305.
 (pdftex.def)             Requested size: 409.71692pt x 230.3483pt.
  [32
 pdfTeX warning (ext4): destination with the same identifier (name{table.7.2}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.1337 \subsection
+l.1333 \subsection
                   {Pasos}
 pdfTeX warning (ext4): destination with the same identifier (name{figure.7.1}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.1337 \subsection
+l.1333 \subsection
                   {Pasos} <./images/manual_img-009.png (PNG copy)>]
 <images/manual_img-010.png, id=1066, 1371.1225pt x 770.88pt>
 File: images/manual_img-010.png Graphic file (type png)
 <use images/manual_img-010.png>
-Package pdftex.def Info: images/manual_img-010.png  used on input line 1353.
+Package pdftex.def Info: images/manual_img-010.png  used on input line 1349.
 (pdftex.def)             Requested size: 409.71692pt x 230.3483pt.
  [33
 pdfTeX warning (ext4): destination with the same identifier (name{figure.7.2}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.1358 \chapter
+l.1354 \chapter
                {M贸dulos Adicionales} <./images/manual_img-010.png (PNG copy)>]
 Cap\'{\i }tulo 8.
 <images/manual_img-012.png, id=1081, 1371.1225pt x 770.88pt>
 File: images/manual_img-012.png Graphic file (type png)
 <use images/manual_img-012.png>
-Package pdftex.def Info: images/manual_img-012.png  used on input line 1382.
+Package pdftex.def Info: images/manual_img-012.png  used on input line 1378.
 (pdftex.def)             Requested size: 409.71692pt x 230.3483pt.
 [34
 
@@ -779,32 +793,32 @@ Package pdftex.def Info: images/manual_img-012.png  used on input line 1382.
 <images/manual_img-013.png, id=1090, 1371.1225pt x 770.88pt>
 File: images/manual_img-013.png Graphic file (type png)
 <use images/manual_img-013.png>
-Package pdftex.def Info: images/manual_img-013.png  used on input line 1410.
+Package pdftex.def Info: images/manual_img-013.png  used on input line 1406.
 (pdftex.def)             Requested size: 409.71692pt x 230.3483pt.
  [35
 pdfTeX warning (ext4): destination with the same identifier (name{figure.8.1}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.1414 
+l.1410 
         <./images/manual_img-012.png (PNG copy)>]
 <images/manual_img-014.png, id=1100, 1371.1225pt x 770.88pt>
 File: images/manual_img-014.png Graphic file (type png)
 <use images/manual_img-014.png>
-Package pdftex.def Info: images/manual_img-014.png  used on input line 1439.
+Package pdftex.def Info: images/manual_img-014.png  used on input line 1435.
 (pdftex.def)             Requested size: 409.71692pt x 230.3483pt.
  [36
 pdfTeX warning (ext4): destination with the same identifier (name{figure.8.2}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.1443 
+l.1439 
         <./images/manual_img-013.png (PNG copy)>] [37
 pdfTeX warning (ext4): destination with the same identifier (name{figure.8.3}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.1467 \chapter
+l.1463 \chapter
                {B煤squedas, Filtros y Reportes} <./images/manual_img-014.png (P
 NG copy)>]
 Cap\'{\i }tulo 9.
@@ -825,17 +839,17 @@ Cap\'{\i }tulo 12.
 ] [43]
 Cap\'{\i }tulo 13.
 
-Overfull \hbox (102.58525pt too wide) in alignment at lines 1664--1668
+Overfull \hbox (102.58525pt too wide) in alignment at lines 1660--1664
  [] [] [] [] [] [] [] 
  []
 
 
-Overfull \hbox (102.58525pt too wide) in alignment at lines 1668--1670
+Overfull \hbox (102.58525pt too wide) in alignment at lines 1664--1666
  [] [] [] [] [] [] [] 
  []
 
 
-Overfull \hbox (102.58525pt too wide) in alignment at lines 1670--1731
+Overfull \hbox (102.58525pt too wide) in alignment at lines 1666--1727
  [] [] [] [] [] [] [] 
  []
 
@@ -846,7 +860,7 @@ Cap\'{\i }tulo 14.
 [46
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 1809--1810
+Underfull \hbox (badness 10000) in paragraph at lines 1805--1806
 []|\T1/cmr/m/n/12 Al me-nos 1 ca-r醕-ter es-pe-cial
  []
 
@@ -855,7 +869,7 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.14.1})
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.1839 \item S
+l.1835 \item S
               istema env铆a enlace de recuperaci贸n por email] [48]
 Cap\'{\i }tulo 15.
 [49
@@ -903,9 +917,9 @@ mmi12.pfb><C:/Users/TIGER/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsf
 onts/cm/cmr12.pfb><C:/Users/TIGER/AppData/Local/Programs/MiKTeX/fonts/type1/pub
 lic/amsfonts/cm/cmsy10.pfb><C:/Users/TIGER/AppData/Local/Programs/MiKTeX/fonts/
 type1/public/amsfonts/symbols/msam10.pfb>
-Output written on Manual_Usuario_V2.pdf (53 pages, 1836722 bytes).
+Output written on Manual_Usuario_V2.pdf (53 pages, 1835539 bytes).
 PDF statistics:
- 1956 PDF objects out of 2073 (max. 8388607)
+ 1953 PDF objects out of 2073 (max. 8388607)
  461 named destinations out of 1000 (max. 500000)
  1288 words of extra memory for PDF output out of 10000 (max. 10000000)
 

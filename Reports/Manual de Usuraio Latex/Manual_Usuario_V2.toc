@@ -16,7 +16,7 @@
 \contentsline {subsubsection}{Paso 4: Configurar Base de Datos}{7}{section*.5}%
 \contentsline {subsubsection}{Paso 5: Instalar Dependencias Frontend}{7}{section*.6}%
 \contentsline {subsubsection}{Paso 6: Iniciar la Aplicación}{7}{section*.7}%
-\contentsline {subsection}{\numberline {1.5.2}Instalación en Cliente (Local Development)}{8}{subsection.1.5.2}%
+\contentsline {subsection}{\numberline {1.5.2}Instalación en Cliente (Local Development)}{7}{subsection.1.5.2}%
 \contentsline {subsection}{\numberline {1.5.3}Verificación de Instalación}{8}{subsection.1.5.3}%
 \contentsline {chapter}{\numberline {2}Conceptos Básicos}{9}{chapter.2}%
 \contentsline {section}{\numberline {2.1}Introducción}{9}{section.2.1}%
