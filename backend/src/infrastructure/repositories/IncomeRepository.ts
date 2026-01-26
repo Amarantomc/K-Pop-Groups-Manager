@@ -53,6 +53,7 @@ export class IncomeRepository implements IIncomeRepository
         });
       
         if (!income) return null;
+        
         return IncomeResponseDto.toEntity(income);
       }
     
@@ -60,17 +61,21 @@ export class IncomeRepository implements IIncomeRepository
       async update(id: string, data: Partial<UpdateIncomeDto>): Promise<Income> {
         const numericId = Number(id);
       
-        // 1. Buscar TODOS los ingresos
-        const incomes = await this.db.Ingreso.findMany();
+        //  Buscar todos los ingresos incluyendo solo tipoActividad
+        const incomes = await this.db.Ingreso.findMany({
+          include: {
+            actividad: { select: { tipoActividad: true } } // <- solo tipoActividad
+          }
+        });
       
-        // 2. Encontrar el que tenga ese idIng
+        //  Encontrar el ingreso que tenga ese idIng
         const existing = incomes.find((inc: any) => inc.idIng === numericId);
       
         if (!existing) {
           throw new Error(`Income with id ${numericId} not found`);
         }
       
-        // 3. Actualizar usando la clave compuesta
+        // Actualizar usando la clave compuesta y traer la actividad actualizada
         const updated = await this.db.Ingreso.update({
           where: {
             idIng_idAct: {
@@ -82,8 +87,13 @@ export class IncomeRepository implements IIncomeRepository
             descripcion: data.description,
             monto: data.amount,
           },
+          include: {
+            actividad: { select: { tipoActividad: true } } 
+          }
         });
-      
+
+        
+
         return IncomeResponseDto.toEntity(updated);
       }
 
@@ -119,11 +129,10 @@ export class IncomeRepository implements IIncomeRepository
         const incomes = await this.db.Ingreso.findMany({
           include: {
             actividad: {
-              select: { tipoActividad: true } // o el campo que quieras mostrar como "activityName"
+              select: { tipoActividad: true } 
             }
           }
         });
-        console.log(incomes);
         return IncomeResponseDto.toEntities(incomes);
       }
 }

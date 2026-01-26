@@ -15,6 +15,6 @@ export class GetIncomeUseCase{
                 throw new Error('Income not found');
             }
 
-            return new IncomeResponseDto(income.idIncome, income.idActivity, income.description,income.amount,new Date(income.date));
+            return new IncomeResponseDto(income.idIncome, income.idActivity, income.description,income.amount,new Date(income.date),income.activityType);
     }
 }

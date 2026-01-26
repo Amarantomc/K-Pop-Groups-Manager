@@ -26,7 +26,8 @@ export class UpdateIncomeUseCase {
       updatedIncome.idActivity,
       updatedIncome.description,
       updatedIncome.amount,
-      new Date(updatedIncome.date)
+      new Date(updatedIncome.date),
+      updatedIncome.activityType
     );
   }
 }

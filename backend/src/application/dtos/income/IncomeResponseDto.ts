@@ -31,9 +31,9 @@ export class IncomeResponseDto {
       idIncome: data.idIng,
       idActivity: data.idAct,
       description: data.descripcion,
-      amount: data.monto,
+      amount: Number(data.monto),
       date: new Date(data.fecha),
-      activityType: data.actividad?.tipoActividad || null // ← aquí va el nombre real
+      activityType: data.actividad?.tipoActividad || null // <- solo tipoActividad
     });
   }
 
