@@ -58,13 +58,16 @@ const Requests: React.FC = () => {
         throw new Error('Error al aprobar solicitud');
       }
 
-      // Actualizar estado local
-      setRequests(prev =>
-        prev.map(req => req.id === id ? { ...req, status: 'VALIDADA' } : req)
-      );
       console.log('Solicitud aprobada exitosamente:', id);
+      setSuccessMessage('Solicitud aprobada exitosamente');
+      setOpenSuccess(true);
+
+      // Recargar solicitudes
+      await loadAndFormatRequests();
     } catch (error) {
       console.error('Error al aprobar solicitud:', error);
+      setErrorMessage('Error al aprobar solicitud');
+      setOpenError(true);
     }
   };
 
@@ -77,7 +80,6 @@ const Requests: React.FC = () => {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json'
         },
-
         body: JSON.stringify({
           status: 'RECHAZADA',
         })
@@ -87,13 +89,16 @@ const Requests: React.FC = () => {
         throw new Error('Error al rechazar solicitud');
       }
 
-      // Actualizar estado local
-      setRequests(prev =>
-        prev.map(req => req.id === id ? { ...req, status: 'Rechazado' } : req)
-      );
       console.log('Solicitud rechazada:', id);
+      setSuccessMessage('Solicitud rechazada exitosamente');
+      setOpenSuccess(true);
+
+      // Recargar solicitudes
+      await loadAndFormatRequests();
     } catch (error) {
       console.error('Error al rechazar solicitud:', error);
+      setErrorMessage('Error al rechazar solicitud');
+      setOpenError(true);
     }
   };
 
@@ -116,7 +121,7 @@ const Requests: React.FC = () => {
 
       // Actualizar estado local
       setRequests(prev =>
-        prev.map(req => req.id === requestId ? { ...req, status: 'completed' } : req)
+        prev.map(req => req.id === requestId ? { ...req, status: 'COMPLETADA' } : req)
       );
 
       console.log('Grupo creado exitosamente:', groupName, 'para solicitud:', requestId);
@@ -182,23 +187,133 @@ const Requests: React.FC = () => {
       setOpenError(true);
     }
   };
-  // Lógica para aceptar/rechazar solicitud como aprendiz o artista
+
+  // Función central para recargar y formatear solicitudes
+  const loadAndFormatRequests = async () => {
+    if (!user) {
+      console.log('No hay usuario, no se pueden cargar solicitudes');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      console.log('========== INICIO loadAndFormatRequests ==========');
+
+      let endpoint = '';
+
+      switch (user.role) {
+        case 'apprentice':
+          endpoint = `/api/application?apprenticeId=${user.id}&agencyId=${user.agencyId}`;
+          break;
+
+        case 'artist':
+          endpoint = `/api/application?artistId=${user.id}&agencyId=${user.agencyId}`;
+          break;
+
+        case 'manager':
+        case 'director':
+          endpoint = `/api/application?agencyId=${user.agencyId}`;
+          break;
+
+        case 'admin':
+          endpoint = '/api/application';
+          break;
+
+        default:
+          console.error('Rol no reconocido:', user.role);
+          return;
+      }
+
+      console.log('Endpoint construido:', endpoint);
+
+      const token = localStorage.getItem('token');
+      const response = await fetch(`http://localhost:3000${endpoint}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error al obtener solicitudes - Status ${response.status}`);
+      }
+
+      const data = await response.json();
+      const requestsArray = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
+
+      let filteredRequests = requestsArray;
+
+      // Filtrar solicitudes según rol
+      if (user.role === 'apprentice') {
+        const apprenticeId = user.profileData?.apprenticeId;
+        filteredRequests = requestsArray.filter(
+          (req: any) => Array.isArray(req.apprentices) && req.apprentices.some((a: any) => a.apprenticeId === Number(apprenticeId))
+        );
+      } else if (user.role === 'artist') {
+        const idAp = user.profileData?.IdAp;
+        const idGr = user.profileData?.IdGr;
+        filteredRequests = requestsArray.filter(
+          (req: any) => {
+            const hasArtists = Array.isArray(req.artists);
+            return hasArtists && req.artists.some((a: any) => a.idApprentice === Number(idAp) && a.groupId === Number(idGr));
+          }
+        );
+      } else if (user.role === 'manager' || user.role === 'director') {
+        const agencyIdToMatch = user.agencyId || user.profileData?.agencyId;
+        filteredRequests = requestsArray.filter((req: any) => req.idAgency === Number(agencyIdToMatch) || req.idAgency === Number(user.profileData?.agencyId));
+      }
+
+      // Formatear solicitudes
+      const formattedRequests = await Promise.all(filteredRequests.map(async (req: any, index: number) => {
+        let agencyName = req.agency?.name || '';
+        if (!agencyName && req.idAgency) {
+          agencyName = await fetchAgencyName(req.idAgency);
+        }
+
+        let conceptName = req.concept?.name || '';
+        let conceptId = req.concept?.id || req.idConcept || req.concept;
+        if (!conceptName && conceptId) {
+          conceptName = await fetchConceptName(conceptId);
+        }
+
+        const artists = Array.isArray(req.artists) ? req.artists : [];
+        const apprentices = Array.isArray(req.apprentices) ? req.apprentices : [];
+        const members = [...artists, ...apprentices];
+
+        return {
+          id: req.id || index,
+          entityName: req.artist?.name || req.apprentice?.name || '',
+          groupName: req.groupName || '',
+          agency: agencyName,
+          date: transformDate(req.date) || '',
+          concept: conceptName,
+          members,
+          idAgency: req.agencyId || '',
+          status: req.status || '',
+          type: req.type || '',
+        };
+      }));
+
+      console.log('Solicitudes formateadas:', formattedRequests);
+      setRequests(formattedRequests);
+      console.log('✅ loadAndFormatRequests completado exitosamente');
+      console.log('========== FIN loadAndFormatRequests ==========');
+    } catch (error) {
+      console.error('❌ Error al cargar y formatear solicitudes:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleAccept = async (requestId: number) => {
     try {
       console.log('========== INICIO handleAccept ==========');
       console.log('requestId:', requestId);
-      console.log('user?.role:', user?.role);
-      console.log('user?.id:', user?.id);
-      console.log('user?.profileData:', user?.profileData);
 
       const isArtist = user?.role === 'artist';
-      console.log('isArtist:', isArtist);
 
       const url = isArtist
         ? `http://localhost:3000/api/application/${requestId}/artist-decision`
         : `http://localhost:3000/api/application/${requestId}/apprentice-decision`;
-
-      console.log('URL construida:', url);
 
       const body: any = {
         decision: true,
@@ -207,17 +322,9 @@ const Requests: React.FC = () => {
       if (isArtist) {
         body.apprenticeId = user?.profileData?.IdAp;
         body.groupId = user?.profileData?.IdGr || user?.profileData?.groupId;
-        console.log('Rol: ARTIST - apprenticeId:', body.apprenticeId, '- groupId:', body.groupId);
       } else {
         body.apprenticeId = user?.profileData?.apprenticeId || user?.profileData?.IdAp;
-        console.log('Rol: APPRENTICE - apprenticeId:', body.apprenticeId);
       }
-
-      console.log('Body final a enviar:', JSON.stringify(body, null, 2));
-      console.log('Headers:', {
-        'Authorization': `Bearer ${localStorage.getItem('token')?.substring(0, 20)}...`,
-        'Content-Type': 'application/json',
-      });
 
       const response = await fetch(url, {
         method: 'PATCH',
@@ -228,23 +335,7 @@ const Requests: React.FC = () => {
         body: JSON.stringify(body)
       });
 
-      console.log('handleAccept - response.status:', response.status);
-      console.log('handleAccept - response.statusText:', response.statusText);
-      console.log('handleAccept - response.ok:', response.ok);
-
-      // Leer respuesta del servidor
-      let responseData: any;
-      try {
-        responseData = await response.json();
-        console.log('handleAccept - responseData:', responseData);
-      } catch (e) {
-        console.log('No se pudo parsear respuesta como JSON');
-        const text = await response.text();
-        console.log('Respuesta texto:', text);
-      }
-
       if (!response.ok) {
-        console.error('Response no fue OK. Status:', response.status);
         throw new Error(`Error al aceptar solicitud - Status ${response.status}`);
       }
 
@@ -252,32 +343,12 @@ const Requests: React.FC = () => {
       setSuccessMessage('Solicitud aceptada exitosamente');
       setOpenSuccess(true);
 
-      // Recargar solicitudes después de aceptar
-      const token = localStorage.getItem('token');
-      const endpoint = user?.role === 'apprentice'
-        ? `/api/application?apprenticeId=${user?.id}&agencyId=${user?.agencyId}`
-        : `/api/application?artistId=${user?.id}&agencyId=${user?.agencyId}`;
-
-      console.log('Reloading requests desde endpoint:', endpoint);
-
-      const refreshResponse = await fetch(`http://localhost:3000${endpoint}`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-
-      console.log('refreshResponse.status:', refreshResponse.status);
-
-      if (refreshResponse.ok) {
-        const data = await refreshResponse.json();
-        console.log('Datos recargados:', data);
-        const requestsArray = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
-        setRequests(requestsArray);
-        console.log('✅ Solicitudes reloaded correctamente');
-      }
+      // Recargar y formatear solicitudes
+      await loadAndFormatRequests();
 
       console.log('========== FIN handleAccept EXITOSO ==========');
     } catch (error) {
       console.error('❌ Error al aceptar solicitud:', error);
-      console.error('Error stack:', error instanceof Error ? error.stack : 'sin stack');
       setErrorMessage('Error al aceptar solicitud');
       setOpenError(true);
       console.log('========== FIN handleAccept CON ERROR ==========');
@@ -293,9 +364,6 @@ const Requests: React.FC = () => {
     try {
       console.log('========== INICIO handleDeny ==========');
       console.log('requestId:', requestId);
-      console.log('user?.role:', user?.role);
-      console.log('isArtist:', isArtist);
-      console.log('URL construida:', url);
 
       const body: any = {
         decision: false,
@@ -304,13 +372,9 @@ const Requests: React.FC = () => {
       if (isArtist) {
         body.apprenticeId = user?.profileData?.IdAp || user?.profileData?.apprenticeId;
         body.groupId = user?.profileData?.IdGr || user?.profileData?.groupId;
-        console.log('Rol: ARTIST - apprenticeId:', body.apprenticeId, '- groupId:', body.groupId);
       } else {
         body.apprenticeId = user?.profileData?.apprenticeId || user?.profileData?.IdAp;
-        console.log('Rol: APPRENTICE - apprenticeId:', body.apprenticeId);
       }
-
-      console.log('Body final a enviar:', JSON.stringify(body, null, 2));
 
       const response = await fetch(url, {
         method: 'PATCH',
@@ -321,56 +385,20 @@ const Requests: React.FC = () => {
         body: JSON.stringify(body)
       });
 
-      console.log('handleDeny - response.status:', response.status);
-      console.log('handleDeny - response.statusText:', response.statusText);
-      console.log('handleDeny - response.ok:', response.ok);
-
-      // Leer respuesta del servidor
-      let responseData: any;
-      try {
-        responseData = await response.json();
-        console.log('handleDeny - responseData:', responseData);
-      } catch (e) {
-        console.log('No se pudo parsear respuesta como JSON');
-        const text = await response.text();
-        console.log('Respuesta texto:', text);
-      }
-
       if (!response.ok) {
-        console.error('Response no fue OK. Status:', response.status);
-        throw new Error(`Error al negar solicitud - Status ${response.status}`);
+        throw new Error(`Error al rechazar solicitud - Status ${response.status}`);
       }
 
       console.log('✅ Solicitud rechazada correctamente');
       setSuccessMessage('Solicitud rechazada exitosamente');
       setOpenSuccess(true);
 
-      // Recargar solicitudes después de rechazar
-      const token = localStorage.getItem('token');
-      const endpoint = user?.role === 'apprentice'
-        ? `/api/application?apprenticeId=${user?.id}&agencyId=${user?.agencyId}`
-        : `/api/application?artistId=${user?.id}&agencyId=${user?.agencyId}`;
-
-      console.log('Reloading requests desde endpoint:', endpoint);
-
-      const refreshResponse = await fetch(`http://localhost:3000${endpoint}`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-
-      console.log('refreshResponse.status:', refreshResponse.status);
-
-      if (refreshResponse.ok) {
-        const data = await refreshResponse.json();
-        console.log('Datos recargados:', data);
-        const requestsArray = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
-        setRequests(requestsArray);
-        console.log('✅ Solicitudes reloaded correctamente');
-      }
+      // Recargar solicitudes
+      await loadAndFormatRequests();
 
       console.log('========== FIN handleDeny EXITOSO ==========');
     } catch (error) {
-      console.error('❌ Error al negar solicitud:', error);
-      console.error('Error stack:', error instanceof Error ? error.stack : 'sin stack');
+      console.error('❌ Error al rechazar solicitud:', error);
       setErrorMessage('Error al rechazar solicitud');
       setOpenError(true);
       console.log('========== FIN handleDeny CON ERROR ==========');
@@ -417,8 +445,12 @@ const Requests: React.FC = () => {
         throw new Error('Error al eliminar solicitud');
       }
 
-      setRequests(prev => prev.filter(req => req.id !== requestToDelete));
+      console.log('Solicitud eliminada exitosamente:', requestToDelete);
+      setSuccessMessage('Solicitud eliminada exitosamente');
       setOpenAccept(true);
+
+      // Recargar solicitudes
+      await loadAndFormatRequests();
     } catch (error) {
       console.error('Error al eliminar solicitud:', error);
       setErrorMessage(error instanceof Error ? error.message : 'Error al eliminar solicitud');
@@ -444,11 +476,12 @@ const Requests: React.FC = () => {
         throw new Error('Error al actualizar solicitud');
       }
 
-      const data = await response.json();
-      setRequests(prev =>
-        prev.map(req => req.id === updatedRow.id ? (data.data || data) : req)
-      );
+      console.log('Solicitud actualizada exitosamente:', updatedRow.id);
+      setSuccessMessage('Solicitud actualizada exitosamente');
       setOpenAccept(true);
+
+      // Recargar solicitudes
+      await loadAndFormatRequests();
     } catch (error) {
       console.error('Error al actualizar solicitud:', error);
       setErrorMessage(error instanceof Error ? error.message : 'Error al actualizar solicitud');
@@ -477,7 +510,6 @@ const Requests: React.FC = () => {
       const idAp = user?.profileData?.IdAp || user?.profileData?.apprenticeId;
       const idGr = user?.profileData?.IdGr || user?.profileData?.groupId;
 
-
       console.log('newrequest', newrequest)
       // Separar miembros en apprentices y artists según el tipo, incluyendo los roles
       const members = Array.isArray(newrequest.members) ? newrequest.members : [];
@@ -490,7 +522,7 @@ const Requests: React.FC = () => {
           // Para artistas, memberId viene como "apprenticeId,groupId" (string)
           let apprenticeId = 0;
           let groupId = 0;
-          
+
           // Parsear el string "apprenticeId,groupId"
           if (typeof p.memberId === 'string' && p.memberId.includes(',')) {
             const parts = p.memberId.split(',');
@@ -504,7 +536,7 @@ const Requests: React.FC = () => {
             apprenticeId = Number(p.memberId) || 0;
             groupId = 0;
           }
-          
+
           console.log(`[handleCreateSave] Artist ${p.memberId} parseado como [${apprenticeId}, ${groupId}]`);
           return [apprenticeId, groupId, p.role];
         });
@@ -513,8 +545,8 @@ const Requests: React.FC = () => {
 
       const payload: any = {
         groupName: newrequest.groupName || newrequest.name,
-        idAgency: agencyUser.id, //user?.profileData?.agencyId || newrequest.idAgency || agency.agencyId,
-        idConcept:  Number(newrequest.concept),
+        idAgency: agencyUser.id,
+        idConcept: Number(newrequest.concept),
         idApprentice: idAp,
         idGroup: idGr
       };
@@ -550,9 +582,12 @@ const Requests: React.FC = () => {
         throw new Error(errorData?.error || `Error al crear solicitud (status ${response.status})`);
       }
 
-      const data = await response.json();
-      setRequests(prev => [...prev, (data.data || data)]);
+      console.log('Solicitud creada exitosamente');
+      setSuccessMessage('Solicitud creada exitosamente');
       setOpenAccept(true);
+
+      // Recargar solicitudes
+      await loadAndFormatRequests();
     } catch (error) {
       console.error('Error al crear solicitud:', error);
       setErrorMessage(error instanceof Error ? error.message : 'Error al crear solicitud');
@@ -589,7 +624,7 @@ const Requests: React.FC = () => {
         // Extraer nombre y rol de cada miembro (artista o aprendiz)
         const membersList = members.map((member: any) => ({
           name: member.name || member.realName || 'Sin nombre',
-          role: member.role ||member.rol|| 'Sin rol'
+          role: member.role || member.rol || 'Sin rol'
         }));
         console.log("membersList", membersList);
 
@@ -735,28 +770,28 @@ const Requests: React.FC = () => {
     renderCell: (params) => {
       const request = params.row as any;
       const members = Array.isArray(request.members) ? request.members : [];
-      
+
       // Buscar el miembro que coincida con el usuario logueado
       let userStatus = '';
       let foundMember: any = null;
-      
-      
+
+
       const apprenticeId = user?.profileData?.apprenticeId || user.id;
       const idAp = user?.profileData?.IdAp;
       const idGr = user?.profileData?.IdGr;
-      foundMember = user?.role==='apprentice' ? 
-       members.find((m: any) => m.apprenticeId === Number(apprenticeId)) 
-      :members.find((m: any) => m.idApprentice === Number(idAp) && m.groupId === Number(idGr)); ;
+      foundMember = user?.role === 'apprentice' ?
+        members.find((m: any) => m.apprenticeId === Number(apprenticeId))
+        : members.find((m: any) => m.idApprentice === Number(idAp) && m.groupId === Number(idGr));;
       if (foundMember) {
-          userStatus = foundMember.status
+        userStatus = foundMember.status
 
       }
-   
-      
+
+
       if (!foundMember) {
         console.log(`Miembro no encontrado en solicitud ${request.id}. Members:`, members);
       }
-      
+
       return userStatus || '-';
     }
   };
@@ -766,180 +801,9 @@ const Requests: React.FC = () => {
     ? [...baseColumns, actionsColumn, ...(user?.role === 'apprentice' || user?.role === 'artist' ? [statusColumn] : [])]
     : baseColumns;
 
+  // Cargar solicitudes cuando el usuario cambia
   useEffect(() => {
-    const fetchRequests = async () => {
-      setIsLoading(true);
-      try {
-        console.log('========== INICIO fetchRequests ==========');
-        if (!user) {
-          console.log('No hay usuario, retornando');
-          return;
-        }
-
-        console.log('Usuario actual:', {
-          id: user.id,
-          role: user.role,
-          agencyId: user.agencyId,
-          profileData: user.profileData
-        });
-
-        let endpoint = '';
-
-        switch (user.role) {
-          case 'apprentice':
-            endpoint = `/api/application?apprenticeId=${user.id}&agencyId=${user.agencyId}`;
-            break;
-
-          case 'artist':
-            endpoint = `/api/application?artistId=${user.id}&agencyId=${user.agencyId}`;
-            break;
-
-          case 'manager':
-          case 'director':
-            endpoint = `/api/application?agencyId=${user.agencyId}`;
-            break;
-
-          case 'admin':
-            endpoint = '/api/application';
-            break;
-
-          default:
-            console.error('Rol no reconocido:', user.role);
-            return;
-        }
-
-        console.log('Endpoint construido:', endpoint);
-
-        // ============================================
-        // SECCIÓN: BACKEND ENDPOINT
-        // ============================================
-
-        const token = localStorage.getItem('token');
-        console.log('Token presente:', !!token);
-
-        const response = await fetch(`http://localhost:3000${endpoint}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-
-        if (!response.ok) {
-          throw new Error(`Error al obtener solicitudes - Status ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log('Data recibida del backend:', data);
-
-        const requestsArray = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
-        console.log('Array de solicitudes extraído:', requestsArray);
-
-        let filteredRequests = requestsArray;
-
-        // Filtrar solicitudes según rol y datos del usuario
-        if (user.role === 'apprentice') {
-          console.log('Filtrando por APPRENTICE');
-          const apprenticeId = user.profileData?.apprenticeId;
-          console.log('apprenticeId a filtrar:', apprenticeId);
-
-          filteredRequests = requestsArray.filter(
-            (req: any) => {
-              const hasApprentices = Array.isArray(req.apprentices);
-              const matches = hasApprentices && req.apprentices.some((a: any) => a.apprenticeId === Number(apprenticeId));
-              console.log(`Solicitud ${req.id}: hasApprentices=${hasApprentices}, matches=${matches}`);
-              return matches;
-            }
-          );
-        } else if (user.role === 'artist') {
-          console.log('Filtrando por ARTIST');
-          const idAp = user.profileData?.IdAp;
-          const idGr = user.profileData?.IdGr;
-          console.log('idAp a filtrar:', idAp, 'idGr a filtrar:', idGr);
-
-          filteredRequests = requestsArray.filter(
-            (req: any) => {
-              const hasArtists = Array.isArray(req.artists);
-              const matches = hasArtists && req.artists.some(
-                (a: any) => {
-                  const idApprenticeMatch = a.idApprentice === Number(idAp);
-                  const groupIdMatch = a.groupId === Number(idGr);
-                  console.log(`  Solicitud ${req.id} - Artist: idApprentice=${a.idApprentice} (match=${idApprenticeMatch}), groupId=${a.groupId} (match=${groupIdMatch})`);
-                  return idApprenticeMatch && groupIdMatch;
-                }
-              );
-              console.log(`Solicitud ${req.id}: hasArtists=${hasArtists}, matches=${matches}`);
-              return matches;
-            }
-          );
-        } else if (user.role === 'manager' || user.role === 'director') {
-          console.log('Filtrando por MANAGER/DIRECTOR');
-          const agencyIdToMatch = user.agencyId || user.profileData?.agencyId;
-          console.log('agencyId a filtrar:', agencyIdToMatch);
-
-          filteredRequests = requestsArray.filter(
-            (req: any) => {
-              const matches = req.idAgency === Number(agencyIdToMatch) || req.idAgency === Number(user.profileData?.agencyId);
-              console.log(`Solicitud ${req.id}: idAgency=${req.idAgency}, match=${matches}`);
-              return matches;
-            }
-          );
-        }
-
-        console.log('Solicitudes después del filtrado:', filteredRequests.length);
-
-        // Obtener nombres de agencia y concepto para cada solicitud
-        const formattedRequests = await Promise.all(filteredRequests.map(async (req: any, index: number) => {
-          console.log(`Formateando solicitud ${req.id}...`);
-
-          // Obtener nombre de agencia
-          let agencyName = req.agency?.name || '';
-          if (!agencyName && req.idAgency) {
-            agencyName = await fetchAgencyName(req.idAgency);
-          }
-
-          // Obtener nombre de concepto
-          let conceptName = req.concept?.name || '';
-          let conceptId = req.concept?.id || req.idConcept || req.concept;
-          if (!conceptName && conceptId) {
-            conceptName = await fetchConceptName(conceptId);
-          }
-
-          // Unir artistas y aprendices
-          const artists = Array.isArray(req.artists) ? req.artists : [];
-          const apprentices = Array.isArray(req.apprentices) ? req.apprentices : [];
-          const members = [...artists, ...apprentices];
-          
-          console.log("artists solicitud", artists);
-          console.log("apprentices solicitud", apprentices);
-          console.log("members solicitud", members);
-
-          return {
-            id: req.id || index,
-            entityName: req.artist?.name || req.apprentice?.name || '',
-            groupName: req.groupName || '',
-            agency: agencyName,
-            date: transformDate(req.date) || '',
-            concept: conceptName,
-            members,
-            idAgency: req.agencyId || '',
-            status: req.status || '',
-            type: req.type || '',
-          };
-        }));
-
-        console.log('Solicitudes formateadas:', formattedRequests);
-        console.log('Cantidad final de solicitudes:', formattedRequests.length);
-        setRequests(formattedRequests);
-        console.log('✅ fetchRequests completado exitosamente');
-        console.log('========== FIN fetchRequests ==========');
-      } catch (error) {
-        console.error('❌ Error al cargar solicitudes:', error);
-        console.error('Error stack:', error instanceof Error ? error.stack : 'sin stack');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchRequests();
+    loadAndFormatRequests();
   }, [user]);
 
   if (!user) {
@@ -970,7 +834,7 @@ const Requests: React.FC = () => {
           onEditSave={handleEditSave}
           onCreateSave={handleCreateSave}
           showCreateButton={user.role === 'admin' || user.role === 'apprentice' || user.role === 'artist'}
-          showEditButton={user.role === 'manager' || user.role === 'director' || user.role === 'admin'}
+          showEditButton={false}
           constraints={requestConstraints}
           createEntity="request"
           userRole={user?.role}

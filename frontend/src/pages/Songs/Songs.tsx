@@ -45,7 +45,7 @@ const Songs: React.FC = () => {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
       }
     },
-    { field: 'genre', headerName: 'Género', width: 130 },
+    { field: 'gender', headerName: 'Género', width: 130 },
     {
       field: 'releaseDate',
       headerName: 'Fecha de Lanzamiento',
@@ -84,7 +84,7 @@ const Songs: React.FC = () => {
           id: song.id ?? index,
           title: song.title,
           producer: song.producer,
-          genre: song.gender,
+          gender: song.gender,
           releaseDate: song.releaseDate,
           albums: song.albums
         }));

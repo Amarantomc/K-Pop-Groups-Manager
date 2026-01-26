@@ -472,6 +472,7 @@ const Contracts: React.FC = () => {
             constraints={contractConstraints}
             createEntity="contract"
             userRole={user?.role}
+            showCreateButton={false}
           />
           <ModalCreate
             isOpen={showCreateModal}

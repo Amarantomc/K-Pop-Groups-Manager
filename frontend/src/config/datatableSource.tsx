@@ -219,7 +219,7 @@ export const songColumns: GridColDef[] = [
     { field: 'title', headerName: 'Título Canción', width: 200 },
     { field: 'producer', headerName: 'Productor', width: 150 },
     { field: 'releaseDate', headerName: 'Fecha Lanzamiento', width: 150 },
-    { field: 'genre', headerName: 'Género', width: 120 },
+    { field: 'gender', headerName: 'Género', width: 120 },
     {   field:'albums',
         headerName:'Álbums',
         width:200,
