@@ -5,40 +5,40 @@ import { Types } from "../../infrastructure/di/Types";
 import { RoleMiddleware } from "../middlewares/RoleMiddleware";
 import { AuthMiddleware, type AuthenticatedRequest } from "../middlewares/AuthMiddleware";
 
-    export class ArtistRoutes{
-        private router: Router;
-        private artistController: ArtistController;
-  
+export class ArtistRoutes {
+  private router: Router;
+  private artistController: ArtistController;
+
 
   constructor() {
     this.router = Router();
-    this.artistController =container.get<ArtistController>(Types.ArtistController)
+    this.artistController = container.get<ArtistController>(Types.ArtistController)
     this.setupRoutes();
   }
 
   private setupRoutes(): void {
 
     //this.router.use(AuthMiddleware.authenticate());
-    this.router.post('/',RoleMiddleware.onlyStaff(), (req, res) => this.artistController.createArtist(req, res))
-    this.router.get('/:apprenticeId&:groupId', (req, res) => this.artistController.findById(req,res))
-    this.router.put('/:apprenticeId&:groupId',RoleMiddleware.onlyStaff(), (req, res) => this.artistController.updateArtist(req, res))
-    this.router.delete('/:apprenticeId&:groupId',RoleMiddleware.onlyStaff(), (req, res) => this.artistController.deleteArtist(req, res))
-    
-    this.router.get('/query/:id', (req, res) => this.artistController.getArtistsOnDebut(req, res));
-    this.router.post('/income/',(req,res)=> this.artistController.getTotalIncome(req,res))
-    this.router.post('/bestAlbums/',(req,res)=> this.artistController.getBestAlbums(req,res))
-    this.router.post('/succes/',(req,res)=> this.artistController.getIncomeAndSucces(req,res))
-    this.router.get('/agencyChanges/',(req,res)=> this.artistController.getWhoChangeAgencyAndGroup(req,res))
-    this.router.get('/soloArtists/',(req,res)=> this.artistController.getSoloArtistsProfesionalHistory(req,res))
-    
-    this.router.get('/',(req, res) => this.artistController.getAll(req, res))
-    this.router.get('/:id', (req, res) => this.artistController.getArtistsByAgency(req, res));
-   
+    this.router.post('/', AuthMiddleware.authenticate(), RoleMiddleware.onlyStaff(), (req, res) => this.artistController.createArtist(req, res))
+    this.router.get('/:apprenticeId&:groupId', (req, res) => this.artistController.findById(req, res))
+    this.router.put('/:apprenticeId&:groupId', AuthMiddleware.authenticate(), RoleMiddleware.onlyStaff(), (req, res) => this.artistController.updateArtist(req, res))
+    this.router.delete('/:apprenticeId&:groupId', AuthMiddleware.authenticate(), RoleMiddleware.onlyStaff(), (req, res) => this.artistController.deleteArtist(req, res))
 
-   
+    this.router.get('/query/:id', (req, res) => this.artistController.getArtistsOnDebut(req, res));
+    this.router.post('/income/', (req, res) => this.artistController.getTotalIncome(req, res))
+    this.router.post('/bestAlbums/', (req, res) => this.artistController.getBestAlbums(req, res))
+    this.router.post('/succes/', (req, res) => this.artistController.getIncomeAndSucces(req, res))
+    this.router.get('/agencyChanges/', (req, res) => this.artistController.getWhoChangeAgencyAndGroup(req, res))
+    this.router.get('/soloArtists/', (req, res) => this.artistController.getSoloArtistsProfesionalHistory(req, res))
+
+    this.router.get('/', (req, res) => this.artistController.getAll(req, res))
+    this.router.get('/:id', (req, res) => this.artistController.getArtistsByAgency(req, res));
+
+
+
   }
 
   public getRouter(): Router {
     return this.router;
   }
-    }
+}
