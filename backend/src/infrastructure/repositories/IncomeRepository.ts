@@ -48,7 +48,7 @@ export class IncomeRepository implements IIncomeRepository
         const income = await this.db.Ingreso.findFirst({
           where: { idIng: Number(id) },
           include: {
-            actividad: { select: { responsable: true } }
+            actividad: { select: { tipoActividad: true } }
           }
         });
       
@@ -119,11 +119,11 @@ export class IncomeRepository implements IIncomeRepository
         const incomes = await this.db.Ingreso.findMany({
           include: {
             actividad: {
-              select: { responsable: true } // o el campo que quieras mostrar como "activityName"
+              select: { tipoActividad: true } // o el campo que quieras mostrar como "activityName"
             }
           }
         });
-      
+        console.log(incomes);
         return IncomeResponseDto.toEntities(incomes);
       }
 }

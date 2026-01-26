@@ -6,7 +6,7 @@ export default class Income {
     readonly amount: number;
     readonly description: string;
     readonly date: Date | string;
-    readonly activityName?: string;
+    readonly activityType?: string;
 
     //readonly responsible: string;
 
@@ -16,7 +16,7 @@ export default class Income {
         amount: number;
         description: string;
         date: Date | string;
-        activityName: string;
+        activityType: string;
         //responsible: string;
     }) {
         this.idIncome = attrs.idIncome;
@@ -24,7 +24,7 @@ export default class Income {
         this.amount = attrs.amount;
         this.description = attrs.description;
         this.date = attrs.date;
-        this.activityName = attrs.activityName;
+        this.activityType = attrs.activityType;
         //this.responsible = attrs.responsible;
     }
 }
