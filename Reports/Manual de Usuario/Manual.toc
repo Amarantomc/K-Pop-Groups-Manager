@@ -1,0 +1,77 @@
+\babel@toc {spanish}{}\relax 
+\contentsline {section}{\numberline {1}Introducción}{3}{section.1}%
+\contentsline {section}{\numberline {2}Requisitos Previos}{3}{section.2}%
+\contentsline {section}{\numberline {3}Requerimientos Técnicos}{3}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Requerimientos de Máquina (Cliente)}{3}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Requerimientos de Red}{3}{subsection.3.2}%
+\contentsline {section}{\numberline {4}Requerimientos de Software}{4}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Software Requerido en Servidor}{4}{subsection.4.1}%
+\contentsline {section}{\numberline {5}Procedimiento de Instalación}{4}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Instalación en Servidor}{4}{subsection.5.1}%
+\contentsline {subsubsection}{\numberline {5.1.1}Paso 1: Clonar el Repositorio}{4}{subsubsection.5.1.1}%
+\contentsline {subsubsection}{\numberline {5.1.2}Paso 2: Instalar Dependencias Backend}{4}{subsubsection.5.1.2}%
+\contentsline {subsubsection}{\numberline {5.1.3}Paso 3: Configurar Variables de Entorno}{4}{subsubsection.5.1.3}%
+\contentsline {subsubsection}{\numberline {5.1.4}Paso 4: Configurar Base de Datos}{4}{subsubsection.5.1.4}%
+\contentsline {subsubsection}{\numberline {5.1.5}Paso 5: Instalar Dependencias Frontend}{4}{subsubsection.5.1.5}%
+\contentsline {subsubsection}{\numberline {5.1.6}Paso 6: Iniciar la Aplicación}{5}{subsubsection.5.1.6}%
+\contentsline {subsection}{\numberline {5.2}Verificación de Instalación}{5}{subsection.5.2}%
+\contentsline {section}{\numberline {6}Acceso al Sistema}{5}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Inicio de Sesión}{5}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Pantalla de Inicio del Sistema}{6}{subsection.6.2}%
+\contentsline {section}{\numberline {7}Roles de Usuario}{6}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Administrador}{6}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Director}{6}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Manager}{6}{subsection.7.3}%
+\contentsline {subsection}{\numberline {7.4}Artista}{7}{subsection.7.4}%
+\contentsline {subsection}{\numberline {7.5}Aprendiz}{7}{subsection.7.5}%
+\contentsline {section}{\numberline {8}Navegación General del Sistema}{7}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Elementos de la Interfaz}{7}{subsection.8.1}%
+\contentsline {section}{\numberline {9}Gestión de Agencias}{7}{section.9}%
+\contentsline {subsection}{\numberline {9.1}Registro de una Agencia}{7}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}Consulta y Edición de Agencias}{8}{subsection.9.2}%
+\contentsline {section}{\numberline {10}Gestión de Aprendices}{8}{section.10}%
+\contentsline {subsection}{\numberline {10.1}Registro de un Aprendiz}{8}{subsection.10.1}%
+\contentsline {subsection}{\numberline {10.2}Evaluación de Aprendices}{9}{subsection.10.2}%
+\contentsline {subsection}{\numberline {10.3}Conversión de Aprendiz a Artista}{10}{subsection.10.3}%
+\contentsline {section}{\numberline {11}Gestión de Grupos}{10}{section.11}%
+\contentsline {subsection}{\numberline {11.1}Creación de un Grupo}{10}{subsection.11.1}%
+\contentsline {subsection}{\numberline {11.2}Consulta de Grupos}{10}{subsection.11.2}%
+\contentsline {subsection}{\numberline {11.3}Asociación de Concepto}{11}{subsection.11.3}%
+\contentsline {subsection}{\numberline {11.4}Definición del Concepto Visual}{11}{subsection.11.4}%
+\contentsline {subsection}{\numberline {11.5}Artistas sin Grupo(Solista)}{12}{subsection.11.5}%
+\contentsline {section}{\numberline {12}Gestión de Actividades e Ingresos}{12}{section.12}%
+\contentsline {subsection}{\numberline {12.1}Registro de una Actividad e Ingreso}{12}{subsection.12.1}%
+\contentsline {subsection}{\numberline {12.2}Participación Individual de Artistas}{13}{subsection.12.2}%
+\contentsline {subsection}{\numberline {12.3}Registro de Ingresos}{14}{subsection.12.3}%
+\contentsline {subsection}{\numberline {12.4}Consulta de Actividades e Ingresos}{14}{subsection.12.4}%
+\contentsline {section}{\numberline {13}Gestión Musical}{14}{section.13}%
+\contentsline {subsection}{\numberline {13.1}Gestión de Álbumes}{14}{subsection.13.1}%
+\contentsline {subsection}{\numberline {13.2}Registro de un Álbumes}{15}{subsection.13.2}%
+\contentsline {subsection}{\numberline {13.3}Gestión de Canciones}{15}{subsection.13.3}%
+\contentsline {subsection}{\numberline {13.4}Registro de una Canción}{15}{subsection.13.4}%
+\contentsline {subsection}{\numberline {13.5}Premios}{16}{subsection.13.5}%
+\contentsline {subsection}{\numberline {13.6}Listas de Popularidad}{16}{subsection.13.6}%
+\contentsline {subsection}{\numberline {13.7}Gestión de Listas}{17}{subsection.13.7}%
+\contentsline {subsection}{\numberline {13.8}Consulta de Producción Musical}{17}{subsection.13.8}%
+\contentsline {section}{\numberline {14}Gestión de Contratos}{18}{section.14}%
+\contentsline {subsection}{\numberline {14.1}Registro de Contratos con Artistas y con Grupos}{18}{subsection.14.1}%
+\contentsline {subsection}{\numberline {14.2}Consulta de Contratos}{18}{subsection.14.2}%
+\contentsline {section}{\numberline {15}Gestión de Talento}{19}{section.15}%
+\contentsline {subsection}{\numberline {15.1}Captación de Aprendices}{19}{subsection.15.1}%
+\contentsline {subsection}{\numberline {15.2}Captación de Artistas}{19}{subsection.15.2}%
+\contentsline {subsection}{\numberline {15.3}Captación de Grupos}{20}{subsection.15.3}%
+\contentsline {section}{\numberline {16}Gestión de Solicitudes}{20}{section.16}%
+\contentsline {subsection}{\numberline {16.1}Creación de Solicitudes}{21}{subsection.16.1}%
+\contentsline {subsection}{\numberline {16.2}Estados de las Solicitudes}{21}{subsection.16.2}%
+\contentsline {subsection}{\numberline {16.3}Gestión de Solicitudes por la Agencia}{21}{subsection.16.3}%
+\contentsline {subsection}{\numberline {16.4}Consulta de Solicitudes por el Usuario}{22}{subsection.16.4}%
+\contentsline {subsection}{\numberline {16.5}Consultas Especializadas}{22}{subsection.16.5}%
+\contentsline {subsection}{\numberline {16.6}Opciones de Consulta}{22}{subsection.16.6}%
+\contentsline {subsection}{\numberline {16.7}Acceso a las Consultas}{23}{subsection.16.7}%
+\contentsline {subsubsection}{\numberline {16.7.1}Visualización de Resultados}{23}{subsubsection.16.7.1}%
+\contentsline {subsection}{\numberline {16.8}Gestión del Perfil de Usuario}{24}{subsection.16.8}%
+\contentsline {subsection}{\numberline {16.9}Acceso al Perfil}{24}{subsection.16.9}%
+\contentsline {subsubsection}{\numberline {16.9.1}Cambio de Contraseña}{25}{subsubsection.16.9.1}%
+\contentsline {subsubsection}{\numberline {16.9.2}Eliminación de Cuenta}{26}{subsubsection.16.9.2}%
+\contentsline {subsubsection}{\numberline {16.9.3}Cierre de Sesión}{26}{subsubsection.16.9.3}%
+\contentsline {section}{\numberline {17}Consideraciones Finales}{26}{section.17}%

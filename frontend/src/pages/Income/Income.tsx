@@ -64,50 +64,98 @@ const Income: React.FC = () => {
       try {
         if (!user) return;
 
-        let endpoint = '';
+        // Traer todos los ingresos sin filtrar por parámetro
+        const response = await fetch(`http://localhost:3000/api/income`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error('Error al obtener ingresos');
+        }
+        
+        const data = await response.json();
+        const incomesArray = Array.isArray(data.data) ? data.data : Array.isArray(data) ? data : [];
+        
+        console.log('=== ESTRUCTURA DE DATOS RECIBIDA DEL GET /api/income ===');
+        console.log('Respuesta completa:', data);
+        console.log('Array de ingresos:', incomesArray);
+        if (incomesArray.length > 0) {
+          console.log('Primer ingreso (estructura completa):', incomesArray[0]);
+          console.log('Claves del primer ingreso:', Object.keys(incomesArray[0]));
+        }
+        console.log('=== FIN LOG ===');
+
+        let filteredIncomes = incomesArray;
+
+        // Filtrar ingresos según rol
         switch (user.role) {
-          case 'artist':
-            endpoint = `/api/income?artistId=${user.profileData?.artistId || user.id}`;
-            break;
-          case 'manager':
-            endpoint = `/api/income?agencyId=${user.agencyId}`;
-            break;
-          case 'director':
-            endpoint = `/api/income?agencyId=${user.agencyId}`;
-            break;
           case 'admin':
-            endpoint = '/api/income';
+            // Admin ve todos los ingresos
+            console.log('Admin - Mostrando todos los ingresos');
             break;
+
+          case 'manager':
+          case 'director':
+            // Manager y Director ven solo ingresos de su agencia
+            console.log('Filtrando ingresos para manager/director');
+            const agencyIdToMatch = user.agencyId || user.profileData?.agencyId;
+            console.log('AgencyId a buscar:', agencyIdToMatch);
+            
+            filteredIncomes = incomesArray.filter((income: any) => {
+              const incomeAgencyId = income.agency?.id;
+              console.log('Ingreso - agencyId:', incomeAgencyId, 'Match:', incomeAgencyId === Number(agencyIdToMatch) || incomeAgencyId === agencyIdToMatch);
+              return incomeAgencyId === Number(agencyIdToMatch) || incomeAgencyId === agencyIdToMatch;
+            });
+            break;
+
+          case 'artist':
+            // Artista ve ingresos donde está involucrado (individuales o de grupo)
+            const artistIdAp = user.profileData?.IdAp;
+            const artistIdGr = user.profileData?.IdGr;
+            console.log('Filtrando ingresos para artista - IdAp:', artistIdAp, 'IdGr:', artistIdGr);
+
+            filteredIncomes = incomesArray.filter((income: any) => {
+              // Ingresos individuales del artista
+              const isIndividualIncome = (
+                income.type === 'Artist' &&
+                income.artist?.ApprenticeId === Number(artistIdAp) &&
+                income.artist?.GroupId === Number(artistIdGr)
+              );
+              
+              // Ingresos de grupo donde el artista está en ese grupo
+              // Buscar si el IdAp e IdGr del artista coinciden con algún miembro del grupo
+              const isGroupIncome = (
+                income.type === 'Group' &&
+                Array.isArray(income.group?.members) &&
+                income.group.members.some((member: any) => 
+                  member.apprenticeId === Number(artistIdAp) && 
+                  member.groupId === Number(artistIdGr)
+                )
+              );
+              
+              console.log('Ingreso:', income.type, 'Individual:', isIndividualIncome, 'Group:', isGroupIncome);
+              return isIndividualIncome || isGroupIncome;
+            });
+            break;
+
           default:
             console.error('Rol no reconocido:', user.role);
             return;
         }
 
-        // ============================================
-        // SECCIÓN: BACKEND ENDPOINT
-        const response = await fetch(`http://localhost:3000${endpoint}`, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        });
-        if (!response.ok) {
-          throw new Error('Error al obtener ingresos');
-        }
-        const data = await response.json();
-        console.log(data.data)
-
-        const formattedData = data.data.map((income: any, index: number) => ({
+        const formattedData = filteredIncomes.map((income: any, index: number) => ({
             id: income.idIncome ?? index,
             eventType : income.eventType,
             idActivity : income.idActivity,
             description : income.description,
             date : income.date,
             amount : income.amount
-          }))
+          }));
+        
+        console.log('Ingresos formateados:', formattedData);
         setIncomes(formattedData);
-        // ============================================
-        // FIN SECCIÓN: BACKEND ENDPOINT
-        // ============================================
 
       } catch (error) {
         console.error('Error al cargar ingresos:', error);

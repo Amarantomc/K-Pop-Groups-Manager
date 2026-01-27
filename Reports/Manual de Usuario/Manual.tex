@@ -1,0 +1,875 @@
+\documentclass[12pt,a4paper,spanish,oneside]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\usepackage{lmodern}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{amssymb}
+\usepackage{setspace}
+\usepackage{parskip}
+
+\graphicspath{{images/}}
+
+\geometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm}
+\setlength{\headheight}{14.5pt}
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\thepage}
+\lhead{\textit{Manual de Usuario - K-POP World}}
+\cfoot{\small Manual de Usuario - K-POP World }
+
+\title{\textbf{MANUAL DE USUARIO} \\[0.5cm] \Large Sistema de Gestión de Agencias de K-Pop}
+\author{Equipo de Desarrollo}
+\date{16 de Enero de 2026 \\ Versión 2.0}
+
+\begin{document}
+	
+	% Portada personalizada
+	\begin{titlepage}
+		\centering
+		\vspace*{0.5cm}
+		
+		{\Large \textbf{MANUAL DE USUARIO}}
+		
+		\vspace{1cm}
+		
+		{\Large \textbf{K-POP World}}
+		
+		\vspace{1.5cm}
+		
+		% Logo de la aplicación
+		\includegraphics[width=0.35\textwidth]{../KPopWorld logo.png}
+		
+		\vspace{1.5cm}
+		
+		{\Large \textcolor{gray}{Sistema de Gestión de Agencias de K-Pop}}
+		
+		\vspace{0.5cm}
+		
+		\vspace{1cm}
+		
+		{\large \textbf{Equipo de Desarrollo Responsable}}
+		
+		\vspace{0.3cm}
+		
+		{\normalsize \textbf{Equipo \#1}}
+		
+		\vspace{0.5cm}
+		
+		\begin{tabular}{l}
+			\textit{Ronald Provance Valladares} \quad (C-312) \quad @Ron\_1301 \\
+			\textit{Agustín Alberto Carbajal Romero} \quad (C-312) \quad @lil\_agus03 \\
+			\textit{Daniel Amaranto Mares García} \quad (C-312) \quad @amarantomc \\
+			\textit{Dylan Ramsés Cabrera Morales} \quad (C-312) \quad @dylan2108 \\
+			\textit{Sheila Roque Alemán} \quad (C-312) \quad @Luminara03
+		\end{tabular}
+		
+		\vspace{3cm}
+		
+		\vfill
+		
+		\vspace{0.5cm}
+		
+	\end{titlepage}
+	
+	\newpage
+	
+	\tableofcontents
+	\newpage
+	
+	\section{Introducción}
+	
+	El presente manual de usuario describe el funcionamiento del sistema web de gestión
+	de agencias y grupos de K-pop, cuyo objetivo es facilitar la administración de información relacionada con agencias de entretenimiento, grupos musicales, artistas, aprendices, actividades, contratos y producción musical.
+	
+	\vspace{0.3cm}
+	
+	El documento está dirigido a usuarios finales del sistema, tales como administradores de la aplicación,
+	directores y managers de las agencias, artistas y aprendices de la industria musical del K-Pop, y proporciona una guía práctica
+	para el uso correcto de las funcionalidades disponibles según el rol del usuario.
+	
+	
+	\section{Requisitos Previos}
+	
+	Para acceder y utilizar el sistema de gestión de agencias de K-pop, es necesario contar con un navegador web moderno como Chrome, Firefox, Safari o Edge y un lector de PDF, ya sea Adobe Reader, WPS u otro (para exportaciones). Además, se requiere una conexión a internet estable, una cuenta de usuario activa registrada en el sistema, y las credenciales de acceso proporcionadas por el administrador correspondiente.
+	
+	\section{Requerimientos Técnicos}
+	
+	\subsection{Requerimientos de Máquina (Cliente)}
+	
+	\begin{table}[H]
+		\centering
+		\caption{Especificaciones Mínimas de Máquina-Cliente}
+		\begin{tabular}{|l|l|}
+			\hline
+			\textbf{Componente} & \textbf{Especificación Mínima} \\
+			\hline
+			Procesador & Intel Core i3 o equivalente (2 GHz+) \\
+			\hline
+			Memoria RAM & 4 GB mínimo (8 GB recomendado) \\
+			\hline
+			Disco Duro & 500 MB de espacio libre \\
+			\hline
+			Conexión & Ancho de banda mínimo: 5 Mbps \\
+			\hline
+			Pantalla & Resolución 1024x768 mínima (1920x1080 recomendado) \\
+			\hline
+		\end{tabular}
+	\end{table}
+	
+	\subsection{Requerimientos de Red}
+	
+	El sistema requiere una conexión de red confiable que soporte protocolo IPv4 o IPv6. Los puertos 80 (HTTP) y 443 (HTTPS) deben estar abiertos para permitir la comunicación segura con el servidor. Es fundamental que el firewall esté configurado para permitir el tráfico HTTPS, y el servidor DNS debe ser capaz de resolver correctamente los nombres de dominio. Para una experiencia óptima de usuario, se recomienda una latencia máxima de 150 milisegundos en la conexión de red.
+	
+	
+	\section{Requerimientos de Software}
+	
+	\subsection{Software Requerido en Servidor}
+	
+	\begin{table}[H]
+		\centering
+		\caption{Software Requerido en Servidor}
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Software} & \textbf{Versión Mínima} & \textbf{Propósito} \\
+			\hline
+			Node.js & 18.0+ & Runtime de backend \\
+			\hline
+			npm & 8.0+ & Gestor de paquetes \\
+			\hline
+			PostgreSQL & 12.0+ & Base de datos \\
+			\hline
+			Git & 2.25+ & Control de versiones \\
+			\hline
+			Prisma & 15.2+ & ORM de Vase de Datos \\
+			\hline
+		\end{tabular}
+	\end{table}
+	
+	\section{Procedimiento de Instalación}
+	
+	\subsection{Instalación en Servidor}
+	
+	\subsubsection{Paso 1: Clonar el Repositorio}
+	
+	\begin{verbatim}
+		https://github.com/Amarantomc/K-Pop-Groups-Manager.git
+		cd K-Pop-Groups-Manager
+	\end{verbatim}
+	
+	\subsubsection{Paso 2: Instalar Dependencias Backend}
+	
+	\begin{verbatim}
+		cd backend
+		npm install
+	\end{verbatim}
+	
+	\subsubsection{Paso 3: Configurar Variables de Entorno}
+	
+	Crear archivo \texttt{.env} en la carpeta \texttt{backend}:
+	
+	\begin{verbatim}
+		NODE_ENV=production
+		PORT=3000
+		DATABASE_URL=postgresql://user:password@localhost:5432/kpop_db
+	\end{verbatim}
+	
+	\subsubsection{Paso 4: Configurar Base de Datos}
+	
+	\begin{verbatim}
+		# Ejecutar migraciones de Prisma
+		npx prisma migrate deploy
+	\end{verbatim}
+	
+	\subsubsection{Paso 5: Instalar Dependencias Frontend}
+	
+	\begin{verbatim}
+		cd ../frontend
+		npm install
+	\end{verbatim}
+	
+	\subsubsection{Paso 6: Iniciar la Aplicación}
+	
+	\begin{verbatim}
+		# Terminal 1 - Backend
+		cd backend
+		npm start
+		
+		# Terminal 2 - Frontend 
+		cd frontend
+		npm run dev
+	\end{verbatim}
+	
+	
+	\subsection{Verificación de Instalación}
+	
+	\begin{enumerate}
+		\item Acceder a la URL del sistema en navegador
+		\item Verificar que aparece pantalla de login
+		\item Intentar login con credenciales de prueba
+		\item Verificar que se carga el dashboard correctamente
+	\end{enumerate}
+	
+	\section{Acceso al Sistema}
+	
+	Para acceder al sistema, el usuario debe ingresar a la dirección web proporcionada por el administrador y autenticarse mediante sus credenciales.
+	
+	\subsection{Inicio de Sesión}
+	
+	El sistema presenta una pantalla de inicio de sesión en la cual el usuario debe ingresar su correo electrónico y contraseña previamente registrados. Una vez validados los datos, el sistema redirige al usuario a la página principal de la aplicación.
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{manual_img-000.png}
+	\caption{Inicio de Sesión}
+	\end{figure}
+	
+	\subsection{Pantalla de Inicio del Sistema}
+	
+	Una vez que el usuario ha iniciado sesión correctamente, el sistema muestra una pantalla de inicio común para todos los roles. Esta pantalla de inicio presenta un tablero de control (dashboard) que ofrece una visión general del estado actual del sistema, mostrando información resumida de las principales entidades registradas. Esta información permite al usuario obtener una visión global del sistema de forma inmediata, sin necesidad de acceder individualmente a cada sección.
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{manual_img-001.png}
+	\caption{Pantalla de inicio del sistema con resumen de entidades registradas}
+	\end{figure}
+	
+	\section{Roles de Usuario}
+	
+	El sistema implementa un control de acceso basado en roles, lo que permite restringir o habilitar funcionalidades específicas según el tipo de usuario.
+	
+	\subsection{Administrador}
+	
+	El administrador tiene acceso completo al sistema y es responsable de la gestión global de usuarios, agencias y configuraciones generales.
+	
+	\subsection{Director}
+	
+	El director de agencia puede administrar la información de su agencia, supervisar y validar grupos, contratos y solicitudes, y acceder a reportes generales.
+	
+	\subsection{Manager}
+	
+	El manager se encarga del seguimiento operativo de artistas y aprendices, ya sean sus actividades, evaluaciones y producción musical, así como el registro de información asociada a los grupos.
+	
+	\subsection{Artista}
+	
+	El artista puede consultar su información personal, actividades asignadas, contratos, solicitudes, historial de grupos y producción musical relacionada.
+	
+	\subsection{Aprendiz}
+	
+	El aprendiz puede visualizar su estado dentro de la agencia, evaluaciones recibidas y solicitudes.
+	
+	\section{Navegación General del Sistema}
+	
+	Una vez que el usuario ha iniciado sesión correctamente, el sistema muestra la pantalla principal correspondiente a su rol. Desde esta pantalla es posible acceder a las distintas funcionalidades mediante un menú de navegación. El menú principal se encuentra disponible de forma permanente (también es posible ocultarlo a comodidad del usuario) y permite al usuario desplazarse entre las diferentes secciones del sistema sin perder el contexto de trabajo actual.
+	
+	\subsection{Elementos de la Interfaz}
+	
+	De manera general, la interfaz del sistema incluye los siguientes elementos:
+	
+	\begin{itemize}
+		\item Barra de navegación principal, en el lateral izquierdo de la pantalla, desde la cual se accede a las distintas secciones del sistema.
+		\item Área de contenido central, donde se muestran los formularios, listados y resultados de las acciones realizadas.
+		\item Botones de acción, tales como Exportar, Agregar, Editar, Eliminar u otras funcionalidades.
+		\item Mensajes de confirmación y notificaciones, que informan al usuario sobre el resultado de cada operación.
+	\end{itemize}
+	
+	Dependiendo del rol del usuario, algunas opciones del menú pueden encontrarse habilitadas o deshabilitadas.
+	
+	\section{Gestión de Agencias}
+	
+	La gestión de agencias permite registrar, consultar y actualizar la información de las agencias de entretenimiento dentro del sistema. Esta funcionalidad se encuentra disponible para usuarios con rol de administrador.
+	
+	\subsection{Registro de una Agencia}
+	
+	Para registrar una nueva agencia, el usuario debe seguir los siguientes pasos:
+	
+	\begin{enumerate}
+		\item Acceder a la opción Mostrar Agencias desde la barra de navegación.
+		\item Seleccionar botón Agregar en el área de trabajo.
+		\item Completar el formulario con la información solicitada, como nombre, ubicación y fecha de fundación.
+		\item Confirmar la operación seleccionando el botón Agregar.
+	\end{enumerate}
+	
+	Una vez registrada, la agencia queda disponible en el sistema y puede ser asociada a aprendices, artistas, grupos y contratos.
+	
+	\subsection{Consulta y Edición de Agencias}
+	
+	El sistema muestra un listado de agencias registradas, desde el cual el usuario puede:
+	
+	\begin{itemize}
+		\item Visualizar la información general de una agencia.
+		\item Añadir una nueva agencia.
+		\item Editar los datos existentes.
+		\item Eliminar los datos existentes.
+	\end{itemize}
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{manual_img-002.png}
+	\caption{Vista de Consulta de Agencias}
+	\end{figure}
+	
+	Las modificaciones realizadas se almacenan automáticamente, manteniendo la consistencia de la información.
+	
+	\section{Gestión de Aprendices}
+	
+	La sección de gestión de aprendices permite administrar la información de los aspirantes a artistas, así como realizar su seguimiento dentro de una agencia.
+	
+	\subsection{Registro de un Aprendiz}
+	
+	Para registrar un aprendiz en el sistema, el usuario debe:
+	
+	\begin{enumerate}
+		\item Acceder a la sección Aprendices.
+		\item Seleccionar botón Agregar en el área de trabajo.
+		\item Ingresar los datos personales solicitados
+		\item Asociar el aprendiz a una agencia.
+		\item Confirmar el registro.
+	\end{enumerate}
+	
+	El aprendiz queda registrado con un estado inicial que puede ser modificado según su evolución dentro de la agencia.
+	
+	\subsection{Evaluación de Aprendices}
+	
+	El sistema permite registrar evaluaciones para cada aprendiz en la agencia asociada en el momento de la evaluación.
+	
+	\begin{enumerate}
+		\item Seleccionar un aprendiz desde el listado.
+		\item Acceder a la opción Evaluar Aprendiz.
+		\item Registrar la calificación correspondiente.
+		\item Guardar la evaluación.
+	\end{enumerate}
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{aprendizLista.png}
+	\caption{Vista de Consulta de Aprendices}
+	\end{figure}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{aprendizEvaluar.png}
+		\caption{Formulario de evaluación del aprendiz}
+	\end{figure}
+	
+	Todas las evaluaciones quedan almacenadas en el historial del aprendiz.
+	
+	\subsection{Conversión de Aprendiz a Artista}
+	
+	Cuando un aprendiz forma parte de un grupo, el sistema automaticamente lo convierte en artista, a esto se le llama debut del artista
+	
+	El historial del aprendiz se conserva, la cuenta del usuario evoluciona a rol artista y el nuevo artista tiene acceso a todo su entorno asociado ya sea los grupos a los que pertenece, actividades, contratos, entre otras.
+	
+	\section{Gestión de Grupos}
+	
+	La gestión de grupos permite administrar la información relacionada con los grupos musicales registrados en el sistema, incluyendo su creación, asociación con conceptos creativos, definición de concepto visual y control del historial de integrantes. Esta funcionalidad se encuentra disponible para usuarios con rol de director de agencia y manager de agencia, mientras que los miembros del grupo(artistas) tienen acceso a la informacion de su historial de grupos asociados.
+	
+	\subsection{Creación de un Grupo}
+	
+	Para registrar un nuevo grupo musical en el sistema, el usuario debe tener el rol aprendiz o artista,ya que se crea a través del flujo de solicitud y seguir los siguientes pasos:
+	
+	\begin{enumerate}
+		\item Acceder a la sección Solicitud desde la barra de navegación.
+		\item Seleccionar botón Agregar en el área de trabajo.
+		\item Ingresar los datos que solicita el formulario
+		\item Presionar el botón Agregar en el formulario
+	\end{enumerate}
+	
+	Luego de realizado el flujo de la solicitud y esta quede  validada, entonces se procede a la creación del grupo
+	
+	\subsection{Consulta de Grupos}
+	
+	El sistema muestra un listado de grupos registrados en dependencia del rol que tenga el usuario, desde el cual el usuario puede visualizar la información general de cada  grupo relacionado con el usuario.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{groupList.png}
+		\caption{Vista de Consulta de Grupos}
+	\end{figure}
+	
+	\subsection{Asociación de Concepto}
+	
+	Cada grupo debe estar asociado a un concepto creativo que define el estilo musical, estético y coreográfico del grupo.
+	
+	\begin{enumerate}
+		\item Durante la creación del grupo, el usuario selecciona un concepto existente.
+		\item En caso de no existir, puede registrarse un nuevo concepto.
+	\end{enumerate}
+	
+	Un mismo concepto puede ser reutilizado por distintos grupos, permitiendo mantener consistencia temática dentro de la industria musical.
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{manual_img-005.png}
+	\caption{Vista de Consulta de Conceptos}
+	\end{figure}
+	
+	\subsection{Definición del Concepto Visual}
+	
+	El concepto visual representa la identidad gráfica y estética del grupo, como su logotipo, paleta de colores y elementos visuales distintivos. Cada grupo posee un único concepto visual, y dicho concepto visual pertenece exclusivamente a ese grupo.
+	
+	\begin{enumerate}
+		\item Al crear un grupo, el usuario define su concepto visual.
+		\item El sistema permite asociar una imagen representativa del grupo.
+	\end{enumerate}
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{manual_img-006.png}
+	\caption{Vista de Consulta de Conceptos Visuales}
+	\end{figure}
+	
+	\subsection{Artistas sin Grupo(Solista)}
+	
+	El sistema contempla la posibilidad de que un artista no pertenezca a ningún grupo durante un período de tiempo, desempeñándose como solista. En estos casos, el artista mantiene su información y puede participar en actividades, lanzar álbumes y realizar solicitudes de forma independiente y crecer su carrera profesional de manera independiente
+	
+	\section{Gestión de Actividades e Ingresos}
+	
+	La gestión de actividades muestra un calendario que permite registrar eventos relacionados con artistas, grupos, así como administrar los ingresos generados por dichas actividades. Esta funcionalidad se encuentra disponible para usuarios con rol de artista, director y manager de agencia.
+	
+	\subsection{Registro de una Actividad e Ingreso}
+	
+	Para registrar una nueva actividad en el sistema, el usuario debe seguir los siguientes pasos:
+	
+	\begin{enumerate}
+		\item Acceder a la sección Actividades desde la barra de navegación.
+		\item Seleccionar la fecha en la que se quiere la actividad .
+		\item Seleccione el botón Agregar Actividad.
+		\item Ingresar la información solicitada
+		\item Confirmar el registro de actividad.
+		\item Ingresar la información del ingreso asociado a dicha actividad
+		\item Termina seleccionando el botón Agregar
+	\end{enumerate}
+	
+	La actividad queda registrada en el sistema con los participantes( artistas o grupos) e ingreso asociado.
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{activityCalendar.png}
+	\caption{Vista de Calendario de Actividades}
+	\end{figure}
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{activityAdd.png}
+	\caption{Vista de Agregar Actividad}
+	\end{figure}
+	
+	\subsection{Participación Individual de Artistas}
+	
+	Cuando un artista participa en una actividad fuera del contexto de un grupo, dicha participación se registra de forma individual. El sistema permite indicar si la participación ha sido aceptada o no, así como mantener un historial de las actividades individuales de cada artista. Esta información es utilizada exclusivamente para reflejar actividades personales del artista y no reemplaza ni duplica las actividades realizadas como parte de un grupo.
+	
+	\subsection{Registro de Ingresos}
+	
+	Cada actividad tiene un ingreso asociado,que se puede visualizar desde el menu ingreso,donde se obtiene el acceso a todos los datos de los ingresos
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{manual_img-009.png}
+	\caption{Vista de Consulta de Ingresos}
+	\end{figure}
+	
+	\subsection{Consulta de Actividades e Ingresos}
+	
+	El sistema permite consultar el listado de actividades registradas en la seccion Actividad, así como los ingresos asociados a cada una de ellas en la sección Ingresos. Permitiendo al ususario:
+	
+	\begin{itemize}
+		\item Visualizar el detalle de una actividad.
+		\item Consultar los participantes asociados.
+		\item Revisar los ingresos generados.
+		\item Editar información cuando corresponda.
+	\end{itemize}
+	
+	Esta funcionalidad facilita el seguimiento económico y operativo de las actividades realizadas.
+	
+	
+	\section{Gestión Musical}
+	
+	La gestión musical permite administrar la información relacionada con la producción artística del sistema, incluyendo álbumes, canciones, premios y listas de popularidad. Esta sección se encuentra disponible para usuarios con rol de artista, director y manager de agencia.
+	
+	\subsection{Gestión de Álbumes}
+	
+	El sistema permite registrar y administrar álbumes musicales, los cuales pueden estar asociados a un grupo, a artistas individuales o a ambos, según corresponda.
+	
+	\subsection{Registro de un Álbumes}
+	
+	Para registrar un nuevo álbum, el usuario debe:
+	
+	\begin{enumerate}
+		\item Acceder a la sección Álbumes.
+		\item Seleccionar botón Agregar en el área de trabajo.
+		\item Ingresar los datos correspondientes en el formulario
+		\item Confirmar el registro.
+	\end{enumerate}
+	
+	Un álbum puede estar asociado a un grupo, a artistas individuales o a ambos, permitiendo modelar lanzamientos colectivos o en solitario.
+	Además,mediante el botón agregar canción se le pueden agregar las canciones a cada álbum
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{albumesList.png}
+	\caption{Vista de Consulta de Albumes}
+	\end{figure}
+	
+	
+	\subsection{Gestión de Canciones}
+	
+	Las canciones representan las piezas musicales individuales que conforman los álbumes registrados en el sistema.
+	
+	\subsection{Registro de una Canción}
+	
+	Para registrar una nueva canción, el usuario debe:
+	
+	\begin{enumerate}
+		\item Acceder a la sección Canciones.
+		\item Seleccionar botón Agregar en el área de trabajo.
+		\item Ingresar los datos correspondientes en el formulario
+		\item Confirmar el registro.
+	\end{enumerate}
+	
+	Una canción puede figurar en diversas listas de popularidad.
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{songList.png}
+	\caption{Vista de Consulta de Canciones}
+	\end{figure}
+	
+	\subsection{Premios}
+	
+	El sistema permite registrar premios obtenidos por álbumes como parte del reconocimiento a la producción musical.
+	
+	\begin{enumerate}
+		\item Acceder a la sección Premios.
+		\item Seleccionar botón Agregar en el área de trabajo.
+		\item Ingresar datos correspondietnes en el formulario
+		\item Confirmar registro
+	\end{enumerate}
+	
+	Los premios permiten reflejar el reconocimiento obtenido por los álbumes a lo largo del tiempo.
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{awardsList.png}
+	\caption{Vista de Consulta de Premios}
+	\end{figure}
+	
+	\subsection{Listas de Popularidad}
+	
+	Las listas de popularidad permiten registrar el posicionamiento de canciones en rankings musicales.
+	
+	\subsection{Gestión de Listas}
+	
+	Para administrar listas de popularidad, el usuario puede:
+	(solo rol administrador)
+	\begin{itemize}
+		\item Registrar una nueva lista, indicando su nombre y tipo.
+	\end{itemize}
+	
+	Una canción puede aparecer en múltiples listas de popularidad y en distintos años, permitiendo un seguimiento histórico de su desempeño.
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{populist.png}
+	\caption{Vista de Consulta de Listas de Popularidad}
+	\end{figure}
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{populistInfo.png}
+	\caption{Visualizacion de una Lista de Popularidad}
+	\end{figure}
+	
+	\subsection{Consulta de Producción Musical}
+	
+	El sistema permite consultar de forma integrada la producción musical registrada. Desde esta sección, el usuario puede:
+	
+	\begin{itemize}
+		\item Visualizar álbumes asociados a un grupo o artista.
+		\item Consultar las canciones incluidas en cada álbum.
+		\item Revisar premios obtenidos.
+		\item Analizar el desempeño en listas de popularidad.
+	\end{itemize}
+	
+	Esta información facilita el análisis del impacto y trayectoria artística dentro del sistema.
+	
+	\section{Gestión de Contratos}
+	
+	La gestión de contratos permite consultar y administrar los acuerdos establecidos entre agencias, artistas y grupos musicales. Esta funcionalidad se encuentra disponible para usuarios con rol de artista, director y manager de agencia.
+	
+	\subsection{Registro de Contratos con Artistas y con Grupos}
+	
+	El sistema permite registrar contratos entre una agencia y un artista, estableciendo las condiciones de colaboración. Además de contratos individuales con artistas, y se permite que un artista tenga más de un contrato activo de forma simultánea, siempre que se registren correctamente las fechas y condiciones. También se pueden registrar contratos entre una agencia y un grupo musical, que permiten formalizar acuerdos colectivos asociados a la representación y actividades del grupo.
+	
+	Este registro de contratos,ya sea con un artista o con un grupo,se realizan mediante la gestion de Talento y solicitud
+	
+	\subsection{Consulta de Contratos}
+	
+	El sistema proporciona un listado de contratos registrados, permitiendo su consulta y análisis. Desde esta sección, el usuario puede:
+	
+	\begin{itemize}
+		\item Visualizar contratos.
+		\item Consultar los detalles de cada contrato.
+		\item Filtrar contratos por agencia, artista o grupo.
+	\end{itemize}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{contractList.png}
+		\caption{Vista de Consulta de Contratos}
+	\end{figure}
+	
+	
+	El sistema conserva el historial de contratos, permitiendo consultar acuerdos anteriores sin perder información.
+	
+	\section{Gestión de Talento}
+	
+	La gestión de talento es el centro neuralálgico del sistema de K-POP World, permitiendo la administración integral de los recursos humanos de una agencia de entretenimiento. Esta funcionalidad facilita la gestión de artistas, aprendices y grupos, considerando sus perfiles, desempeño, evolución profesional y participación en proyectos musicales. El acceso a esta sección varía según el rol del usuario, siendo más restrictivo para aprendices y artistas, y más completo para directores y managers de agencia.
+	\\
+	
+	\subsection{Captación de Aprendices}
+	
+	Los aprendices son aspirantes a artistas que se encuentran en formación dentro de una agencia. Esta sección permite que diferentes agencias,capten a los aprendices que no esten asociados a ninguna agencia por el momento,quedando en proceso de selección
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{talentAprendiz.png}
+		\caption{Vista de captación de Aprendices}
+	\end{figure}
+	
+	Esto permite guardar un historial del recorrido de cada aprendiz por diferentes agencias
+	
+	\subsection{Captación de Artistas}
+	
+	La captación de artistas permite ofrecerles contratos a los artistas que por el momento no estan asociados a ninguna agencia mediante contrato
+	
+	El sistema permite registrar nuevos contratos con artistas siguiendo estos pasos:
+	(Similar con grupos)
+	
+	\begin{enumerate}
+		\item Acceder a la sección Talento desde la barra de navegación
+		\item Seleccionar la opción Artistas.
+		\item Hacer clic en Ofrecer Contrato en la fila del artisa que se quiere captar.
+		\item Completar el formulario con la información que se solicita
+		\item Confirmar el registro.
+	\end{enumerate}
+	
+	Y así la agencia le ofrece un contrato a los artistas que ellos posteriormente,decidirán si aceptan o no.
+
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{TalentArtist.png}
+	\caption{Vista de captación de Artistas}
+	\end{figure}
+	
+	\subsection{Captación de Grupos}
+	
+	La captación de grupos permite registrar la creacion de contratos con los grupos musicales ,al igual que como se dijo anteriormente con los artistas,ofreciendoles contratos,que también posteriormente los líderes de los grupos,aceptarán o rechazarán
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{talentGroup.png}
+	\caption{Vista de captación de Grupos}
+	\end{figure}
+
+	\section{Gestión de Solicitudes}
+	
+	La gestión de solicitudes permite administrar las peticiones realizadas por aprendices y artistas para integrarse a grupos musicales. Esta funcionalidad se encuentra disponible para usuarios con rol de director y manager de agencia, artista y aprendiz, según corresponda.
+	
+	\subsection{Creación de Solicitudes}
+	
+	El sistema permite que aprendices y artistas realicen solicitudes de forma individual. Para crear una nueva solicitud, el usuario debe seguir los siguientes pasos:
+	
+	\begin{enumerate}
+		\item Acceder a la sección Solicitudes desde el menú principal.
+		\item Seleccionar la opción Agregar.
+		\item Ingresar los datos referentes a la creación de la solicitud
+		\item Confirmar el envío de la solicitud.
+	\end{enumerate}
+	
+	Un mismo aprendiz o artista puede realizar múltiples solicitudes, las cuales quedan registradas de forma independiente en el sistema.
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{requestList.png}
+	\caption{Vista de Consulta de Solicitudes}
+	\end{figure}
+	
+	\subsection{Estados de las Solicitudes}
+	
+	Cada solicitud cuenta con un estado que refleja su situación actual dentro del proceso. Los estados posibles incluyen, entre otros:
+	
+	\begin{itemize}
+		\item Pendiente
+		\item Rechazada
+		\item Aprobada
+		\item Validaada
+		\item Completada
+	\end{itemize}
+	
+	El estado de la solicitud puede ser actualizado únicamente por usuarios con los permisos correspondientes.
+	
+	\subsection{Gestión de Solicitudes por la Agencia}
+	
+	Los directores y managers de agencia pueden gestionar las solicitudes recibidas. Desde esta sección, el usuario puede:
+	
+	\begin{itemize}
+		\item Consultar el listado de solicitudes recibidas.
+		\item Visualizar el detalle de cada solicitud.
+		\item Aprobar o rechazar solicitudes.
+		\item Crear el grupo asociado a la solicitud si esta ya fue validada
+	\end{itemize}
+	
+	Las decisiones tomadas quedan registradas en el sistema, manteniendo un seguimiento claro del proceso.
+	
+	\subsection{Consulta de Solicitudes por el Usuario}
+	
+	Los aprendices y artistas pueden consultar el estado de sus solicitudes en todo momento. Desde esta sección, el usuario puede:
+	
+	\begin{itemize}
+		\item Visualizar el listado de solicitudes en las que esta involucrado.
+		\item Consultar el estado actual de cada solicitud.
+		\item Aceptar o rechazar cada solicitud
+	\end{itemize}
+	
+	Esta funcionalidad permite al usuario realizar un seguimiento transparente de sus solicitudes.
+	
+	\subsection{Consultas Especializadas}
+	
+	El sistema dispone de una sección de consultas especializadas que permite al usuario acceder a información consolidada y análisis específicos a partir de los datos registrados en la aplicación. Esta sección se encuentra disponible desde la barra de navegación y presenta un conjunto de botones que facilitan el acceso directo a cada consulta.
+	
+	\subsection{Opciones de Consulta}
+	
+	La sección de consultas especializadas incluye las siguientes opciones:
+	
+	\begin{itemize}
+		\item \textbf{Artistas activos por agencia}: muestra el listado de artistas activos asociados a cada agencia.
+		\item \textbf{Actividades por grupo}: permite consultar las actividades realizadas por un grupo determinado.
+		\item \textbf{Artistas con debut y contrato activo}: presenta los artistas que han debutado y cuentan con al menos un contrato vigente.
+		\item \textbf{Ingresos por artista}: muestra el total de ingresos generados por cada artista a partir de sus actividades.
+		\item \textbf{Cambios de agencia y grupos}: permite visualizar el historial de cambios de agencia y de pertenencia a grupos de los artistas.
+		\item \textbf{Solistas de grupos disueltos con álbum exitoso}: presenta los artistas que, tras la disolución de su grupo, han desarrollado una carrera como solistas con al menos un álbum exitoso.
+	\end{itemize}
+	
+	\subsection{Acceso a las Consultas}
+	
+	Para acceder a una consulta especializada, el usuario debe:
+	
+	\begin{enumerate}
+		\item Acceder a la barra de navegación del sistema.
+		\item Seleccionar la opción Consultas Especializadas.
+		\item Hacer clic en el botón correspondiente a la consulta deseada.
+	\end{enumerate}
+	
+	El sistema procesa la información y en dependencia de la consulta, muestra el formulario correspondiente y al hacer click en el botón consultar genera los resultados de la consulta de forma clara y ordenada.
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{manual_img-017.png}
+	\caption{Vista de Consultas Especializadas}
+	\end{figure}
+	
+	\subsubsection{Visualización de Resultados}
+	
+	Los resultados de cada consulta se presentan en tablas o listados, facilitando su análisis y lectura. Dependiendo de la consulta seleccionada, el sistema puede mostrar información adicional como totales, fechas relevantes o estados actuales.
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{manual_img-018.png}
+	\caption{Visualización de Resultados}
+	\end{figure}
+	
+	\subsection{Gestión del Perfil de Usuario}
+	
+	El sistema dispone de una sección de perfil de usuario que permite a cada usuario administrar aspectos básicos de su cuenta, independientemente del rol que tenga asignado. Las opciones relacionadas con la cuenta del usuario se encuentran disponibles en el panel lateral de navegación, dentro de la sección Cuenta.
+	
+	\subsection{Acceso al Perfil}
+	
+	Para acceder a las opciones de perfil, el usuario debe:
+	
+	\begin{enumerate}
+		\item Acceder al panel lateral del sistema.
+		\item Seleccionar la sección Cuenta.
+		\item Hacer clic en la opción Perfil.
+	\end{enumerate}
+	
+	Desde esta sección, el usuario puede visualizar la información de su cuenta y modificar su contraseña o eliminar su cuenta y en caso de ser un artista puede retirarse, según corresponda.
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{manual_img-019.png}
+	\caption{Vista del Perfil de Usuario}
+	\end{figure}
+	
+	\subsubsection{Cambio de Contraseña}
+	
+	El sistema permite al usuario modificar su contraseña de acceso de forma segura desde la sección de perfil. Para realizar el cambio de contraseña, el usuario debe seguir los siguientes pasos:
+	
+	\begin{enumerate}
+		\item Ingresar la contraseña actual.
+		\item Ingresar la nueva contraseña.
+		\item Confirmar la nueva contraseña.
+		\item Guardar los cambios.
+	\end{enumerate}
+	
+	El sistema valida que la contraseña actual sea correcta y que la nueva contraseña coincida con su confirmación antes de aplicar el cambio. Una vez realizada la modificación, la nueva contraseña queda activa para inicios de sesión posteriores.
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{manual_img-020.png}
+	\caption{Vista de Cambiar la Contraseña del Usuario}
+	\end{figure}
+	
+	\subsubsection{Eliminación de Cuenta}
+	
+	El sistema permite al usuario eliminar su cuenta desde la sección de perfil. Para eliminar la cuenta, el usuario debe:
+	
+	\begin{enumerate}
+		\item Acceder a la sección Perfil.
+		\item Seleccionar la opción Eliminar Cuenta.
+	\end{enumerate}
+	
+	Al seleccionar esta opción, el sistema muestra un mensaje de confirmación solicitando al usuario verificar si desea eliminar su cuenta. La eliminación de la cuenta solo se realiza una vez que el usuario confirma explícitamente la acción. Una vez eliminada, la cuenta deja de existir en el sistema y no puede ser recuperada.
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{manual_img-021.png}
+	\caption{Notificación de Alerta de Eliminación de Perfil}
+	\end{figure}
+	
+	\subsubsection{Cierre de Sesión}
+	
+	El sistema permite al usuario cerrar su sesión de forma segura desde el panel lateral de navegación. Para cerrar sesión, el usuario debe:
+	
+	\begin{enumerate}
+		\item Acceder al panel lateral del sistema.
+		\item Seleccionar la sección Cuenta.
+		\item Hacer clic en el botón Cerrar Sesión.
+	\end{enumerate}
+	
+	Al cerrar sesión, el sistema finaliza la sesión activa y redirige al usuario a la pantalla de inicio de sesión, evitando accesos no autorizados.
+	
+	\section{Consideraciones Finales}
+	
+	El sistema de gestión de agencias y grupos de K-pop proporciona una plataforma integral para la administración de información relacionada con la industria del entretenimiento musical coreano. El uso de roles permite garantizar un acceso controlado a las funcionalidades, mientras que la organización modular del sistema facilita su utilización de forma intuitiva.
+	
+	Se recomienda a los usuarios:
+	
+	\begin{itemize}
+		\item Mantener actualizada la información registrada en el sistema.
+		\item Verificar los datos antes de confirmar cualquier operación.
+		\item Cerrar sesión al finalizar el uso del sistema, especialmente en equipos compartidos.
+	\end{itemize}
+	
+	Este manual constituye una guía de referencia para el uso adecuado del sistema y puede ser actualizado conforme se incorporen nuevas funcionalidades.
+
+\end{document}

@@ -279,7 +279,33 @@ async function main() {
       Agencias: { connect: [{ id: pledisEntertainment.id }] }
     }
   })
-  console.log('✅ 9 Grupos creados')
+
+  // Grupos en pausa
+  const strayKids = await prisma.grupo.create({
+    data: {
+      nombreCompleto: "Stray Kids",
+      fechaDebut: new Date("2018-03-25"),
+      estadoGrupo: "EN PAUSA",
+      idConcepto: conceptoUrbano.id,
+      idConceptoVisual: visualUrbano.id,
+      Nomiembros: 8,
+      Agencias: { connect: [{ id: jypEntertainment.id }] }
+    }
+  })
+
+  const gfriend = await prisma.grupo.create({
+    data: {
+      nombreCompleto: "GFriend",
+      fechaDebut: new Date("2015-01-16"),
+      estadoGrupo: "EN PAUSA",
+      idConcepto: conceptoElegante.id,
+      idConceptoVisual: visualElegante.id,
+      Nomiembros: 6,
+      Agencias: { connect: [{ id: starshipEntertainment.id }] }
+    }
+  })
+
+  console.log('✅ 11 Grupos creados (9 activos + 2 en pausa)')
 //#endregion
 
 
@@ -1233,10 +1259,28 @@ async function main() {
         estado: "ACTIVO",
         condicionesIniciales: "Contrato de grupo por 7 años con 13 miembros",
         distribucionIngresos: "45% agencia, 55% grupo"
+      },
+      {
+        idAg: jypEntertainment.id,
+        IdGr: strayKids.id,
+        fechaInicio: new Date("2018-03-25"),
+        fechaFinalizacion: new Date("2032-08-31"),
+        estado: "PAUSADO",
+        condicionesIniciales: "Contrato de grupo en pausa por período de descanso",
+        distribucionIngresos: "50% agencia, 50% grupo"
+      },
+      {
+        idAg: starshipEntertainment.id,
+        IdGr: gfriend.id,
+        fechaInicio: new Date("2015-01-16"),
+        fechaFinalizacion: new Date("2031-12-31"),
+        estado: "PAUSADO",
+        condicionesIniciales: "Contrato de grupo en pausa para reestructuración",
+        distribucionIngresos: "48% agencia, 52% grupo"
       }
     ]
   })
-  console.log('✅ Contratos de grupo creados')
+  console.log('✅ 10 Contratos de grupo creados (8 activos + 2 pausados)')
 //#endregion
 
 
