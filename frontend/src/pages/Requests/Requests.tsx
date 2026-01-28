@@ -35,13 +35,8 @@ const Requests: React.FC = () => {
   const [openAccept, setOpenAccept] = useState(false);
   const [openError, setOpenError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [showContractModal, setShowContractModal] = useState(false);
-  const [contractModalData, setContractModalData] = useState<any | null>(null);
   const [openSuccess, setOpenSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
-  const [groupID, setGroupID] = useState<any>('');
-  const [successContext, setSuccessContext] = useState<string | null>(null);
-  const [createdGroup, setCreatedGroup] = useState<any | null>(null);
 
   // Manejar aprobación de solicitud (Director)
   const handleApprove = async (id: number) => {
@@ -122,86 +117,19 @@ const Requests: React.FC = () => {
 
       const result = await response.json();
       const createdGroupData = result.data || result;
-      
+
       console.log('Grupo creado exitosamente:', groupName, 'para solicitud:', requestId);
       console.log('Datos del grupo:', createdGroupData);
-      
-      // Guardar datos del grupo creado
-      setCreatedGroup(createdGroupData);
-      setGroupID(createdGroupData.id);
-      
+
       // Actualizar solicitudes
       await loadAndFormatRequests();
-      
+
       // Mostrar confirm dialog de éxito
       setSuccessMessage('Grupo creado exitosamente');
-      setSuccessContext('group');
       setOpenAccept(true);
     } catch (error) {
       console.error('Error al crear grupo:', error);
       setErrorMessage(error instanceof Error ? error.message : 'Error al crear grupo');
-      setOpenError(true);
-    }
-  };
-
-  const handleOpenContractModal = async () => {
-
-    const agencyId = user?.profileData?.agencyId || '';
-    let agencyName = '';
-    if (agencyId) {
-      try {
-        const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:3000/api/agency/${agencyId}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
-        if (response.ok) {
-          const data = await response.json();
-          agencyName = data?.name || '';
-        }
-      } catch (error) {
-        console.error('Error al obtener el nombre de la agencia', error);
-      }
-    }
-    setContractModalData({
-      agencyId,
-      agencyName,
-    });
-    setShowContractModal(true);
-  };
-
-  const handleContractSave = async (formData: any) => {
-    try {
-      const token = localStorage.getItem('token');
-      // Adaptar el payload al formato requerido por el backend
-      const payload = {
-        type: 'Group',
-        agencyId: user?.profileData?.agencyId || user?.agencyId,
-        startDate: formData.startDate,
-        initialConditions: formData.terms,
-        incomeDistribution: formData.value,
-        groupId: groupID || formData.groupId || formData.GroupId || '',
-      };
-      const response = await fetch('http://localhost:3000/api/contract', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-      if (!response.ok) throw new Error('Error al ofrecer contrato');
-      
-      console.log('Contrato guardado exitosamente');
-      setSuccessMessage('Contrato ofrecido exitosamente');
-      setSuccessContext('contract');
-      setShowContractModal(false);
-      setOpenAccept(true);
-    } catch (error) {
-      console.error('Error al guardar contrato:', error);
-      setErrorMessage(error instanceof Error ? error.message : 'Error al ofrecer contrato');
       setOpenError(true);
     }
   };
@@ -302,11 +230,11 @@ const Requests: React.FC = () => {
         const apprenticeId = user.profileData?.apprenticeId || user.id;
         const idAp = user.profileData?.IdAp;
         const idGr = user.profileData?.IdGr;
-        
+
         const foundMember = user.role === 'apprentice' ?
           members.find((m: any) => m.apprenticeId === Number(apprenticeId))
           : members.find((m: any) => m.idApprentice === Number(idAp) && m.groupId === Number(idGr));
-        
+
         if (foundMember) {
           statusindividual = foundMember.status || '';
         }
@@ -858,7 +786,7 @@ const Requests: React.FC = () => {
 
       // Aprendiz y Artista: boton para que los miembros acepten la solicitud
       if (user?.role === 'apprentice' || user?.role === 'artist') {
-        const isPending = params.row.statusindividual === 'PENDIENTE' ;
+        const isPending = params.row.statusindividual === 'PENDIENTE';
 
         return (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-start' }}>
@@ -949,20 +877,8 @@ const Requests: React.FC = () => {
         message={successMessage || 'Operación realizada correctamente'}
         open={openAccept}
         type="success"
-        onCancel={() => {
-          setOpenAccept(false);
-          if (successContext === 'group') {
-            handleOpenContractModal();
-            setSuccessContext(null);
-          }
-        }}
-        onConfirm={() => {
-          setOpenAccept(false);
-          if (successContext === 'group') {
-            handleOpenContractModal();
-            setSuccessContext(null);
-          }
-        }}
+        onCancel={() => setOpenAccept(false)}
+        onConfirm={() => setOpenAccept(false)}
         confirmText="Aceptar"
         showDeleteButton={false}
       />
@@ -976,15 +892,6 @@ const Requests: React.FC = () => {
         confirmText="Aceptar"
         showDeleteButton={false}
       />
-      {showContractModal && (
-        <ModalCreate
-          isOpen={showContractModal}
-          onClose={() => setShowContractModal(false)}
-          title="Registrar Contrato"
-          createEntity="contract"
-          onSave={handleContractSave}
-        />
-      )}
     </PageLayout>
   );
 };
