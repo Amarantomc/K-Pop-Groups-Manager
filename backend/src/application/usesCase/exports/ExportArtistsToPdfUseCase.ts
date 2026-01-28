@@ -16,10 +16,7 @@ export class ExportArtistsToPdfUseCase {
 
     async execute(agencyId?: number): Promise<Buffer> {
         const artists= await this.artist.execute(agencyId!);
-        artists.map(x=>{
-            const nameGroup=x.groupHistory?.find(y=>y.id===x.GroupId)?.name
-             x.debutGroup={name:nameGroup?nameGroup:""}
-        })
+         
 
         return this.pdfExporter.export(artists, {
             title: 'Listado de Artistas K-Pop',
@@ -30,7 +27,7 @@ export class ExportArtistsToPdfUseCase {
                 { header:'Nombre Artístico', dataKey: 'ArtistName' },
                 { header:'Fecha Debut', dataKey: 'DebutDate' },
                 { header:'Estado', dataKey: 'Status' },
-                { header:'Grupo Debut', dataKey: 'debutGroup.name' },
+                 
 
                 
                  

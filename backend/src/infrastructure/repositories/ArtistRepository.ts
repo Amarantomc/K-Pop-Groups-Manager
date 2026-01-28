@@ -182,7 +182,7 @@ private get db() {
     });
     
 
-    console.log(artist);
+     
     return ArtistResponseDto.toEntityForManager(artist);
   }
 
@@ -557,7 +557,7 @@ private get db() {
       return artists ? ArtistOnDebutResponseDto.fromQueryResults(artists):null;
   }
 
-  async getIndividualIncome(data:RequestArtistWithIncomeDto): Promise<ArtistWithIncomeDto> {
+  async getIndividualIncome(data:RequestArtistWithIncomeDto): Promise<ArtistWithIncomeDto|null> {
        const artist = await this.db.$queryRaw`
          SELECT 
         a."idAp" as "apprenticeId",
@@ -574,11 +574,11 @@ private get db() {
         AND i."fecha" BETWEEN ${data.startDate} AND ${data.endDate}
       GROUP BY a."idAp", a."idGr"
        `
-       
-       return ArtistWithIncomeDto.fromQueryResult(artist[0])
+       console.log(artist)
+       return artist[0]?ArtistWithIncomeDto.fromQueryResult(artist[0]):null
   }
 
-  async  getIncomeGeneratedInGroups(data: RequestArtistWithIncomeDto): Promise<ArtistWithIncomeDto> {
+  async  getIncomeGeneratedInGroups(data: RequestArtistWithIncomeDto): Promise<ArtistWithIncomeDto|null> {
      const artist= await this.db.$queryRaw`
           SELECT 
         a."idAp" as "apprenticeId",
@@ -596,7 +596,7 @@ private get db() {
       GROUP BY a."idAp", a."idGr"
       `
        
-      return ArtistWithIncomeDto.fromQueryResult(artist[0])
+      return artist[0]?ArtistWithIncomeDto.fromQueryResult(artist[0]):null
   }
 
   async getBestAlbums(data: RequestArtistWithIncomeDto): Promise<ArtistWithSuccesDto[]|null> {
