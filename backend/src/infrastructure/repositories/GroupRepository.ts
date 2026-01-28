@@ -117,16 +117,19 @@ export class GroupRepository implements IGroupRepository {
 		if (data.debut) updateData.fechaDebut = new Date(data.debut);
 		if (data.status) updateData.estadoGrupo = data.status;
 		if(data.memberCount) updateData.Nomiembros=data.memberCount
+		 
 		if(data.status=="DISUELTO"){
-			await this.db.artistaEnGrupo.update({
+			 
+			await this.db.artistaEnGrupo.updateMany({
 				where:{OR: [
 					{ idGr:Number(id) },
 					{ idGrupoDebut:Number(id) },
 					],},
 				data:{fechaFinalizacion:new Date()}
 			})
+			updateData.Nomiembros=0
 		}
-
+		 
 		const updated = await this.db.grupo.update({
 			where: { id: Number(id) },
 			data: updateData,
@@ -138,7 +141,7 @@ export class GroupRepository implements IGroupRepository {
 					where: { fechaFinalizacion: null },
 					select: { idAp: true },
 				},
-				Album: { select: { id: true } },
+				 
 				Actividades: { select: { idAct: true } },
 			},
 		});
@@ -151,7 +154,7 @@ export class GroupRepository implements IGroupRepository {
 			concept: updated.concepto,
 			visualConcept: updated.conceptoVisual,
 			members: updated.HistorialArtistas.map((a: any) => a.idAp),
-			albums: updated.Album.map((a: any) => a.id),
+			 
 			activities: updated.Actividades.map((a: any) => a.idAct),
 		});
 	}
