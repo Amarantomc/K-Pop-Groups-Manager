@@ -140,6 +140,11 @@ const Scout: React.FC = () => {
       } else{
         SetgroupId(artistRow.GroupId);
       }
+    if(!artistRow.GroupId){
+      console.log('artistRow',artistRow)
+      SetgroupId(artistRow.id)
+    }
+    // console.log('artistRow',artistRow)
     let agencyName = '';
     if (agencyId) {
       try {
@@ -180,6 +185,7 @@ const Scout: React.FC = () => {
         type: isArtist ? 'Artist' : 'Group',
         agencyId: user?.profileData?.agencyId || user?.agencyId,
         startDate: formData.startDate,
+        completionDate: formData.endDate,
         initialConditions: formData.terms,
         incomeDistribution: formData.value,
         apprenticeId: isArtist ? (apprenticeID || formData.apprenticeId || '') : '',

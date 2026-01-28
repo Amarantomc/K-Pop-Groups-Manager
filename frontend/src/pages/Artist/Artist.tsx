@@ -89,7 +89,7 @@ const Artist: React.FC = () => {
           ApprenticeId: artist.ApprenticeId,
           GroupId: artist.GroupId,
           realName: artist.realName,
-          dateOfBirth: apprenticeMap[artist.ApprenticeId]?.dateOfBirth || ''
+          dateOfBirth: artist.dateOfBirth,
         }));
         setArtistsRows(formattedData);
         console.log('Artistas cargados:', formattedData);

@@ -9,18 +9,18 @@ import { useAuth } from '../../contexts/auth/AuthContext';
 import { contractFields } from '../../config/formSource';
 import { contractConstraints } from '../../config/modalConstraints';
 
-interface Contract {
-  id: number;
-  artistName: string;
-  groupName?: string;
-  contractType: 'exclusive' | 'non_exclusive' | 'production' | 'distribution';
-  startDate: string;
-  endDate: string;
-  value: number;
-  status: 'active' | 'expired' | 'terminated' | 'pending';
-  agencyName: string;
-  terms?: string;
-}
+// interface Contract {
+//   id: number;
+//   artistName: string;
+//   groupName?: string;
+//   contractType: 'exclusive' | 'non_exclusive' | 'production' | 'distribution';
+//   startDate: string;
+//   endDate: string;
+//   value: number;
+//   status: 'active' | 'expired' | 'terminated' | 'pending';
+//   agencyName: string;
+//   terms?: string;
+// }
 
 const Contracts: React.FC = () => {
   const { user } = useAuth();
@@ -58,7 +58,6 @@ const Contracts: React.FC = () => {
     { field: 'agencyName', headerName: 'Agencia', width: 180 },
     { field: 'startDate', headerName: 'Fecha Inicio', width: 150, valueFormatter: (params) => new Date(params).toLocaleDateString('es-ES') },
     { field: 'status', headerName: 'Estado', width: 120 },
-    { field: 'initialConditions', headerName: 'Términos Iniciales', width: 220 },
     { field: 'incomeDistribution', headerName: 'Distribución de Ingresos', width: 180 }
   ];
 
@@ -78,7 +77,7 @@ const Contracts: React.FC = () => {
           const isGroupContract = params.row.type === 'Group';
           const isNegotiation = params.row.status === 'Pendiente';
 
-           const groupMembers = params.row.group?.members || [];
+          const groupMembers = params.row.group?.members || [];
 
             const userAsMember = groupMembers.find((member: any) => 
           member.apprenticeId === user.profileData?.IdAp
@@ -116,14 +115,14 @@ const Contracts: React.FC = () => {
             <>
               <button
                 style={acceptButtonStyle}
-                disabled={!showDecisionArtist || !showDecisionGroup || processingId === params.row.id}
-                onClick={() => handleAcceptContract(params.row)}
+                disabled={(!showDecisionArtist && !showDecisionGroup) || processingId === params.row.id}
+                onClick={() => handleAcceptContract(params.row, true)}
                 title={!isNegotiation ? "Solo disponible para contratos Pendientes" : ""}
               >Aceptar</button>
               <button
                 style={rejectButtonStyle}
-                disabled={!showDecisionArtist|| !showDecisionGroup || processingId === params.row.id}
-                onClick={() => handleRejectContract(params.row)}
+                disabled={(!showDecisionArtist && !showDecisionGroup) || processingId === params.row.id}
+                onClick={() => handleAcceptContract(params.row, false)}
                 title={!isNegotiation ? "Solo disponible para contratos Pendientes" : ""}
               >Rechazar</button>
             </>
@@ -135,9 +134,22 @@ const Contracts: React.FC = () => {
 
   // Funciones para aceptar/rechazar contrato
   //Falta ver como se actualizan los contratos
-  const handleAcceptContract = async (row: any) => {
+  const handleAcceptContract = async (row: any,decision:boolean) => {
     setProcessingId(row.id);
     try {
+         const payload = {
+          agencyId : row.agencyId,
+          agencyName : row.agencyName,
+          apprenticeId : row.apprenticeId,
+          groupId : row.groupId,
+          id :row.id,
+          incomeDistribution : row.incomeDistribution,
+          initialConditions : row.initialConditions,
+          status : decision === true? 'ACEPTADO':'RECHAZADO',
+          entityName : row.entityName,
+          type : row.type,
+          startDate : row.startDate? formatDate(row.startDate) : null
+        }
       // Llama al endpoint para aprobar el contrato y la solicitud asociada
       const response = await fetch(`http://localhost:3000/api/contract`, {
         method: 'PUT',
@@ -146,14 +158,24 @@ const Contracts: React.FC = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(
-          {
-
-          }
+          payload
         )
       });
       if (!response.ok) throw new Error('Error al aprobar el contrato');
       // Actualiza el estado local
-      setContracts(prev => prev.map(c => c.id === row.id ? { ...c, status: 'active' } : c));
+       const data = await response.json();
+      const updatedContract = {
+  ...(data.data || data),
+  id: payload.id,
+  agencyName: payload.agencyName, // 👈 aseguramos el id
+  entityName: payload.entityName // 👈 mantenemos el nombre del artista/grupo
+};
+
+setContracts(prev =>
+  prev.map(contract =>
+    contract.id === row.id ? updatedContract : contract
+  )
+); 
       setOpenAccept(true);
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : 'Error al aprobar contrato');
@@ -263,10 +285,13 @@ const Contracts: React.FC = () => {
         console.log('filtrados roles',filteredContracts)
 
         const formattedContracts = filteredContracts.map((contract: any, index: number) => ({
-          id: index,
+          id: contract.id?? index,
           type: contract.type,
           entityName: contract.type === 'Artist' ? contract.artist?.ArtistName : contract.group?.name,
           agencyName: contract.agency?.name,
+          agencyId: contract.agency?.id,
+          apprenticeId: contract.artist?.ApprenticeId,
+          groupId: contract.type === 'Artist'? contract.artist?.GroupId: contract.group?.id,
           startDate: contract.startDate,
           status: contract.status,
           initialConditions: contract.initialConditions,
@@ -323,16 +348,54 @@ const Contracts: React.FC = () => {
     }
   };
 
-  const handleEditSave = async (updatedRow: Contract) => {
+  const formatDate = (dateString: string): string => {
+  const date = new Date(dateString);
+  
+  // Verificar si la fecha es válida
+  if (isNaN(date.getTime())) {
+    console.error('Fecha inválida:', dateString);
+    throw new Error('Fecha inválida');
+  }
+  
+  // Obtener componentes de fecha LOCAL (no UTC)
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(date.getUTCDate()).padStart(2, '0');
+  const hours = String(date.getUTCHours()).padStart(2, '0');
+  const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+  const seconds = String(date.getUTCSeconds()).padStart(2, '0');
+  const milliseconds = String(date.getUTCMilliseconds()).padStart(3, '0');
+  
+  // Formato: YYYY-MM-DD HH:MM:SS (mantiene hora local)
+  // return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  
+  // O si prefieres formato ISO pero con hora local:
+   return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
+};
+  const handleEditSave = async (updatedRow: any) => {
     try {
       // PUT /api/contract - Sin autenticación, id en body
+      console.log('updatedRow',updatedRow)
+        const payload = {
+          agencyId : updatedRow.agencyId,
+          agencyName : updatedRow.agencyName,
+          apprenticeId : updatedRow.apprenticeId,
+          groupId : updatedRow.groupId,
+          id :updatedRow.id,
+          incomeDistribution : updatedRow.incomeDistribution,
+          initialConditions : updatedRow.initialConditions,
+          status : updatedRow.status,
+          entityName : updatedRow.entityName,
+          type : updatedRow.type,
+          startDate : updatedRow.startDate? formatDate(updatedRow.startDate) : null
+        }
       const response = await fetch(`http://localhost:3000/api/contract`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify(updatedRow)
+        body: JSON.stringify(payload)
       });
 
       if (!response.ok) {
@@ -340,9 +403,21 @@ const Contracts: React.FC = () => {
       }
 
       const data = await response.json();
-      setContracts(prev =>
-        prev.map(contract => contract.id === updatedRow.id ? (data.data || data) : contract)
-      );
+      const updatedContract = {
+  ...(data.data || data),
+  id: payload.id,
+  agencyName: payload.agencyName, // 👈 aseguramos el id
+  entityName: payload.entityName // 👈 mantenemos el nombre del artista/grupo
+};
+
+setContracts(prev =>
+  prev.map(contract =>
+    contract.id === updatedRow.id ? updatedContract : contract
+  )
+); 
+      // setContracts(prev =>
+      //   prev.map(contract => contract.id === updatedRow.id ? (data.data || data) : contract)
+      // );
       setOpenAccept(true);
     } catch (error) {
       console.error('Error al actualizar contrato:', error);

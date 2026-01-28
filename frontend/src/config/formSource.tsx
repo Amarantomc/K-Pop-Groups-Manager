@@ -99,14 +99,14 @@ export const agencyFields: Field[] = [
     // Alineado con CreateAgencyDTO del backend: name, address, foundation
     { id: 'name', name: 'name', label: 'Nombre Agencia', type: 'text', placeholder: 'Nombre de la agencia', required: true, minLength: 2, maxLength: 120 },
     { id: 'address', name: 'address', label: 'Ubicación', type: 'text', placeholder: 'Ciudad / Dirección', required: true, maxLength: 200 },
-    { id: 'foundation', name: 'foundation', label: 'Fecha Fundación', type: 'date', required: true },
+    { id: 'foundation', name: 'foundation', label: 'Fecha Fundación', type: 'date', required: true ,dateRule:"no-future"},
 ];
 
 // Aprendiz
 export const apprenticeFields: Field[] = [
     // Campos alineados con CreateApprenticeDto del backend
     { id: 'name', name: 'name', label: 'Nombre Completo', type: 'text', required: true },
-    { id: 'dateOfBirth', name: 'dateOfBirth', label: 'Fecha Nacimiento', type: 'date', required: true },
+    { id: 'dateOfBirth', name: 'dateOfBirth', label: 'Fecha Nacimiento', type: 'date', required: true,dateRule:"no-future" },
     {
         id: 'agencyId',
         name: 'agencyId',
@@ -136,7 +136,7 @@ export const albumFields: Field[] = [
 export const songFields: Field[] = [
     { id: 'title', name: 'title', label: 'Título Canción', type: 'text' },
     { id: 'producer', name: 'producer', label: 'Productor', type: 'text' },
-    { id: 'releaseDate', name: 'releaseDate', label: 'Fecha Lanzamiento', type: 'date' },
+    { id: 'releaseDate', name: 'releaseDate', label: 'Fecha Lanzamiento', type: 'date',dateRule: 'no-future' },
     { id: 'gender', name: 'gender', label: 'Género', type: 'text' },
 ];
 
@@ -265,7 +265,7 @@ export const contractFields: Field[] = [
             return null; // ✅ válido
         },
     },
-    { id: 'value', name: 'value', label: 'Valor', type: 'text', required: true, placeholder: 'Monto del contrato' },
+    { id: 'value', name: 'value', label: 'Distribución de Ingresos', type: 'text', required: true, placeholder: 'Distribución de Ingresos' },
     { id: 'terms', name: 'terms', label: 'Términos', type: 'textarea', required: true, placeholder: 'Condiciones del contrato' },
 ];
 

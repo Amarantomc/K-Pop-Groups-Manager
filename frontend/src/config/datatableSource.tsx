@@ -27,7 +27,6 @@ export const artistColumns: GridColDef[] = [
     { field: 'realName', headerName: 'Nombre Real', width: 200 },
     {field: 'DebutDate',headerName: 'Fecha Debut',width: 150},
     {field: 'Status',headerName: 'Estado',width:120},
-    { field: 'dateOfBirth', headerName: 'Fecha de Nacimiento', width: 150 },
 ]
 
 // Grupo

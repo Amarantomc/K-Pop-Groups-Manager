@@ -304,7 +304,6 @@ export const requestConstraints: Constraints = {
 // Contrato
 export const contractConstraints: Constraints = {
     id: {editable: false, label: "ID"},
-    initialConditions: {editable: true, required: true, type: "string", label: "Términos iniciales"},
     incomeDistribution: {editable:true,required:true,type:"string",label:"Distribución de Ingresos"}
 }
 
