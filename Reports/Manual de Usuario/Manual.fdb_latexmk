@@ -1,7 +1,7 @@
 # Fdb version 4
-["pdflatex"] 1769578827.10139 "/home/dylan/Documentos/3ro/IS/K-Pop-World/K-Pop-Groups-Manager/Reports/Manual de Usuario/Manual.tex" "Manual.pdf" "Manual" 1769578832.96474 0
+["pdflatex"] 1769578988.72171 "/home/dylan/Documentos/3ro/IS/K-Pop-World/K-Pop-Groups-Manager/Reports/Manual de Usuario/Manual.tex" "Manual.pdf" "Manual" 1769578994.29761 0
   "/etc/texmf/web2c/texmf.cnf" 1723367149.94527 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/dylan/Documentos/3ro/IS/K-Pop-World/K-Pop-Groups-Manager/Reports/Manual de Usuario/Manual.tex" 1769578826.68586 40579 54106a5f7cf0d21aff24233a5d41b6ab ""
+  "/home/dylan/Documentos/3ro/IS/K-Pop-World/K-Pop-Groups-Manager/Reports/Manual de Usuario/Manual.tex" 1769578988.34386 40567 ff6fc00ed9511d4edf8d19e1e6f0e86f ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/ecrm1200.tfm" 1136768653 3584 f80ddd985bd00e29e9a6047ebd9d4781 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam10.tfm" 1246382020 916 f87d7c45f9c908e672703b83b72241a3 ""
@@ -107,10 +107,10 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1707919699 40399 f2c302f7d2af602abb742093540a5834 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1739088797.22149 5472669 54eaf61a88b6b7896ebd0dac973cb29c ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1739088906 8214069 37345e8c89cc9e756104619b8093d420 ""
-  "Manual.aux" 1769578832.74177 15769 c9a2543d2aaf8fbc1897b23f462d3793 "pdflatex"
-  "Manual.out" 1769578832.74577 15149 35cfa1860c91fb59baa6fa1af0b7e520 "pdflatex"
-  "Manual.tex" 1769578826.68586 40579 54106a5f7cf0d21aff24233a5d41b6ab ""
-  "Manual.toc" 1769578832.74677 7525 49d7ed21cc19315c593c80851b0b8bed "pdflatex"
+  "Manual.aux" 1769578994.09127 15769 c9a2543d2aaf8fbc1897b23f462d3793 "pdflatex"
+  "Manual.out" 1769578994.09627 15149 35cfa1860c91fb59baa6fa1af0b7e520 "pdflatex"
+  "Manual.tex" 1769578988.34386 40567 ff6fc00ed9511d4edf8d19e1e6f0e86f ""
+  "Manual.toc" 1769578994.09727 7525 49d7ed21cc19315c593c80851b0b8bed "pdflatex"
   "images/ExportacionEditada.png" 1769578406.07362 84083 e0b4377a5ac9cd0bcfc42cb4494a98b6 ""
   "images/KPopWorldlogo.png" 1766216430.81575 163908 cb21714cd735be4ca150abcee9d0174c ""
   "images/TalentArtist.png" 1769519070.9177 120853 4cd870b42b364120b6dd989f18530e87 ""
