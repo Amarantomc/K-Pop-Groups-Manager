@@ -17,10 +17,13 @@ export class GroupRepository implements IGroupRepository {
 	) {}
 	
 	
+	
 
 	private get db() {
 		return this.unitOfWork.getTransaction();
 	}
+
+	 
 
 	async create(data: CreateGroupDTO): Promise<Group> {
 		const group = await this.db.grupo.create({
@@ -113,6 +116,16 @@ export class GroupRepository implements IGroupRepository {
 		if (data.name) updateData.nombreCompleto = data.name;
 		if (data.debut) updateData.fechaDebut = new Date(data.debut);
 		if (data.status) updateData.estadoGrupo = data.status;
+		if(data.memberCount) updateData.Nomiembros=data.memberCount
+		if(data.status=="DISUELTO"){
+			await this.db.artistaEnGrupo.update({
+				where:{OR: [
+					{ idGr:Number(id) },
+					{ idGrupoDebut:Number(id) },
+					],},
+				data:{fechaFinalizacion:new Date()}
+			})
+		}
 
 		const updated = await this.db.grupo.update({
 			where: { id: Number(id) },

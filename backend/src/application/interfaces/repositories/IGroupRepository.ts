@@ -27,4 +27,5 @@ export interface IGroupRepository
 	removeMembers(groupId: number, artistIds: number[]): Promise<void>;
 	addAlbums(groupId: number, albumIds: number[]): Promise<void>;
 	addActivities(groupId: number, activityIds: number[]): Promise<void>;
+	
 }
