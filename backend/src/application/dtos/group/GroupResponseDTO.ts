@@ -10,11 +10,11 @@ import { VisualConceptResponseDto } from "../visualConcept/VisualConceptResponse
 
 export class GroupResponseDTO {
   constructor(
-    public readonly id: number,
-    public readonly name: string,
-    public readonly debut: Date,
-    public readonly status: string,
-    public readonly memberCount: number,
+    public readonly id?: number,
+    public readonly name?: string,
+    public readonly debut?: Date,
+    public readonly status?: string,
+    public readonly memberCount?: number,
 
     public readonly agency?: AgencyResponseDTO | null,
     public readonly concept?: ConceptResponseDto,

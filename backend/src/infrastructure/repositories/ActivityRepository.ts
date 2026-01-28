@@ -215,18 +215,40 @@
       return ActivityResponseDto.toEntity(activity);
     }
 
+    // async findById(id: string): Promise<Activity | null> {
+    //   const activity = await this.db.actividad.findUnique({
+    //     where: { id: Number(id) },
+    //     include: {
+    //       Ingreso: true,
+    //       Personas: {
+    //         include: {
+    //           artista: true
+    //         }
+    //       }
+    //     }
+    //   });
+    //   return activity ? ActivityResponseDto.toEntity(activity) : null;
+    // }
+
     async findById(id: string): Promise<Activity | null> {
       const activity = await this.db.actividad.findUnique({
         where: { id: Number(id) },
         include: {
-          Ingreso: true,
-          Personas: {
+          Ingreso: true, // ingresos de la actividad
+          Personas: {    // participantes
             include: {
-              artista: true
+              artista: true, // info del artista
+              grupos: {      // info del grupo de la persona
+                select: {
+                  id: true,
+                  nombreCompleto: true
+                }
+              }
             }
           }
         }
       });
+    
       return activity ? ActivityResponseDto.toEntity(activity) : null;
     }
 
@@ -279,16 +301,23 @@
       const activities = await this.db.actividad.findMany({
         include: {
           Ingreso: true,
-          Personas: { // usar el nombre correcto según tu schema
+          Personas: {
             include: {
-              artista: true // aquí está el artista
+              artista: true,
+              grupos: {
+                select: {
+                  id: true,
+                  nombreCompleto: true
+                }
+              }
             }
           }
         }
-      });
-    
-      // Debug: ver qué trae realmente Prisma
-    
+      }); 
+
+
+      //console.log(activities[18].Personas);
+
       return ActivityResponseDto.toEntities(activities);
     }
 

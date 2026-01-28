@@ -390,7 +390,7 @@ export class ApplicationRepository implements IApplicationRepository
       data: {
         nombreCompleto: dto.groupName,
         fechaDebut: dto.debut,
-        estadoGrupo: "ACTIVO",
+        estadoGrupo: "EN PAUSA",
         idConcepto: dto.conceptId,
         idConceptoVisual: dto.visualConceptId,
         Nomiembros: totalMembers,

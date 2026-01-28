@@ -1,7 +1,8 @@
 // ActivityResponseDto.ts
 import { Activity } from "../../../domain/entities/Activity";
 import { Artist } from "../../../domain/entities/Artist";
-import type { ArtistStatus } from "../../../domain/enums/ArtistStatus";
+import { GroupResponseDTO } from "../group/GroupResponseDTO";
+import type { Group } from "../../../domain/entities/Group";
 
 export class ActivityResponseDto {
   constructor(
@@ -11,7 +12,7 @@ export class ActivityResponseDto {
     public readonly date: string | null,
     public readonly place: string,
     public readonly eventType: string,
-    public readonly status:string,
+    public readonly status: string,
     public readonly artists?: Array<{
       apprenticeId: number;
       groupId: number;
@@ -22,43 +23,49 @@ export class ActivityResponseDto {
       amount: number;
       type: string;
       date: Date;
-    }[]
+    }[],
+    public readonly groups?: { id: number; groupName: string }[]
   ) {}
 
-  static fromEntity(activity: Activity): ActivityResponseDto {
-    return new ActivityResponseDto(
-      activity.id,
-      activity.responsible,
-      activity.activityType ?? null,
-      activity.date ? activity.date.toISOString() : null,
-      activity.place,
-      activity.eventType,
-      activity.status,
-  
-      // ARTISTAS
-      activity.artists?.map(a => ({
-        apprenticeId: a.apprenticeId,
-        groupId: a.groupId,
-        artistName: a.artistName
-      })) ?? [],
-  
-      // INGRESOS
-      activity.incomes?.map(i => ({
-        idIncome: i.idIncome,
-        amount: i.amount,
-        type: i.type,
-        date: i.date,
-      })) ?? []
-    );
-  }
+    // Convierte entidad a DTO
+    static fromEntity(activity: Activity): ActivityResponseDto {
+      console.log(activity.groups);
+      return new ActivityResponseDto(
+        activity.id,
+        activity.responsible,
+        activity.activityType ?? null,
+        activity.date ? activity.date.toString() : null,
+        activity.place,
+        activity.eventType,
+        activity.status,
 
+        // ARTISTAS
+        activity.artists?.map(a => ({
+          apprenticeId: a.apprenticeId,
+          groupId: a.groupId,
+          artistName: a.artistName
+        })) ?? [],
+
+        // INGRESOS
+        activity.incomes?.map(i => ({
+          idIncome: i.idIncome,
+          amount: i.amount,
+          type: i.type,
+          date: i.date
+        })) ?? [],
+
+        // GRUPOS
+        activity.groups?.map((g:{id:number; name:string} ) => ({
+          id: g.id,
+          groupName: g.name
+        })) ?? []
+      );
+    }
+
+  // Convierte DTO/objeto de DB a entidad
   static toEntity(activity: any): Activity {
-    // ARTISTAS desde PersonasEnActividad
-    const artists: Array<{
-      apprenticeId: number;
-      groupId: number;
-      artistName: string;
-    }> =
+    // ARTISTAS
+    const artists =
       activity.Personas
         ?.filter((p: any) => p.artista)
         .map((p: any) => ({
@@ -76,6 +83,16 @@ export class ActivityResponseDto {
         date: i.fecha
       })) ?? [];
   
+    // GRUPOS — sacando desde Personas
+    const groups = activity.Personas?.flatMap((p: any) =>
+      p.grupos
+        ? [{
+            id: p.grupos.id,
+            groupName: p.grupos.nombreCompleto 
+          }]
+        : []
+    ) ?? [];
+    
     return new Activity({
       id: activity.id,
       responsible: activity.responsable,
@@ -85,32 +102,10 @@ export class ActivityResponseDto {
       eventType: activity.tipoEvento,
       status: activity.estado,
       artists,
-      incomes
+      incomes,
+      groups
     });
   }
-
-
-  // static toEntity(activity: any): Activity {
-  //   return new Activity({
-  //     id: activity.id,
-  //     responsible: activity.responsable,
-  //     activityType: activity.tipoActividad,
-  //     eventType: activity.tipoEvento,
-  //     date: activity.fecha,
-  //     place: activity.lugar,
-  //     status: activity.estado,
-  
-  //     artists: activity.Personas
-  //       ?.filter((p: { idAp: any; }) => p.idAp)
-  //       .map((p: { Aprendiz: { id: any; nombreCompleto: any; }; idGr: any; }) => ({
-  //         id: p.Aprendiz.id,
-  //         name: p.Aprendiz.nombreCompleto,
-  //         groupId: p.idGr,
-  //       })) ?? [],
-  
-  //     incomes: [],
-  //   });
-  // }
 
   static fromEntities(activities: Activity[]): ActivityResponseDto[] {
     return activities.map(activity => this.fromEntity(activity));

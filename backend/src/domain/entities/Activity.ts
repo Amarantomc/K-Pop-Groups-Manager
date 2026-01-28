@@ -1,5 +1,6 @@
 import type { ActivityTypes } from "../enums/ActivityType";
 import type { Artist } from "./Artist";
+import type { Group } from "./Group";
 //import type { Group } from "./Group";
 import Income from "./Income";
 
@@ -21,7 +22,8 @@ export class Activity {
         amount: number;
         type: string;
         date: Date;
-      }[]
+      }[];
+    readonly groups?: {id:number; name: string}[]
 
     constructor(attrs: {
         id: number;
@@ -41,6 +43,7 @@ export class Activity {
             amount: number;
             type: string;
             date: Date;}[] ;
+        groups: {id:number; name: string}[]
     }) {
         this.id = attrs.id;
         this.responsible = attrs.responsible;
@@ -51,5 +54,6 @@ export class Activity {
         this.eventType=attrs.eventType;
         this.status = attrs.status
         this.incomes = attrs.incomes;
+        this.groups = attrs.groups;
     }
 }
