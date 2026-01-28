@@ -88,9 +88,9 @@ export class GroupResponseDTO {
         ? group.albums.map(a => AlbumResponseDto.fromEntity(a))
         : [],
   
-      group.activities
-        ? group.activities.map(a => ActivityResponseDto.fromEntity(a))
-        : []
+      // group.activities
+      //   ? group.activities.map(a => ActivityResponseDto.fromEntity(a))
+      //   : []
     );
   }
 

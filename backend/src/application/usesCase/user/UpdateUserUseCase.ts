@@ -38,7 +38,8 @@ export class UpdateUserUseCase {
             
             return UserResponseDto.fromEntity(updateUser)
     } catch (error) {
-       await this.unitOfWork.rollback();
+      
+      await this.unitOfWork.rollback();
             throw error;
     }
 

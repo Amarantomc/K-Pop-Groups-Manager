@@ -66,7 +66,8 @@ export class RoleMiddleware {
 
     
     //Updatear user distinto al que eres
-    if (req.user?.userId !== requestedId && (password || name || email)) {
+    if (req.user?.userId != requestedId && (password || name || email)) {
+      console.log(req.user?.userId)
       return res.status(403).json({
         success: false,
         error: 'You can only update your own profile'
