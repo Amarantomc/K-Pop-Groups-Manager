@@ -21,6 +21,7 @@ import { FindGroupsByAgencyUseCase } from "../../application/usesCase/group/Find
 import { FindGroupsByConceptUseCase } from "../../application/usesCase/group/FindGroupsByConceptUseCase";
 import { FindGroupByVisualConceptUseCase } from "../../application/usesCase/group/FindGroupByVisualConceptUseCase";
 import type { GroupStatus } from "../../domain/enums/GroupStatus";
+import type { DissolveGroupUseCase } from "../../application/usesCase/group/DissolveGroupUseCase";
 
 @injectable()
 export class GroupController {
@@ -56,7 +57,9 @@ export class GroupController {
 		@inject(Types.FindGroupsByConceptUseCase)
 		private findGroupsByConceptUseCase: FindGroupsByConceptUseCase,
 		@inject(Types.FindGroupsByVisualConceptUseCase)
-		private findGroupByVisualConceptUseCase: FindGroupByVisualConceptUseCase
+		private findGroupByVisualConceptUseCase: FindGroupByVisualConceptUseCase,
+		@inject(Types.DissolveGroupUseCase)
+		private dissolveGroupUseCase: DissolveGroupUseCase
 	) {}
 
 	async createGroup(req: Request, res: Response) {
@@ -325,6 +328,16 @@ export class GroupController {
 				parseInt(visualConceptId)
 			);
 			res.json({ success: true, data: groups });
+		} catch (error: any) {
+			res.status(400).json({ success: false, error: error.message });
+		}
+	}
+
+	async DissolveGroup(req: Request, res: Response) {
+		try {
+			const { id } = req.params;
+			const group = await this.dissolveGroupUseCase.execute(id!);
+			res.json({ success: true, data: group });
 		} catch (error: any) {
 			res.status(400).json({ success: false, error: error.message });
 		}

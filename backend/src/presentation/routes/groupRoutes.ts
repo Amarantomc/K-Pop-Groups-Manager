@@ -74,6 +74,9 @@ export class GroupRoutes {
 		this.router.post("/:id/activities/add", (req, res) =>
 			this.groupController.addActivities(req, res)
 		);
+		this.router.post("/:id/dissolve", (req, res) =>
+			this.groupController.DissolveGroup(req, res)
+		);
 	}
 
 	public getRouter(): Router {

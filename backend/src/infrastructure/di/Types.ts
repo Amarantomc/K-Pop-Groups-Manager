@@ -194,6 +194,7 @@ FindGroupsByMemberUseCase : Symbol.for('FindGroupsByMemberUseCase'),
 FindGroupsByAgencyUseCase : Symbol.for('FindGroupsByAgencyUseCase'),
 FindGroupsByConceptUseCase : Symbol.for('FindGroupsByConceptUseCase'),
 FindGroupsByVisualConceptUseCase : Symbol.for('FindGroupsByVisualConceptUseCase'),
+DissolveGroupUseCase : Symbol.for('DissolveGroupUseCase'),
 //#endregion
 
 

@@ -201,6 +201,7 @@ import { SoloistsArtistWhithoutApplicationUseCase } from "../../application/uses
 import { GetAgencyByApprenticeOrArtistUseCase } from "../../application/usesCase/agency/GetAgencyByApprenticeOrArtistUseCase";
 import { GetApprenticesWhithoutApplicationUseCase } from "../../application/usesCase/apprentice/GetApprenticesWhithoutApplicationUseCase";
 import { UpdateContractStatusUseCase } from "../../application/usesCase/contract/UpdateContractStatusUseCase";
+import { DissolveGroupUseCase } from "../../application/usesCase/group/DissolveGroupUseCase";
  
 const container=new Container()
  
@@ -393,6 +394,9 @@ container
 	.bind<FindGroupByVisualConceptUseCase>(Types.FindGroupsByVisualConceptUseCase)
 	.to(FindGroupByVisualConceptUseCase)
 	.inTransientScope();
+
+  container.bind<DissolveGroupUseCase>(Types.DissolveGroupUseCase)
+  .to(DissolveGroupUseCase).inTransientScope()
 
   //#endregion
 

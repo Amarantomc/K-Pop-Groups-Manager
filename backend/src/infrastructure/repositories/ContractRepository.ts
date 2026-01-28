@@ -59,9 +59,11 @@ export class ContractRepository implements IContractRepository{
           condicionesIniciales: data.initialConditions,
           distribucionIngresos: data.incomeDistribution
         },
-        include: {
+          include: {
           Agencia: true,
-          Artista: true
+          Artista: {
+            include: { aprendiz: true }
+          }
         }
       });
 
@@ -77,10 +79,26 @@ export class ContractRepository implements IContractRepository{
           condicionesIniciales: data.initialConditions,
           distribucionIngresos: data.incomeDistribution
         },
-        include: {
-          Agencia: true,
-          Grupo: true
-        }
+         include: {
+              Agencias: true,
+              concepto: true,
+              conceptoVisual: true,
+              HistorialArtistas: {
+                where: { fechaFinalizacion: null },
+                include: { artista: { include: { aprendiz: true } } }
+              },
+              Lanzamiento: { include: { album: true } },
+              Actividades: {
+                include: {
+                  actividad: {
+                    include: {
+                      Personas: { include: { artista: true } },
+                      Ingreso: true
+                    }
+                  }
+                }
+              }
+            }
       });
 
       
@@ -98,9 +116,25 @@ export class ContractRepository implements IContractRepository{
             id=Number(id) 
           contract =await this.db.contratoGrupo.findUnique({
             where:{id},
-            include: {
-              Agencia: true,
-              Grupo:true
+             include: {
+              Agencias: true,
+              concepto: true,
+              conceptoVisual: true,
+              HistorialArtistas: {
+                where: { fechaFinalizacion: null },
+                include: { artista: { include: { aprendiz: true } } }
+              },
+              Lanzamiento: { include: { album: true } },
+              Actividades: {
+                include: {
+                  actividad: {
+                    include: {
+                      Personas: { include: { artista: true } },
+                      Ingreso: true
+                    }
+                  }
+                }
+              }
             }
         })
      } else {
@@ -112,10 +146,12 @@ export class ContractRepository implements IContractRepository{
             fechaInicio: new Date(startDate)
          }
          },
-          include:{
-            Agencia:true,
-            Artista:true
+            include: {
+          Agencia: true,
+          Artista: {
+            include: { aprendiz: true }
           }
+        }
       })
      }  
       
@@ -341,10 +377,12 @@ export class ContractRepository implements IContractRepository{
             idGr: Number (groupId),
           
          },
-          include:{
-            Agencia:true,
-            Artista:true
+            include: {
+          Agencia: true,
+          Artista: {
+            include: { aprendiz: true }
           }
+        }
   })  
       return ContractResponseDto.toEntities(contracts);
 
