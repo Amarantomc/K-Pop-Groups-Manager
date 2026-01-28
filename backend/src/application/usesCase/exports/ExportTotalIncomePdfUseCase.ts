@@ -17,21 +17,26 @@ export class ExportTotalIncomePdfUseCase {
         @inject(Types.GetIncomeAndSuccesUseCase) private artists: GetIncomeAndSuccesUseCase,
         @inject(Types.IExportable) private pdfExporter: IExportable<{
     incomes: ArtistWithIncomeDto;
-    succes: ArtistWithSuccesDto[];
-    lastWorks: AlbumResponseDto[];
+    succes: ArtistWithSuccesDto|undefined;
+    lastWorks: AlbumResponseDto|undefined;
 }>
     ) {}
 
     async execute(data: RequestArtistWithIncomeDto): Promise<Buffer> {
         const  artist= await this.artists.execute(data);
-        const arr=[artist]
+        const newArtist={incomes:artist.incomes,lastWorks:artist.lastWorks[0],succes:artist.succes[0]}
+        const arr=[newArtist]
         return this.pdfExporter.export(arr, {
             title: 'Ingresos Artista',
             filename: `ingreso_${Date.now()}.pdf`,
             orientation: 'landscape',
             columns: [
                  
-                { header: 'Total', dataKey: 'incomes' },
+                { header: 'Total', dataKey: 'incomes.TotalIncome' },
+                { header: 'Exitos', dataKey: 'succes.Title' },
+                { header: 'Ultimo Trabajo', dataKey: 'lastWorks.title' },
+                { header: 'NoCanciones', dataKey: 'lastWorks.noSongs' },
+                { header: 'Copias Vendidas', dataKey: 'lastWorks.noCopiesSold' },
                  
                 
             ]

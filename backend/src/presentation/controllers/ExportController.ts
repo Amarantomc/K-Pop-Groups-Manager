@@ -16,6 +16,10 @@ import type { ExportContractsPdfUseCase } from "../../application/usesCase/expor
 import type { ExportIncomesPdfUseCase } from "../../application/usesCase/exports/ExportIncomesPdfUseCase";
 import type { ExportApplicationsPdfUseCase } from "../../application/usesCase/exports/ExportApplicationsUseCase";
 import type { ExportUsersPdfUseCase } from "../../application/usesCase/exports/ExportUsersPdfUseCase";
+import type { ExportArtistOnChangePdfUseCase } from "../../application/usesCase/exports/ExportArtistOnChangePdfUseCase";
+import type { ExportTotalIncomePdfUseCase } from "../../application/usesCase/exports/ExportTotalIncomePdfUseCase";
+import type { ExportSoloArtistPdfUseCase } from "../../application/usesCase/exports/ExportSoloArtistPdfUseCase";
+import { RequestArtistWithIncomeDto } from "../../application/dtos/artist/RequestArtistWithIncomeDto";
 
  
 
@@ -36,7 +40,10 @@ export class ExportController {
         @inject(Types.ExportContractsPdfUseCase)private exportContracts:ExportContractsPdfUseCase,
         @inject(Types.ExportIncomesPdfUseCase)private exportIncomes:ExportIncomesPdfUseCase,
         @inject(Types.ExportApplicationsPdfUseCase)private exportApplications:ExportApplicationsPdfUseCase,
-        @inject(Types.ExportUsersPdfUseCase) private exportUsers:ExportUsersPdfUseCase
+        @inject(Types.ExportUsersPdfUseCase) private exportUsers:ExportUsersPdfUseCase,
+        @inject(Types.ExportArtistOnChangePdfUseCase) private exportArtistOnChange:ExportArtistOnChangePdfUseCase,
+        @inject(Types.ExportTotalIncomePdfUseCase) private exportTotalIncome:ExportTotalIncomePdfUseCase,
+        @inject(Types.ExportSoloArtistPdfUseCase) private exportSoloArtist:ExportSoloArtistPdfUseCase,
     ) {}
 
     async exportArtistsPdf(req: Request, res: Response): Promise<void> {
@@ -250,4 +257,47 @@ export class ExportController {
             res.status(500).json({ error: 'Error generando PDF' });
         }
     }
+
+    async exportArtistOnChangePdf(req: Request, res: Response): Promise<void> {
+        try {
+            
+            
+            const pdfBuffer = await this.exportArtistOnChange.execute()
+
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', `attachment; filename=users_${Date.now()}.pdf`);
+            res.send(pdfBuffer);
+        } catch (error) {
+            res.status(500).json({ error: 'Error generando PDF' });
+        }
+    }
+
+    async exportTotalIncomePdf(req: Request, res: Response): Promise<void> {
+        try {
+            
+            const data=RequestArtistWithIncomeDto.create(req.body)
+            const pdfBuffer = await this.exportTotalIncome.execute(data)
+
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', `attachment; filename=users_${Date.now()}.pdf`);
+            res.send(pdfBuffer);
+        } catch (error) {
+            res.status(500).json({ error: 'Error generando PDF' });
+        }
+    }
+
+    async exportSoloArtistPdf(req: Request, res: Response): Promise<void> {
+        try {
+            
+            
+            const pdfBuffer = await this.exportSoloArtist.execute()
+
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', `attachment; filename=users_${Date.now()}.pdf`);
+            res.send(pdfBuffer);
+        } catch (error) {
+            res.status(500).json({ error: 'Error generando PDF' });
+        }
+    }
 }
+
