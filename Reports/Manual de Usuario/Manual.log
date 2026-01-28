@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.2.9)  28 JAN 2026 00:43
+=======
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.10.15)  28 JAN 2026 00:39
+>>>>>>> Stashed changes
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -424,6 +428,7 @@ File: images/KPopWorldlogo.png Graphic file (type png)
 <use images/KPopWorldlogo.png>
 Package pdftex.def Info: images/KPopWorldlogo.png  used on input line 50.
 (pdftex.def)             Requested size: 159.33821pt x 103.13377pt.
+<<<<<<< Updated upstream
 LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 68.
  (/usr/share/texmf/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
@@ -438,13 +443,38 @@ File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 68.
  (/usr/share/texmf/tex/latex/lm/omxlmex.fd
+=======
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 6
+4.
+
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/lm\ot1lmr.fd
+File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 6
+4.
+
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/lm\omllmm.fd
+File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
+64.
+
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/lm\omslmsy.fd
+File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
+64.
+
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/lm\omxlmex.fd
+>>>>>>> Stashed changes
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 68.
+(Font)              <12> on input line 64.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 68.
+(Font)              <8> on input line 64.
 LaTeX Font Info:    External font `lmex10' loaded for size
+<<<<<<< Updated upstream
 (Font)              <6> on input line 68.
 LaTeX Font Info:    Trying to load font information for U+msa on input line 68.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
@@ -452,6 +482,19 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
 LaTeX Font Info:    Trying to load font information for U+msb on input line 68.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
+=======
+(Font)              <6> on input line 64.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 64.
+
+
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 64.
+
+
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
+>>>>>>> Stashed changes
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
 
@@ -471,128 +514,156 @@ l.41 ...s sin Grupo(Solista)}{13}{subsection.11.5}
 pdfTeX warning (ext4): destination with the same identifier (name{table.1}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.157 	
+l.153 	
        ]
+<<<<<<< Updated upstream
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 164.
  (/usr/share/texmf/tex/latex/lm/t1lmtt.fd
+=======
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 1
+60.
+ (C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/lm\t1lmtt.fd
+>>>>>>> Stashed changes
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 ) [5
 pdfTeX warning (ext4): destination with the same identifier (name{table.2}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.210 	\end{verbatim}
+l.206 	\end{verbatim}
                      ]
 <images/manual_img-000.png, id=452, 1371.1225pt x 770.88pt>
 File: images/manual_img-000.png Graphic file (type png)
 <use images/manual_img-000.png>
-Package pdftex.def Info: images/manual_img-000.png  used on input line 232.
+Package pdftex.def Info: images/manual_img-000.png  used on input line 228.
 (pdftex.def)             Requested size: 364.19667pt x 204.75273pt.
  [6
 pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.239 	
+l.235 	
         <./images/manual_img-000.png (PNG copy)>]
 <images/manual_img-001.png, id=463, 1371.1225pt x 770.88pt>
 File: images/manual_img-001.png Graphic file (type png)
 <use images/manual_img-001.png>
-Package pdftex.def Info: images/manual_img-001.png  used on input line 242.
+Package pdftex.def Info: images/manual_img-001.png  used on input line 238.
 (pdftex.def)             Requested size: 364.19667pt x 204.75273pt.
  [7
 pdfTeX warning (ext4): destination with the same identifier (name{figure.2}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.266 	\subsection
+l.262 	\subsection
                   {Aprendiz} <./images/manual_img-001.png (PNG copy)>] [8]
 <images/manual_img-002.png, id=476, 1371.1225pt x 770.88pt>
 File: images/manual_img-002.png Graphic file (type png)
 <use images/manual_img-002.png>
-Package pdftex.def Info: images/manual_img-002.png  used on input line 317.
+Package pdftex.def Info: images/manual_img-002.png  used on input line 313.
 (pdftex.def)             Requested size: 364.19667pt x 204.75273pt.
  [9
 pdfTeX warning (ext4): destination with the same identifier (name{figure.3}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
+<<<<<<< Updated upstream
 l.335 		\item A
                sociar el aprendiz a una agencia. <./images/manual_img-002.png (PNG copy)>]
 <images/aprendizLista.png, id=486, 1116.5715pt x 565.51276pt>
+=======
+l.331 		\item A
+               sociar el aprendiz a una agencia. <./images/manual_img-002.png (
+PNG copy)>]
+<images/aprendizLista.png, id=567, 1116.5715pt x 565.51276pt>
+>>>>>>> Stashed changes
 File: images/aprendizLista.png Graphic file (type png)
 <use images/aprendizLista.png>
-Package pdftex.def Info: images/aprendizLista.png  used on input line 354.
+Package pdftex.def Info: images/aprendizLista.png  used on input line 350.
 (pdftex.def)             Requested size: 364.19667pt x 184.45389pt.
 <images/aprendizEvaluar.png, id=487, 1119.58275pt x 563.706pt>
 File: images/aprendizEvaluar.png Graphic file (type png)
 <use images/aprendizEvaluar.png>
-Package pdftex.def Info: images/aprendizEvaluar.png  used on input line 360.
+Package pdftex.def Info: images/aprendizEvaluar.png  used on input line 356.
 (pdftex.def)             Requested size: 364.19667pt x 183.3743pt.
  [10
 pdfTeX warning (ext4): destination with the same identifier (name{figure.4}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.366 	\subsection
+l.362 	\subsection
                   {Conversión de Aprendiz a Artista}
 pdfTeX warning (ext4): destination with the same identifier (name{figure.5}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
+<<<<<<< Updated upstream
 l.366 	\subsection
                   {Conversión de Aprendiz a Artista} <./images/aprendizLista.png> <./images/aprendizEvaluar.png>]
 <images/groupList.png, id=503, 1117.776pt x 564.9105pt>
+=======
+l.362 	\subsection
+                  {Conversión de Aprendiz a Artista} <./images/aprendizLista.p
+ng> <./images/aprendizEvaluar.png>]
+<images/groupList.png, id=584, 1117.776pt x 564.9105pt>
+>>>>>>> Stashed changes
 File: images/groupList.png Graphic file (type png)
 <use images/groupList.png>
-Package pdftex.def Info: images/groupList.png  used on input line 395.
+Package pdftex.def Info: images/groupList.png  used on input line 391.
 (pdftex.def)             Requested size: 364.19667pt x 184.0592pt.
  [11]
 <images/manual_img-005.png, id=512, 1371.1225pt x 770.88pt>
 File: images/manual_img-005.png Graphic file (type png)
 <use images/manual_img-005.png>
-Package pdftex.def Info: images/manual_img-005.png  used on input line 412.
+Package pdftex.def Info: images/manual_img-005.png  used on input line 408.
 (pdftex.def)             Requested size: 364.19667pt x 204.75273pt.
  [12
 pdfTeX warning (ext4): destination with the same identifier (name{figure.6}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.422 		\item E
+l.418 		\item E
                l sistema permite asociar una imagen representativa del grupo.
 pdfTeX warning (ext4): destination with the same identifier (name{figure.7}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
+<<<<<<< Updated upstream
 l.422 		\item E
                l sistema permite asociar una imagen representativa del grupo. <./images/groupList.png> <./images/manual_img-005.png (PNG copy)>]
 <images/manual_img-006.png, id=523, 1371.1225pt x 770.88pt>
+=======
+l.418 		\item E
+               l sistema permite asociar una imagen representativa del grupo. <
+./images/groupList.png> <./images/manual_img-005.png (PNG copy)>]
+<images/manual_img-006.png, id=604, 1371.1225pt x 770.88pt>
+>>>>>>> Stashed changes
 File: images/manual_img-006.png Graphic file (type png)
 <use images/manual_img-006.png>
-Package pdftex.def Info: images/manual_img-006.png  used on input line 427.
+Package pdftex.def Info: images/manual_img-006.png  used on input line 423.
 (pdftex.def)             Requested size: 364.19667pt x 204.75273pt.
  [13
 pdfTeX warning (ext4): destination with the same identifier (name{figure.8}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.451 	\end{enumerate}
+l.447 	\end{enumerate}
                        <./images/manual_img-006.png (PNG copy)>]
 <images/activityCalendar.png, id=537, 1118.37825pt x 566.71725pt>
 File: images/activityCalendar.png Graphic file (type png)
 <use images/activityCalendar.png>
-Package pdftex.def Info: images/activityCalendar.png  used on input line 457.
+Package pdftex.def Info: images/activityCalendar.png  used on input line 453.
 (pdftex.def)             Requested size: 364.19667pt x 184.54411pt.
 <images/activityAdd.png, id=538, 1117.17375pt x 569.7285pt>
 File: images/activityAdd.png Graphic file (type png)
 <use images/activityAdd.png>
-Package pdftex.def Info: images/activityAdd.png  used on input line 463.
+Package pdftex.def Info: images/activityAdd.png  used on input line 459.
 (pdftex.def)             Requested size: 364.19667pt x 185.72464pt.
 <images/manual_img-009.png, id=539, 1371.1225pt x 770.88pt>
 File: images/manual_img-009.png Graphic file (type png)
 <use images/manual_img-009.png>
-Package pdftex.def Info: images/manual_img-009.png  used on input line 477.
+Package pdftex.def Info: images/manual_img-009.png  used on input line 473.
 (pdftex.def)             Requested size: 364.19667pt x 204.75273pt.
  [14
 pdfTeX warning (ext4): destination with the same identifier (name{figure.9}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.479 	\end{figure}
+l.475 	\end{figure}
                    
 pdfTeX warning (ext4): destination with the same identifier (name{figure.10}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
+<<<<<<< Updated upstream
 l.479 	\end{figure}
                     <./images/activityCalendar.png> <./images/activityAdd.png>] [15
 pdfTeX warning (ext4): destination with the same identifier (name{figure.11}) has been already used, duplicate ignored
@@ -601,94 +672,121 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.11}) ha
 l.508 		\item A
                cceder a la sección Álbumes. <./images/manual_img-009.png (PNG copy)>]
 <images/albumesList.png, id=554, 1117.776pt x 566.115pt>
+=======
+l.475 	\end{figure}
+                    <./images/activityCalendar.png> <./images/activityAdd.png>]
+[15
+pdfTeX warning (ext4): destination with the same identifier (name{figure.11}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.504 		\item A
+               cceder a la sección Álbumes. <./images/manual_img-009.png (PNG
+ copy)>]
+<images/albumesList.png, id=635, 1117.776pt x 566.115pt>
+>>>>>>> Stashed changes
 File: images/albumesList.png Graphic file (type png)
 <use images/albumesList.png>
-Package pdftex.def Info: images/albumesList.png  used on input line 519.
+Package pdftex.def Info: images/albumesList.png  used on input line 515.
 (pdftex.def)             Requested size: 364.19667pt x 184.45166pt.
 <images/songList.png, id=555, 1115.96925pt x 566.71725pt>
 File: images/songList.png Graphic file (type png)
 <use images/songList.png>
-Package pdftex.def Info: images/songList.png  used on input line 543.
+Package pdftex.def Info: images/songList.png  used on input line 539.
 (pdftex.def)             Requested size: 364.19667pt x 184.95053pt.
  [16
 pdfTeX warning (ext4): destination with the same identifier (name{figure.12}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.546 	
+l.542 	
         <./images/albumesList.png>]
 <images/awardsList.png, id=571, 1117.776pt x 561.297pt>
 File: images/awardsList.png Graphic file (type png)
 <use images/awardsList.png>
-Package pdftex.def Info: images/awardsList.png  used on input line 562.
+Package pdftex.def Info: images/awardsList.png  used on input line 558.
 (pdftex.def)             Requested size: 364.19667pt x 182.88185pt.
  [17
 pdfTeX warning (ext4): destination with the same identifier (name{figure.13}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.575 		\item R
+l.571 		\item R
                egistrar una nueva lista, indicando su nombre y tipo.
 pdfTeX warning (ext4): destination with the same identifier (name{figure.14}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
+<<<<<<< Updated upstream
 l.575 		\item R
                egistrar una nueva lista, indicando su nombre y tipo. <./images/songList.png> <./images/awardsList.png>]
 <images/populist.png, id=584, 1121.3895pt x 563.706pt>
+=======
+l.571 		\item R
+               egistrar una nueva lista, indicando su nombre y tipo. <./images/
+songList.png> <./images/awardsList.png>]
+<images/populist.png, id=664, 1121.3895pt x 563.706pt>
+>>>>>>> Stashed changes
 File: images/populist.png Graphic file (type png)
 <use images/populist.png>
-Package pdftex.def Info: images/populist.png  used on input line 582.
+Package pdftex.def Info: images/populist.png  used on input line 578.
 (pdftex.def)             Requested size: 364.19667pt x 183.07326pt.
 <images/populistInfo.png, id=585, 1117.776pt x 566.115pt>
 File: images/populistInfo.png Graphic file (type png)
 <use images/populistInfo.png>
-Package pdftex.def Info: images/populistInfo.png  used on input line 588.
+Package pdftex.def Info: images/populistInfo.png  used on input line 584.
 (pdftex.def)             Requested size: 364.19667pt x 184.45166pt.
  [18
 pdfTeX warning (ext4): destination with the same identifier (name{figure.15}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.601 	\end{itemize}
+l.597 	\end{itemize}
                     
 pdfTeX warning (ext4): destination with the same identifier (name{figure.16}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.601 	\end{itemize}
+l.597 	\end{itemize}
                      <./images/populist.png> <./images/populistInfo.png>]
 <images/contractList.png, id=595, 1120.78725pt x 566.115pt>
 File: images/contractList.png Graphic file (type png)
 <use images/contractList.png>
-Package pdftex.def Info: images/contractList.png  used on input line 627.
+Package pdftex.def Info: images/contractList.png  used on input line 623.
 (pdftex.def)             Requested size: 364.19667pt x 183.95064pt.
  [19
 pdfTeX warning (ext4): destination with the same identifier (name{figure.17}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.637 	
+l.633 	
         <./images/contractList.png>]
 <images/talentAprendiz.png, id=602, 1117.776pt x 563.10374pt>
 File: images/talentAprendiz.png Graphic file (type png)
 <use images/talentAprendiz.png>
-Package pdftex.def Info: images/talentAprendiz.png  used on input line 644.
+Package pdftex.def Info: images/talentAprendiz.png  used on input line 639.
 (pdftex.def)             Requested size: 364.19667pt x 183.47052pt.
 <images/TalentArtist.png, id=603, 1115.96925pt x 563.10374pt>
 File: images/TalentArtist.png Graphic file (type png)
 <use images/TalentArtist.png>
-Package pdftex.def Info: images/TalentArtist.png  used on input line 669.
+Package pdftex.def Info: images/TalentArtist.png  used on input line 662.
 (pdftex.def)             Requested size: 364.19667pt x 183.77126pt.
  [20
 pdfTeX warning (ext4): destination with the same identifier (name{figure.18}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
+<<<<<<< Updated upstream
 l.671 	\end{figure}
                     <./images/talentAprendiz.png>]
 <images/talentGroup.png, id=615, 1117.17375pt x 561.89925pt>
+=======
+l.665 	
+        <./images/talentAprendiz.png>]
+<images/talentGroup.png, id=695, 1117.17375pt x 561.89925pt>
+>>>>>>> Stashed changes
 File: images/talentGroup.png Graphic file (type png)
 <use images/talentGroup.png>
-Package pdftex.def Info: images/talentGroup.png  used on input line 679.
+Package pdftex.def Info: images/talentGroup.png  used on input line 671.
 (pdftex.def)             Requested size: 364.19667pt x 183.1724pt.
  [21
 pdfTeX warning (ext4): destination with the same identifier (name{figure.19}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
+<<<<<<< Updated upstream
 l.692 		\item A
                cceder a la sección Solicitudes desde el menú principal.
 pdfTeX warning (ext4): destination with the same identifier (name{figure.20}) has been already used, duplicate ignored
@@ -697,30 +795,53 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.20}) ha
 l.692 		\item A
                cceder a la sección Solicitudes desde el menú principal. <./images/TalentArtist.png> <./images/talentGroup.png>]
 <images/requestList.png, id=624, 1118.9805pt x 564.30824pt>
+=======
+l.685 		\item S
+               eleccionar la opción Agregar.
+pdfTeX warning (ext4): destination with the same identifier (name{figure.20}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.685 		\item S
+               eleccionar la opción Agregar. <./images/TalentArtist.png> <./im
+ages/talentGroup.png>]
+<images/requestList.png, id=704, 1118.9805pt x 564.30824pt>
+>>>>>>> Stashed changes
 File: images/requestList.png Graphic file (type png)
 <use images/requestList.png>
-Package pdftex.def Info: images/requestList.png  used on input line 702.
+Package pdftex.def Info: images/requestList.png  used on input line 694.
 (pdftex.def)             Requested size: 364.19667pt x 183.66493pt.
  [22
 pdfTeX warning (ext4): destination with the same identifier (name{figure.21}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
+<<<<<<< Updated upstream
 l.726 		\item V
                isualizar el detalle de cada solicitud. <./images/requestList.png>] [23]
 <images/manual_img-017.png, id=639, 1371.1225pt x 770.88pt>
+=======
+l.721 	\end{itemize}
+                     <./images/requestList.png>] [23]
+<images/manual_img-017.png, id=720, 1371.1225pt x 770.88pt>
+>>>>>>> Stashed changes
 File: images/manual_img-017.png Graphic file (type png)
 <use images/manual_img-017.png>
-Package pdftex.def Info: images/manual_img-017.png  used on input line 776.
+Package pdftex.def Info: images/manual_img-017.png  used on input line 768.
 (pdftex.def)             Requested size: 364.19667pt x 204.75273pt.
+<<<<<<< Updated upstream
 <images/manual_img-018.png, id=640, 1371.1225pt x 770.88pt>
+=======
+<images/manual_img-018.png, id=721, 1371.1225pt x 770.88pt>
+>>>>>>> Stashed changes
 File: images/manual_img-018.png Graphic file (type png)
 <use images/manual_img-018.png>
-Package pdftex.def Info: images/manual_img-018.png  used on input line 786.
+Package pdftex.def Info: images/manual_img-018.png  used on input line 778.
 (pdftex.def)             Requested size: 364.19667pt x 204.75273pt.
  [24
 pdfTeX warning (ext4): destination with the same identifier (name{figure.22}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
+<<<<<<< Updated upstream
 l.789 	
         <./images/manual_img-017.png (PNG copy)>]
 <images/manual_img-019.png, id=650, 1371.1225pt x 770.88pt>
@@ -735,10 +856,28 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.23}) ha
 l.811 	
         <./images/manual_img-018.png (PNG copy)>]
 <images/manual_img-020.png, id=659, 1371.1225pt x 770.88pt>
+=======
+l.785 	
+       
+pdfTeX warning (ext4): destination with the same identifier (name{figure.23}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.785 	
+        <./images/manual_img-017.png (PNG copy)> <./images/manual_img-018.png (
+PNG copy)>]
+<images/manual_img-019.png, id=731, 1371.1225pt x 770.88pt>
+File: images/manual_img-019.png Graphic file (type png)
+<use images/manual_img-019.png>
+Package pdftex.def Info: images/manual_img-019.png  used on input line 800.
+(pdftex.def)             Requested size: 364.19667pt x 204.75273pt.
+<images/manual_img-020.png, id=732, 1371.1225pt x 770.88pt>
+>>>>>>> Stashed changes
 File: images/manual_img-020.png Graphic file (type png)
 <use images/manual_img-020.png>
-Package pdftex.def Info: images/manual_img-020.png  used on input line 827.
+Package pdftex.def Info: images/manual_img-020.png  used on input line 819.
 (pdftex.def)             Requested size: 364.19667pt x 204.75273pt.
+<<<<<<< Updated upstream
  [26
 pdfTeX warning (ext4): destination with the same identifier (name{figure.24}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
@@ -757,23 +896,109 @@ Package pdftex.def Info: images/manual_img-021.png  used on input line 844.
 (pdftex.def)             Requested size: 364.19667pt x 204.75273pt.
  [27
 pdfTeX warning (ext4): destination with the same identifier (name{figure.26}) has been already used, duplicate ignored
+=======
+ [25
+pdfTeX warning (ext4): destination with the same identifier (name{figure.24}) h
+as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.867 	
-        <./images/manual_img-021.png (PNG copy)>]
+l.821 	\end{figure}
+                    <./images/manual_img-019.png (PNG copy)>]
+<images/manual_img-021.png, id=745, 1371.1225pt x 770.88pt>
+File: images/manual_img-021.png Graphic file (type png)
+<use images/manual_img-021.png>
+Package pdftex.def Info: images/manual_img-021.png  used on input line 836.
+(pdftex.def)             Requested size: 364.19667pt x 204.75273pt.
+ [26
+pdfTeX warning (ext4): destination with the same identifier (name{figure.25}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.839 	
+        <./images/manual_img-020.png (PNG copy)>] [27
+pdfTeX warning (ext4): destination with the same identifier (name{figure.26}) h
+as been already used, duplicate ignored
+>>>>>>> Stashed changes
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.866 		\item \textbf
+                     {Exportación}: Los datos mostrados en tabla pueden exp...
+ <./images/manual_img-021.png (PNG copy)>]
 File: images/manual_img-018.png Graphic file (type png)
 <use images/manual_img-018.png>
-Package pdftex.def Info: images/manual_img-018.png  used on input line 897.
+Package pdftex.def Info: images/manual_img-018.png  used on input line 889.
 (pdftex.def)             Requested size: 364.19667pt x 204.75273pt.
+<<<<<<< Updated upstream
  [28]
 File: images/contractList.png Graphic file (type png)
 <use images/contractList.png>
 Package pdftex.def Info: images/contractList.png  used on input line 919.
+=======
+ [28] [29
+pdfTeX warning (ext4): destination with the same identifier (name{figure.27}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.919 	\end{itemize}
+                    ]
+File: images/populist.png Graphic file (type png)
+<use images/populist.png>
+Package pdftex.def Info: images/populist.png  used on input line 934.
+(pdftex.def)             Requested size: 364.19667pt x 183.07326pt.
+File: images/manual_img-009.png Graphic file (type png)
+<use images/manual_img-009.png>
+Package pdftex.def Info: images/manual_img-009.png  used on input line 956.
+(pdftex.def)             Requested size: 364.19667pt x 204.75273pt.
+ [30
+pdfTeX warning (ext4): destination with the same identifier (name{figure.28}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.959 	
+       ] [31
+pdfTeX warning (ext4): destination with the same identifier (name{figure.29}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.989 	
+       ]
+File: images/aprendizLista.png Graphic file (type png)
+<use images/aprendizLista.png>
+Package pdftex.def Info: images/aprendizLista.png  used on input line 992.
+(pdftex.def)             Requested size: 364.19667pt x 184.45389pt.
+ [32
+pdfTeX warning (ext4): destination with the same identifier (name{figure.30}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.1023 	\end{itemize}
+                     ]
+File: images/manual_img-009.png Graphic file (type png)
+<use images/manual_img-009.png>
+Package pdftex.def Info: images/manual_img-009.png  used on input line 1051.
+(pdftex.def)             Requested size: 364.19667pt x 204.75273pt.
+ [33
+pdfTeX warning (ext4): destination with the same identifier (name{figure.31}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.1062 		\item A
+                gencia actual]
+File: images/albumesList.png Graphic file (type png)
+<use images/albumesList.png>
+Package pdftex.def Info: images/albumesList.png  used on input line 1096.
+(pdftex.def)             Requested size: 364.19667pt x 184.45166pt.
+ [34]
+File: images/contractList.png Graphic file (type png)
+<use images/contractList.png>
+Package pdftex.def Info: images/contractList.png  used on input line 1129.
+>>>>>>> Stashed changes
 (pdftex.def)             Requested size: 364.19667pt x 183.95064pt.
  [29
 pdfTeX warning (ext4): destination with the same identifier (name{figure.27}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
+<<<<<<< Updated upstream
 l.922 	
        ]
 <images/ExportacionEditada.png, id=695, 1315.91624pt x 628.3475pt>
@@ -792,6 +1017,17 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.29}) ha
                                                   \__shipout_drop_firstpage_...
 l.942 \end{document}
                      <./images/ExportacionEditada.png>] (./Manual.aux
+=======
+l.1132 	
+        ] [36
+pdfTeX warning (ext4): destination with the same identifier (name{figure.33}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.1166 	\subsubsection
+                      {Ejemplo 3: Evaluación de Productividad de Grupo}]
+[37] (Manual.aux
+>>>>>>> Stashed changes
 LaTeX Info: Redefining \. on input line 11.
 LaTeX Info: Redefining \% on input line 11.
 )
@@ -809,9 +1045,20 @@ Here is how much of TeX's memory you used:
  34933 multiletter control sequences out of 15000+600000
  596968 words of font info for 63 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
+<<<<<<< Updated upstream
  75i,12n,79p,642b,783s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf/fonts/type1/public/lm/lmbx12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr17.pfb></usr/share/texmf/fonts/type1/public/lm/lmri12.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt12.pfb>
 Output written on Manual.pdf (31 pages, 3212393 bytes).
+=======
+ 75i,12n,79p,553b,785s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<C:/Users/TIGER/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmbx12.pf
+b><C:/Users/TIGER/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr10.pfb
+><C:/Users/TIGER/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr12.pfb>
+<C:/Users/TIGER/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr17.pfb><
+C:/Users/TIGER/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmri12.pfb><
+C:/Users/TIGER/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt12.pfb>
+Output written on Manual.pdf (38 pages, 3262554 bytes).
+>>>>>>> Stashed changes
 PDF statistics:
  782 PDF objects out of 1000 (max. 8388607)
  685 compressed objects within 7 object streams

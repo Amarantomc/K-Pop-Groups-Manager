@@ -61,22 +61,22 @@
 \contentsline {subsection}{\numberline {15.2}Captación de Artistas}{20}{subsection.15.2}%
 \contentsline {subsection}{\numberline {15.3}Captación de Grupos}{21}{subsection.15.3}%
 \contentsline {section}{\numberline {16}Gestión de Solicitudes}{21}{section.16}%
-\contentsline {subsection}{\numberline {16.1}Creación de Solicitudes}{22}{subsection.16.1}%
+\contentsline {subsection}{\numberline {16.1}Creación de Solicitudes}{21}{subsection.16.1}%
 \contentsline {subsection}{\numberline {16.2}Estados de las Solicitudes}{22}{subsection.16.2}%
 \contentsline {subsection}{\numberline {16.3}Gestión de Solicitudes por la Agencia}{22}{subsection.16.3}%
 \contentsline {subsection}{\numberline {16.4}Consulta de Solicitudes por el Usuario}{23}{subsection.16.4}%
 \contentsline {subsection}{\numberline {16.5}Consultas Especializadas}{23}{subsection.16.5}%
 \contentsline {subsection}{\numberline {16.6}Opciones de Consulta}{23}{subsection.16.6}%
-\contentsline {subsection}{\numberline {16.7}Acceso a las Consultas}{24}{subsection.16.7}%
+\contentsline {subsection}{\numberline {16.7}Acceso a las Consultas}{23}{subsection.16.7}%
 \contentsline {subsubsection}{\numberline {16.7.1}Visualización de Resultados}{24}{subsubsection.16.7.1}%
 \contentsline {subsection}{\numberline {16.8}Gestión del Perfil de Usuario}{25}{subsection.16.8}%
 \contentsline {subsection}{\numberline {16.9}Acceso al Perfil}{25}{subsection.16.9}%
-\contentsline {subsubsection}{\numberline {16.9.1}Cambio de Contraseña}{26}{subsubsection.16.9.1}%
-\contentsline {subsubsection}{\numberline {16.9.2}Eliminación de Cuenta}{27}{subsubsection.16.9.2}%
+\contentsline {subsubsection}{\numberline {16.9.1}Cambio de Contraseña}{25}{subsubsection.16.9.1}%
+\contentsline {subsubsection}{\numberline {16.9.2}Eliminación de Cuenta}{26}{subsubsection.16.9.2}%
 \contentsline {subsubsection}{\numberline {16.9.3}Cierre de Sesión}{27}{subsubsection.16.9.3}%
 \contentsline {section}{\numberline {17}Salidas y Reportes del Sistema}{27}{section.17}%
-\contentsline {subsection}{\numberline {17.1}Tablas de Datos}{28}{subsection.17.1}%
-\contentsline {subsubsection}{\numberline {17.1.1}Características de las Tablas}{28}{subsubsection.17.1.1}%
+\contentsline {subsection}{\numberline {17.1}Tablas de Datos}{27}{subsection.17.1}%
+\contentsline {subsubsection}{\numberline {17.1.1}Características de las Tablas}{27}{subsubsection.17.1.1}%
 \contentsline {subsubsection}{\numberline {17.1.2}Tablas Principales del Sistema}{28}{subsubsection.17.1.2}%
 \contentsline {subsection}{\numberline {17.2}Exportación de Datos a PDF}{29}{subsection.17.2}%
 \contentsline {subsubsection}{\numberline {17.2.1}Cómo Exportar}{29}{subsubsection.17.2.1}%

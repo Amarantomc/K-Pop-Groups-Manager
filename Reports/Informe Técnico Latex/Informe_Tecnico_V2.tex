@@ -69,22 +69,19 @@
     
     \vspace{0.5cm}
     
-    \vspace{1cm}
+    \vspace{2cm}
     
-    {\large \textbf{Equipo de Desarrollo Responsable}}
-    
-    \vspace{0.3cm}
     
     {\normalsize \textbf{Equipo \#1}}
     
     \vspace{0.5cm}
     
-    \begin{tabular}{l}
-        \textit{Ronald Provance Valladares} \quad (C-312) \quad @Ron\_1301 \\
-        \textit{Agustín Alberto Carbajal Romero} \quad (C-312) \quad @lil\_agus03 \\
-        \textit{Daniel Amaranto Mares García} \quad (C-312) \quad @amarantomc \\
-        \textit{Dylan Ramsés Cabrera Morales} \quad (C-312) \quad @dylan2108 \\
-        \textit{Sheila Roque Alemán} \quad (C-312) \quad @Luminara03
+    \begin{tabular}{lcr}
+    \textit{Ronald Provance Valladares} & C-312 & @Ron\_1301 \\
+    \textit{Agustín Alberto Carbajal Romero} & C-312 & @lil\_agus03 \\
+    \textit{Daniel Amaranto Mares García} & C-312 & @amarantomc \\
+    \textit{Dylan Ramsés Cabrera Morales} & C-312 & @dylan2108 \\
+    \textit{Sheila Roque Alemán} & C-312 & @Luminara03 \\
     \end{tabular}
     
     \vspace{3cm}
@@ -102,159 +99,18 @@
 
 \chapter{Introducción}
 
-Este documento describe la especificación técnica del \textbf{Sistema de Gestión de Agencias de K-Pop}. El sistema es una aplicación web diseñada para facilitar la administración de agencias de música K-Pop, permitiendo la gestión integral de grupos, artistas, aprendices, contratos, actividades y recursos relacionados.
-
-\vspace{0.3cm}
-
-El presente informe establece los lineamientos técnicos, requerimientos, arquitectura, seguridad e implementación del proyecto desarrollado por el Equipo \#1 durante el semestre académico 2025-2026.
-
-\section{Propósito del Sistema}
-
-\begin{itemize}
-    \item Centralizar la información de agencias de K-Pop
-    \item Administrar relaciones entre agencias, grupos y artistas
-    \item Gestionar el proceso de evaluación de aprendices
-    \item Mantener registro de contratos y actividades
-    \item Generar reportes y estadísticas
-\end{itemize}
-
-\section{Alcance}
-
-El sistema cubre 14 módulos principales que abarcan todas las operaciones de una agencia de K-Pop, desde la gestión de personal hasta la administración de activos de la empresa.
-
-\chapter{Descripción del Problema}
-
-Las agencias de K-Pop enfrentan varios desafíos en su operación diaria:
-
-\section{Problemas Identificados}
-
-\subsection{Desorganización de Datos}
-\begin{itemize}
-    \item Información dispersa entre múltiples sistemas
-    \item Dificultad para acceder a datos históricos
-    \item Inconsistencias en registros
-\end{itemize}
-
-\subsection{Gestión Compleja de Relaciones}
-\begin{itemize}
-    \item Múltiples relaciones entre entidades (agencias, grupos, artistas)
-    \item Difícil rastrear cambios en status y evaluaciones
-    \item Falta de visibilidad en el progreso de aprendices
-\end{itemize}
-
-\subsection{Falta de Automatización}
-\begin{itemize}
-    \item Procesos manuales propensos a errores
-    \item Dificultad en generación de reportes
-    \item Tiempo invertido en tareas administrativas
-\end{itemize}
-
-\subsection{Seguridad y Control de Acceso}
-\begin{itemize}
-    \item Información sensible sin protección adecuada
-    \item Falta de auditoría de cambios
-    \item Acceso sin restricciones por rol
-\end{itemize}
-
-\chapter{Solución Propuesta}
-
-\section{Objetivo General}
-
-Desarrollar una aplicación web moderna que centralice la gestión de agencias de K-Pop, proporcionando herramientas intuitivas y seguras para la administración de datos y procesos.
-
-\section{Objetivos Específicos}
-
-\begin{enumerate}
-    \item Crear una base de datos relacional normalizada para almacenar información
-    \item Desarrollar una API REST escalable para acceso a datos
-    \item Implementar interfaz de usuario intuitiva para cada tipo de usuario
-    \item Establecer controles de seguridad basados en roles
-    \item Automatizar procesos críticos del negocio
-\end{enumerate}
-
-\chapter{Arquitectura del Sistema}
-
-\section{Modelo de 3 Capas}
-
-El sistema implementa una arquitectura de tres capas claramente separadas:
-
-\subsection{Capa de Presentación}
-\begin{itemize}
-    \item Tecnología: React + TypeScript + Vite
-    \item Componentes reutilizables
-    \item Context API para estado global
-    \item Interfaz responsiva
-\end{itemize}
-
-\subsection{Capa de Aplicación}
-\begin{itemize}
-    \item Tecnología: Node.js + Express + TypeScript
-    \item Controladores HTTP
-    \item DTOs (Data Transfer Objects)
-    \item Lógica de negocio
-    \item Inyección de dependencias
-\end{itemize}
-
-\subsection{Capa de Datos}
-\begin{itemize}
-    \item Tecnología: PostgreSQL + Prisma ORM
-    \item Base de datos relacional
-    \item Modelos y esquemas
-    \item Migraciones versionadas
-\end{itemize}
-
-\section{Componentes Principales}
-
-\subsection{Frontend (React)}
-\begin{itemize}
-    \item Framework: React 18+ con TypeScript
-    \item Build Tool: Vite
-    \item Estado: Context API
-    \item Estructura: Organizada por feature
-    \item Estilos: CSS modules
-\end{itemize}
-
-\subsection{Backend (Node.js + Express)}
-\begin{itemize}
-    \item Runtime: Node.js
-    \item Framework: Express.js
-    \item Lenguaje: TypeScript
-    \item ORM: Prisma
-    \item Patrón: Clean Architecture + Dependency Injection
-\end{itemize}
-
-\subsection{Base de Datos (PostgreSQL)}
-\begin{itemize}
-    \item Motor: PostgreSQL 12+
-    \item ORM: Prisma
-    \item Migraciones: Versionadas
-    \item Entidades: 15+ modelos relacionales
-\end{itemize}
-
-\section{Patrones de Arquitectura}
-
-\subsection{Clean Architecture}
-
-La aplicación sigue el patrón Clean Architecture con capas claramente definidas:
-
-\begin{verbatim}
-Domain Layer (Entidades y Lógica de Negocio)
-    ↓
-Application Layer (Casos de Uso y DTOs)
-    ↓
-Infrastructure Layer (Repositorios y BD)
-    ↓
-Presentation Layer (Controladores)
-\end{verbatim}
-
-\subsection{Dependency Injection}
-
-Se implementa un contenedor de inyección de dependencias que permite:
-\begin{itemize}
-    \item Registro de servicios centralizados
-    \item Inyección automática en controladores
-    \item Facilidad de testing y mocking
-\end{itemize}
+El presente informe técnico describe el diseño, modelado e implementación de un
+sistema de información orientado a la gestión integral de agencias y grupos de K-pop. El
+sistema fue desarrollado como parte del curso Bases de Datos II, aplicando principios de
+modelado conceptual avanzado y arquitectura de software.
+El objetivo principal del sistema es administrar de manera estructurada la información relacionada con agencias de entretenimiento, aprendices, artistas, grupos musicales,
+actividades, contratos y evaluaciones, considerando relaciones complejas,
+dependencias temporales y restricciones de integridad propias del dominio.
+Para el diseño de la solución se empleó un Modelo Entidad–Relación Extendido (MERX),
+el cual permitió representar especializaciones, relaciones históricas y entidades relacionales. Asimismo, se adoptó el enfoque de Clean Architecture con el fin de garantizar un alto
+nivel de desacoplamiento, mantenibilidad y escalabilidad.
+Este documento presenta el diccionario de datos, el esquema de clases, el diseño arquitectónico, la descripción del MERX final, la solución propuesta y las consideraciones
+necesarias para el mantenimiento y evolución futura del sistema.
 
 \chapter{Diccionario de Datos}
 
@@ -262,1813 +118,1016 @@ Se implementa un contenedor de inyección de dependencias que permite:
 
 El Diccionario de Datos es una referencia completa de todos los campos, tipos de datos y restricciones de cada tabla en la base de datos. Esta sección es esencial para desarrolladores y administradores de base de datos que realicen mantenimiento del sistema.
 
-\section{Tabla: Usuario}
-
+\section{Tabla: User}
+La entidad User representa a los usuarios del sistema. Permite gestionar autenticación,
+autorización y asociación con los distintos roles disponibles (admin, manager, director, aprendiz
+y artista).
 \begin{table}[H]
 \centering
-\caption{Diccionario - Tabla Usuario}
+\caption{Diccionario - Tabla User}
 \begin{tabular}{|l|l|l|l|l|}
 \hline
-\textbf{Campo} & \textbf{Tipo} & \textbf{Nulo} & \textbf{Restricción} & \textbf{Descripción} \\
+\textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Restricción} & \textbf{Descripción} \\
 \hline
-id & SERIAL & NO & PK & Identificador único \\
+id & INTEGER & PK & Identificador único del usuario \\
 \hline
-email & VARCHAR(255) & NO & UNIQUE & Email de login \\
+email & VARCHAR & UNIQUE, NOT NULL & Correo electrónico \\
 \hline
-nombre & VARCHAR(255) & NO & & Nombre completo \\
+nombre & VARCHAR & NOT NULL & Nombre del usuario \\
 \hline
-password & VARCHAR(255) & NO & & Contraseña hasheada \\
+password & VARCHAR & NOT NULL & Contraseña hasheada \\
 \hline
-rol & ENUM & NO & & Rol en el sistema \\
+rol & VARCHAR & NOT NULL & Rol en el sistema \\
 \hline
-agencyId & INTEGER & NO & FK & Referencia a Agencia \\
+\end{tabular}
+\end{table}
+
+\section{Tabla: PerfilManager}
+Representa la especialización del usuario con rol de manager, asociado a una agencia
+específica.
+\begin{table}[H]
+\centering
+\caption{Diccionario - Tabla PerfilManager}
+\begin{tabular}{|l|l|l|l|l|}
 \hline
-createdAt & TIMESTAMP & NO & DEFAULT NOW() & Fecha creación \\
+\textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Restricción} & \textbf{Descripción} \\
 \hline
-updatedAt & TIMESTAMP & NO & DEFAULT NOW() & Fecha última actualización \\
+userid & INTEGER & PK, FK(User)& Usuario asociado \\
+\hline
+agenciaId & INTEGER & FK(Agencia)& Agencia gestionada \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Tabla: PerfilDirector}
+Representa la especialización del usuario con rol de director de una agencia.
+\begin{table}[H]
+\centering
+\caption{Diccionario - Tabla PerfilDirector}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Restricción} & \textbf{Descripción} \\
+\hline
+userid & INTEGER & PK, FK(User)& Usuario asociado \\
+\hline
+agenciaId & INTEGER & FK(Agencia)& Agencia dirigida \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Tabla: PerfilAprendiz}
+Asocia un usuario con un aprendiz del sistema
+\begin{table}[H]
+\centering
+\caption{Diccionario - Tabla PerfilAprendiz}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Restricción} & \textbf{Descripción} \\
+\hline
+userid & INTEGER & PK, FK(User)& Usuario asociado \\
+\hline
+aprendizId & INTEGER & FK(Aprendiz)& Aprendiz vinculado \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Tabla: PerfilArtista}
+Relaciona un usuario con un artista, considerando su pertenencia a un grupo.
+\begin{table}[H]
+\centering
+\caption{Diccionario - Tabla PerfilArtista}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Restricción} & \textbf{Descripción} \\
+\hline
+userid & INTEGER & PK, FK(User)& Usuario asociado \\
+\hline
+IdAp & INTEGER & FK(Aprendiz)& Identificador del aprendiz \\
+\hline
+IdGr & INTEGER & FK(Grupo) & Grupo de Debut del artista \\
 \hline
 \end{tabular}
 \end{table}
 
 \section{Tabla: Agencia}
+La entidad Agencia representa a las compañías de entretenimiento responsables de
+la gestión de aprendices, artistas y grupos musicales. Una agencia puede administrar
+múltiples grupos, contratos, evaluaciones y solicitudes, actuando como eje central del
+sistema.
 
 \begin{table}[H]
 \centering
 \caption{Diccionario - Tabla Agencia}
 \begin{tabular}{|l|l|l|l|l|}
 \hline
-\textbf{Campo} & \textbf{Tipo} & \textbf{Nulo} & \textbf{Restricción} & \textbf{Descripción} \\
+\textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Restricción} & \textbf{Descripción} \\
 \hline
-id & SERIAL & NO & PK & Identificador único \\
+id & INTEGER & PK & Identificador único de la agencia \\
 \hline
-name & VARCHAR(255) & NO & UNIQUE & Nombre agencia \\
+nombre & VARCHAR & NOT NULL & Nombre oficial de la agencia \\
 \hline
-address & VARCHAR(500) & SÍ & & Dirección física \\
+ubicacion & VARCHAR & NOT NULL & Ubicación geográfica \\
 \hline
-fundationDate & DATE & SÍ & & Fecha de fundación \\
-\hline
-estado & VARCHAR(50) & NO & & Estado (Activa/Inactiva) \\
-\hline
-createdAt & TIMESTAMP & NO & DEFAULT NOW() & Fecha creación \\
-\hline
-updatedAt & TIMESTAMP & NO & & Fecha última actualización \\
+fechaFundacion & DATE & NOT NULL & Fecha de fundación \\
 \hline
 \end{tabular}
 \end{table}
 
 \section{Tabla: Aprendiz}
-
+La entidad Aprendiz representa a una persona en proceso de formación dentro de una agencia.
 \begin{table}[H]
 \centering
 \caption{Diccionario - Tabla Aprendiz}
 \begin{tabular}{|l|l|l|l|l|}
 \hline
-\textbf{Campo} & \textbf{Tipo} & \textbf{Nulo} & \textbf{Restricción} & \textbf{Descripción} \\
+\textbf{Campo} & \textbf{Tipo de Dato}  & \textbf{Restricción} & \textbf{Descripción} \\
 \hline
-id & SERIAL & NO & PK & Identificador único \\
+id & INTEGER & PK & Identificador único del aprendiz \\
 \hline
-nombre & VARCHAR(255) & NO & & Nombre completo \\
+idSolicitud & INTEGER & FK(Solicitud) & Identificador de la solicitud \\
 \hline
-dateOfBirth & DATE & NO & & Fecha nacimiento \\
+nombreCompleto & VARCHAR & NOT NULL & Nombre completo \\
 \hline
-agencyId & INTEGER & NO & FK & Referencia a Agencia \\
+fechaNacimiento & DATE & NOT NULL & Fecha de nacimiento \\
 \hline
-estado & ENUM & NO & & Estado entrenamiento \\
+edad & INTEGER & NOT NULL & Edad del aprendiz \\
 \hline
-createdAt & TIMESTAMP & NO & DEFAULT NOW() & Fecha creación \\
-\hline
-updatedAt & TIMESTAMP & NO & & Fecha última actualización \\
+nivelEntrenamiento & INTEGER & NOT NULL & Nivel de Entrenamiento \\
 \hline
 \end{tabular}
 \end{table}
 
 \section{Tabla: Grupo}
+La entidad Grupo representa un conjunto de artistas que desarrollan actividades mu-
+sicales de manera conjunta. Cada grupo se encuentra asociado a una agencia, un concepto
+artístico y un concepto visual, y mantiene información histórica sobre sus integrantes, ac-
+tividades, lanzamientos y contratos.
 
 \begin{table}[H]
 \centering
 \caption{Diccionario - Tabla Grupo}
 \begin{tabular}{|l|l|l|l|l|}
 \hline
-\textbf{Campo} & \textbf{Tipo} & \textbf{Nulo} & \textbf{Restricción} & \textbf{Descripción} \\
+\textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Restricción} & \textbf{Descripción} \\
 \hline
-id & SERIAL & NO & PK & Identificador único \\
+id & INTEGER & PK & Identificador único \\
 \hline
-nombre & VARCHAR(255) & NO & UNIQUE & Nombre grupo \\
+nombreCompleto & VARCHAR & NOT NULL & Nombre del grupo \\
 \hline
-debut & DATE & SÍ & & Fecha de debut \\
+fechaDebut & DATE & NOT NULL & Fecha oficial de debut \\
 \hline
-status & VARCHAR(50) & NO & & Estado (Activo/Inactivo) \\
+estadoGrupo & VARCHAR & NOT NULL & Estado actual del grupo \\
 \hline
-miembros & INTEGER & SÍ & CHECK (1-20) & Cantidad de miembros \\
+idConcepto & INTEGER & FK(Concepto) & Concepto artístico asociado \\
 \hline
-idAgency & INTEGER & NO & FK & Referencia a Agencia \\
+idConceptoVisual & INTEGER & FK(ConceptoVisual) & Concepto visual asociado \\
 \hline
-createdAt & TIMESTAMP & NO & DEFAULT NOW() & Fecha creación \\
-\hline
-updatedAt & TIMESTAMP & NO & & Fecha última actualización \\
+Nomiembros & INTEGER & NOT NULL & Cantidad de miembros \\
 \hline
 \end{tabular}
 \end{table}
 
 \section{Tabla: Artista}
-
+La entidad Artista representa a un aprendiz que ha debutado oficialmente en la
+industria musical. Un artista puede formar parte de uno o varios grupos a lo largo de su
+carrera o desempeñarse como solista durante determinados períodos de tiempo.
 \begin{table}[H]
 \centering
 \caption{Diccionario - Tabla Artista}
 \begin{tabular}{|l|l|l|l|l|}
 \hline
-\textbf{Campo} & \textbf{Tipo} & \textbf{Nulo} & \textbf{Restricción} & \textbf{Descripción} \\
+\textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Restricción} & \textbf{Descripción} \\
 \hline
-id & SERIAL & NO & PK & Identificador único \\
+idAp & INTEGER & PK,FK(Aprendiz) & Identificador del aprendiz\\
 \hline
-apprenticeId & INTEGER & NO & FK & Referencia a Aprendiz \\
+idGr & INTEGER & PK,FK(Grupo) & Grupo de debut del artista \\
 \hline
-groupId & INTEGER & NO & FK & Referencia a Grupo \\
+idSolicitud & INTEGER & FK(Solicitud) & Identificador de la solicitud \\
 \hline
-nombreArtistico & VARCHAR(255) & NO & & Nombre artístico \\
+nombreArtistico & VARCHAR & NOT NULL & Nombre artístico \\
 \hline
-debufecha & DATE & SÍ & & Fecha debut en grupo \\
+fechaDebut & DATE & NOT NULL & Fecha de debut oficial \\
 \hline
-status & VARCHAR(50) & NO & & Estado en grupo \\
+estadoArtista & VARCHAR & NOT NULL & Estado actual del artista \\
 \hline
-createdAt & TIMESTAMP & NO & DEFAULT NOW() & Fecha creación \\
+\end{tabular}
+\end{table}
+\section{Tabla: Concepto}
+La entidad Concepto representa el estilo artístico general de un grupo musical.
+\begin{table}[H]
+\centering
+\caption{Diccionario - Tabla Concepto}
+
+
+\begin{tabular}{|l|l|l|l|l|}
 \hline
-updatedAt & TIMESTAMP & NO & & Fecha última actualización \\
+\textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Restricción} & \textbf{Descripción} \\
+\hline
+id & INTEGER & PK & Identificador del concepto \\
+\hline
+nombre & VARCHAR & NOT NULL & Nombre del concepto \\
+\hline
+descripcion & VARCHAR & NOT NULL & Descripción del concepto \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Tabla: Concepto Visual}
+La entidad ConceptoVisual representa la identidad visual exclusiva de un grupo musical
+\begin{table}[H]
+\centering
+\caption{Diccionario - Tabla Concepto Visual}
+
+
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Restricción} & \textbf{Descripción} \\
+\hline
+id & INTEGER & PK & Identificador del concepto visual\\
+\hline
+imagen & VARCHAR & NOT NULL & Imagen representativa del concepto visual \\
 \hline
 \end{tabular}
 \end{table}
 
 \section{Tabla: Álbum}
-
+La entidad Álbum representa una producción musical lanzada por un grupo y/o artistas. Contiene información relacionada con el lanzamiento, producción, ventas y relaciones con canciones, premios y participantes.
 \begin{table}[H]
 \centering
 \caption{Diccionario - Tabla Álbum}
 \begin{tabular}{|l|l|l|l|l|}
 \hline
-\textbf{Campo} & \textbf{Tipo} & \textbf{Nulo} & \textbf{Restricción} & \textbf{Descripción} \\
+\textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Restricción} & \textbf{Descripción} \\
 \hline
-id & SERIAL & NO & PK & Identificador único \\
+id & INTEGER & PK & Identificador del álbum \\
 \hline
-titulo & VARCHAR(255) & NO & & Título del álbum \\
+titulo & VARCHAR & NOT NULL & Título del álbum \\
 \hline
-groupId & INTEGER & NO & FK & Referencia a Grupo \\
+fechaLanzamiento & DATE & NOT NULL & Fecha de lanzamiento \\
 \hline
-fechaLanzamiento & DATE & NO & & Fecha de lanzamiento \\
+productor & VARCHAR & NOT NULL & Productor musical del álbum \\
 \hline
-numCanciones & INTEGER & SÍ & & Cantidad de canciones \\
+NoCanciones & INTEGER & NOT NULL & Número de canciones \\
 \hline
-copiaVendidas & INTEGER & SÍ & DEFAULT 0 & Copias vendidas \\
-\hline
-createdAt & TIMESTAMP & NO & DEFAULT NOW() & Fecha creación \\
-\hline
-updatedAt & TIMESTAMP & NO & & Fecha última actualización \\
+NoCopiasVendidas & INTEGER & NOT NULL & Copias vendidas \\
 \hline
 \end{tabular}
 \end{table}
 
 \section{Tabla: Canción}
-
+La entidad Canción representa una composición musical que forma parte de uno o varios álbumes y puede posicionarse en listas de popularidad.
 \begin{table}[H]
 \centering
 \caption{Diccionario - Tabla Canción}
 \begin{tabular}{|l|l|l|l|l|}
 \hline
-\textbf{Campo} & \textbf{Tipo} & \textbf{Nulo} & \textbf{Restricción} & \textbf{Descripción} \\
+\textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Restricción} & \textbf{Descripción} \\
 \hline
-id & SERIAL & NO & PK & Identificador único \\
+id & INTEGER & PK & Identificador de la canción \\
 \hline
-titulo & VARCHAR(255) & NO & & Título canción \\
+titulo & VARCHAR & NOT NULL & Título de la canción \\
 \hline
-albumId & INTEGER & NO & FK & Referencia a Álbum \\
+genero & VARCHAR & NOT NULL & Género musical \\
 \hline
-duracion & DECIMAL(5,2) & SÍ & & Duración en minutos \\
+productor & VARCHAR & NOT NULL & Productor de la canción \\
 \hline
-reproducciones & INTEGER & SÍ & DEFAULT 0 & Cantidad de reproducciones \\
+fechaLanzamiento & DATE & NOT NULL & Fecha de lanzamiento \\
 \hline
-createdAt & TIMESTAMP & NO & DEFAULT NOW() & Fecha creación \\
+reproducciones & INTEGER & NOT NULL & Cantidad de reproducciones \\
 \hline
-updatedAt & TIMESTAMP & NO & & Fecha última actualización \\
+\end{tabular}
+\end{table}
+
+\section{Tabla: Lista de Popularidad}
+La entidad ListaPopularidad representa los rankings musicales nacionales o internacionales en los que se posicionan las canciones, permitiendo registrar históricamente su desempeño a lo largo del tiempo.
+\begin{table}[H]
+\centering
+\caption{Diccionario - Tabla Lista de Popularidad}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Restricción} & \textbf{Descripción} \\
+\hline
+id & INTEGER & PK & Identificador de la lista \\
+\hline
+nombre & VARCHAR & NOT NULL & Nombre de la lista de popularidad \\
+\hline
+tipoLista & VARCHAR & NOT NULL & Tipo de Lista \\
+\hline
+requisito & INTEGER & NOT NULL & Requisito para posicionarse en la lista \\
 \hline
 \end{tabular}
 \end{table}
 
 \section{Tabla: Actividad}
-
+La entidad Actividad representa los eventos organizados por las agencias tales como conciertos, promociones, sesiones de grabación u otros eventos relacionados con la industria musical. Cada actividad puede generar ingresos y contar con la
+participación de artistas y grupos.
 \begin{table}[H]
 \centering
 \caption{Diccionario - Tabla Actividad}
 \begin{tabular}{|l|l|l|l|l|}
 \hline
-\textbf{Campo} & \textbf{Tipo} & \textbf{Nulo} & \textbf{Restricción} & \textbf{Descripción} \\
+\textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Restricción} & \textbf{Descripción} \\
 \hline
-id & SERIAL & NO & PK & Identificador único \\
+id & INTEGER  & PK & Identificador único de la actividad \\
 \hline
-tipo & ENUM & NO & & Tipo actividad \\
+responsable & VARCHAR & NOT NULL & Responsable de la actividad \\
 \hline
-fecha & DATE & NO & & Fecha actividad \\
+lugar & VARCHAR & NOT NULL & Ubicación de la actividad  \\
 \hline
-lugar & VARCHAR(255) & NO & & Ubicación \\
+fecha & DATE & NOT NULL & Fecha de realización de la actividad \\
 \hline
-participantes & TEXT & SÍ & & JSON con IDs participantes \\
+tipoActividad & VARCHAR & NOT NULL & Tipo de actividad \\
 \hline
-estado & VARCHAR(50) & NO & & Estado actividad \\
+tipoEvento & VARCHAR & NOT NULL & Tipo de evento \\
 \hline
-createdAt & TIMESTAMP & NO & DEFAULT NOW() & Fecha creación \\
-\hline
-updatedAt & TIMESTAMP & NO & & Fecha última actualización \\
-\hline
-\end{tabular}
-\end{table}
-
-\section{Tabla: Contrato}
-
-\begin{table}[H]
-\centering
-\caption{Diccionario - Tabla Contrato}
-\begin{tabular}{|l|l|l|l|l|}
-\hline
-\textbf{Campo} & \textbf{Tipo} & \textbf{Nulo} & \textbf{Restricción} & \textbf{Descripción} \\
-\hline
-id & SERIAL & NO & PK & Identificador único \\
-\hline
-tipo & VARCHAR(50) & NO & & Tipo contrato \\
-\hline
-parte1Id & INTEGER & NO & FK & Referencia entidad 1 \\
-\hline
-parte2Id & INTEGER & NO & FK & Referencia entidad 2 \\
-\hline
-fechaInicio & DATE & NO & & Fecha inicio \\
-\hline
-fechaFin & DATE & SÍ & CHECK (>= inicio) & Fecha fin \\
-\hline
-condiciones & TEXT & SÍ & & Condiciones especiales \\
-\hline
-estado & VARCHAR(50) & NO & & Estado contrato \\
-\hline
-createdAt & TIMESTAMP & NO & DEFAULT NOW() & Fecha creación \\
-\hline
-updatedAt & TIMESTAMP & NO & & Fecha última actualización \\
+estado & VARCHAR & NOT NULL & Estado de la actividad \\
 \hline
 \end{tabular}
 \end{table}
 
 \section{Tabla: Premio}
-
+La entidad Premio representa los reconocimientos otorgados por academias o instituciones musicales a producciones destacadas.
 \begin{table}[H]
 \centering
 \caption{Diccionario - Tabla Premio}
 \begin{tabular}{|l|l|l|l|l|}
 \hline
-\textbf{Campo} & \textbf{Tipo} & \textbf{Nulo} & \textbf{Restricción} & \textbf{Descripción} \\
+\textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Restricción} & \textbf{Descripción} \\
 \hline
-id & SERIAL & NO & PK & Identificador único \\
+id & INTEGER & PK & Identificador único del premio \\
 \hline
-nombre & VARCHAR(255) & NO & & Nombre del premio \\
+tituloPremio & VARCHAR & NOT NULL & Nombre del premio otorgado\\
 \hline
-groupId & INTEGER & SÍ & FK & Referencia Grupo \\
+nombreAcademia & VARCHAR & NOT NULL & Academia o institución otorgante \\
 \hline
-artistaId & INTEGER & SÍ & FK & Referencia Artista \\
-\hline
-fecha & DATE & NO & & Fecha del premio \\
-\hline
-categoria & VARCHAR(255) & SÍ & & Categoría \\
-\hline
-createdAt & TIMESTAMP & NO & DEFAULT NOW() & Fecha creación \\
+requisito & INTEGER & NOT NULL & Requisito para obtener el premio \\
 \hline
 \end{tabular}
 \end{table}
 
 \section{Tabla: Ingreso}
-
+La entidad Ingreso registra los beneficios económicos obtenidos como resultado de una actividad específica, permitiendo llevar un control financiero del sistema
 \begin{table}[H]
 \centering
 \caption{Diccionario - Tabla Ingreso}
 \begin{tabular}{|l|l|l|l|l|}
 \hline
-\textbf{Campo} & \textbf{Tipo} & \textbf{Nulo} & \textbf{Restricción} & \textbf{Descripción} \\
+\textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Restricción} & \textbf{Descripción} \\
 \hline
-id & SERIAL & NO & PK & Identificador único \\
+idIng & INTEGER & PK & Identificador del ingreso \\
 \hline
-tipo & VARCHAR(50) & NO & & Tipo ingreso \\
+idAct & INTEGER & PK,FK(Actividad)& Actividad asociada \\
 \hline
-monto & DECIMAL(10,2) & NO & CHECK (>0) & Cantidad en dinero \\
+monto & DECIMAL & NOT NULL & Monto del ingreso \\
 \hline
-fecha & DATE & NO & & Fecha ingreso \\
+fecha & DATE & NOT NULL & Fecha del ingreso \\
 \hline
-actividadId & INTEGER & SÍ & FK & Referencia Actividad \\
-\hline
-distribucion & TEXT & SÍ & & JSON distribución \\
-\hline
-createdAt & TIMESTAMP & NO & DEFAULT NOW() & Fecha creación \\
-\hline
-updatedAt & TIMESTAMP & NO & & Fecha última actualización \\
+descripcion & VARCHAR & NOT NULL & Descripción del ingreso \\
 \hline
 \end{tabular}
 \end{table}
 
-El sistema cuenta con 15+ entidades principales relacionadas entre sí:
-
+\section{Tabla: Solicitud}
+La entidad Solicitud representa una propuesta formal para la creación o integración a
+un grupo musical. Dicha solicitud puede involucrar tanto aprendices como artistas activos
+y es gestionada por una agencia.
 \begin{table}[H]
 \centering
-\caption{Entidades Principales}
-\begin{tabular}{|l|c|p{6cm}|}
+\caption{Diccionario - Tabla Solicitud}
+\begin{tabular}{|l|l|l|l|l|}
 \hline
-\textbf{Entidad} & \textbf{Registros Típicos} & \textbf{Descripción} \\
+\textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Restricción} & \textbf{Descripción} \\
 \hline
-Usuario & 10-50 & Administradores, gerentes, artistas \\
+id & INTEGER & PK & Identificador de la solicitud \\
 \hline
-Agencia & 3-10 & Agencias de K-Pop principales \\
+nombreGrupo & VARCHAR & NOT NULL & Nombre propuesto para el grupo \\
 \hline
-Grupo & 20-100 & Grupos musicales bajo agencias \\
+idConcepto & INTEGER & FK(Concepto) & Concepto propuesto para el grupo \\
 \hline
-Artista & 100-500 & Miembros de grupos \\
+idAgencia & INTEGER & FK(Agencia) & Agencia que gestiona la solicitud \\
 \hline
-Aprendiz & 50-300 & Nuevos talentos en entrenamiento \\
+fechaSolicitud & DATE & NOT NULL & Fecha de la solicitud \\
 \hline
-Contrato & 20-100 & Acuerdos entre entidades \\
-\hline
-Álbum & 50-300 & Lanzamientos discográficos \\
-\hline
-Canción & 500-2000 & Composiciones musicales \\
-\hline
-Actividad & 200-1000 & Eventos, conciertos, actividades \\
-\hline
-Premio & 50-200 & Reconocimientos ganados \\
+estado & VARCHAR & NOT NULL & Estado actual de la solicitud \\
 \hline
 \end{tabular}
 \end{table}
+
+\section{Tabla: Contrato}
+La entidad Contrato representa los acuerdos contractuales establecidos entre una
+agencia y un artista. Dichos contratos regulan las condiciones bajo las cuales el artista
+desarrolla actividades profesionales bajo la gestión de una agencia.
+\begin{table}[H]
+\centering
+\caption{Diccionario - Tabla Contrato}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Restricción} & \textbf{Descripción} \\
+\hline
+idAg & INTEGER & PK,FK(Agencia) & Identificador de la agencia \\
+\hline
+idAp & INTEGER & PK,FK(Artista) & Identificador del aprendiz \\
+\hline
+idGr & INTEGER & PK,FK(Artista) & Identificador del grupo  \\
+\hline
+fechaInicio & DATE & PK & Fecha de inicio del contrato \\
+\hline
+fechaFinalizacion & DATE & NOT NULL & Fecha de finalización del contrato \\
+\hline
+estado & VARCHAR & NOT NULL & Estado actual del contrato \\
+\hline
+condicionesIniciales & VARCHAR & NOT NULL & Condiciones iniciales del contrato \\
+\hline
+distribucionIngresos & VARCHAR & NOT NULL & Distribución de ingresos acordada \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Tabla: ContratoGrupo}
+La entidad ContratoGrupo representa los acuerdos contractuales establecidos entre una
+agencia y un grupo.
+\begin{table}[H]
+\centering
+\caption{Diccionario - Tabla ContratoGrupo}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Restricción} & \textbf{Descripción} \\
+\hline
+id & INTEGER & PK & Identificador del contrato \\
+\hline
+idAg & INTEGER & FK(Agencia) & Identificador de la agencia \\
+\hline
+idGr & INTEGER & FK(Artista) & Identificador del grupo  \\
+\hline
+fechaInicio & DATE & PK & Fecha de inicio del contrato \\
+\hline
+fechaFinalizacion & DATE & NOT NULL & Fecha de finalización del contrato \\
+\hline
+estado & VARCHAR & NOT NULL & Estado actual del contrato \\
+\hline
+condicionesIniciales & VARCHAR & NOT NULL & Condiciones iniciales del contrato \\
+\hline
+distribucionIngresos & VARCHAR & NOT NULL & Distribución de ingresos acordada \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Tabla: ArtistaEnGrupo}
+La entidad ArtistaEnGrupo registra la pertenencia histórica de un artista a un grupo
+musical, permitiendo modelar cambios de alineación a lo largo del tiempo y preservar
+información temporal.
+\begin{table}[H]
+\centering
+\caption{Diccionario - Tabla ArtistaEnGrupo}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Restricción} & \textbf{Descripción} \\
+\hline
+idAp & INTEGER & PK,FK(Artista) & Identificador del artista \\
+\hline
+idGrupoDebut & INTEGER & PK,FK(Artista) & Identificador del grupo de debut  \\
+\hline
+idGr & INTEGER & PK,FK(Grupo) & Identificador del grupo  \\
+\hline
+fechaInicio & DATE & PK & Fecha de inicio en grupo \\
+\hline
+fechaFinalizacion & DATE & NOT NULL & Fecha de finalización en grupo \\
+\hline
+rol & VARCHAR & NOT NULL & Rol del artista en el grupo \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Tabla: AlbumPremiado}
+La entidad AlbumPremiado relaciona álbums con los premios que han recibido,
+permitiendo registrar el año en que se otorgó cada reconocimiento.
+\begin{table}[H]
+\centering
+\caption{Diccionario - Tabla AlbumPremiado}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Restricción} & \textbf{Descripción} \\
+\hline
+idAlb & INTEGER & PK,FK(Album) & Identificador del álbum \\
+\hline
+idPremio & INTEGER & PK,FK(Premio) & Identificador del premio \\
+\hline
+año & INTEGER & NOT NULL & Año en que se otorgó el premio \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Tabla: CancionEnListaDePopularidad}
+La entidad CancionEnListaDePopularidad registra la posición histórica de una
+canción dentro de una lista de popularidad en un año determinado.
+\begin{table}[H]
+\centering
+\caption{Diccionario - Tabla CancionEnListaDePopularidad}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Restricción} & \textbf{Descripción} \\
+\hline
+idCa & INTEGER & PK,FK(Cancion) & Identificador de la canción \\
+\hline
+idLista & INTEGER & PK,FK(ListaPopularidad) & Identificador de la lista de popularidad \\
+\hline
+posicion & INTEGER & NOT NULL & Posición alcanzada en la lista \\
+año & INTEGER & NOT NULL & Año del ranking \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Tabla: AprendizEnAgencia}
+La entidad AprendizEnAgencia registra la relación temporal entre un aprendiz y
+una agencia, permitiendo conservar el historial de permanencia del aprendiz.
+\begin{table}[H]
+\centering
+\caption{Diccionario - Tabla AprendizEnAgencia}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Restricción} & \textbf{Descripción} \\
+\hline
+idAp & INTEGER & PK,FK(Aprendiz) & Identificador del aprendiz \\
+\hline
+idAg & INTEGER & PK,FK(Agencia) & Identificador de la agencia \\
+\hline
+fechaInicio & DATE & PK & Fecha de inicio en la agencia \\
+\hline
+fechaFinalizacion & DATE & NOT NULL & Fecha de finalización en la agencia \\
+\hline
+estado & VARCHAR & NOT NULL & Estado del aprendiz en la agencia \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Tabla: EvaluacionAprendiz}
+La entidad EvaluacionAprendiz registra las evaluaciones periódicas realizadas a los aprendices por parte de las agencias.
+\begin{table}[H]
+\centering
+\caption{Diccionario - Tabla EvaluacionAprendiz}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Restricción} & \textbf{Descripción} \\
+\hline
+idAp & INTEGER & PK,FK(Aprendiz) & Identificador del aprendiz \\
+\hline
+idAg & INTEGER & PK,FK(Agencia) & Identificador de la agencia \\
+\hline
+fechaEvaluacion & DATE & PK & Fecha de evaluación \\
+\hline
+evaluacion & INTEGER & NOT NULL & Resultado de la evaluación\\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Tabla: PersonasEnActividad}
+La entidad PersonasEnActividad registra la participación de artistas o grupos en
+una actividad específica, indicando si dicha participación fue aprobada.
+\begin{table}[H]
+\centering
+\caption{Diccionario - Tabla PersonasEnActividad}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Restricción} & \textbf{Descripción} \\
+\hline
+id & INTEGER & PK & Identificador de la participación\\
+\hline
+idAp & INTEGER & FK(Artista) & Artista participante \\
+\hline
+idGr & INTEGER & FK(Artista) & Grupo de debut del artista \\
+\hline
+idAct & INTEGER & FK(Actividad) & Actividad asociada\\
+\hline
+idGrupos & INTEGER & FK(Grupo) & Grupo participante \\
+\hline
+aceptado & BOOLEAN & NULLABLE & Indica si la participación fue aprobada \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Tabla: ArtistaLanzaAlbum}
+La entidad ArtistaLanzaAlbum relaciona artistas con álbumes lanzados.
+\begin{table}[H]
+\centering
+\caption{Diccionario - Tabla ArtistaLanzaAlbum}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Restricción} & \textbf{Descripción} \\
+\hline
+idAp & INTEGER & PK,FK(Artista) & Identificador del artista\\
+\hline
+idGr & INTEGER & PK,FK(Artista) & Grupo de debut del artista \\
+\hline
+idAlb & INTEGER & PK,FK(Album) & Identificador del álbum lanzado \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Tabla: GrupoLanzaAlbum}
+La entidad GrupoLanzaAlbum relaciona grupos musicales con álbumes lanzados.
+\begin{table}[H]
+\centering
+\caption{Diccionario - Tabla GrupoLanzaAlbum}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Restricción} & \textbf{Descripción} \\
+\hline
+idGr & INTEGER & PK,FK(Grupo) & Identificador del grupo \\
+\hline
+idAlb & INTEGER & PK,FK(Album) & Identificador del álbum lanzado \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Tabla: AprendizSolicitaGrupo}
+La entidad AprendizSolicitaGrupo registra la participación de aprendices en solicitudes de creación de grupos musicales.
+\begin{table}[H]
+\centering
+\caption{Diccionario - Tabla AprendizSolicitaGrupo}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Restricción} & \textbf{Descripción} \\
+\hline
+idAp & INTEGER & PK,FK(Aprendiz) & Aprendiz Solicitante \\
+\hline
+idAg & INTEGER & PK,FK(Agencia) & Agencia asociada \\
+\hline
+idSolicitud & INTEGER & PK,FK(Solicitud) & Solicitud asociada \\
+\hline
+estado & VARCHAR & NOT NULL & Estado de la solicitud \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Tabla: ArtistaSolicitaGrupo}
+La entidad ArtistaSolicitaGrupo registra la participación de artistas en solicitudes de creación de grupos musicales.
+\begin{table}[H]
+\centering
+\caption{Diccionario - Tabla AprendizSolicitaGrupo}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Restricción} & \textbf{Descripción} \\
+\hline
+idAp & INTEGER & PK,FK(Artista) & Artista Solicitante \\
+\hline
+idGr & INTEGER & PK,FK(Artista) & Grupo de debut del artista \\
+\hline
+idAg & INTEGER & PK,FK(Agencia) & Agencia asociada \\
+\hline
+idSolicitud & INTEGER & PK,FK(Solicitud) & Solicitud asociada \\
+\hline
+estado & VARCHAR & NOT NULL & Estado de la solicitud \\
+\hline
+\end{tabular}
+\end{table}
+
+\chapter{Diseño de la aplicación}
+El sistema de gestión de agencias y grupos de K-pop fue diseñado siguiendo los principios de Clean Architecture, con el objetivo de garantizar un alto nivel de desacoplamiento, mantenibilidad, escalabilidad y facilidad de prueba.
+Esta arquitectura permite separar claramente las responsabilidades del sistema, evitando dependencias directas entre la lógica de negocio y los detalles de infraestructura o presentación.
+\section{Arquitectura general}
+La arquitectura del sistema se organiza en capas concéntricas, donde las dependencias
+siempre apuntan hacia el núcleo del sistema. Las capas principales son:
+\begin{itemize}
+    \item Capa de Dominio
+    \item Capa de Aplicación
+    \item Capa de Infraestructura
+    \item Capa de Presentación
+\end{itemize}
+Cada capa cumple una función específica y se comunica con las demás mediante interfaces bien definidas.
+
+\subsection{Capa de Dominio}
+La capa de dominio constituye el núcleo del sistema. Contiene las entidades principales
+del negocio, así como las reglas y restricciones fundamentales del dominio.
+En esta capa se definen:
+\begin{itemize}
+    \item Entidades como Agencia, Aprendiz, Artista, Grupo, Álbum y Contrato.
+    \item Reglas de negocio relacionadas con contratos, pertenencia a grupos y estados.
+    \item Restricciones temporales y de integridad del dominio.
+\end{itemize}
+Esta capa no depende de ninguna tecnología externa ni de frameworks específicos.
+
+\subsection{Capa de Aplicación}
+La capa de aplicación orquesta los casos de uso del sistema y actúa como intermediaria
+entre la capa de dominio y las capas externas. Sus responsabilidades incluyen:
+\begin{itemize}
+    \item Implementación de casos de uso como creación, eliminación, actualización y obtención de cada entidad, así como otros casos de gestión de la entidad.
+    \item Coordinación de flujos de datos entre entidades.
+    \item Validación de reglas de negocio complejas.
+\end{itemize}
+Esta capa depende únicamente de abstracciones definidas en el dominio.
+
+\subsection{Capa de Infraestructura}
+La capa de infraestructura contiene los detalles técnicos de implementación, incluyendo el acceso a datos y servicios externos. En esta capa se encuentran:
+\begin{itemize}
+    \item Implementación de repositorios mediante Prisma ORM.
+    \item Conexión y persistencia de datos en PostgreSQL.
+    \item Configuración de servicios externos y utilidades.
+\end{itemize}
+Esta capa implementa las interfaces definidas por la capa de aplicación.
+
+\subsection{Capa de Presentación}
+La capa de presentación expone la API HTTP y actúa como la interfaz entre los clientes (frontend) y la lógica de la aplicación. Se encarga de recibir peticiones, validar y normalizar datos de entrada, orquestar llamadas a los casos de uso y formatear las respuestas HTTP para el cliente. En esta capa se encuentran:
+\begin{itemize}
+    \item Controladores por recurso (por ejemplo GroupController, UserController): reciben Request/Response, usan DTOs para validar/transformar la entrada y delegan la ejecución a los Use Cases inyectados.
+    \item Definición de rutas: clases que crean Routers y asignan endpoints (GET/POST/PUT/DELETE), agrupadas y montadas en el router raíz (routes/index.ts) con prefijos claros (/group, /auth, /user, ...).
+    \item Uso de DTOs y validaciones: los controladores consumen DTOs desde la capa de aplicación para garantizar formato y reglas antes de invocar la lógica de negocio.
+    \item Middlewares de presentación: autenticación y autorización (AuthMiddleware, RoleMiddleware) y otros pre-procesos que ejecutan antes de llegar a los controladores.
+\end{itemize}
+
+\section{Flujo de Datos}
+El flujo de datos del sistema sigue el principio de inversión de dependencias. Las solicitudes del usuario se originan en la capa de presentación, pasan por la capa de aplicación
+y afectan al dominio, mientras que la persistencia se realiza a través de la infraestructura.
+Este enfoque permite que el sistema sea fácilmente extensible y adaptable a cambios
+futuros en tecnologías o requerimientos.
+
+\chapter{Esquema de clases}
+
+El diseño de clases del sistema se estructura siguiendo los principios de la arquitectura limpia y está organizado en la capa de dominio. Las clases definidas representan las entidades principales del negocio, cada una con responsabilidades específicas y relaciones claramente definidas con otras entidades.
+
+\section{Clases principales del dominio}
+
+\subsection{Clase User (Usuario)}
+Clase abstracta que representa a los usuarios del sistema. Define los atributos comunes a todos los usuarios y establece un contrato para que las clases derivadas implementen el método \texttt{getProfileData()}.
+
+\begin{itemize}
+	\item \textbf{Atributos:} id (identificador único), name (nombre), email (correo electrónico), password (contraseña), role (rol del usuario)
+	\item \textbf{Relación:} Superclase de AdminUser, ManagerUser, DirectorUser, ApprenticeUser y ArtistUser
+	\item \textbf{Responsabilidad:} Almacenar información común de autenticación y perfil de usuario
+\end{itemize}
+
+\subsection{Clase Agency (Agencia)}
+Representa una agencia de entretenimiento en el sistema. Las agencias son la entidad raíz que agrupa a managers, directores, aprendices y artistas.
+
+\begin{itemize}
+	\item \textbf{Atributos:} id, name (nombre de la agencia), address (dirección), foundation (fecha de fundación)
+	\item \textbf{Relaciones:} 
+	\begin{itemize}
+		\item Contiene múltiples Apprentice (aprendices)
+		\item Contiene múltiples Group (grupos)
+		\item Contiene múltiples ManagerUser y DirectorUser
+		\item Participa en múltiples Contract (contratos)
+	\end{itemize}
+	\item \textbf{Responsabilidad:} Servir como contenedor y punto de control para la gestión de talento y recursos
+\end{itemize}
+
+\subsection{Clase Apprentice (Aprendiz)}
+Representa a un aspirante a artista que se encuentra en formación dentro de una agencia.
+
+\begin{itemize}
+	\item \textbf{Atributos:} id, name (nombre), dateOfBirth (fecha de nacimiento), age (edad calculada), trainingLv (nivel de entrenamiento), status (estado actual del aprendiz)
+	\item \textbf{Relaciones:}
+	\begin{itemize}
+		\item Pertenece a una Agency
+		\item Puede formar parte de un Group
+		\item Puede generar Album (cuando debuta)
+		\item Puede participar en Activity (actividades)
+		\item Tiene evaluaciones ApprenticeEvaluation
+	\end{itemize}
+	\item \textbf{Responsabilidad:} Representar la etapa inicial de formación de los artistas
+\end{itemize}
+
+\subsection{Clase Artist (Artista)}
+Representa a un artista profesional que ha debutado en el sistema. Un artista es una evolución de un aprendiz que ha integrado un grupo.
+
+\begin{itemize}
+	\item \textbf{Atributos:} ApprenticeId (identificador del aprendiz original), GroupId (grupo actual), ArtistName (nombre artístico), DebutDate (fecha de debut), Status (estado: activo, inactivo, retirado), realName (nombre real), agencyId (identificador de agencia)
+	\item \textbf{Atributo adicional:} GroupHistory (historial de grupos a los que ha pertenecido)
+	\item \textbf{Relaciones:}
+	\begin{itemize}
+		\item Registra un Apprentice como antecedente
+		\item Participa en uno o múltiples Group
+		\item Participa en múltiples Activity
+		\item Tiene múltiples Contract
+		\item Genera Income (ingresos)
+	\end{itemize}
+	\item \textbf{Responsabilidad:} Representar la carrera profesional de un artista, con seguimiento de grupos y participaciones
+\end{itemize}
+
+\subsection{Clase Group (Grupo)}
+Representa un grupo musical formado por uno o más artistas/aprendices bajo la supervisión de una agencia.
+
+\begin{itemize}
+	\item \textbf{Atributos:} id, name (nombre del grupo), debut (fecha de debut), status (estado: activo, disuelto, en pausa), memberCount (número de miembros), agency (agencia responsable), concept (concepto creativo), visualConcept (concepto visual)
+	\item \textbf{Relaciones:}
+	\begin{itemize}
+		\item Pertenece a una Agency
+		\item Asociado a un Concept (identidad creativa)
+		\item Posee un VisualConcept (identidad visual única)
+		\item Contiene múltiples miembros (artistas/aprendices)
+		\item Genera múltiples Album
+		\item Participa en múltiples Activity
+		\item Tiene múltiples Contract
+	\end{itemize}
+	\item \textbf{Responsabilidad:} Agrupar artistas y gestionar su actividad colectiva
+\end{itemize}
+
+\subsection{Clase Contract (Contrato)}
+Representa los acuerdos contractuales entre agencias, artistas y/o grupos.
+
+\begin{itemize}
+	\item \textbf{Atributos:} agency (agencia firmante), artist (artista opcional), group (grupo opcional), type (tipo: individual o colectivo), startDate (fecha de inicio), completionDate (fecha de finalización), incomeDistribution (distribución de ingresos), status (estado: activo, finalizado, cancelado), initialConditions (condiciones iniciales)
+	\item \textbf{Relaciones:}
+	\begin{itemize}
+		\item Vincula una Agency
+		\item Puede vincular un Artist
+		\item Puede vincular un Group
+	\end{itemize}
+	\item \textbf{Responsabilidad:} Formalizar y controlar la relación laboral entre agencia y talento
+\end{itemize}
+
+\subsection{Clase Activity (Actividad)}
+Representa las actividades en las que participan artistas o grupos (conciertos, presentaciones, grabaciones, etc.).
+
+\begin{itemize}
+	\item \textbf{Atributos:} id, responsible (responsable), activityType (tipo de actividad), date (fecha), place (lugar), eventType (tipo de evento), status (estado), artists (artistas participantes), incomes (ingresos generados)
+	\item \textbf{Relaciones:}
+	\begin{itemize}
+		\item Involucra múltiples Artist
+		\item Genera múltiples Income
+	\end{itemize}
+	\item \textbf{Responsabilidad:} Registrar y gestionar eventos en los que participan artistas o grupos
+\end{itemize}
+
+\subsection{Clase Album}
+Representa un álbum musical producido por un artista o grupo.
+
+\begin{itemize}
+	\item \textbf{Atributos:} id, title (título), releaseDate (fecha de lanzamiento), producer (productor), noSongs (número de canciones), noCopiesSold (número de copias vendidas), apprenticeId (aprendiz/artista solista opcional), groupId (grupo opcional)
+	\item \textbf{Relaciones:}
+	\begin{itemize}
+		\item Asociado a un Artist o Group
+		\item Contiene múltiples Song
+		\item Puede recibir múltiples Award
+	\end{itemize}
+	\item \textbf{Responsabilidad:} Registrar producciones musicales y sus resultados comerciales
+\end{itemize}
+
+\subsection{Clase Income (Ingreso)}
+Representa los ingresos generados por actividades de artistas o grupos.
+
+\begin{itemize}
+	\item \textbf{Atributos:} id, type (tipo de ingreso), amount (monto), date (fecha), activity (actividad que lo generó)
+	\item \textbf{Relaciones:}
+	\begin{itemize}
+		\item Asociado a una Activity
+	\end{itemize}
+	\item \textbf{Responsabilidad:} Registrar y controlar los ingresos financieros del sistema
+\end{itemize}
+
+\subsection{Clase Song (Canción)}
+Representa una canción dentro de un álbum.
+
+\begin{itemize}
+	\item \textbf{Atributos:} id, name (nombre de la canción), album (álbum al que pertenece)
+	\item \textbf{Relaciones:}
+	\begin{itemize}
+		\item Pertenece a un Album
+	\end{itemize}
+	\item \textbf{Responsabilidad:} Detallar las canciones incluidas en cada álbum
+\end{itemize}
+
+\subsection{Clase Concept (Concepto creativo)}
+Representa un concepto creativo que define el estilo musical y estético de un grupo.
+
+\begin{itemize}
+	\item \textbf{Atributos:} id, name (nombre del concepto), description (descripción)
+	\item \textbf{Relaciones:}
+	\begin{itemize}
+		\item Asociado a múltiples Group
+	\end{itemize}
+	\item \textbf{Responsabilidad:} Definir y mantener la identidad creativa de grupos
+\end{itemize}
+
+\subsection{Clase VisualConcept (Concepto Visual)}
+Representa la identidad visual única de un grupo (logotipo, colores, elementos gráficos).
+
+\begin{itemize}
+	\item \textbf{Atributos:} id, description (descripción visual), color, design (diseño)
+	\item \textbf{Relaciones:}
+	\begin{itemize}
+		\item Asociado a un único Group (relación 1:1)
+	\end{itemize}
+	\item \textbf{Responsabilidad:} Mantener la identidad visual exclusiva de cada grupo
+\end{itemize}
+
+\subsection{Clase Award (Premio)}
+Representa premios y reconocimientos obtenidos por álbumes o artistas.
+
+\begin{itemize}
+	\item \textbf{Atributos:} id, title (nombre del premio), year (año), album (álbum premiado)
+	\item \textbf{Relaciones:}
+	\begin{itemize}
+		\item Asociado a un Album
+	\end{itemize}
+	\item \textbf{Responsabilidad:} Registrar reconocimientos y logros
+\end{itemize}
+
+\section{Jerarquía de clases de Usuario}
+
+El sistema implementa una especialización de la clase User mediante herencia:
+
+\begin{itemize}
+	\item \textbf{AdminUser}: Usuario administrador con permisos de control total
+	\item \textbf{ManagerUser}: Usuario manager asociado a una agencia específica
+	\item \textbf{DirectorUser}: Usuario director con control sobre operaciones de agencia
+	\item \textbf{ApprenticeUser}: Usuario aprendiz con perfil asociado a un Apprentice
+	\item \textbf{ArtistUser}: Usuario artista con perfil asociado a un Artist
+\end{itemize}
+
+\section{Enumeraciones (Enums)}
+
+El sistema utiliza enumeraciones para representar estados y tipos:
+
+\begin{itemize}
+	\item \textbf{Role}: Enumeración de roles del sistema (ADMIN, MANAGER, DIRECTOR, APPRENTICE, ARTIST)
+	\item \textbf{ApprenticeStatus}: Estados de aprendiz (EN\_FORMACION, APTO\_DEBUT, RETIRADO)
+	\item \textbf{ArtistStatus}: Estados de artista (ACTIVO, INACTIVO, RETIRADO)
+	\item \textbf{GroupStatus}: Estados de grupo (ACTIVO, DISUELTO, EN\_PAUSA)
+	\item \textbf{ContractStatus}: Estados de contrato (ACTIVO, FINALIZADO, CANCELADO)
+	\item \textbf{ContractType}: Tipos de contrato (INDIVIDUAL, COLECTIVO)
+	\item \textbf{ActivityType}: Tipos de actividad (CONCIERTO, PRESENTACION, GRABACION, OTRO)
+	\item \textbf{IncomeType}: Tipos de ingreso (VENTA\_ALBUMES, CONCIERTOS, PATROCINIO, OTRO)
+\end{itemize}
+
+\chapter{Esquema MERX}
+
+A partir del análisis del dominio y del diccionario de datos definido, se construyó
+un Modelo Entidad–Relación Extendido (MERX) que representa de forma gráfica las
+entidades del sistema, sus atributos y las relaciones existentes entre ellas.
 
 \section{Diagrama Entidad-Relación (MERX)}
 
-\textbf{Ubicación del archivo:}
-\begin{itemize}
-\item Versión 1: \texttt{1era entrega BD/MERX K-pop Final (2).drawio}
-\item Versión 2: \texttt{Seminario Problematica/MERX K-pop Final Actualizado.drawio}
-\end{itemize}
-
-El Diagrama Entidad-Relación (MERX - Modelo Entidad-Relación eXtendido) representa la estructura lógica de la base de datos. Los diagramas en formato DrawIO pueden visualizarse en la aplicación Draw.io en línea o en VS Code con la extensión correspondiente.
-
-\subsubsection{Relaciones Principales}
-
-\begin{itemize}
-\item Agencia \(\rightarrow\) Grupo (1:N) - Una agencia tiene múltiples grupos
-\item Agencia \(\rightarrow\) Usuario (1:N) - Una agencia tiene múltiples usuarios gestores
-\item Agencia \(\rightarrow\) Aprendiz (1:N) - Una agencia entrena múltiples aprendices
-\item Grupo \(\rightarrow\) Artista (1:N) - Un grupo tiene múltiples artistas
-\item Grupo \(\rightarrow\) Álbum (1:N) - Un grupo produce múltiples álbumes
-\item Álbum \(\rightarrow\) Canción (1:N) - Un álbum contiene múltiples canciones
-\item Grupo \(\rightarrow\) Premio (1:N) - Grupos pueden recibir múltiples premios
-\item Actividad \(\rightarrow\) Ingreso (1:N) - Una actividad genera múltiples ingresos
-\item Contrato \(\rightarrow\) Partes (M:N) - Contratos vinculan múltiples entidades
-\end{itemize}
+El siguiente diagrama representa el Modelo Entidad–Relación Extendido del sistema:
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=1.0\textwidth]{informe_i_img-001.png}
-\caption{Diagrama MERX - Entidades y Relaciones del Sistema K-POP World}
-\label{fig:merx_diagram}
+\includegraphics[width=1\textwidth]{merx.png}
+\caption{Modelo Entidad–Relación Extendido (MERX) del Sistema K-POP World}
 \end{figure}
 
-\section{Propiedades de Datos - Usuario}
+\chapter{Solución Propuesta}
+El modelo conceptual definido mediante el Modelo Entidad–Relación Extendido sirvió
+como base directa para la implementación del sistema, garantizando la correspondencia
+entre el diseño del dominio y la solución desarrollada.
+La implementación se realizó utilizando PostgreSQL como sistema gestor de base de
+datos, junto con Prisma como herramienta de mapeo objeto–relacional, lo que permitió
+reflejar de forma estructurada las entidades, relaciones y restricciones definidas en el
+modelo de datos.
 
-\begin{table}[H]
-\centering
-\caption{Tabla Usuario}
-\begin{tabular}{|l|l|l|}
-\hline
-\textbf{Campo} & \textbf{Tipo} & \textbf{Restricción} \\
-\hline
-id & SERIAL & PRIMARY KEY \\
-\hline
-email & VARCHAR(255) & UNIQUE, NOT NULL \\
-\hline
-nombre & VARCHAR(255) & NOT NULL \\
-\hline
-password & VARCHAR(255) & NOT NULL \\
-\hline
-rol & ENUM & ADMIN, STAFF, ARTIST, APPRENTICE, MANAGER, DIRECTOR \\
-\hline
-agencyId & INTEGER & FOREIGN KEY \\
-\hline
-createdAt & TIMESTAMP & DEFAULT NOW() \\
-\hline
-updatedAt & TIMESTAMP & DEFAULT NOW() \\
-\hline
-\end{tabular}
-\end{table}
+\section{Organización Funcional del Sistema}
+El sistema se organiza en módulos funcionales que agrupan responsabilidades relacionadas, facilitando la implementación y el mantenimiento del software. Cada módulo
+interactúa con un subconjunto específico del modelo de datos, respetando las reglas y
+restricciones definidas en el MERX y el diccionario de datos.
+Esta organización modular se encuentra alineada con los principios de la arquitectura
+limpia (Clean Architecture), promoviendo una clara separación entre la lógica de negocio
+y los detalles de implementación.
 
-\section{Propiedades de Datos - Agencia}
+\section{Justificación de la Solución Adoptada}
+La solución propuesta permite modelar relaciones complejas, dependencias temporales y restricciones de integridad propias del dominio, garantizando la consistencia de la
+información almacenada.
+El uso de Clean Architecture, junto con PostgreSQL y Prisma, facilita la mantenibilidad del sistema y asegura que futuras modificaciones puedan realizarse sin comprometer
+la coherencia del modelo de datos.
 
-\begin{table}[H]
-\centering
-\caption{Tabla Agencia}
-\begin{tabular}{|l|l|l|}
-\hline
-\textbf{Campo} & \textbf{Tipo} & \textbf{Restricción} \\
-\hline
-id & SERIAL & PRIMARY KEY \\
-\hline
-name & VARCHAR(255) & NOT NULL \\
-\hline
-address & VARCHAR(500) & \\
-\hline
-fundationDate & DATE & \\
-\hline
-estado & VARCHAR(50) & \\
-\hline
-createdAt & TIMESTAMP & DEFAULT NOW() \\
-\hline
-updatedAt & TIMESTAMP & DEFAULT NOW() \\
-\hline
-\end{tabular}
-\end{table}
+\chapter{Mantenimiento y Evolución del Sistema}
+Esta sección presenta consideraciones técnicas orientadas al mantenimiento, extensión
+y evolución futura del sistema de gestión de agencias y grupos de K-pop.
 
-\section{Propiedades de Datos - Aprendiz}
+\section{Mantenibilidad}
+El uso de una arquitectura limpia facilita el mantenimiento del sistema al separar
+claramente la lógica de negocio de los detalles de implementación. Los cambios en la
+interfaz de usuario o en la infraestructura de datos no afectan directamente al núcleo del
+dominio, reduciendo el riesgo de errores.
 
-\begin{table}[H]
-\centering
-\caption{Tabla Aprendiz}
-\begin{tabular}{|l|l|l|}
-\hline
-\textbf{Campo} & \textbf{Tipo} & \textbf{Restricción} \\
-\hline
-id & SERIAL & PRIMARY KEY \\
-\hline
-nombre & VARCHAR(255) & NOT NULL \\
-\hline
-dateOfBirth & DATE & NOT NULL \\
-\hline
-agencyId & INTEGER & NOT NULL, FOREIGN KEY \\
-\hline
-estado & ENUM & ACTIVE, INACTIVE, GRADUATED \\
-\hline
-createdAt & TIMESTAMP & DEFAULT NOW() \\
-\hline
-updatedAt & TIMESTAMP & DEFAULT NOW() \\
-\hline
-\end{tabular}
-\end{table}
+\section{Escalabilidad}
+La solución fue diseñada para soportar el crecimiento progresivo del sistema, tanto en
+volumen de datos como en funcionalidades. PostgreSQL permite manejar grandes cantidades de información y relaciones complejas, mientras que Prisma facilita la gestión
+eficiente de claves compuestas y consultas estructuradas.
 
-\section{Propiedades de Datos - Grupo}
+\section{Extensión del sistema}
+El sistema puede extenderse para incorporar nuevas funcionalidades, tales como la
+gestión de giras internacionales, la integración con plataformas de streaming musical, el
+análisis estadístico de popularidad y la generación de reportes financieros avanzados.
+Estas extensiones pueden implementarse respetando las capas de la arquitectura, sin
+modificar las reglas centrales del dominio.
 
-\begin{table}[H]
-\centering
-\caption{Tabla Grupo}
-\begin{tabular}{|l|l|l|}
-\hline
-\textbf{Campo} & \textbf{Tipo} & \textbf{Restricción} \\
-\hline
-id & SERIAL & PRIMARY KEY \\
-\hline
-nombre & VARCHAR(255) & NOT NULL, UNIQUE \\
-\hline
-debut & DATE & \\
-\hline
-status & VARCHAR(50) & ACTIVE, INACTIVE \\
-\hline
-miembros & INTEGER & 1-20 \\
-\hline
-idAgency & INTEGER & NOT NULL, FOREIGN KEY \\
-\hline
-createdAt & TIMESTAMP & DEFAULT NOW() \\
-\hline
-\end{tabular}
-\end{table}
-
-\chapter{Especificación Técnica}
-
-\section{Stack Tecnológico}
-
-\begin{table}[H]
-\centering
-\caption{Componentes Tecnológicos}
-\begin{tabular}{|l|l|l|}
-\hline
-\textbf{Componente} & \textbf{Tecnología} & \textbf{Versión} \\
-\hline
-Frontend & React & 18+ \\
-\hline
-Backend & Node.js & 18+ \\
-\hline
-Framework API & Express.js & 4+ \\
-\hline
-Lenguaje & TypeScript & 5+ \\
-\hline
-ORM & Prisma & 5+ \\
-\hline
-Base de Datos & PostgreSQL & 12+ \\
-\hline
-Build & Vite & 5+ \\
-\hline
-Test & Jest & 29+ \\
-\hline
-\end{tabular}
-\end{table}
-
-\section{Enumeraciones Principales}
-
-\subsection{Estado de Usuario}
+\section{Buenas Prácticas de Desarrollo}
+Para garantizar la calidad y estabilidad del sistema, se recomienda:
 \begin{itemize}
-    \item ADMIN: Acceso total
-    \item STAFF: Gestión de contenido
-    \item ARTIST: Artista del sistema
-    \item APPRENTICE: Aprendiz
-    \item MANAGER: Gerente de agencia
-    \item DIRECTOR: Director ejecutivo
+    \item Mantener la separación de responsabilidades entre capas.
+    \item Documentar adecuadamente los cambios realizados.
+    \item Implementar pruebas unitarias sobre la capa de dominio.
+    \item Validar reglas de negocio en la capa de aplicación.
+    \item Utilizar migraciones controladas para cambios en la base de datos.
 \end{itemize}
-
-\subsection{Estado de Aprendiz}
-\begin{itemize}
-    \item ACTIVE: En entrenamiento
-    \item INACTIVE: Inactivo temporalmente
-    \item GRADUATED: Completó entrenamiento
-    \item SUSPENDED: Suspendido
-\end{itemize}
-
-\subsection{Tipo de Actividad}
-\begin{itemize}
-    \item CONCERT: Concierto público
-    \item REHEARSAL: Ensayo privado
-    \item RECORDING: Sesión de grabación
-    \item EVENT: Evento especial
-    \item PRESENTATION: Presentación
-\end{itemize}
-
-\chapter{Seguridad y Autenticación}
-
-\section{Sistema de Autenticación JWT}
-
-El sistema implementa autenticación basada en JWT (JSON Web Tokens) con la siguiente estructura:
-
-\begin{table}[H]
-\centering
-\caption{Payload JWT}
-\begin{tabular}{|l|l|}
-\hline
-\textbf{Campo} & \textbf{Descripción} \\
-\hline
-userId & Identificador del usuario \\
-\hline
-email & Email del usuario \\
-\hline
-role & Rol del usuario en el sistema \\
-\hline
-agencyId & Agencia a la que pertenece \\
-\hline
-iat & Tiempo de emisión (issued at) \\
-\hline
-exp & Tiempo de expiración (24 horas) \\
-\hline
-\end{tabular}
-\end{table}
-
-\section{Control de Acceso por Rol}
-
-\subsection{Roles Disponibles en el Sistema}
-
-El sistema implementa 6 roles principales con niveles de acceso progresivos:
-
-\begin{table}[H]
-\centering
-\caption{Descripción de Roles}
-\begin{tabular}{|l|p{8cm}|}
-\hline
-\textbf{Rol} & \textbf{Descripción y Responsabilidades} \\
-\hline
-ADMIN & Acceso administrativo completo. Gestión de usuarios, permisos, configuración del sistema. \\
-\hline
-DIRECTOR & Acceso directivo. Aprobación de cambios, reportes, supervisión de agencia. \\
-\hline
-MANAGER & Gestor de operaciones. Crea y edita grupos, aprendices, actividades, registra ingresos. \\
-\hline
-STAFF & Personal administrativo. Lectura de datos, creación de nuevos registros con supervisión. \\
-\hline
-ARTIST & Artista del sistema. Acceso limitado a su información personal y grupo. \\
-\hline
-APPRENTICE & Aprendiz en formación. Acceso muy limitado, solo su perfil y materiales de entrenamiento. \\
-\hline
-\end{tabular}
-\end{table}
-
-\subsection{Matriz Detallada de Permisos}
-
-La siguiente matriz indica los permisos (C=Create, R=Read, U=Update, D=Delete) para cada rol por recurso:
-
-\begin{table}[H]
-\centering
-\caption{Matriz Completa de Permisos por Rol}
-\begin{tabular}{|l|c|c|c|c|c|c|}
-\hline
-\textbf{Recurso} & \textbf{ADMIN} & \textbf{STAFF} & \textbf{ARTIST} & \textbf{APPRENTICE} & \textbf{MANAGER} & \textbf{DIRECTOR} \\
-\hline
-\textit{Usuarios} \\
-\hline
-Ver usuarios & CRUD & R & R & R & R & R \\
-\hline
-Crear usuario & CRUD & R & - & - & R & R \\
-\hline
-Editar usuario & CRUD & R & R$^*$ & R$^*$ & R & U \\
-\hline
-Eliminar usuario & CRUD & - & - & - & - & - \\
-\hline
-\textit{Agencias} \\
-\hline
-Ver agencias & CRUD & R & R & - & R & R \\
-\hline
-Crear agencia & CRUD & - & - & - & - & - \\
-\hline
-Editar agencia & CRUD & - & - & - & U & U \\
-\hline
-\textit{Grupos} \\
-\hline
-Ver grupos & CRUD & R & R & R & R & R \\
-\hline
-Crear grupo & CRUD & - & - & - & C & C \\
-\hline
-Editar grupo & CRUD & U & - & - & U & U \\
-\hline
-Eliminar grupo & CRUD & - & - & - & - & - \\
-\hline
-\textit{Aprendices} \\
-\hline
-Ver aprendices & CRUD & R & R & R$^*$ & R & R \\
-\hline
-Crear aprendiz & CRUD & C & - & - & C & C \\
-\hline
-Editar aprendiz & CRUD & U & - & R$^*$ & U & U \\
-\hline
-Evaluar aprendiz & - & - & - & - & C & U \\
-\hline
-\textit{Artistas} \\
-\hline
-Ver artistas & CRUD & R & R & - & R & R \\
-\hline
-Crear artista & CRUD & U & - & - & R & R \\
-\hline
-Editar artista & CRUD & D & R$^*$ & - & R & R \\
-\hline
-\textit{Contratos} \\
-\hline
-Ver contratos & CRUD & R & R & R & R & R \\
-\hline
-Crear contrato & CRUD & - & - & - & U & U \\
-\hline
-Editar contrato & CRUD & U & - & - & U & U \\
-\hline
-\textit{Actividades} \\
-\hline
-Ver actividades & CRUD & R & R & R & R & R \\
-\hline
-Crear actividad & CRUD & C & - & - & U & U \\
-\hline
-Editar actividad & CRUD & U & - & - & U & U \\
-\hline
-\textit{Reportes} \\
-\hline
-Ver reportes & R & R & R & - & R & CR \\
-\hline
-Generar reportes & - & - & - & - & - & C \\
-\hline
-Exportar datos & R & R & R & - & R & CR \\
-\hline
-\end{tabular}
-\end{table}
-
-\textit{Nota: $^*$ significa acceso solo a información propia}
-
-\subsection{Restricciones Especiales}
-
-\begin{itemize}
-\item \textbf{Artist:} Solo puede editar su propio perfil
-\item \textbf{Apprentice:} Solo puede ver su propio perfil y evaluaciones
-\item \textbf{Staff:} No puede crear o eliminar usuarios
-\item \textbf{Manager:} No puede crear agencias ni aprobar contratos principales
-\item \textbf{Director:} Acceso de lectura a todos, escritura en áreas supervisadas
-\item \textbf{Admin:} Acceso irrestricto (con auditoría completa)
-\end{itemize}
-
-\section{Matriz de Permisos por Rol}
-
-\subsection{AuthMiddleware}
-
-Verifica que la solicitud incluya JWT válido:
-\begin{itemize}
-    \item Header ``Authorization'' presente
-    \item Token con formato ``Bearer <token>''
-    \item JWT válido y no expirado
-    \item Usuario existe en base de datos
-\end{itemize}
-
-\subsection{RoleMiddleware}
-
-Verifica que el usuario tenga el rol requerido:
-\begin{itemize}
-    \item Usuario autenticado
-    \item Rol está en lista de permitidos
-\end{itemize}
-
-\section{Protección de Datos Sensibles}
-
-\begin{itemize}
-    \item Contraseñas: Hasheadas con bcrypt (10 rounds)
-    \item Tokens: Expiración 24 horas (refresh: 7 días)
-    \item HTTPS: Requerido en producción
-    \item CORS: Configurado para dominios específicos
-    \item Rate Limiting: 100 solicitudes por minuto por IP
-\end{itemize}
-
-\chapter{Documentación de APIs}
-
-\section{Base URL}
-
-\begin{verbatim}
-Development: http://localhost:3000/api
-Production: https://kpop-api.example.com/api
-\end{verbatim}
-
-\section{Headers Requeridos}
-
-\begin{verbatim}
-Content-Type: application/json
-Authorization: Bearer <JWT_TOKEN>
-X-Request-ID: <UUID>
-\end{verbatim}
-
-\section{Códigos HTTP Utilizados}
-
-\begin{table}[H]
-\centering
-\caption{HTTP Status Codes}
-\begin{tabular}{|c|l|p{6cm}|}
-\hline
-\textbf{Código} & \textbf{Significado} & \textbf{Descripción} \\
-\hline
-200 & OK & Solicitud exitosa \\
-\hline
-201 & Created & Recurso creado \\
-\hline
-204 & No Content & Éxito sin contenido \\
-\hline
-400 & Bad Request & Solicitud inválida \\
-\hline
-401 & Unauthorized & No autenticado \\
-\hline
-403 & Forbidden & No autorizado \\
-\hline
-404 & Not Found & Recurso no existe \\
-\hline
-409 & Conflict & Conflicto (ej: email duplicado) \\
-\hline
-500 & Server Error & Error interno \\
-\hline
-\end{tabular}
-\end{table}
-
-\section{Endpoints por Módulo}
-
-\subsection{Autenticación}
-\begin{verbatim}
-POST   /auth/login          - Login de usuario
-POST   /auth/logout         - Logout
-POST   /auth/refresh        - Refrescar token
-GET    /auth/profile        - Obtener perfil
-PUT    /auth/profile        - Actualizar perfil
-\end{verbatim}
-
-\subsection{Usuarios}
-\begin{verbatim}
-GET    /users               - Listar usuarios
-GET    /users/:id           - Obtener usuario
-POST   /users               - Crear usuario
-PUT    /users/:id           - Actualizar usuario
-DELETE /users/:id           - Eliminar usuario
-GET    /users/search        - Buscar usuarios
-\end{verbatim}
-
-\subsection{Agencias}
-\begin{verbatim}
-GET    /agencies            - Listar agencias
-GET    /agencies/:id        - Obtener agencia
-POST   /agencies            - Crear agencia
-PUT    /agencies/:id        - Actualizar agencia
-DELETE /agencies/:id        - Eliminar agencia
-\end{verbatim}
-
-\subsection{Grupos}
-\begin{verbatim}
-GET    /groups              - Listar grupos
-GET    /groups/:id          - Obtener grupo
-POST   /groups              - Crear grupo
-PUT    /groups/:id          - Actualizar grupo
-DELETE /groups/:id          - Eliminar grupo
-GET    /groups/:id/members  - Miembros del grupo
-\end{verbatim}
-
-\subsection{Aprendices}
-\begin{verbatim}
-GET    /apprentices         - Listar aprendices
-GET    /apprentices/:id     - Obtener aprendiz
-POST   /apprentices         - Crear aprendiz
-PUT    /apprentices/:id     - Actualizar aprendiz
-DELETE /apprentices/:id     - Eliminar aprendiz
-\end{verbatim}
-
-\chapter{Validaciones y Restricciones}
-
-\section{Validaciones por Entidad}
-
-\subsection{Usuario}
-
-\begin{table}[H]
-\centering
-\caption{Validaciones de Usuario}
-\begin{tabular}{|l|l|l|}
-\hline
-\textbf{Campo} & \textbf{Restricción} & \textbf{Tipo} \\
-\hline
-email & Formato email, único, requerido & Validación \\
-\hline
-nombre & Texto 2-255 caracteres & Validación \\
-\hline
-password & Mín. 8 caracteres, mayúsculas, minúsculas, números, símbolos & Validación \\
-\hline
-rol & ENUM de 6 roles disponibles & Validación \\
-\hline
-\end{tabular}
-\end{table}
-
-\subsection{Aprendiz}
-
-\begin{table}[H]
-\centering
-\caption{Validaciones de Aprendiz}
-\begin{tabular}{|l|l|l|}
-\hline
-\textbf{Campo} & \textbf{Restricción} & \textbf{Tipo} \\
-\hline
-nombre & Texto 2-255 caracteres, requerido & Validación \\
-\hline
-dateOfBirth & Edad 15-50 años, fecha pasada & Validación \\
-\hline
-agencyId & Foreign Key válido, requerido & Validación \\
-\hline
-\end{tabular}
-\end{table}
-
-\section{Restricciones de Negocio}
-
-\begin{table}[H]
-\centering
-\caption{Restricciones de Negocio}
-\begin{tabular}{|l|p{5cm}|l|}
-\hline
-\textbf{Restricción} & \textbf{Descripción} & \textbf{Validación} \\
-\hline
-Email único & No puede haber dos usuarios con mismo email & BD + API \\
-\hline
-Edad mínima & Aprendices deben tener mínimo 15 años & API \\
-\hline
-Edad máxima & Aprendices deben tener máximo 50 años & API \\
-\hline
-Fecha debut & Debe ser anterior a hoy & API \\
-\hline
-Contrato válido & endDate debe ser >= startDate & API \\
-\hline
-Nombre único & Cada grupo debe tener nombre único & BD \\
-\hline
-\end{tabular}
-\end{table}
-
-\chapter{Flujos de Negocio}
-
-\section{Flujo 1: Login de Usuario}
-
-El proceso de autenticación sigue estos pasos:
-
-\begin{enumerate}
-    \item Usuario ingresa email y contraseña
-    \item Backend valida credenciales en BD
-    \item Si son inválidas: Retornar error 401
-    \item Si son válidas: Generar JWT token (exp: 24 horas)
-    \item Generar refresh token (exp: 7 días)
-    \item Retornar tokens y datos de usuario
-\end{enumerate}
-
-\section{Flujo 2: Crear Nuevo Grupo}
-
-El proceso de creación de grupo:
-
-\begin{enumerate}
-    \item Usuario (MANAGER/ADMIN) ingresa datos del grupo
-    \item Frontend valida datos localmente
-    \item Si hay errores: Mostrar mensaje
-    \item Si son válidos: POST /groups con datos
-    \item Backend valida autorización (requiere MANAGER/ADMIN)
-    \item Si no autorizado: Retornar error 403
-    \item Backend valida datos
-    \item Si falla: Retornar error 400
-    \item Verificar nombre único
-    \item Si existe: Retornar error 409
-    \item Si es único: Crear grupo en BD
-    \item Registrar en auditoría
-    \item Retornar grupo creado (201)
-\end{enumerate}
-
-\section{Flujo 3: Evaluar Aprendiz}
-
-El proceso de evaluación automáticamente determina estado:
-
-\begin{enumerate}
-    \item MANAGER accede a módulo de Evaluación
-    \item Sistema obtiene lista de aprendices ACTIVE
-    \item MANAGER selecciona aprendiz e ingresa evaluación
-    \item Backend valida puntaje (0-100)
-    \item Si es inválido: Retornar error
-    \item Si es válido: Guardar evaluación
-    \item Verificar promedio últimas 5 evaluaciones
-    \item Si promedio >= 80: Estado = GRADUATED, crear Usuario ARTIST
-    \item Si promedio < 40: Estado = SUSPENDED, notificar supervisor
-    \item Si 40-79: Estado = ACTIVE, mantener
-    \item Actualizar registro
-\end{enumerate}
-
-\chapter{Pruebas}
-
-\section{Estrategia de Testing}
-
-\subsection{Unit Tests}
-
-Enfoque en funciones individuales y validaciones:
-\begin{itemize}
-    \item Cobertura: >80\%
-    \item Framework: Jest
-    \item Ejemplo: Validar formato de email
-\end{itemize}
-
-\subsection{Integration Tests}
-
-Enfoque en APIs y flujos completos:
-\begin{itemize}
-    \item Cobertura: Endpoints críticos
-    \item Framework: Jest + Supertest
-    \item Ejemplo: Test de login con credenciales válidas
-\end{itemize}
-
-\subsection{E2E Tests}
-
-Enfoque en flujos de usuario completos:
-\begin{itemize}
-    \item Herramienta: Cypress o Playwright
-    \item Ejemplo: Crear grupo y agregar miembros
-\end{itemize}
-
-\section{Test Cases Críticos}
-
-\begin{table}[H]
-\centering
-\caption{Test Cases}
-\begin{tabular}{|l|p{4cm}|p{4cm}|}
-\hline
-\textbf{Caso} & \textbf{Descripción} & \textbf{Resultado Esperado} \\
-\hline
-TC-AUTH-001 & Login con credenciales válidas & Status 200, tokens retornados \\
-\hline
-TC-AUTH-002 & Login con email inválido & Status 401, error de autenticación \\
-\hline
-TC-USER-001 & Crear usuario con email duplicado & Status 409, error de conflicto \\
-\hline
-TC-USER-002 & Crear usuario con datos válidos & Status 201, usuario creado \\
-\hline
-TC-GROUP-001 & Crear grupo sin autenticación & Status 401, no autorizado \\
-\hline
-TC-GROUP-002 & Crear grupo con nombre duplicado & Status 409, conflicto \\
-\hline
-TC-APPRENTICE-001 & Crear aprendiz con edad < 15 & Status 400, validación fallida \\
-\hline
-TC-APPRENTICE-002 & Crear aprendiz con edad válida & Status 201, aprendiz creado \\
-\hline
-\end{tabular}
-\end{table}
 
 \chapter{Conclusiones}
-
-\section{Logros Alcanzados}
-
-\begin{itemize}
-    \item[\checkmark] Sistema robusto: Arquitectura escalable con separación clara de capas
-    \item[\checkmark] Seguridad: Implementación de JWT, roles y controles de acceso
-    \item[\checkmark] Escalabilidad: Diseño modular que permite crecimiento
-    \item[\checkmark] Mantenibilidad: Código limpio siguiendo Clean Architecture
-    \item[\checkmark] Funcionalidad: 14 módulos cubriendo necesidades de agencias K-Pop
-\end{itemize}
-
-\section{Beneficios para la Organización}
-
-\begin{itemize}
-    \item \textbf{Eficiencia}: Automatización de procesos manuales
-    \item \textbf{Datos Centralizados}: Una única fuente de verdad
-    \item \textbf{Seguridad}: Control granular de acceso y auditoría
-    \item \textbf{Reportes}: Visualización de datos en tiempo real
-    \item \textbf{Escalabilidad}: Infraestructura preparada para crecimiento
-\end{itemize}
-
-\section{Recomendaciones Futuras}
-
-\begin{enumerate}
-    \item Implementar Caché: Redis para mejorar performance
-    \item Agregar WebSockets: Para notificaciones en tiempo real
-    \item Expandir Mobile: Aplicación nativa para iOS/Android
-    \item Analytics: Dashboard de métricas del sistema
-    \item Integración: APIs externas (Spotify, Instagram, etc.)
-\end{enumerate}
-
-\appendix
-
-\chapter{Anexos}
-
-\section{Datos de Prueba}
-
-Usuarios disponibles para testing:
-
-\begin{verbatim}
-ADMIN:
-  Email: admin@kpop.com
-  Password: AdminPass123!
-  
-MANAGER:
-  Email: manager@kpop.com
-  Password: ManagerPass123!
-  
-ARTIST:
-  Email: artist@kpop.com
-  Password: ArtistPass123!
-\end{verbatim}
-
-\section{Variables de Entorno Backend}
-
-\begin{verbatim}
-NODE_ENV=development
-PORT=3000
-DATABASE_URL=postgresql://user:password@localhost:5432/kpop_db
-JWT_SECRET=your-secret-key-here
-REFRESH_TOKEN_SECRET=your-refresh-secret
-JWT_EXPIRATION=24h
-CORS_ORIGIN=http://localhost:5173
-\end{verbatim}
-
-\section{Referencia Rápida de Errores}
-
-\begin{table}[H]
-\centering
-\caption{Errores Comunes}
-\begin{tabular}{|l|p{4cm}|p{5cm}|}
-\hline
-\textbf{Código} & \textbf{Mensaje} & \textbf{Solución} \\
-\hline
-AUTH\_001 & Invalid credentials & Verificar email y contraseña \\
-\hline
-AUTH\_002 & Token expired & Usar refresh token \\
-\hline
-VAL\_001 & Email format invalid & Verificar formato de email \\
-\hline
-VAL\_002 & Age out of range & Aprendiz 15-50 años \\
-\hline
-AUTH\_003 & Unauthorized & Verificar permisos del rol \\
-\hline
-DB\_001 & Duplicate entry & El registro ya existe \\
-\hline
-\end{tabular}
-\end{table}
-
-\chapter{Flujos de Negocio}
-
-\section{Introducción}
-
-Los flujos de negocio describen cómo el sistema procesa los casos de uso principales del negocio de gestión de agencias K-pop. Cada flujo incluye validaciones, decisiones y cambios de estado automáticos.
-
-\section{Flujo 1: Autenticación de Usuario}
-
-\subsection{Descripción}
-
-Un usuario intenta acceder al sistema proporcionando credenciales (email y contraseña).
-
-\subsection{Participantes}
-
-\begin{itemize}
-\item Usuario (Cliente Frontend)
-\item Sistema (Servidor Backend)
-\item Base de Datos
-\end{itemize}
-
-\subsection{Secuencia del Flujo}
-
-\begin{enumerate}
-\item \textbf{Inicio:} Usuario navega a \texttt{/login} y ve formulario
-\item \textbf{Acción 1:} Usuario ingresa email y contraseña
-\item \textbf{Validación 1:} Frontend valida formato de email localmente
-    \begin{itemize}
-    \item [X] Inválido $\rightarrow$ Mostrar error "Formato de email incorrecto"
-    \item [OK] Válido $\rightarrow$ Continuar
-    \end{itemize}
-\item \textbf{Acción 2:} Usuario hace clic en botón Login
-\item \textbf{Acción 3:} Frontend envía POST \texttt{/auth/login} con credenciales
-\item \textbf{Validación 2:} Backend valida estructura de datos
-    \begin{itemize}
-    \item [X] Campos vacíos $\rightarrow$ Error 400 "Campos requeridos"
-    \item [OK] Válido $\rightarrow$ Continuar
-    \end{itemize}
-\item \textbf{Validación 3:} Backend busca usuario en BD por email
-    \begin{itemize}
-    \item [X] No encontrado $\rightarrow$ Error 401 "Email o contraseña incorrectos"
-    \item [OK] Encontrado $\rightarrow$ Continuar
-    \end{itemize}
-\item \textbf{Validación 4:} Backend valida contraseña (bcrypt compare)
-    \begin{itemize}
-    \item [X] No coincide $\rightarrow$ Error 401 "Email o contraseña incorrectos"
-    \item [OK] Coincide $\rightarrow$ Continuar
-    \end{itemize}
-\item \textbf{Validación 5:} Backend verifica estado de usuario
-    \begin{itemize}
-    \item [X] Inactivo/Suspendido $\rightarrow$ Error 403 "Cuenta desactivada"
-    \item [OK] Activo $\rightarrow$ Continuar
-    \end{itemize}
-\item \textbf{Acción 4:} Backend genera JWT (access token) válido por 24 horas
-\item \textbf{Acción 5:} Backend genera refresh token válido por 7 días
-\item \textbf{Acción 6:} Backend registra login en auditoría con timestamp e IP
-\item \textbf{Retorno:} Backend retorna tokens al frontend (200 OK)
-\item \textbf{Acción 7:} Frontend guarda tokens en localStorage/sessionStorage
-\item \textbf{Acción 8:} Frontend redirige a dashboard según rol
-\item \textbf{Fin:} Usuario autenticado en el sistema
-\end{enumerate}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.95\textwidth]{informe_tecnico_img-000.png}
-\caption{Pantalla de Autenticación del Sistema K-POP World}
-\label{fig:login_technical}
-\end{figure}
-
-\section{Flujo 2: Evaluar Aprendiz (CRÍTICO)}
-
-\subsection{Descripción}
-
-Un manager registra una evaluación para un aprendiz. El sistema calcula automáticamente el promedio de últimas 5 evaluaciones y puede transicionar el estado del aprendiz automáticamente.
-
-\subsection{Participantes}
-
-\begin{itemize}
-\item Manager/Director (acceso autorizado)
-\item Aprendiz (sujeto de evaluación)
-\item Sistema (cálculos automáticos)
-\end{itemize}
-
-\subsection{Secuencia del Flujo}
-
-\begin{enumerate}
-\item \textbf{Inicio:} Manager accede a "Gestión de Aprendices"
-\item \textbf{Acción 1:} Manager busca/filtra aprendiz específico
-\item \textbf{Acción 2:} Manager hace clic en botón "Evaluar"
-\item \textbf{Validación 1:} Sistema verifica permisos de manager
-    \begin{itemize}
-    \item [X] Sin permisos $\rightarrow$ Error 403
-    \item [OK] Con permisos $\rightarrow$ Continuar
-    \end{itemize}
-\item \textbf{Acción 3:} Se abre formulario de evaluación
-\item \textbf{Acción 4:} Manager ingresa puntaje (0-100)
-\item \textbf{Validación 2:} Sistema valida puntaje
-    \begin{itemize}
-    \item [X] Fuera de rango $\rightarrow$ Error "Puntaje debe estar entre 0 y 100"
-    \item [OK] Válido $\rightarrow$ Continuar
-    \end{itemize}
-\item \textbf{Acción 5:} Manager opcionalmente agrega comentarios
-\item \textbf{Acción 6:} Manager hace clic en "Guardar Evaluación"
-\item \textbf{Acción 7:} Backend guarda evaluación en BD con timestamp
-\item \textbf{Acción 8:} Backend recupera últimas 5 evaluaciones del aprendiz
-\item \textbf{Acción 9:} Backend calcula promedio automáticamente
-\item \textbf{Decisión 1:} ¿Promedio $\geq$ 80?
-    \begin{itemize}
-    \item \textbf{SÍ} → Ir a Ramificación A (Graduación)
-    \item \textbf{NO} → Ir a Decisión 2
-    \end{itemize}
-\item \textbf{Decisión 2:} ¿Promedio $< 40$?
-    \begin{itemize}
-    \item \textbf{SÍ} → Ir a Ramificación B (Suspensión)
-    \item \textbf{NO} → Ir a Acción 12
-    \end{itemize}
-\end{enumerate}
-
-\subsubsection{Ramificación A: Graduación (Promedio $\geq$ 80)}
-
-\begin{enumerate}
-\item Cambiar estado de aprendiz a GRADUADO
-\item Crear nuevo Usuario en BD con:
-    \begin{itemize}
-    \item email = apellido + número aleatorio@kpop.local
-    \item rol = ARTIST
-    \item nombre = nombre del aprendiz
-    \item agencyId = misma agencia del aprendiz
-    \end{itemize}
-\item Generar contraseña temporal aleatoria
-\item Enviar email al aprendiz con credenciales y enlace para cambiar contraseña
-\item Registrar evento en auditoría: "APPRENTICE\_GRADUATED"
-\item Notificar a director/admin de la graduación
-\item Retornar confirmación al manager
-\end{enumerate}
-
-\subsubsection{Ramificación B: Suspensión (Promedio $< 40$)}
-
-\begin{enumerate}
-\item Cambiar estado de aprendiz a SUSPENDIDO
-\item Generar reporte de bajo desempeño
-\item Enviar notificación a supervisor asignado
-\item Registrar evento en auditoría: "APPRENTICE\_SUSPENDED"
-\item Crear tarea para revisión: "Revisar plan de recuperación para [Aprendiz]"
-\item Retornar confirmación al manager
-\end{enumerate}
-
-\subsubsection{Continuación Normal (Promedio 40-79)}
-
-\begin{enumerate}
-\item Mantener estado como ACTIVO
-\item Registrar evento en auditoría: "APPRENTICE\_EVALUATED"
-\item Retornar confirmación al manager
-\item \textbf{Fin:} Evaluación guardada y procesada
-\end{enumerate}
-
-\section{Flujo 3: Crear Nuevo Grupo}
-
-\subsection{Descripción}
-
-Un manager crea un nuevo grupo musical bajo la agencia, definiendo nombre, concepto y otros detalles.
-
-\subsection{Validaciones Críticas}
-
-\begin{itemize}
-\item Nombre del grupo debe ser único en todo el sistema
-\item Número de miembros debe estar entre 1 y 20
-\item Fecha de debut no puede ser futura
-\item Manager debe tener permisos (MANAGER/ADMIN/DIRECTOR)
-\item Grupo debe pertenecer a una agencia válida
-\end{itemize}
-
-\subsection{Resultado}
-
-Nuevo registro de grupo creado con estado INACTIVO hasta que tenga al menos un artista.
-
-\section{Flujo 4: Registrar Ingreso}
-
-\subsection{Descripción}
-
-Se registra un ingreso (streaming, concierto, merchandising) que genera dinero para un artista o grupo. El sistema distribuye automáticamente según contratos.
-
-\subsection{Cálculo de Distribución}
-
-\begin{enumerate}
-\item Buscar todos los contratos activos del grupo/artista
-\item Para cada contrato activo, aplicar porcentaje de distribución
-\item Registrar transacción de distribución en auditoría
-\item Actualizar saldos pendientes de pago
-\item Generar notificación de pago pendiente si aplica
-\end{enumerate}
-
-\section{Restricciones de Transición de Estado}
-
-No todos los cambios de estado son permitidos. Las transiciones válidas se muestran en la siguiente tabla:
-
-\begin{table}[H]
-\centering
-\caption{Transiciones de Estado de Aprendiz Permitidas}
-\begin{tabular}{|l|l|l|}
-\hline
-\textbf{Estado Actual} & \textbf{Puede Cambiar a} & \textbf{Desencadenante} \\
-\hline
-ACTIVO & GRADUADO & Promedio evaluación $\geq$ 80 \\
-\hline
-ACTIVO & SUSPENDIDO & Promedio evaluación $< 40$ \\
-\hline
-ACTIVO & INACTIVO & Acción manual de admin \\
-\hline
-SUSPENDIDO & ACTIVO & Reactivación manual por admin \\
-\hline
-GRADUADO & --- & Estado permanente (no vuelve) \\
-\hline
-\end{tabular}
-\end{table}
-
-\chapter{Guía de Mantenimiento}
-
-\section{Introducción}
-
-Esta sección proporciona información esencial para desarrolladores y administradores de sistema que realicen mantenimiento, depuración y actualización del sistema K-POP World.
-
-\section{Estructura de Directorios}
-
-\begin{verbatim}
-backend/
-  src/
-    application/        # Logica de aplicacion
-    domain/             # Entidades e interfaces
-    infrastructure/     # Configuracion y servicios
-    presentation/       # Controladores y rutas
-    plugins/            # Modulos externos
-    generated/          # Codigo generado (Prisma)
-    tests/              # Suite de pruebas
-  prisma/
-    schema.prisma       # Esquema de BD
-    migrations/         # Historial migraciones
-  tsconfig.json           # Config TypeScript
-  jest.config.ts          # Config pruebas
-  package.json            # Dependencias
-  nodemon.json            # Config reloading
-
-frontend/
-  src/
-    components/         # Componentes React
-    pages/              # Paginas/vistas
-    contexts/           # Context API
-    types/              # Tipos TypeScript
-    config/             # Configuracion
-  public/                 # Archivos estaticos
-  vite.config.ts          # Config Vite
-  package.json            # Dependencias
-\end{verbatim}
-
-\section{Procedimientos de Diagnóstico}
-
-\subsection{Verificación de Base de Datos}
-
-\begin{enumerate}
-\item Conectar a PostgreSQL: 
-\begin{verbatim}
-psql -U kpop_user -d kpop_db -h localhost
-\end{verbatim}
-
-\item Verificar estado de tablas:
-\begin{verbatim}
-SELECT table_name FROM information_schema.tables 
-WHERE table_schema = 'public';
-\end{verbatim}
-
-\item Revisar integridad referencial:
-\begin{verbatim}
-SELECT constraint_name, table_name, violation_count 
-FROM pg_constraint WHERE table_name LIKE '%';
-\end{verbatim}
-
-\item Limpiar caché de conexiones abandonadas:
-\begin{verbatim}
-SELECT pg_terminate_backend(pid) 
-FROM pg_stat_activity 
-WHERE usename = 'kpop_user' AND state = 'idle';
-\end{verbatim}
-\end{enumerate}
-
-\subsection{Verificación de Servidor}
-
-\begin{enumerate}
-\item Revisar logs del servidor:
-\begin{verbatim}
-tail -f logs/server.log
-grep -i "error" logs/server.log
-\end{verbatim}
-
-\item Probar conectividad de API:
-\begin{verbatim}
-curl -X GET http://localhost:3000/health
-curl -X GET http://localhost:3000/api/users 
-  -H "Authorization: Bearer TOKEN"
-\end{verbatim}
-
-\item Verificar puertos en uso:
-\begin{verbatim}
-netstat -an | grep 3000
-netstat -an | grep 5432
-\end{verbatim}
-
-\item Revisar variables de entorno:
-\begin{verbatim}
-cat .env | grep -v PRIVATE
-\end{verbatim}
-\end{enumerate}
-
-\section{Procedimientos de Depuración}
-
-\subsection{Depuración Node.js}
-
-\begin{verbatim}
-# Modo debug
-node --inspect=0.0.0.0:9229 src/index.ts
-
-# Desde Chrome: chrome://inspect
-# Desde VS Code: agregar configuración launch.json
-{
-  "type": "node",
-  "request": "attach",
-  "name": "Attach",
-  "port": 9229
-}
-\end{verbatim}
-
-\subsection{Depuración TypeScript/Prisma}
-
-\begin{enumerate}
-\item Generar cliente Prisma actualizado:
-\begin{verbatim}
-npx prisma generate
-\end{verbatim}
-
-\item Visualizar esquema:
-\begin{verbatim}
-npx prisma studio
-\end{verbatim}
-
-\item Validar migraciones:
-\begin{verbatim}
-npx prisma migrate status
-npx prisma migrate resolve --applied <migration_name>
-\end{verbatim}
-
-\item Limpiar base de datos (CUIDADO):
-\begin{verbatim}
-npx prisma migrate reset
-npx prisma db seed
-\end{verbatim}
-\end{enumerate}
-
-\section{Procedimientos de Backup y Restauración}
-
-\subsection{Backup de Base de Datos}
-
-\begin{verbatim}
-# Backup completo
-pg_dump -U kpop_user -d kpop_db -F c -f backup.dump
-
-# Backup solo estructura
-pg_dump -U kpop_user -d kpop_db -s > schema.sql
-
-# Backup con compresión
-pg_dump -U kpop_user -d kpop_db | gzip > backup_$(date +%Y%m%d).sql.gz
-\end{verbatim}
-
-\subsection{Restauración de Base de Datos}
-
-\begin{verbatim}
-# Desde archivo dump
-pg_restore -U kpop_user -d kpop_db backup.dump
-
-# Desde SQL comprimido
-gunzip -c backup_20260116.sql.gz | psql -U kpop_user -d kpop_db
-
-# Restaurar tabla específica
-pg_restore -U kpop_user -d kpop_db -t nombre_tabla backup.dump
-\end{verbatim}
-
-\section{Problemas Comunes y Soluciones}
-
-\begin{table}[H]
-\centering
-\caption{Problemas de Mantenimiento}
-\begin{tabular}{|l|p{4cm}|p{6cm}|}
-\hline
-\textbf{Problema} & \textbf{Causa Probable} & \textbf{Solución} \\
-\hline
-ECONNREFUSED (5432) & PostgreSQL no está corriendo & Iniciar: sudo systemctl start postgresql \\
-\hline
-JWT malformed & Token inválido o expirado & Generar nuevo token, verificar SECRET \\
-\hline
-Prisma Error: Cannot find & Cliente no generado & npx prisma generate \\
-\hline
-Módulo no encontrado & Dependencia no instalada & npm install, verificar package.json \\
-\hline
-Query timeout & DB lenta o cuelgue & Optimizar índices, revisar logs \\
-\hline
-CORS error & Origen no permitido & Actualizar CORS\_ORIGIN en .env \\
-\hline
-\end{tabular}
-\end{table}
-
-\section{Monitoreo y Performance}
-
-\subsection{Índices de Base de Datos}
-
-\begin{verbatim}
--- Listar índices existentes
-SELECT indexname, indexdef FROM pg_indexes 
-WHERE tablename = 'usuario';
-
--- Crear índice en campo frecuentemente consultado
-CREATE INDEX idx_usuario_email ON usuario(email);
-
--- Analizar query performance
-EXPLAIN ANALYZE SELECT * FROM usuario 
-WHERE email = 'user@example.com';
-\end{verbatim}
-
-\subsection{Métricas de Servidor}
-
-\begin{enumerate}
-\item CPU y memoria:
-\begin{verbatim}
-ps aux | grep node
-top -p $(pgrep -f "node src")
-\end{verbatim}
-
-\item Conexiones activas:
-\begin{verbatim}
-psql -c "SELECT count(*) FROM pg_stat_activity"
-\end{verbatim}
-
-\item Tamaño de base de datos:
-\begin{verbatim}
-psql -c "SELECT pg_size_pretty(pg_database_size('kpop_db'))"
-\end{verbatim}
-\end{enumerate}
-
-\section{Consideraciones de Seguridad}
-
-\subsection{Gestión de Secretos}
-
-\begin{itemize}
-\item \textbf{Nunca} commit .env a repositorio
-\item Utilizar secretos diferentes para cada ambiente (dev/prod)
-\item Rotar tokens JWT periódicamente (cada 30-90 días)
-\item Cambiar contraseñas de BD regularmente
-\item Utilizar variables de entorno para credentials sensibles
-\end{itemize}
-
-\subsection{Auditoría y Logs}
-
-\begin{itemize}
-\item Todos los cambios de datos se registran en base de datos
-\item Logs incluyen: usuario, acción, timestamp, valores antiguos/nuevos
-\item Revisar logs regularmente para detectar anomalías
-\item Mantener logs durante mínimo 3 meses
-\item Implementar alertas para operaciones críticas
-\end{itemize}
-
-\subsection{Actualizaciones y Parches}
-
-\begin{itemize}
-\item Revisar vulnerabilidades: \texttt{npm audit}
-\item Actualizar dependencias: \texttt{npm update}
-\item Probar cambios en ambiente de staging antes de producción
-\item Mantener historial de cambios y rollback plan
-\end{itemize}
-
-\chapter{Diagrama de Clases UML}
-
-\section{Introducción}
-
-Esta sección describe la estructura de clases del sistema según el patrón Clean Architecture. El diagrama visual se puede encontrar en \texttt{backend/src/diagram.drawio}.
-
-\section{Capas de la Arquitectura}
-
-\subsection{Domain Layer (Capa de Dominio)}
-
-Contiene las entidades de negocio y reglas de dominio:
-
-\begin{itemize}
-\item \textbf{Usuario}: Entidad principal de acceso
-\begin{itemize}
-\item Propiedades: id, email, nombre, password, rol, agencyId
-\item Métodos: validarCredenciales(), obtenerPermisos()
-\end{itemize}
-
-\item \textbf{Agencia}: Entidad empresarial
-\begin{itemize}
-\item Propiedades: id, nombre, dirección, fechaFundación, estado
-\item Métodos: agregarGrupo(), obtenerGrupos(), calcularIngresos()
-\end{itemize}
-
-\item \textbf{Grupo}: Entidad musical
-\begin{itemize}
-\item Propiedades: id, nombre, debut, status, miembros, agencyId
-\item Métodos: agregarMiembro(), removerMiembro(), obtenerAlbumes()
-\end{itemize}
-
-\item \textbf{Artista}: Integrante de grupo
-\begin{itemize}
-\item Propiedades: id, nombreArtístico, début, status, groupId
-\item Métodos: cambiarGrupo(), obtenerPremios(), actualizarEstado()
-\end{itemize}
-
-\item \textbf{Aprendiz}: Nuevo talento en formación
-\begin{itemize}
-\item Propiedades: id, nombre, fechaNacimiento, agencyId, estado
-\item Métodos: promoverArtista(), evaluarProgreso()
-\end{itemize}
-
-\item \textbf{Álbum}: Producción discográfica
-\begin{itemize}
-\item Propiedades: id, título, groupId, fechaLanzamiento, numCanciones, copiaVendidas
-\item Métodos: agregarCanción(), calcularDuración(), obtenerEstadísticas()
-\end{itemize}
-
-\item \textbf{Canción}: Composición musical
-\begin{itemize}
-\item Propiedades: id, título, albumId, duración, reproducciones
-\item Métodos: incrementarReproducciones(), obtenerMetadata()
-\end{itemize}
-
-\item \textbf{Contrato}: Acuerdo vinculante
-\begin{itemize}
-\item Propiedades: id, tipo, parte1Id, parte2Id, fechaInicio, fechaFin, condiciones
-\item Métodos: esVigente(), calcularVigencia(), renovar()
-\end{itemize}
-
-\item \textbf{Premio}: Reconocimiento recibido
-\begin{itemize}
-\item Propiedades: id, nombre, groupId/artistaId, fecha, categoría
-\item Métodos: obtenerDetalles(), verificarAutenticidad()
-\end{itemize}
-
-\item \textbf{Actividad}: Evento o presentación
-\begin{itemize}
-\item Propiedades: id, tipo, fecha, lugar, participantes, estado
-\item Métodos: agregarParticipante(), cambiarFecha(), finalizarActividad()
-\end{itemize}
-
-\item \textbf{Ingreso}: Registro económico
-\begin{itemize}
-\item Propiedades: id, tipo, monto, fecha, actividadId, distribución
-\item Métodos: calcularDistribución(), obtenerReporte()
-\end{itemize}
-\end{itemize}
-
-\subsection{Application Layer (Capa de Aplicación)}
-
-Contiene la lógica de casos de uso:
-
-\begin{itemize}
-\item \textbf{UseCase (Interfaz Base)}: Define el contrato
-\begin{itemize}
-\item Método abstracto: execute(input): Output
-\end{itemize}
-
-\item Casos de uso específicos (ejemplos):
-\begin{itemize}
-\item CrearAgenciaUseCase
-\item AgregarGrupoUseCase
-\item RegistrarActividadUseCase
-\item CalcularIngresosUseCase
-\item GenerarReporteUseCase
-\end{itemize}
-
-\item \textbf{DTOs (Data Transfer Objects)}:
-\begin{itemize}
-\item CreateAgencyDTO
-\item UpdateGroupDTO
-\item RegisterActivityDTO
-\item GenerateReportDTO
-\end{itemize}
-\end{itemize}
-
-\subsection{Infrastructure Layer (Capa de Infraestructura)}
-
-Implementa detalles técnicos:
-
-\begin{itemize}
-\item \textbf{Prisma Client}: Cliente ORM automático
-\begin{itemize}
-\item Generado automáticamente desde schema.prisma
-\item Proporciona tipado fuerte
-\item Métodos: create(), findUnique(), update(), delete()
-\end{itemize}
-
-\item \textbf{Repositories}:
-\begin{itemize}
-\item UserRepository
-\item AgencyRepository
-\item GroupRepository
-\item ActivityRepository
-\item IncomeRepository
-\end{itemize}
-
-\item \textbf{Database Connection}:
-\begin{itemize}
-\item PostgreSQL Connection Pool
-\item Migraciones Prisma
-\item Seeds de datos iniciales
-\end{itemize}
-
-\item \textbf{Servicios Externos}:
-\begin{itemize}
-\item JWT Handler (autenticación)
-\item Email Service (notificaciones)
-\item Logger Service (auditoría)
-\end{itemize}
-\end{itemize}
-
-\subsection{Presentation Layer (Capa de Presentación)}
-
-Maneja las solicitudes HTTP:
-
-\begin{itemize}
-\item \textbf{Controladores}:
-\begin{itemize}
-\item AuthController
-\item UserController
-\item AgencyController
-\item GroupController
-\item ArtistController
-\item ApprenticceController
-\item ActivityController
-\item IncomeController
-\end{itemize}
-
-\item \textbf{Rutas}:
-\begin{itemize}
-\item POST /auth/login
-\item GET/POST /api/agencies
-\item GET/POST /api/groups
-\item GET/POST /api/activities
-\item GET /api/reports
-\end{itemize}
-
-\item \textbf{Middleware}:
-\begin{itemize}
-\item AuthenticationMiddleware
-\item AuthorizationMiddleware
-\item ValidationMiddleware
-\item ErrorHandlingMiddleware
-\item LoggingMiddleware
-\end{itemize}
-\end{itemize}
-
-\section{Patrones de Diseño}
-
-\subsection{Dependency Injection}
-
-\begin{verbatim}
-// Contenedor de IoC
-class Container {
-  private services: Map<string, any>
-  
-  register(name: string, factory: Function)
-  resolve<T>(name: string): T
-}
-
-// Uso en controladores
-class AgencyController {
-  constructor(private agencyUseCase: AgencyUseCase) {}
-  
-  async createAgency(req: Request, res: Response) {
-    const result = await this.agencyUseCase.execute(req.body)
-    res.json(result)
-  }
-}
-\end{verbatim}
-
-\subsection{Repository Pattern}
-
-\begin{verbatim}
-interface IRepository<T> {
-  create(data: Partial<T>): Promise<T>
-  findAll(): Promise<T[]>
-  findById(id: number): Promise<T | null>
-  update(id: number, data: Partial<T>): Promise<T>
-  delete(id: number): Promise<boolean>
-}
-
-class UserRepository implements IRepository<User> {
-  constructor(private prisma: PrismaClient) {}
-  
-  async findById(id: number): Promise<User | null> {
-    return this.prisma.usuario.findUnique({
-      where: { id }
-    })
-  }
-}
-\end{verbatim}
-
-\section{Relaciones entre Clases}
-
-\begin{table}[H]
-\centering
-\caption{Relaciones UML}
-\begin{tabular}{|l|l|p{6cm}|}
-\hline
-\textbf{Clase A} & \textbf{Relación} & \textbf{Clase B} \\
-\hline
-Agencia & Composición (1:N) & Grupo \\
-\hline
-Grupo & Composición (1:N) & Artista \\
-\hline
-Grupo & Composición (1:N) & Álbum \\
-\hline
-Álbum & Composición (1:N) & Canción \\
-\hline
-Contrato & Asociación (M:N) & Usuario/Artista \\
-\hline
-Actividad & Agregación & Participantes \\
-\hline
-Ingreso & Asociación & Actividad \\
-\hline
-UseCase & Dependencia & Repository \\
-\hline
-Controller & Dependencia & UseCase \\
-\hline
-\end{tabular}
-\end{table}
-
+El desarrollo del sistema de gestión de agencias y grupos de K-pop permitió abordar
+un dominio complejo mediante un modelo de datos estructurado y coherente, capaz de
+representar relaciones dinámicas, temporales y contractuales.
+La definición del diccionario de datos y del Modelo Entidad–Relación Extendido ase-
+gura la consistencia entre el diseño conceptual y la implementación, mientras que el uso
+de una arquitectura limpia favorece la mantenibilidad y evolución del sistema.
+En conjunto, la solución propuesta constituye una base sólida para la gestión de la
+información del dominio y para la incorporación de futuras funcionalidades, manteniendo
+la integridad y coherencia de los datos.
 \end{document}

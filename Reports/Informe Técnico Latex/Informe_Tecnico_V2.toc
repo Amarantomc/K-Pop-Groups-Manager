@@ -1,145 +1,69 @@
 \babel@toc {spanish}{}\relax 
-\contentsline {chapter}{\numberline {1}Introducción}{5}{chapter.1}%
-\contentsline {section}{\numberline {1.1}Propósito del Sistema}{5}{section.1.1}%
-\contentsline {section}{\numberline {1.2}Alcance}{5}{section.1.2}%
-\contentsline {chapter}{\numberline {2}Descripción del Problema}{6}{chapter.2}%
-\contentsline {section}{\numberline {2.1}Problemas Identificados}{6}{section.2.1}%
-\contentsline {subsection}{\numberline {2.1.1}Desorganización de Datos}{6}{subsection.2.1.1}%
-\contentsline {subsection}{\numberline {2.1.2}Gestión Compleja de Relaciones}{6}{subsection.2.1.2}%
-\contentsline {subsection}{\numberline {2.1.3}Falta de Automatización}{6}{subsection.2.1.3}%
-\contentsline {subsection}{\numberline {2.1.4}Seguridad y Control de Acceso}{6}{subsection.2.1.4}%
-\contentsline {chapter}{\numberline {3}Solución Propuesta}{7}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Objetivo General}{7}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Objetivos Específicos}{7}{section.3.2}%
-\contentsline {chapter}{\numberline {4}Arquitectura del Sistema}{8}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Modelo de 3 Capas}{8}{section.4.1}%
-\contentsline {subsection}{\numberline {4.1.1}Capa de Presentación}{8}{subsection.4.1.1}%
-\contentsline {subsection}{\numberline {4.1.2}Capa de Aplicación}{8}{subsection.4.1.2}%
-\contentsline {subsection}{\numberline {4.1.3}Capa de Datos}{8}{subsection.4.1.3}%
-\contentsline {section}{\numberline {4.2}Componentes Principales}{9}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}Frontend (React)}{9}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}Backend (Node.js + Express)}{9}{subsection.4.2.2}%
-\contentsline {subsection}{\numberline {4.2.3}Base de Datos (PostgreSQL)}{9}{subsection.4.2.3}%
-\contentsline {section}{\numberline {4.3}Patrones de Arquitectura}{9}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Clean Architecture}{9}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}Dependency Injection}{9}{subsection.4.3.2}%
-\contentsline {chapter}{\numberline {5}Diccionario de Datos}{11}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Introducción}{11}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Tabla: Usuario}{11}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Tabla: Agencia}{11}{section.5.3}%
-\contentsline {section}{\numberline {5.4}Tabla: Aprendiz}{12}{section.5.4}%
-\contentsline {section}{\numberline {5.5}Tabla: Grupo}{12}{section.5.5}%
-\contentsline {section}{\numberline {5.6}Tabla: Artista}{12}{section.5.6}%
-\contentsline {section}{\numberline {5.7}Tabla: Álbum}{13}{section.5.7}%
-\contentsline {section}{\numberline {5.8}Tabla: Canción}{13}{section.5.8}%
-\contentsline {section}{\numberline {5.9}Tabla: Actividad}{13}{section.5.9}%
-\contentsline {section}{\numberline {5.10}Tabla: Contrato}{14}{section.5.10}%
-\contentsline {section}{\numberline {5.11}Tabla: Premio}{14}{section.5.11}%
-\contentsline {section}{\numberline {5.12}Tabla: Ingreso}{14}{section.5.12}%
-\contentsline {section}{\numberline {5.13}Diagrama Entidad-Relación (MERX)}{15}{section.5.13}%
-\contentsline {subsubsection}{Relaciones Principales}{15}{section*.2}%
-\contentsline {section}{\numberline {5.14}Propiedades de Datos - Usuario}{16}{section.5.14}%
-\contentsline {section}{\numberline {5.15}Propiedades de Datos - Agencia}{17}{section.5.15}%
-\contentsline {section}{\numberline {5.16}Propiedades de Datos - Aprendiz}{17}{section.5.16}%
-\contentsline {section}{\numberline {5.17}Propiedades de Datos - Grupo}{17}{section.5.17}%
-\contentsline {chapter}{\numberline {6}Especificación Técnica}{18}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Stack Tecnológico}{18}{section.6.1}%
-\contentsline {section}{\numberline {6.2}Enumeraciones Principales}{18}{section.6.2}%
-\contentsline {subsection}{\numberline {6.2.1}Estado de Usuario}{18}{subsection.6.2.1}%
-\contentsline {subsection}{\numberline {6.2.2}Estado de Aprendiz}{18}{subsection.6.2.2}%
-\contentsline {subsection}{\numberline {6.2.3}Tipo de Actividad}{19}{subsection.6.2.3}%
-\contentsline {chapter}{\numberline {7}Seguridad y Autenticación}{20}{chapter.7}%
-\contentsline {section}{\numberline {7.1}Sistema de Autenticación JWT}{20}{section.7.1}%
-\contentsline {section}{\numberline {7.2}Control de Acceso por Rol}{20}{section.7.2}%
-\contentsline {subsection}{\numberline {7.2.1}Roles Disponibles en el Sistema}{20}{subsection.7.2.1}%
-\contentsline {subsection}{\numberline {7.2.2}Matriz Detallada de Permisos}{21}{subsection.7.2.2}%
-\contentsline {subsection}{\numberline {7.2.3}Restricciones Especiales}{22}{subsection.7.2.3}%
-\contentsline {section}{\numberline {7.3}Matriz de Permisos por Rol}{23}{section.7.3}%
-\contentsline {subsection}{\numberline {7.3.1}AuthMiddleware}{23}{subsection.7.3.1}%
-\contentsline {subsection}{\numberline {7.3.2}RoleMiddleware}{23}{subsection.7.3.2}%
-\contentsline {section}{\numberline {7.4}Protección de Datos Sensibles}{23}{section.7.4}%
-\contentsline {chapter}{\numberline {8}Documentación de APIs}{24}{chapter.8}%
-\contentsline {section}{\numberline {8.1}Base URL}{24}{section.8.1}%
-\contentsline {section}{\numberline {8.2}Headers Requeridos}{24}{section.8.2}%
-\contentsline {section}{\numberline {8.3}Códigos HTTP Utilizados}{24}{section.8.3}%
-\contentsline {section}{\numberline {8.4}Endpoints por Módulo}{24}{section.8.4}%
-\contentsline {subsection}{\numberline {8.4.1}Autenticación}{24}{subsection.8.4.1}%
-\contentsline {subsection}{\numberline {8.4.2}Usuarios}{25}{subsection.8.4.2}%
-\contentsline {subsection}{\numberline {8.4.3}Agencias}{25}{subsection.8.4.3}%
-\contentsline {subsection}{\numberline {8.4.4}Grupos}{25}{subsection.8.4.4}%
-\contentsline {subsection}{\numberline {8.4.5}Aprendices}{25}{subsection.8.4.5}%
-\contentsline {chapter}{\numberline {9}Validaciones y Restricciones}{26}{chapter.9}%
-\contentsline {section}{\numberline {9.1}Validaciones por Entidad}{26}{section.9.1}%
-\contentsline {subsection}{\numberline {9.1.1}Usuario}{26}{subsection.9.1.1}%
-\contentsline {subsection}{\numberline {9.1.2}Aprendiz}{26}{subsection.9.1.2}%
-\contentsline {section}{\numberline {9.2}Restricciones de Negocio}{27}{section.9.2}%
-\contentsline {chapter}{\numberline {10}Flujos de Negocio}{28}{chapter.10}%
-\contentsline {section}{\numberline {10.1}Flujo 1: Login de Usuario}{28}{section.10.1}%
-\contentsline {section}{\numberline {10.2}Flujo 2: Crear Nuevo Grupo}{28}{section.10.2}%
-\contentsline {section}{\numberline {10.3}Flujo 3: Evaluar Aprendiz}{29}{section.10.3}%
-\contentsline {chapter}{\numberline {11}Pruebas}{30}{chapter.11}%
-\contentsline {section}{\numberline {11.1}Estrategia de Testing}{30}{section.11.1}%
-\contentsline {subsection}{\numberline {11.1.1}Unit Tests}{30}{subsection.11.1.1}%
-\contentsline {subsection}{\numberline {11.1.2}Integration Tests}{30}{subsection.11.1.2}%
-\contentsline {subsection}{\numberline {11.1.3}E2E Tests}{30}{subsection.11.1.3}%
-\contentsline {section}{\numberline {11.2}Test Cases Críticos}{31}{section.11.2}%
-\contentsline {chapter}{\numberline {12}Conclusiones}{32}{chapter.12}%
-\contentsline {section}{\numberline {12.1}Logros Alcanzados}{32}{section.12.1}%
-\contentsline {section}{\numberline {12.2}Beneficios para la Organización}{32}{section.12.2}%
-\contentsline {section}{\numberline {12.3}Recomendaciones Futuras}{32}{section.12.3}%
-\contentsline {chapter}{\numberline {A}Anexos}{33}{appendix.Alph1}%
-\contentsline {section}{\numberline {A.1}Datos de Prueba}{33}{section.Alph1.1}%
-\contentsline {section}{\numberline {A.2}Variables de Entorno Backend}{33}{section.Alph1.2}%
-\contentsline {section}{\numberline {A.3}Referencia Rápida de Errores}{34}{section.Alph1.3}%
-\contentsline {chapter}{\numberline {B}Flujos de Negocio}{35}{appendix.Alph2}%
-\contentsline {section}{\numberline {B.1}Introducción}{35}{section.Alph2.1}%
-\contentsline {section}{\numberline {B.2}Flujo 1: Autenticación de Usuario}{35}{section.Alph2.2}%
-\contentsline {subsection}{\numberline {B.2.1}Descripción}{35}{subsection.Alph2.2.1}%
-\contentsline {subsection}{\numberline {B.2.2}Participantes}{35}{subsection.Alph2.2.2}%
-\contentsline {subsection}{\numberline {B.2.3}Secuencia del Flujo}{35}{subsection.Alph2.2.3}%
-\contentsline {section}{\numberline {B.3}Flujo 2: Evaluar Aprendiz (CRÍTICO)}{37}{section.Alph2.3}%
-\contentsline {subsection}{\numberline {B.3.1}Descripción}{37}{subsection.Alph2.3.1}%
-\contentsline {subsection}{\numberline {B.3.2}Participantes}{37}{subsection.Alph2.3.2}%
-\contentsline {subsection}{\numberline {B.3.3}Secuencia del Flujo}{37}{subsection.Alph2.3.3}%
-\contentsline {subsubsection}{Ramificación A: Graduación (Promedio $\geq $ 80)}{38}{section*.3}%
-\contentsline {subsubsection}{Ramificación B: Suspensión (Promedio $< 40$)}{39}{section*.4}%
-\contentsline {subsubsection}{Continuación Normal (Promedio 40-79)}{39}{section*.5}%
-\contentsline {section}{\numberline {B.4}Flujo 3: Crear Nuevo Grupo}{39}{section.Alph2.4}%
-\contentsline {subsection}{\numberline {B.4.1}Descripción}{39}{subsection.Alph2.4.1}%
-\contentsline {subsection}{\numberline {B.4.2}Validaciones Críticas}{39}{subsection.Alph2.4.2}%
-\contentsline {subsection}{\numberline {B.4.3}Resultado}{39}{subsection.Alph2.4.3}%
-\contentsline {section}{\numberline {B.5}Flujo 4: Registrar Ingreso}{40}{section.Alph2.5}%
-\contentsline {subsection}{\numberline {B.5.1}Descripción}{40}{subsection.Alph2.5.1}%
-\contentsline {subsection}{\numberline {B.5.2}Cálculo de Distribución}{40}{subsection.Alph2.5.2}%
-\contentsline {section}{\numberline {B.6}Restricciones de Transición de Estado}{40}{section.Alph2.6}%
-\contentsline {chapter}{\numberline {C}Guía de Mantenimiento}{41}{appendix.Alph3}%
-\contentsline {section}{\numberline {C.1}Introducción}{41}{section.Alph3.1}%
-\contentsline {section}{\numberline {C.2}Estructura de Directorios}{41}{section.Alph3.2}%
-\contentsline {section}{\numberline {C.3}Procedimientos de Diagnóstico}{42}{section.Alph3.3}%
-\contentsline {subsection}{\numberline {C.3.1}Verificación de Base de Datos}{42}{subsection.Alph3.3.1}%
-\contentsline {subsection}{\numberline {C.3.2}Verificación de Servidor}{42}{subsection.Alph3.3.2}%
-\contentsline {section}{\numberline {C.4}Procedimientos de Depuración}{42}{section.Alph3.4}%
-\contentsline {subsection}{\numberline {C.4.1}Depuración Node.js}{42}{subsection.Alph3.4.1}%
-\contentsline {subsection}{\numberline {C.4.2}Depuración TypeScript/Prisma}{43}{subsection.Alph3.4.2}%
-\contentsline {section}{\numberline {C.5}Procedimientos de Backup y Restauración}{43}{section.Alph3.5}%
-\contentsline {subsection}{\numberline {C.5.1}Backup de Base de Datos}{43}{subsection.Alph3.5.1}%
-\contentsline {subsection}{\numberline {C.5.2}Restauración de Base de Datos}{43}{subsection.Alph3.5.2}%
-\contentsline {section}{\numberline {C.6}Problemas Comunes y Soluciones}{44}{section.Alph3.6}%
-\contentsline {section}{\numberline {C.7}Monitoreo y Performance}{44}{section.Alph3.7}%
-\contentsline {subsection}{\numberline {C.7.1}Índices de Base de Datos}{44}{subsection.Alph3.7.1}%
-\contentsline {subsection}{\numberline {C.7.2}Métricas de Servidor}{44}{subsection.Alph3.7.2}%
-\contentsline {section}{\numberline {C.8}Consideraciones de Seguridad}{45}{section.Alph3.8}%
-\contentsline {subsection}{\numberline {C.8.1}Gestión de Secretos}{45}{subsection.Alph3.8.1}%
-\contentsline {subsection}{\numberline {C.8.2}Auditoría y Logs}{45}{subsection.Alph3.8.2}%
-\contentsline {subsection}{\numberline {C.8.3}Actualizaciones y Parches}{45}{subsection.Alph3.8.3}%
-\contentsline {chapter}{\numberline {D}Diagrama de Clases UML}{46}{appendix.Alph4}%
-\contentsline {section}{\numberline {D.1}Introducción}{46}{section.Alph4.1}%
-\contentsline {section}{\numberline {D.2}Capas de la Arquitectura}{46}{section.Alph4.2}%
-\contentsline {subsection}{\numberline {D.2.1}Domain Layer (Capa de Dominio)}{46}{subsection.Alph4.2.1}%
-\contentsline {subsection}{\numberline {D.2.2}Application Layer (Capa de Aplicación)}{47}{subsection.Alph4.2.2}%
-\contentsline {subsection}{\numberline {D.2.3}Infrastructure Layer (Capa de Infraestructura)}{48}{subsection.Alph4.2.3}%
-\contentsline {subsection}{\numberline {D.2.4}Presentation Layer (Capa de Presentación)}{48}{subsection.Alph4.2.4}%
-\contentsline {section}{\numberline {D.3}Patrones de Diseño}{49}{section.Alph4.3}%
-\contentsline {subsection}{\numberline {D.3.1}Dependency Injection}{49}{subsection.Alph4.3.1}%
-\contentsline {subsection}{\numberline {D.3.2}Repository Pattern}{49}{subsection.Alph4.3.2}%
-\contentsline {section}{\numberline {D.4}Relaciones entre Clases}{50}{section.Alph4.4}%
+\contentsline {chapter}{\numberline {1}Introducción}{3}{chapter.1}%
+\contentsline {chapter}{\numberline {2}Diccionario de Datos}{4}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Introducción}{4}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Tabla: User}{4}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Tabla: PerfilManager}{4}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Tabla: PerfilDirector}{5}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Tabla: PerfilAprendiz}{5}{section.2.5}%
+\contentsline {section}{\numberline {2.6}Tabla: PerfilArtista}{5}{section.2.6}%
+\contentsline {section}{\numberline {2.7}Tabla: Agencia}{5}{section.2.7}%
+\contentsline {section}{\numberline {2.8}Tabla: Aprendiz}{6}{section.2.8}%
+\contentsline {section}{\numberline {2.9}Tabla: Grupo}{6}{section.2.9}%
+\contentsline {section}{\numberline {2.10}Tabla: Artista}{6}{section.2.10}%
+\contentsline {section}{\numberline {2.11}Tabla: Concepto}{7}{section.2.11}%
+\contentsline {section}{\numberline {2.12}Tabla: Concepto Visual}{7}{section.2.12}%
+\contentsline {section}{\numberline {2.13}Tabla: Álbum}{7}{section.2.13}%
+\contentsline {section}{\numberline {2.14}Tabla: Canción}{7}{section.2.14}%
+\contentsline {section}{\numberline {2.15}Tabla: Lista de Popularidad}{8}{section.2.15}%
+\contentsline {section}{\numberline {2.16}Tabla: Actividad}{8}{section.2.16}%
+\contentsline {section}{\numberline {2.17}Tabla: Premio}{8}{section.2.17}%
+\contentsline {section}{\numberline {2.18}Tabla: Ingreso}{9}{section.2.18}%
+\contentsline {section}{\numberline {2.19}Tabla: Solicitud}{9}{section.2.19}%
+\contentsline {section}{\numberline {2.20}Tabla: Contrato}{9}{section.2.20}%
+\contentsline {section}{\numberline {2.21}Tabla: ContratoGrupo}{10}{section.2.21}%
+\contentsline {section}{\numberline {2.22}Tabla: ArtistaEnGrupo}{10}{section.2.22}%
+\contentsline {section}{\numberline {2.23}Tabla: AlbumPremiado}{11}{section.2.23}%
+\contentsline {section}{\numberline {2.24}Tabla: CancionEnListaDePopularidad}{11}{section.2.24}%
+\contentsline {section}{\numberline {2.25}Tabla: AprendizEnAgencia}{11}{section.2.25}%
+\contentsline {section}{\numberline {2.26}Tabla: EvaluacionAprendiz}{11}{section.2.26}%
+\contentsline {section}{\numberline {2.27}Tabla: PersonasEnActividad}{12}{section.2.27}%
+\contentsline {section}{\numberline {2.28}Tabla: ArtistaLanzaAlbum}{12}{section.2.28}%
+\contentsline {section}{\numberline {2.29}Tabla: GrupoLanzaAlbum}{12}{section.2.29}%
+\contentsline {section}{\numberline {2.30}Tabla: AprendizSolicitaGrupo}{12}{section.2.30}%
+\contentsline {section}{\numberline {2.31}Tabla: ArtistaSolicitaGrupo}{13}{section.2.31}%
+\contentsline {chapter}{\numberline {3}Diseño de la aplicación}{14}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Arquitectura general}{14}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Capa de Dominio}{14}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}Capa de Aplicación}{15}{subsection.3.1.2}%
+\contentsline {subsection}{\numberline {3.1.3}Capa de Infraestructura}{15}{subsection.3.1.3}%
+\contentsline {subsection}{\numberline {3.1.4}Capa de Presentación}{15}{subsection.3.1.4}%
+\contentsline {section}{\numberline {3.2}Flujo de Datos}{15}{section.3.2}%
+\contentsline {chapter}{\numberline {4}Esquema de clases}{17}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Clases principales del dominio}{17}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Clase User (Usuario)}{17}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Clase Agency (Agencia)}{17}{subsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.1.3}Clase Apprentice (Aprendiz)}{18}{subsection.4.1.3}%
+\contentsline {subsection}{\numberline {4.1.4}Clase Artist (Artista)}{18}{subsection.4.1.4}%
+\contentsline {subsection}{\numberline {4.1.5}Clase Group (Grupo)}{18}{subsection.4.1.5}%
+\contentsline {subsection}{\numberline {4.1.6}Clase Contract (Contrato)}{19}{subsection.4.1.6}%
+\contentsline {subsection}{\numberline {4.1.7}Clase Activity (Actividad)}{19}{subsection.4.1.7}%
+\contentsline {subsection}{\numberline {4.1.8}Clase Album}{20}{subsection.4.1.8}%
+\contentsline {subsection}{\numberline {4.1.9}Clase Income (Ingreso)}{20}{subsection.4.1.9}%
+\contentsline {subsection}{\numberline {4.1.10}Clase Song (Canción)}{20}{subsection.4.1.10}%
+\contentsline {subsection}{\numberline {4.1.11}Clase Concept (Concepto creativo)}{20}{subsection.4.1.11}%
+\contentsline {subsection}{\numberline {4.1.12}Clase VisualConcept (Concepto Visual)}{21}{subsection.4.1.12}%
+\contentsline {subsection}{\numberline {4.1.13}Clase Award (Premio)}{21}{subsection.4.1.13}%
+\contentsline {section}{\numberline {4.2}Jerarquía de clases de Usuario}{21}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Enumeraciones (Enums)}{21}{section.4.3}%
+\contentsline {chapter}{\numberline {5}Esquema MERX}{23}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Diagrama Entidad-Relación (MERX)}{23}{section.5.1}%
+\contentsline {chapter}{\numberline {6}Solución Propuesta}{25}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Organización Funcional del Sistema}{25}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Justificación de la Solución Adoptada}{25}{section.6.2}%
+\contentsline {chapter}{\numberline {7}Mantenimiento y Evolución del Sistema}{26}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Mantenibilidad}{26}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Escalabilidad}{26}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Extensión del sistema}{26}{section.7.3}%
+\contentsline {section}{\numberline {7.4}Buenas Prácticas de Desarrollo}{26}{section.7.4}%
+\contentsline {chapter}{\numberline {8}Conclusiones}{28}{chapter.8}%

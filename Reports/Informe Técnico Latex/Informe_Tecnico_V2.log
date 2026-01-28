@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.10.15)  16 JAN 2026 23:02
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.10.15)  28 JAN 2026 00:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -816,17 +816,17 @@ LaTeX Font Warning: Font shape `T1/cmr/m/n' in size <28> not available
 LaTeX Font Warning: Font shape `T1/cmr/bx/n' in size <28> not available
 (Font)              size <29.86> substituted on input line 59.
 
-<../KPopWorld logo.png, id=566, 828.09375pt x 536.0025pt>
+<../KPopWorld logo.png, id=278, 828.09375pt x 536.0025pt>
 File: ../KPopWorld logo.png Graphic file (type png)
 <use ../KPopWorld logo.png>
 Package pdftex.def Info: ../KPopWorld logo.png  used on input line 64.
 (pdftex.def)             Requested size: 159.33821pt x 103.13377pt.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 82.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 79.
 
 (C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 82.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 79.
 
 
 (C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
@@ -843,412 +843,277 @@ pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.37 ...ine {5.11}Tabla: Premio}{14}{section.5.11}
+l.38 ...Capa de Aplicación}{15}{subsection.3.1.2}
                                                   % [1
 
-] [2] [3])
+])
 \tf@toc=\write5
 \openout5 = `Informe_Tecnico_V2.toc'.
 
- [4]
+ [2]
 Cap\'{\i }tulo 1.
-[5
+[3
 
 ]
 Cap\'{\i }tulo 2.
+[4
+
+
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.1}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.176 \end{table}
+                 
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.2}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.176 \end{table}
+                 ]
+Overfull \hbox (7.54517pt too wide) in paragraph at lines 241--258
+ [][] 
+ []
+
+[5
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.3}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.258 \end{table}
+                 
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.4}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.258 \end{table}
+                 
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.5}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.258 \end{table}
+                 
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.6}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.258 \end{table}
+                 ]
+Overfull \hbox (12.53554pt too wide) in paragraph at lines 269--288
+ [][] 
+ []
+
 [6
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.7}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.333 \end{table}
+                 
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.8}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.333 \end{table}
+                 
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.9}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.333 \end{table}
+                 ] [7
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.10}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.400 
+      
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.11}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.400 
+      
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.12}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.400 
+      ] [8
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.13}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.467 
+      
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.14}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.467 
+      
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.15}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.467 
+      ]
+Overfull \hbox (37.13089pt too wide) in paragraph at lines 523--544
+ [][] 
+ []
 
-]
-Cap\'{\i }tulo 3.
-[7
-
-]
-Cap\'{\i }tulo 4.
-[8
-
-]
-LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 2
-40.
- (C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/base\t1cmtt.fd
-File: t1cmtt.fd 2023/04/13 v2.5m Standard LaTeX font definitions
-)
-LaTeX Font Info:    Trying to load font information for TS1+cmtt on input line 
-248.
-
-(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/base\ts1cmtt.fd
-File: ts1cmtt.fd 2023/04/13 v2.5m Standard LaTeX font definitions
-)
-[9] [10]
-Cap\'{\i }tulo 5.
-
-Overfull \hbox (12.04988pt too wide) in paragraph at lines 270--291
+[9
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.16}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.545 
+      
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.17}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.545 
+      
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.18}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.545 
+      ]
+Overfull \hbox (16.74284pt too wide) in paragraph at lines 552--573
  [][] 
  []
 
 
-Overfull \hbox (30.81474pt too wide) in paragraph at lines 298--317
+Overfull \hbox (10.69992pt too wide) in paragraph at lines 582--599
+ [][] 
+ []
+
+[10
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.19}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.618 \end{table}
+                 
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.20}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.618 \end{table}
+                 
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.21}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.618 \end{table}
+                 ]
+Overfull \hbox (50.82344pt too wide) in paragraph at lines 626--638
  [][] 
  []
 
 
-Overfull \hbox (19.0676pt too wide) in paragraph at lines 324--343
+Overfull \hbox (31.68362pt too wide) in paragraph at lines 646--661
  [][] 
  []
 
 [11
-
-
-pdfTeX warning (ext4): destination with the same identifier (name{table.5.1}) h
-as been already used, duplicate ignored
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.22}) 
+has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.344 
+l.682 
       
-pdfTeX warning (ext4): destination with the same identifier (name{table.5.2}) h
-as been already used, duplicate ignored
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.23}) 
+has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.344 
-      ]
-Overfull \hbox (12.04988pt too wide) in paragraph at lines 350--371
- [][] 
- []
-
-
-Overfull \hbox (39.85138pt too wide) in paragraph at lines 378--399
- [][] 
- []
-
-
-Overfull \hbox (48.76173pt too wide) in paragraph at lines 406--427
- [][] 
- []
-
-[12
-pdfTeX warning (ext4): destination with the same identifier (name{table.5.3}) h
-as been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.428 
+l.682 
       
-pdfTeX warning (ext4): destination with the same identifier (name{table.5.4}) h
-as been already used, duplicate ignored
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.24}) 
+has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.428 
+l.682 
+      ] [12
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.25}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.761 
       
-pdfTeX warning (ext4): destination with the same identifier (name{table.5.5}) h
-as been already used, duplicate ignored
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.26}) 
+has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.428 
-      ]
-Overfull \hbox (39.10721pt too wide) in paragraph at lines 434--453
- [][] 
- []
-
-
-Overfull \hbox (30.34956pt too wide) in paragraph at lines 460--481
- [][] 
- []
-
-
-Overfull \hbox (16.53894pt too wide) in paragraph at lines 488--513
- [][] 
- []
-
-[13
-pdfTeX warning (ext4): destination with the same identifier (name{table.5.6}) h
-as been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.514 
+l.761 
       
-pdfTeX warning (ext4): destination with the same identifier (name{table.5.7}) h
-as been already used, duplicate ignored
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.27}) 
+has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.514 
+l.761 
       
-pdfTeX warning (ext4): destination with the same identifier (name{table.5.8}) h
-as been already used, duplicate ignored
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.28}) 
+has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.514 
-      ]
-Overfull \hbox (18.15804pt too wide) in paragraph at lines 546--567
- [][] 
- []
-
+l.761 
+      ] [13
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.29}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.784 \chapter
+              {Diseño de la aplicación}
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.30}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.784 \chapter
+              {Diseño de la aplicación}]
+Cap\'{\i }tulo 3.
 [14
-pdfTeX warning (ext4): destination with the same identifier (name{table.5.9}) h
-as been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.600 
-      
-pdfTeX warning (ext4): destination with the same identifier (name{table.5.10}) 
-has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.600 
-      
-pdfTeX warning (ext4): destination with the same identifier (name{table.5.11}) 
-has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.600 
-      ]
-<images/informe_i_img-001.png, id=800, 1652.1725pt x 1496.59125pt>
-File: images/informe_i_img-001.png Graphic file (type png)
-<use images/informe_i_img-001.png>
-Package pdftex.def Info: images/informe_i_img-001.png  used on input line 627.
-(pdftex.def)             Requested size: 455.24411pt x 412.37456pt.
- [15
-pdfTeX warning (ext4): destination with the same identifier (name{table.5.12}) 
-has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.631 
-      ]
-Overfull \hbox (90.21771pt too wide) in paragraph at lines 637--658
- [][] 
- []
 
-[16
+] [15] [16]
+Cap\'{\i }tulo 4.
+LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 8
+50.
+(C:\Users\TIGER\AppData\Local\Programs\MiKTeX\tex/latex/base\t1cmtt.fd
+File: t1cmtt.fd 2023/04/13 v2.5m Standard LaTeX font definitions
+)
+[17
+
+] [18] [19] [20] [21] [22]
+Cap\'{\i }tulo 5.
+<images/merx.png, id=487, 1652.1725pt x 1496.59125pt>
+File: images/merx.png Graphic file (type png)
+<use images/merx.png>
+Package pdftex.def Info: images/merx.png  used on input line 1064.
+(pdftex.def)             Requested size: 455.24411pt x 412.37456pt.
+[23
+
+] [24
 pdfTeX warning (ext4): destination with the same identifier (name{figure.5.1}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.685 
-      
-pdfTeX warning (ext4): destination with the same identifier (name{table.5.13}) 
-has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.685 
-       <./images/informe_i_img-001.png (PNG copy)>] [17
-pdfTeX warning (ext4): destination with the same identifier (name{table.5.14}) 
-has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.738 \chapter
-              {Especificación Técnica}
-pdfTeX warning (ext4): destination with the same identifier (name{table.5.15}) 
-has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.738 \chapter
-              {Especificación Técnica}
-pdfTeX warning (ext4): destination with the same identifier (name{table.5.16}) 
-has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.738 \chapter
-              {Especificación Técnica}]
+l.1068 \chapter
+               {Solución Propuesta} <./images/merx.png>]
 Cap\'{\i }tulo 6.
-[18
+[25
 
-
-pdfTeX warning (ext4): destination with the same identifier (name{table.6.1}) h
-as been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.786 \end{itemize}
-                   ] [19]
+]
 Cap\'{\i }tulo 7.
-[20
-
-
-pdfTeX warning (ext4): destination with the same identifier (name{table.7.1}) h
-as been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.852 
-      ]
-Overfull \hbox (99.17628pt too wide) in paragraph at lines 860--935
- [][] 
- []
-
-[21
-pdfTeX warning (ext4): destination with the same identifier (name{table.7.2}) h
-as been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.936 
-      ] [22
-pdfTeX warning (ext4): destination with the same identifier (name{table.7.3}) h
-as been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.946 \item \textbf
-                   {Director:} Acceso de lectura a todos, escritura en área...
-] [23]
-Cap\'{\i }tulo 8.
-[24
-
-
-pdfTeX warning (ext4): destination with the same identifier (name{table.8.1}) h
-as been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.1036 \end{verbatim}
-                     ] [25]
-Cap\'{\i }tulo 9.
-
-Overfull \hbox (0.67555pt too wide) in paragraph at lines 1085--1098
- [][] 
- []
-
-
-Underfull \hbox (badness 6927) in paragraph at lines 1137--1137
-[]|\T1/cmr/m/n/12 Cada gru-po de-be te-ner
- []
-
 [26
 
-
-pdfTeX warning (ext4): destination with the same identifier (name{table.9.1}) h
-as been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.1141 
-       
-pdfTeX warning (ext4): destination with the same identifier (name{table.9.2}) h
-as been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.1141 
-       ] [27
-pdfTeX warning (ext4): destination with the same identifier (name{table.9.3}) h
-as been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.1142 \chapter
-               {Flujos de Negocio}]
-Cap\'{\i }tulo 10.
+] [27]
+Cap\'{\i }tulo 8.
 [28
 
-] [29]
-Cap\'{\i }tulo 11.
-
-Underfull \hbox (badness 1603) in paragraph at lines 1232--1233
-[]|\T1/cmr/bx/n/12 Resultado Es-pe-ra-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1238--1238
-[]|\T1/cmr/m/n/12 Crear usua-rio con
- []
-
-
-Underfull \hbox (badness 5756) in paragraph at lines 1240--1241
-[]|\T1/cmr/m/n/12 Status 201, usua-rio
- []
-
-
-Underfull \hbox (badness 6708) in paragraph at lines 1246--1246
-[]|\T1/cmr/m/n/12 Crear apren-diz con
- []
-
-
-Underfull \hbox (badness 6708) in paragraph at lines 1248--1248
-[]|\T1/cmr/m/n/12 Crear apren-diz con
- []
-
-
-Underfull \hbox (badness 1082) in paragraph at lines 1248--1249
-[]|\T1/cmr/m/n/12 Status 201, apren-diz
- []
-
-[30
-
-] [31
-pdfTeX warning (ext4): destination with the same identifier (name{table.11.1}) 
-has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.1253 \chapter
-               {Conclusiones}]
-Cap\'{\i }tulo 12.
-[32
-
-]
-Ap\'{e}ndice A.
-[33
-
-] [34
-pdfTeX warning (ext4): destination with the same identifier (name{table.Alph1.1
-}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.1343 \chapter
-               {Flujos de Negocio}]
-Ap\'{e}ndice B.
-[35
-
-]
-<images/informe_tecnico_img-000.png, id=949, 851.18pt x 770.88pt>
-File: images/informe_tecnico_img-000.png Graphic file (type png)
-<use images/informe_tecnico_img-000.png>
-Package pdftex.def Info: images/informe_tecnico_img-000.png  used on input line
- 1406.
-(pdftex.def)             Requested size: 432.48051pt x 391.68503pt.
- [36] [37
-pdfTeX warning (ext4): destination with the same identifier (name{figure.Alph2.
-1}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.1430 \item \textbf
-                    {Acción 2:} Manager hace clic en botón "Evaluar" <./image
-s/informe_tecnico_img-000.png (PNG copy)>] [38] [39] [40
-pdfTeX warning (ext4): destination with the same identifier (name{table.Alph2.1
-}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.1558 \chapter
-               {Guía de Mantenimiento}]
-Ap\'{e}ndice C.
-[41
-
-] [42] [43]
-Underfull \hbox (badness 2790) in paragraph at lines 1735--1735
-[]|\T1/cmr/m/n/12 PostgreSQL no es-t�
- []
-
-
-Underfull \hbox (badness 1881) in paragraph at lines 1737--1738
-[]|\T1/cmr/m/n/12 Generar nue-vo to-ken, ve-ri-fi-car
- []
-
-
-Underfull \hbox (badness 2932) in paragraph at lines 1745--1746
-[]|\T1/cmr/m/n/12 Actualizar CORS_ORIGIN en
- []
-
-
-Overfull \hbox (3.25563pt too wide) in paragraph at lines 1731--1748
- [][] 
- []
-
-[44
-pdfTeX warning (ext4): destination with the same identifier (name{table.Alph3.1
-}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.1793 \item U
-              tilizar secretos diferentes para cada ambiente (dev/prod)]
-[45]
-Ap\'{e}ndice D.
-[46
-
-] [47] [48] [49] [50
-pdfTeX warning (ext4): destination with the same identifier (name{table.Alph4.1
-}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.2074 \end{document}
-                     ] (Informe_Tecnico_V2.aux
+] (Informe_Tecnico_V2.aux
 LaTeX Info: Redefining \. on input line 11.
 LaTeX Info: Redefining \% on input line 11.
 )
@@ -1262,40 +1127,32 @@ LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.86pt have occurred.
 
 Package rerunfilecheck Info: File `Informe_Tecnico_V2.out' has not changed.
-(rerunfilecheck)             Checksum: A1B152E8C6D6CCCD8DDBDEB43829BAFA;23823.
+(rerunfilecheck)             Checksum: 0CE96FC0AE4127CE593F8B9736F45599;11354.
  ) 
 Here is how much of TeX's memory you used:
- 24187 strings out of 474486
- 442530 string characters out of 5743754
- 1951542 words of memory out of 5000000
- 45742 multiletter control sequences out of 15000+600000
- 574386 words of font info for 71 fonts, out of 8000000 for 9000
+ 23853 strings out of 474486
+ 437514 string characters out of 5743754
+ 1943542 words of memory out of 5000000
+ 45618 multiletter control sequences out of 15000+600000
+ 573323 words of font info for 69 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 84i,12n,87p,513b,806s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 84i,11n,87p,513b,779s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\TIGER\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm
 1200.pk> <C:\Users\TIGER\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi60
-0\ecrm0600.pk> <C:\Users\TIGER\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec
-/dpi600\tctt1200.pk> <C:\Users\TIGER\AppData\Local\MiKTeX\fonts/pk/ljfour/jknap
-pen/ec/dpi600\ectt1200.pk> <C:\Users\TIGER\AppData\Local\MiKTeX\fonts/pk/ljfour
-/jknappen/ec/dpi600\ecbx1728.pk> <C:\Users\TIGER\AppData\Local\MiKTeX\fonts/pk/
-ljfour/jknappen/ec/dpi600\ecbx1095.pk> <C:\Users\TIGER\AppData\Local\MiKTeX\fon
-ts/pk/ljfour/jknappen/ec/dpi600\ecrm1095.pk> <C:\Users\TIGER\AppData\Local\MiKT
-eX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1200.pk> <C:\Users\TIGER\AppData\Loca
-l\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecti1200.pk> <C:\Users\TIGER\AppDat
-a\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1200.pk> <C:\Users\TIGER\
-AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1440.pk> <C:\Users\
-TIGER\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1728.pk> <C:\
-Users\TIGER\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx2986.pk
-> <C:\Users\TIGER\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx2
-488.pk><C:/Users/TIGER/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfont
-s/cm/cmmi12.pfb><C:/Users/TIGER/AppData/Local/Programs/MiKTeX/fonts/type1/publi
-c/amsfonts/cm/cmr12.pfb><C:/Users/TIGER/AppData/Local/Programs/MiKTeX/fonts/typ
-e1/public/amsfonts/cm/cmsy10.pfb><C:/Users/TIGER/AppData/Local/Programs/MiKTeX/
-fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/TIGER/AppData/Local/Programs
-/MiKTeX/fonts/type1/public/amsfonts/symbols/msam10.pfb>
-Output written on Informe_Tecnico_V2.pdf (51 pages, 878314 bytes).
+0\ectt1200.pk> <C:\Users\TIGER\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec
+/dpi600\ecbx1440.pk> <C:\Users\TIGER\AppData\Local\MiKTeX\fonts/pk/ljfour/jknap
+pen/ec/dpi600\ecbx1728.pk> <C:\Users\TIGER\AppData\Local\MiKTeX\fonts/pk/ljfour
+/jknappen/ec/dpi600\ecbx1095.pk> <C:\Users\TIGER\AppData\Local\MiKTeX\fonts/pk/
+ljfour/jknappen/ec/dpi600\ecrm1095.pk> <C:\Users\TIGER\AppData\Local\MiKTeX\fon
+ts/pk/ljfour/jknappen/ec/dpi600\ecrm1200.pk> <C:\Users\TIGER\AppData\Local\MiKT
+eX\fonts/pk/ljfour/jknappen/ec/dpi600\ecti1200.pk> <C:\Users\TIGER\AppData\Loca
+l\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1200.pk> <C:\Users\TIGER\AppDat
+a\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1728.pk> <C:\Users\TIGER\
+AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx2986.pk> <C:\Users\
+TIGER\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx2488.pk>
+Output written on Informe_Tecnico_V2.pdf (29 pages, 674329 bytes).
 PDF statistics:
- 1757 PDF objects out of 2073 (max. 8388607)
- 334 named destinations out of 1000 (max. 500000)
- 1148 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 955 PDF objects out of 1000 (max. 8388607)
+ 129 named destinations out of 1000 (max. 500000)
+ 567 words of extra memory for PDF output out of 10000 (max. 10000000)
 
