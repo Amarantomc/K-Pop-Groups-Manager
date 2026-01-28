@@ -399,10 +399,8 @@ export class GroupRepository implements IGroupRepository {
 		const groups = await this.db.grupo.findMany({
 		  include: {
 			Agencias: true,
-	  
 			concepto: true,
 			conceptoVisual: true,
-	  
 			HistorialArtistas: {
 			  where: { fechaFinalizacion: null },
 			  include: {
@@ -413,7 +411,6 @@ export class GroupRepository implements IGroupRepository {
 				}
 			  }
 			},
-	  
 			Actividades: {
 			  include: {
 				actividad: {
@@ -428,7 +425,6 @@ export class GroupRepository implements IGroupRepository {
 				}
 			  }
 			},
-	  
 			Lanzamiento: {
 			  include: {
 				album: true
@@ -437,37 +433,39 @@ export class GroupRepository implements IGroupRepository {
 		  }
 		});
 	  
-		return groups.map((group: { Agencias: string | any[]; concepto: any; conceptoVisual: any; HistorialArtistas: any[]; Actividades: any[]; Lanzamiento: any[]; }) =>
+		return groups.map((group: any) =>
 		  GroupResponseDTO.toEntity({
 			...group,
 	  
 			// Agencia: tomamos la primera si existe
-			agency: group.Agencias.length ? group.Agencias[0] : null,
+			agency: group.Agencias?.length ? group.Agencias[0] : null,
 	  
 			// Conceptos
 			concept: group.concepto,
 			visualConcept: group.conceptoVisual,
 	  
 			// Miembros
-			members: group.HistorialArtistas.map(h => ({
+			members: group.HistorialArtistas?.map((h: any) => ({
 			  apprenticeId: h.idAp,
 			  groupId: h.idGr,
-			  realName: h.artista.aprendiz.nombreCompleto,
-			  artisticName: h.artista.nombreArtistico
-			})),
+			  realName: h.artista?.aprendiz?.nombreCompleto ?? "",
+			  artisticName: h.artista?.nombreArtistico ?? ""
+			})) ?? [],
 	  
 			// Actividades
-			activities: group.Actividades.map(pa => ({
+			activities: group.Actividades?.map((pa: any) => ({
 			  ...pa.actividad,
-			  Personas: pa.actividad.Personas,
-			  Ingreso: pa.actividad.Ingreso
-			})),
+			  Personas: pa.actividad?.Personas ?? [],
+			  Ingreso: pa.actividad?.Ingreso ?? []
+			})) ?? [],
 	  
-			// Álbumes
-			albums: group.Lanzamiento.map(l => l.album)
+			// Álbumes: solo títulos, filtrando nulls
+			albums: group.Lanzamiento
+			  ?.map((l: any) => l.album?.titulo)
+			  .filter(Boolean) ?? []
 		  })
 		);
-	  }
+	}
 
 	async addMembers(groupId: number,artistIds: number[],artistRoles: string[]): Promise<void> {
 		const today = new Date();

@@ -166,8 +166,8 @@ export class GroupResponseDTO {
         })) ?? [],
   
       albums: group.Lanzamiento
-        ?.map((la: any) => la.album)
-        ?? [],
+        ?.map((l: any) => l.album ? AlbumResponseDto.toEntity(l.album) : null)
+        .filter(Boolean) ?? [],
   
       activities: group.Actividades
         ?.map((pa: any) => pa.actividad)
