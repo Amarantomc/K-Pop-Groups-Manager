@@ -44,12 +44,12 @@
             }
           }),
       
-          // Eliminar ingresos
-          this.db.ingreso.deleteMany({
-            where: {
-              idAct: { in: activityIds }
-            }
-          }),
+          // // Eliminar ingresos
+          // this.db.ingreso.deleteMany({
+          //   where: {
+          //     idAct: { in: activityIds }
+          //   }
+          // }),
       
           // Cancelar actividades
           this.db.actividad.updateMany({
