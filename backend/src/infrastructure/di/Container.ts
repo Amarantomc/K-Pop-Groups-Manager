@@ -202,6 +202,9 @@ import { GetAgencyByApprenticeOrArtistUseCase } from "../../application/usesCase
 import { GetApprenticesWhithoutApplicationUseCase } from "../../application/usesCase/apprentice/GetApprenticesWhithoutApplicationUseCase";
 import { UpdateContractStatusUseCase } from "../../application/usesCase/contract/UpdateContractStatusUseCase";
 import { DissolveGroupUseCase } from "../../application/usesCase/group/DissolveGroupUseCase";
+import { ExportTotalIncomePdfUseCase } from "../../application/usesCase/exports/ExportTotalIncomePdfUseCase";
+import { ExportSoloArtistPdfUseCase } from "../../application/usesCase/exports/ExportSoloArtistPdfUseCase";
+import { ExportArtistOnChangePdfUseCase } from "../../application/usesCase/exports/ExportArtistOnChangePdfUseCase";
  
 const container=new Container()
  
@@ -1122,6 +1125,18 @@ container.bind<CreateVisualConceptUseCase>(Types.CreateVisualConceptUseCase)
 
     container.bind<ExportUsersPdfUseCase>(Types.ExportUsersPdfUseCase)
   .to(ExportUsersPdfUseCase)
+  .inTransientScope();
+
+      container.bind<ExportTotalIncomePdfUseCase>(Types.ExportTotalIncomePdfUseCase)
+  .to(ExportTotalIncomePdfUseCase)
+  .inTransientScope();
+
+    container.bind<ExportSoloArtistPdfUseCase>(Types.ExportSoloArtistPdfUseCase)
+  .to(ExportSoloArtistPdfUseCase)
+  .inTransientScope();
+
+      container.bind<ExportArtistOnChangePdfUseCase>(Types.ExportArtistOnChangePdfUseCase)
+  .to(ExportArtistOnChangePdfUseCase)
   .inTransientScope();
 
   

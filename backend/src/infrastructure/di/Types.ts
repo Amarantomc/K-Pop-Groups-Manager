@@ -1,3 +1,5 @@
+
+
 // src/infrastructure/di/TYPES.ts
 const Types = {
     AlbumController: Symbol.for('AlbumController'),
@@ -267,6 +269,9 @@ ExportContractsPdfUseCase:Symbol.for('ExportContractsPdfUseCase'),
 ExportIncomesPdfUseCase:Symbol.for('ExportIncomesPdfUseCase'),
 ExportApplicationsPdfUseCase:Symbol.for('ExportApplicationsPdfUseCase'),
 ExportUsersPdfUseCase:Symbol.for('ExportUsersPdfUseCase'),
+ExportArtistOnChangePdfUseCase:Symbol.for('ExportArtistOnChangePdfUseCase'),
+ExportSoloArtistPdfUseCase:Symbol.for('ExportSoloArtistPdfUseCase'),
+ExportTotalIncomePdfUseCase:Symbol.for('ExportTotalIncomePdfUseCase'),
 //#endregion
 
   //#region Controllers 
