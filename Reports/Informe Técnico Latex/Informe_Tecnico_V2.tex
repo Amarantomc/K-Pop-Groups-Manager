@@ -61,7 +61,7 @@
     \vspace{1.5cm}
     
     % Logo de la aplicación
-    \includegraphics[width=0.35\textwidth]{../KPopWorld logo.png}
+    \includegraphics[width=0.35\textwidth]{KPopWorldlogo.png}
     
     \vspace{1.5cm}
     
@@ -559,7 +559,7 @@ idAg & INTEGER & FK(Agencia) & Identificador de la agencia \\
 \hline
 idGr & INTEGER & FK(Artista) & Identificador del grupo  \\
 \hline
-fechaInicio & DATE & PK & Fecha de inicio del contrato \\
+fechaInicio & DATE & NOT NULL & Fecha de inicio del contrato \\
 \hline
 fechaFinalizacion & DATE & NOT NULL & Fecha de finalización del contrato \\
 \hline
@@ -763,7 +763,7 @@ estado & VARCHAR & NOT NULL & Estado de la solicitud \\
 La entidad ArtistaSolicitaGrupo registra la participación de artistas en solicitudes de creación de grupos musicales.
 \begin{table}[H]
 \centering
-\caption{Diccionario - Tabla AprendizSolicitaGrupo}
+\caption{Diccionario - Tabla ArtistaSolicitaGrupo}
 \begin{tabular}{|l|l|l|l|l|}
 \hline
 \textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Restricción} & \textbf{Descripción} \\
@@ -829,7 +829,7 @@ Esta capa implementa las interfaces definidas por la capa de aplicación.
 La capa de presentación expone la API HTTP y actúa como la interfaz entre los clientes (frontend) y la lógica de la aplicación. Se encarga de recibir peticiones, validar y normalizar datos de entrada, orquestar llamadas a los casos de uso y formatear las respuestas HTTP para el cliente. En esta capa se encuentran:
 \begin{itemize}
     \item Controladores por recurso (por ejemplo GroupController, UserController): reciben Request/Response, usan DTOs para validar/transformar la entrada y delegan la ejecución a los Use Cases inyectados.
-    \item Definición de rutas: clases que crean Routers y asignan endpoints (GET/POST/PUT/DELETE), agrupadas y montadas en el router raíz (routes/index.ts) con prefijos claros (/group, /auth, /user, ...).
+    \item Definición de rutas: clases que crean Routers y asignan endpoints, agrupadas y montadas en el router raíz (routes/index.ts) con prefijos claros (/group, /auth, /user).
     \item Uso de DTOs y validaciones: los controladores consumen DTOs desde la capa de aplicación para garantizar formato y reglas antes de invocar la lógica de negocio.
     \item Middlewares de presentación: autenticación y autorización (AuthMiddleware, RoleMiddleware) y otros pre-procesos que ejecutan antes de llegar a los controladores.
 \end{itemize}

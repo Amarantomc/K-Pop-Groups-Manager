@@ -39,31 +39,31 @@
 \contentsline {subsection}{\numberline {3.1.3}Capa de Infraestructura}{15}{subsection.3.1.3}%
 \contentsline {subsection}{\numberline {3.1.4}Capa de Presentación}{15}{subsection.3.1.4}%
 \contentsline {section}{\numberline {3.2}Flujo de Datos}{15}{section.3.2}%
-\contentsline {chapter}{\numberline {4}Esquema de clases}{17}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Clases principales del dominio}{17}{section.4.1}%
-\contentsline {subsection}{\numberline {4.1.1}Clase User (Usuario)}{17}{subsection.4.1.1}%
-\contentsline {subsection}{\numberline {4.1.2}Clase Agency (Agencia)}{17}{subsection.4.1.2}%
-\contentsline {subsection}{\numberline {4.1.3}Clase Apprentice (Aprendiz)}{18}{subsection.4.1.3}%
-\contentsline {subsection}{\numberline {4.1.4}Clase Artist (Artista)}{18}{subsection.4.1.4}%
-\contentsline {subsection}{\numberline {4.1.5}Clase Group (Grupo)}{18}{subsection.4.1.5}%
-\contentsline {subsection}{\numberline {4.1.6}Clase Contract (Contrato)}{19}{subsection.4.1.6}%
-\contentsline {subsection}{\numberline {4.1.7}Clase Activity (Actividad)}{19}{subsection.4.1.7}%
-\contentsline {subsection}{\numberline {4.1.8}Clase Album}{20}{subsection.4.1.8}%
-\contentsline {subsection}{\numberline {4.1.9}Clase Income (Ingreso)}{20}{subsection.4.1.9}%
-\contentsline {subsection}{\numberline {4.1.10}Clase Song (Canción)}{20}{subsection.4.1.10}%
-\contentsline {subsection}{\numberline {4.1.11}Clase Concept (Concepto creativo)}{20}{subsection.4.1.11}%
-\contentsline {subsection}{\numberline {4.1.12}Clase VisualConcept (Concepto Visual)}{21}{subsection.4.1.12}%
-\contentsline {subsection}{\numberline {4.1.13}Clase Award (Premio)}{21}{subsection.4.1.13}%
-\contentsline {section}{\numberline {4.2}Jerarquía de clases de Usuario}{21}{section.4.2}%
-\contentsline {section}{\numberline {4.3}Enumeraciones (Enums)}{21}{section.4.3}%
-\contentsline {chapter}{\numberline {5}Esquema MERX}{23}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Diagrama Entidad-Relación (MERX)}{23}{section.5.1}%
-\contentsline {chapter}{\numberline {6}Solución Propuesta}{25}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Organización Funcional del Sistema}{25}{section.6.1}%
-\contentsline {section}{\numberline {6.2}Justificación de la Solución Adoptada}{25}{section.6.2}%
-\contentsline {chapter}{\numberline {7}Mantenimiento y Evolución del Sistema}{26}{chapter.7}%
-\contentsline {section}{\numberline {7.1}Mantenibilidad}{26}{section.7.1}%
-\contentsline {section}{\numberline {7.2}Escalabilidad}{26}{section.7.2}%
-\contentsline {section}{\numberline {7.3}Extensión del sistema}{26}{section.7.3}%
-\contentsline {section}{\numberline {7.4}Buenas Prácticas de Desarrollo}{26}{section.7.4}%
-\contentsline {chapter}{\numberline {8}Conclusiones}{28}{chapter.8}%
+\contentsline {chapter}{\numberline {4}Esquema de clases}{16}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Clases principales del dominio}{16}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Clase User (Usuario)}{16}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Clase Agency (Agencia)}{16}{subsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.1.3}Clase Apprentice (Aprendiz)}{17}{subsection.4.1.3}%
+\contentsline {subsection}{\numberline {4.1.4}Clase Artist (Artista)}{17}{subsection.4.1.4}%
+\contentsline {subsection}{\numberline {4.1.5}Clase Group (Grupo)}{17}{subsection.4.1.5}%
+\contentsline {subsection}{\numberline {4.1.6}Clase Contract (Contrato)}{18}{subsection.4.1.6}%
+\contentsline {subsection}{\numberline {4.1.7}Clase Activity (Actividad)}{18}{subsection.4.1.7}%
+\contentsline {subsection}{\numberline {4.1.8}Clase Album}{19}{subsection.4.1.8}%
+\contentsline {subsection}{\numberline {4.1.9}Clase Income (Ingreso)}{19}{subsection.4.1.9}%
+\contentsline {subsection}{\numberline {4.1.10}Clase Song (Canción)}{19}{subsection.4.1.10}%
+\contentsline {subsection}{\numberline {4.1.11}Clase Concept (Concepto creativo)}{19}{subsection.4.1.11}%
+\contentsline {subsection}{\numberline {4.1.12}Clase VisualConcept (Concepto Visual)}{20}{subsection.4.1.12}%
+\contentsline {subsection}{\numberline {4.1.13}Clase Award (Premio)}{20}{subsection.4.1.13}%
+\contentsline {section}{\numberline {4.2}Jerarquía de clases de Usuario}{20}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Enumeraciones (Enums)}{20}{section.4.3}%
+\contentsline {chapter}{\numberline {5}Esquema MERX}{22}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Diagrama Entidad-Relación (MERX)}{22}{section.5.1}%
+\contentsline {chapter}{\numberline {6}Solución Propuesta}{24}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Organización Funcional del Sistema}{24}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Justificación de la Solución Adoptada}{24}{section.6.2}%
+\contentsline {chapter}{\numberline {7}Mantenimiento y Evolución del Sistema}{25}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Mantenibilidad}{25}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Escalabilidad}{25}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Extensión del sistema}{25}{section.7.3}%
+\contentsline {section}{\numberline {7.4}Buenas Prácticas de Desarrollo}{25}{section.7.4}%
+\contentsline {chapter}{\numberline {8}Conclusiones}{27}{chapter.8}%
