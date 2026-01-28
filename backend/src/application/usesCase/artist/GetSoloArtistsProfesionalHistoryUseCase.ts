@@ -85,7 +85,7 @@ export class GetSoloArtistsProfesionalHistoryUseCase {
                  
                 
         soloArtist=soloArtist.filter(artist=>{
-                    const hasAlbum=validAlbums.some((album)=>album?.artists[0]?.idAp==artist.ApprenticeId && album.artists[0]?.idGr==artist.GroupId && album.noCopiesSold>1000000)
+                    const hasAlbum=validAlbums.some((album)=>album?.apprenticeId==artist.ApprenticeId && album.groupId==artist.GroupId && album.noCopiesSold>1000000)
                       
                     return hasAlbum
                 })
@@ -93,8 +93,8 @@ export class GetSoloArtistsProfesionalHistoryUseCase {
             soloArtist.map(async (artist) => {
                 // Obtener álbumes válidos del artista
                 const artistAlbums = validAlbums.filter(
-                    album => album?.artists[0]?.idAp === artist.ApprenticeId && 
-                             album?.artists[0]?.idGr === artist.GroupId &&
+                    album => album?.apprenticeId === artist.ApprenticeId && 
+                             album?.groupId === artist.GroupId &&
                              album.noCopiesSold > 1000000
                 );
 
