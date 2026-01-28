@@ -47,7 +47,7 @@
 		\vspace{1.5cm}
 		
 		% Logo de la aplicación
-		\includegraphics[width=0.35\textwidth]{../KPopWorld logo.png}
+		\includegraphics[width=0.35\textwidth]{KPopWorldlogo.png}
 		
 		\vspace{1.5cm}
 		
@@ -897,234 +897,16 @@ Así la agencia le ofrece un contrato a los artistas que ellos posteriormente
 	\includegraphics[width=0.8\textwidth]{manual_img-018.png}
 	\caption{Ejemplo de Tabla de Datos con Información de Artistas}
 	\end{figure}
-	
-	\subsection{Gráficos y Visualizaciones}
-	
-	El sistema incorpora gráficos de diversos tipos que permiten visualizar tendencias, comparaciones y análisis de datos de forma intuitiva. Los gráficos son especialmente útiles para identificar patrones y tomar decisiones estratégicas.
-	
-	\subsubsection{Tipos de Gráficos Disponibles}
-	
-	\textbf{Gráficos de Barras}
-	
-	Utilizados para comparaciones entre categorías o períodos de tiempo:
-	
-	\begin{itemize}
-		\item \textbf{Artistas por Agencia}: Muestra la cantidad de artistas activos en cada agencia, permitiendo comparar el tamaño relativo de cada agencia.
-		\item \textbf{Ventas de Álbumes}: Visualiza las unidades vendidas de cada álbum lanzado, identificando los más exitosos.
-		\item \textbf{Ingresos por Tipo de Actividad}: Compara los ingresos generados por diferentes tipos de actividades (conciertos, promociones, colaboraciones, etc.).
-		\item \textbf{Distribución de Artistas por Estado}: Muestra cuántos artistas se encuentran en cada estado (activo, en pausa, retirado).
-	\end{itemize}
-	
-	\textbf{Gráficos de Líneas}
-	
-	Diseñados para mostrar tendencias y evolución en el tiempo:
-	
-	\begin{itemize}
-		\item \textbf{Evolución de Ingresos}: Visualiza la tendencia de ingresos mensuales o trimestrales, permitiendo identificar períodos de mayor o menor actividad.
-		\item \textbf{Crecimiento de Actividades}: Muestra el número de actividades registradas a lo largo del tiempo.
-		\item \textbf{Desempeño en Rankings}: Refleja cómo las posiciones de canciones en listas de popularidad evolucionan a través de los meses.
-		\item \textbf{Crecimiento de Popularidad}: Visualiza el crecimiento progresivo de popularidad de artistas y grupos en redes sociales o plataformas de streaming.
-	\end{itemize}
-	
-	\textbf{Gráficos de Torta}
-	
-	Utilizados para mostrar proporciones y distribuciones:
-	
-	\begin{itemize}
-		\item \textbf{Distribución de Ingresos}: Muestra el porcentaje de ingresos generado por cada artista o grupo.
-		\item \textbf{Composición de Grupos}: Visualiza la proporción de hombres y mujeres en cada grupo.
-		\item \textbf{Distribución por Concepto}: Muestra cuántos grupos están asociados a cada concepto creativo.
-		\item \textbf{Estados de Contratos}: Visualiza la proporción de contratos activos, renovación, finalizados y rescindidos.
-	\end{itemize}
-	
-	\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{populist.png}
-	\caption{Ejemplos de Gráficos: Barras, Líneas y Torta}
-	\end{figure}
-	
-	\subsection{Cálculos Estadísticos y Análisis}
-	
-	El sistema realiza cálculos automáticos que proporcionan información valiosa para la toma de decisiones:
-	
-	\subsubsection{Ingresos por Artista}
-	
-	Calcula el total de ingresos generados por un artista específico en un período determinado, distinguiendo entre:
-	
-	\begin{itemize}
-		\item \textbf{Ingresos grupales}: Generados por actividades realizadas como miembro de un grupo.
-		\item \textbf{Ingresos individuales}: Generados por actividades realizadas como solista.
-		\item \textbf{Total}: Suma de ingresos grupales e individuales.
-	\end{itemize}
-	
-	El usuario puede seleccionar un rango de fechas específico (día, semana, mes, trimestre o año) para filtrar los resultados.
-	
-	\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{manual_img-009.png}
-	\caption{Cálculo de Ingresos por Artista en Período Seleccionado}
-	\end{figure}
-	
-	\subsubsection{Análisis de Popularidad}
-	
-	El sistema calcula estadísticas sobre la posición promedio de canciones en listas de popularidad:
-	
-	\begin{itemize}
-		\item \textbf{Posición Promedio}: Calcula la posición media de una canción en una lista a lo largo del tiempo.
-		\item \textbf{Número de Semanas en Top}: Cuenta cuántas semanas o meses permaneció en el top 10, top 20, etc.
-		\item \textbf{Mejor Posición Alcanzada}: Identifica la posición más alta lograda en cada ranking.
-		\item \textbf{Tendencia}: Indica si la canción sube o baja en popularidad.
-	\end{itemize}
-	
-	\subsection{Consultas Especializadas}
-	
-	Las consultas especializadas proporcionan información consolidada que requiere procesamiento complejo de múltiples tablas y relaciones. Se acceden desde la sección ``Consultas Especializadas'' en el menú principal.
-	
-	\subsubsection{Consulta 1: Artistas Activos por Agencia}
-	
-	Muestra el listado completo de artistas activos asociados a una agencia específica.
-	
-	\textbf{Datos Mostrados}:
-	\begin{itemize}
-		\item Nombre artístico
-		\item Grupo actual (si pertenece a alguno)
-		\item Estado (activo, en pausa, debut próximo)
-		\item Fecha de debut
-		\item Número de contratos activos
-	\end{itemize}
-	
-	\textbf{Uso Típico}: Los managers pueden usar esta consulta para obtener un resumen de todos los artistas bajo su responsabilidad.
-	
-	\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{aprendizLista.png}
-	\caption{Resultado de Consulta 1: Artistas Activos por Agencia}
-	\end{figure}
-	
-	\subsubsection{Consulta 2: Actividades por Grupo}
-	
-	Proporciona el historial completo de actividades realizadas por un grupo específico en un rango de fechas seleccionable.
-	
-	\textbf{Datos Mostrados}:
-	\begin{itemize}
-		\item Fecha y hora de la actividad
-		\item Tipo de actividad (concierto, programa de TV, sesión de grabación, promoción, etc.)
-		\item Lugar donde se realizó
-		\item Número de asistentes o reproducciones
-		\item Ingresos generados
-		\item Responsable de la coordinación
-	\end{itemize}
-	
-	\textbf{Uso Típico}: Útil para analizar la productividad del grupo y planificar futuras actividades.
-	
-	\subsubsection{Consulta 3: Artistas con Debut y Contrato Activo}
-	
-	Identifica y lista todos los artistas que cumplen con dos condiciones: han realizado su debut (han sido miembros de un grupo) y cuentan con al menos un contrato activo con una agencia.
-	
-	\textbf{Datos Mostrados}:
-	\begin{itemize}
-		\item Nombre artístico y real
-		\item Grupo de debut y grupos posteriores
-		\item Agencia o agencias actuales
-		\item Fecha de inicio y vencimiento de contrato
-		\item Porcentaje de distribución de ingresos
-	\end{itemize}
-	
-	\textbf{Uso Típico}: Identificar artistas con potencial de crecimiento y que están actualmente bajo contrato.
-	
-	\subsubsection{Consulta 4: Ingresos por Artista en Período}
-	
-	Calcula el total de ingresos generados por un artista específico en un período personalizable, incluyendo tanto actividades grupales como individuales.
-	
-	\textbf{Funcionalidades}:
-	\begin{itemize}
-		\item Selección de rango de fechas (fecha inicio y fecha fin)
-		\item Desglose por tipo de actividad
-		\item Comparación con períodos anteriores
-		\item Visualización en gráfico de líneas o barras
-	\end{itemize}
-	
-	\textbf{Datos Mostrados}:
-	\begin{itemize}
-		\item Ingresos por actividad individual
-		\item Ingresos por actividad grupal
-		\item Total de ingresos
-		\item Promedio mensual
-	\end{itemize}
-	
-	\textbf{Uso Típico}: Análisis financiero de artistas para auditorías o reportes de rendimiento.
-	
-	\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{manual_img-009.png}
-	\caption{Visualización de Ingresos por Artista: Gráfico y Tabla}
-	\end{figure}
-	
-	\subsubsection{Consulta 5: Cambios de Agencia y Grupos}
-	
-	Proporciona un historial completo de los cambios de agencia y membresía en grupos de un artista a lo largo de su carrera.
-	
-	\textbf{Datos Mostrados}:
-	\begin{itemize}
-		\item Agencia anterior
-		\item Agencia actual
-		\item Fechas de cambio
-		\item Grupos de los que ha formado parte
-		\item Fechas de incorporación y salida de cada grupo
-		\item Razón del cambio (si está registrada)
-	\end{itemize}
-	
-	\textbf{Uso Típico}: Realizar un seguimiento de la evolución profesional de artistas y detectar patrones de movimiento entre agencias.
-	
-	\subsubsection{Consulta 6: Solistas de Grupos Disueltos con Álbum Exitoso}
-	
-	Identifica artistas que, tras la disolución de su grupo, desarrollaron una carrera exitosa como solistas, incluyendo aquellos que lanzaron álbumes con alto número de ventas.
-	
-	\textbf{Criterios de Búsqueda}:
-	\begin{itemize}
-		\item Fue miembro de un grupo que ha sido disuelto
-		\item Ha lanzado al menos un álbum como solista
-		\item El álbum alcanzó criterios de éxito (ej: más de 100,000 copias vendidas)
-	\end{itemize}
-	
-	\textbf{Datos Mostrados}:
-	\begin{itemize}
-		\item Nombre artístico del solista
-		\item Grupo de origen y fecha de disolución
-		\item Álbumes como solista
-		\item Copias vendidas de cada álbum
-		\item Posiciones en listas de popularidad
-		\item Premios obtenidos
-	\end{itemize}
-	
-	\textbf{Uso Típico}: Evaluar el impacto de rupturas de grupos en la carrera individual de sus miembros.
-	
-	\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{albumesList.png}
-	\caption{Resultado de Consulta 6: Solistas Exitosos ex-miembros de Grupos Disueltos}
-	\end{figure}
-	
 	\subsection{Exportación de Datos a PDF}
 	
 	El sistema permite exportar toda la información visualizada en tablas o gráficos a formato PDF, facilitando la generación de reportes, documentación y compartir información con stakeholders externos.
-	
-	\subsubsection{Características de Exportación}
-	
-	\begin{itemize}
-		\item \textbf{Formato PDF Profesional}: Los documentos generados incluyen encabezados, pie de página, fecha de generación y datos del usuario.
-		\item \textbf{Preservación de Filtros}: Los datos exportados respetan los filtros y ordenamientos aplicados en pantalla.
-		\item \textbf{Incluye Gráficos}: Si la vista contiene gráficos, estos se incluyen en el documento PDF.
-		\item \textbf{Tabla Formateada}: Las tablas se exportan con encabezados claramente diferenciados y filas alternadas para mejor legibilidad.
-	\end{itemize}
-	
+
 	\subsubsection{Cómo Exportar}
 	
 	Para exportar datos a PDF, el usuario debe:
 	
 	\begin{enumerate}
-		\item Navegar a la sección que desea exportar (tabla, gráfico o consulta especializada).
-		\item Aplicar filtros u ordenamientos si es necesario.
+		\item Navegar a la sección que desea exportar
 		\item Localizar el botón ``Exportar a PDF'' (generalmente en la esquina superior derecha).
 		\item Hacer clic en el botón para iniciar la descarga.
 		\item El archivo PDF se descargará automáticamente al dispositivo del usuario.
@@ -1138,55 +920,11 @@ Así la agencia le ofrece un contrato a los artistas que ellos posteriormente
 	\caption{Botón de Exportación a PDF Visible en la Interfaz}
 	\end{figure}
 	
-	\subsection{Ejemplos Prácticos de Salidas}
-	
-	A continuación se presentan ejemplos de casos de uso comunes y las salidas del sistema asociadas:
-	
-	\subsubsection{Ejemplo 1: Reporte de Ingresos Mensuales}
-	
-	Un manager desea generar un reporte de ingresos de su agencia para el mes de enero de 2026.
-	
-	\begin{enumerate}
-		\item Accede a la sección ``Ingresos'' desde el menú principal.
-		\item Filtra por fecha de enero 2026.
-		\item Visualiza una tabla con todos los ingresos registrados en ese período.
-		\item Observa un gráfico de líneas mostrando la evolución diaria de ingresos.
-		\item Calcula totales y promedios que aparecen al pie de la tabla.
-		\item Exporta la tabla y gráfico a PDF para enviar al director.
-	\end{enumerate}
-	
-	\textbf{Salida Típica}: PDF con tabla de ingresos ordenada por fecha, gráfico de barras comparativas y resumen ejecutivo.
-	
-	\subsubsection{Ejemplo 2: Análisis de Popularidad de Canción}
-	
-	Un artista desea analizar el desempeño de su última canción en listas de popularidad.
-	
-	\begin{enumerate}
-		\item Accede a la sección ``Listas de Popularidad''.
-		\item Selecciona su canción del listado.
-		\item Visualiza un gráfico de líneas mostrando cómo su posición evoluciona cada semana.
-		\item Consulta la tabla detallada con posición exacta en cada ranking.
-		\item Calcula la posición promedio y número de semanas en top 10.
-	\end{enumerate}
-	
-	\textbf{Salida Típica}: Gráfico de evolución con tabla de posiciones por semana y estadísticas calculadas.
-	
-	\subsubsection{Ejemplo 3: Evaluación de Productividad de Grupo}
-	
-	Un director desea evaluar la productividad de un grupo durante el año 2025.
-	
-	\begin{enumerate}
-		\item Accede a ``Consultas Especializadas''.
-		\item Selecciona ``Actividades por Grupo''.
-		\item Elige el grupo y el rango de fechas (enero-diciembre 2025).
-		\item Sistema genera tabla con todas las actividades realizadas.
-		\item Visualiza gráfico de barras mostrando cantidad de actividades por mes.
-		\item Calcula ingresos totales generados durante el año.
-		\item Exporta el reporte completo a PDF.
-	\end{enumerate}
-	
-	\textbf{Salida Típica}: PDF con tabla detallada de actividades, gráfico de productividad mensual e ingresos totales.
-
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{ExportacionEditada.png}
+	\caption{PDF con información de Agencias}
+	\end{figure}
 	\section{Consideraciones Finales}
 	
 	El sistema de gestión de agencias y grupos de K-pop proporciona una plataforma integral para la administración de información relacionada con la industria del entretenimiento musical coreano. El uso de roles permite garantizar un acceso controlado a las funcionalidades, mientras que la organización modular del sistema facilita su utilización de forma intuitiva.

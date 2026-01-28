@@ -78,23 +78,6 @@
 \contentsline {subsection}{\numberline {17.1}Tablas de Datos}{28}{subsection.17.1}%
 \contentsline {subsubsection}{\numberline {17.1.1}Características de las Tablas}{28}{subsubsection.17.1.1}%
 \contentsline {subsubsection}{\numberline {17.1.2}Tablas Principales del Sistema}{28}{subsubsection.17.1.2}%
-\contentsline {subsection}{\numberline {17.2}Gráficos y Visualizaciones}{29}{subsection.17.2}%
-\contentsline {subsubsection}{\numberline {17.2.1}Tipos de Gráficos Disponibles}{29}{subsubsection.17.2.1}%
-\contentsline {subsection}{\numberline {17.3}Cálculos Estadísticos y Análisis}{30}{subsection.17.3}%
-\contentsline {subsubsection}{\numberline {17.3.1}Ingresos por Artista}{30}{subsubsection.17.3.1}%
-\contentsline {subsubsection}{\numberline {17.3.2}Análisis de Popularidad}{31}{subsubsection.17.3.2}%
-\contentsline {subsection}{\numberline {17.4}Consultas Especializadas}{31}{subsection.17.4}%
-\contentsline {subsubsection}{\numberline {17.4.1}Consulta 1: Artistas Activos por Agencia}{31}{subsubsection.17.4.1}%
-\contentsline {subsubsection}{\numberline {17.4.2}Consulta 2: Actividades por Grupo}{32}{subsubsection.17.4.2}%
-\contentsline {subsubsection}{\numberline {17.4.3}Consulta 3: Artistas con Debut y Contrato Activo}{32}{subsubsection.17.4.3}%
-\contentsline {subsubsection}{\numberline {17.4.4}Consulta 4: Ingresos por Artista en Período}{33}{subsubsection.17.4.4}%
-\contentsline {subsubsection}{\numberline {17.4.5}Consulta 5: Cambios de Agencia y Grupos}{33}{subsubsection.17.4.5}%
-\contentsline {subsubsection}{\numberline {17.4.6}Consulta 6: Solistas de Grupos Disueltos con Álbum Exitoso}{34}{subsubsection.17.4.6}%
-\contentsline {subsection}{\numberline {17.5}Exportación de Datos a PDF}{35}{subsection.17.5}%
-\contentsline {subsubsection}{\numberline {17.5.1}Características de Exportación}{35}{subsubsection.17.5.1}%
-\contentsline {subsubsection}{\numberline {17.5.2}Cómo Exportar}{35}{subsubsection.17.5.2}%
-\contentsline {subsection}{\numberline {17.6}Ejemplos Prácticos de Salidas}{36}{subsection.17.6}%
-\contentsline {subsubsection}{\numberline {17.6.1}Ejemplo 1: Reporte de Ingresos Mensuales}{36}{subsubsection.17.6.1}%
-\contentsline {subsubsection}{\numberline {17.6.2}Ejemplo 2: Análisis de Popularidad de Canción}{36}{subsubsection.17.6.2}%
-\contentsline {subsubsection}{\numberline {17.6.3}Ejemplo 3: Evaluación de Productividad de Grupo}{37}{subsubsection.17.6.3}%
-\contentsline {section}{\numberline {18}Consideraciones Finales}{37}{section.18}%
+\contentsline {subsection}{\numberline {17.2}Exportación de Datos a PDF}{29}{subsection.17.2}%
+\contentsline {subsubsection}{\numberline {17.2.1}Cómo Exportar}{29}{subsubsection.17.2.1}%
+\contentsline {section}{\numberline {18}Consideraciones Finales}{30}{section.18}%

@@ -57,7 +57,7 @@ export const groupColumns: GridColDef[] = [
             >
             {albums.map((album: any) => (
                 <MenuItem key={album.id} value={album.id}>
-                {album.titulo}
+                {album.title}
                 </MenuItem>
             ))}
         </Select>

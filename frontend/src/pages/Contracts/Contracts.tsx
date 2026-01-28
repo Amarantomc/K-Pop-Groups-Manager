@@ -72,30 +72,43 @@ const Contracts: React.FC = () => {
         headerName: 'Acción Líder',
         width: 220,
         renderCell: (params: any) => {
-
+        
           // Solo mostrar si el contrato es de grupo, el usuario es líder y el estado es 'negociacion'
-          // const isGroupContract = params.row.type === 'Group';
+          const isArtistContract = params.row.type === 'Artist'
+          const isGroupContract = params.row.type === 'Group';
           const isNegotiation = params.row.status === 'Pendiente';
+
+           const groupMembers = params.row.group?.members || [];
+
+            const userAsMember = groupMembers.find((member: any) => 
+          member.apprenticeId === user.profileData?.IdAp
+        );
+
+          const isGroupLeader = userAsMember?.rol === 'LIDER'
+
+          const showDecisionArtist = isArtistContract && isNegotiation
+          const showDecisionGroup = isGroupContract && isGroupLeader
+          // const isGroupLeader = row.group.members
           // Estilos para botones habilitados vs deshabilitados
           const acceptButtonStyle = {
             marginRight: 8,
             border: 'none',
             borderRadius: 4,
             padding: '4px 10px',
-            cursor: isNegotiation ? 'pointer' : 'not-allowed',
-            background: isNegotiation ? '#10b981' : '#d1d5db',
-            color: isNegotiation ? 'white' : '#6b7280',
-            opacity: isNegotiation ? 1 : 0.7
+            cursor: showDecisionArtist || showDecisionGroup ? 'pointer' : 'not-allowed',
+            background: showDecisionArtist || showDecisionGroup ? '#10b981' : '#d1d5db',
+            color: showDecisionArtist || showDecisionGroup ? 'white' : '#6b7280',
+            opacity: showDecisionArtist || showDecisionGroup ? 1 : 0.7
           };
 
           const rejectButtonStyle = {
             border: 'none',
             borderRadius: 4,
             padding: '4px 10px',
-            cursor: isNegotiation ? 'pointer' : 'not-allowed',
-            background: isNegotiation ? '#ef4444' : '#d1d5db',
-            color: isNegotiation ? 'white' : '#6b7280',
-            opacity: isNegotiation ? 1 : 0.7
+            cursor: showDecisionArtist || showDecisionGroup ? 'pointer' : 'not-allowed',
+            background: showDecisionArtist || showDecisionGroup ? '#ef4444' : '#d1d5db',
+            color: showDecisionArtist || showDecisionGroup ? 'white' : '#6b7280',
+            opacity: showDecisionArtist || showDecisionGroup ? 1 : 0.7
           };
           // const isUserGroupLeader = user.profileData?.groupId && params.row.entityId === user.profileData.groupId && user.permissions.includes('group_leader');
           //Caso para mostrar el aceptar ,rechazar
@@ -103,13 +116,13 @@ const Contracts: React.FC = () => {
             <>
               <button
                 style={acceptButtonStyle}
-                disabled={!isNegotiation || processingId === params.row.id}
+                disabled={!showDecisionArtist || !showDecisionGroup || processingId === params.row.id}
                 onClick={() => handleAcceptContract(params.row)}
                 title={!isNegotiation ? "Solo disponible para contratos Pendientes" : ""}
               >Aceptar</button>
               <button
                 style={rejectButtonStyle}
-                disabled={!isNegotiation || processingId === params.row.id}
+                disabled={!showDecisionArtist|| !showDecisionGroup || processingId === params.row.id}
                 onClick={() => handleRejectContract(params.row)}
                 title={!isNegotiation ? "Solo disponible para contratos Pendientes" : ""}
               >Rechazar</button>
