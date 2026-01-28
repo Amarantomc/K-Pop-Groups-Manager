@@ -150,7 +150,7 @@
 			\hline
 			Git & 2.25+ & Control de versiones \\
 			\hline
-			Prisma & 15.2+ & ORM de Vase de Datos \\
+			Prisma & 15.2+ & ORM de Base de Datos \\
 			\hline
 		\end{tabular}
 	\end{table}
@@ -365,7 +365,7 @@
 	
 	\subsection{Conversión de Aprendiz a Artista}
 	
-	Cuando un aprendiz forma parte de un grupo, el sistema automaticamente lo convierte en artista, a esto se le llama debut del artista
+	Cuando un aprendiz forma parte de un grupo, el sistema automáticamente lo convierte en artista, a esto se le llama debut del artista
 	
 	El historial del aprendiz se conserva, la cuenta del usuario evoluciona a rol artista y el nuevo artista tiene acceso a todo su entorno asociado ya sea los grupos a los que pertenece, actividades, contratos, entre otras.
 	
@@ -375,7 +375,7 @@
 	
 	\subsection{Creación de un Grupo}
 	
-	Para registrar un nuevo grupo musical en el sistema, el usuario debe tener el rol aprendiz o artista,ya que se crea a través del flujo de solicitud y seguir los siguientes pasos:
+	Para registrar un nuevo grupo musical en el sistema, el usuario debe tener el rol aprendiz o artista, ya que se crea a través del flujo de solicitud y seguir los siguientes pasos:
 	
 	\begin{enumerate}
 		\item Acceder a la sección Solicitud desde la barra de navegación.
@@ -384,11 +384,11 @@
 		\item Presionar el botón Agregar en el formulario
 	\end{enumerate}
 	
-	Luego de realizado el flujo de la solicitud y esta quede  validada, entonces se procede a la creación del grupo
+	Luego de realizado el flujo de la solicitud y esta quede validada, entonces se procede a la creación del grupo
 	
 	\subsection{Consulta de Grupos}
 	
-	El sistema muestra un listado de grupos registrados en dependencia del rol que tenga el usuario, desde el cual el usuario puede visualizar la información general de cada  grupo relacionado con el usuario.
+	El sistema muestra un listado de grupos registrados en dependencia del rol que tenga el usuario, desde el cual el usuario puede visualizar la información general de cada grupo relacionado con el usuario.
 	
 	\begin{figure}[H]
 		\centering
@@ -430,7 +430,7 @@
 	
 	\subsection{Artistas sin Grupo(Solista)}
 	
-	El sistema contempla la posibilidad de que un artista no pertenezca a ningún grupo durante un período de tiempo, desempeñándose como solista. En estos casos, el artista mantiene su información y puede participar en actividades, lanzar álbumes y realizar solicitudes de forma independiente y crecer su carrera profesional de manera independiente
+	El sistema contempla la posibilidad de que un artista no pertenezca a ningún grupo durante un período de tiempo, desempeñándose como solista. En estos casos, el artista mantiene su información y puede participar en actividades, lanzar álbumes y realizar solicitudes de forma independiente para crecer su carrera profesional.
 	
 	\section{Gestión de Actividades e Ingresos}
 	
@@ -442,7 +442,7 @@
 	
 	\begin{enumerate}
 		\item Acceder a la sección Actividades desde la barra de navegación.
-		\item Seleccionar la fecha en la que se quiere la actividad .
+		\item Seleccionar la fecha en la que se quiere registrar la actividad.
 		\item Seleccione el botón Agregar Actividad.
 		\item Ingresar la información solicitada
 		\item Confirmar el registro de actividad.
@@ -470,7 +470,7 @@
 	
 	\subsection{Registro de Ingresos}
 	
-	Cada actividad tiene un ingreso asociado,que se puede visualizar desde el menu ingreso,donde se obtiene el acceso a todos los datos de los ingresos
+	Cada actividad tiene un ingreso asociado, que se puede visualizar desde el menú Ingreso, donde se obtiene el acceso a todos los datos de los ingresos.
 	
 	\begin{figure}[H]
 	\centering
@@ -480,7 +480,7 @@
 	
 	\subsection{Consulta de Actividades e Ingresos}
 	
-	El sistema permite consultar el listado de actividades registradas en la seccion Actividad, así como los ingresos asociados a cada una de ellas en la sección Ingresos. Permitiendo al ususario:
+	El sistema permite consultar el listado de actividades registradas en la sección Actividad, así como los ingresos asociados a cada una de ellas en la sección Ingresos. Permitiendo al usuario:
 	
 	\begin{itemize}
 		\item Visualizar el detalle de una actividad.
@@ -500,7 +500,7 @@
 	
 	El sistema permite registrar y administrar álbumes musicales, los cuales pueden estar asociados a un grupo, a artistas individuales o a ambos, según corresponda.
 	
-	\subsection{Registro de un Álbumes}
+	\subsection{Registro de un Álbum}
 	
 	Para registrar un nuevo álbum, el usuario debe:
 	
@@ -512,7 +512,7 @@
 	\end{enumerate}
 	
 	Un álbum puede estar asociado a un grupo, a artistas individuales o a ambos, permitiendo modelar lanzamientos colectivos o en solitario.
-	Además,mediante el botón agregar canción se le pueden agregar las canciones a cada álbum
+	Además, mediante el botón agregar canción se le pueden agregar las canciones a cada álbum.
 	
 	\begin{figure}[H]
 	\centering
@@ -551,8 +551,8 @@
 	\begin{enumerate}
 		\item Acceder a la sección Premios.
 		\item Seleccionar botón Agregar en el área de trabajo.
-		\item Ingresar datos correspondietnes en el formulario
-		\item Confirmar registro
+		\item Ingresar datos correspondientes en el formulario.
+		\item Confirmar el registro.
 	\end{enumerate}
 	
 	Los premios permiten reflejar el reconocimiento obtenido por los álbumes a lo largo del tiempo.
@@ -586,7 +586,7 @@
 	\begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{populistInfo.png}
-	\caption{Visualizacion de una Lista de Popularidad}
+	\caption{Visualización de una Lista de Popularidad}
 	\end{figure}
 	
 	\subsection{Consulta de Producción Musical}
@@ -610,7 +610,7 @@
 	
 	El sistema permite registrar contratos entre una agencia y un artista, estableciendo las condiciones de colaboración. Además de contratos individuales con artistas, y se permite que un artista tenga más de un contrato activo de forma simultánea, siempre que se registren correctamente las fechas y condiciones. También se pueden registrar contratos entre una agencia y un grupo musical, que permiten formalizar acuerdos colectivos asociados a la representación y actividades del grupo.
 	
-	Este registro de contratos,ya sea con un artista o con un grupo,se realizan mediante la gestion de Talento y solicitud
+	Este registro de contratos, ya sea con un artista o con un grupo, se realiza mediante la gestión de Talento y Solicitud.
 	
 	\subsection{Consulta de Contratos}
 	
@@ -633,13 +633,12 @@
 	
 	\section{Gestión de Talento}
 	
-	La gestión de talento es el centro neuralálgico del sistema de K-POP World, permitiendo la administración integral de los recursos humanos de una agencia de entretenimiento. Esta funcionalidad facilita la gestión de artistas, aprendices y grupos, considerando sus perfiles, desempeño, evolución profesional y participación en proyectos musicales. El acceso a esta sección varía según el rol del usuario, siendo más restrictivo para aprendices y artistas, y más completo para directores y managers de agencia.
-	\\
+	La gestión de talento es el centro neurálgico del sistema de K-POP World, permitiendo la administración integral de los recursos humanos de una agencia de entretenimiento. Esta funcionalidad facilita la gestión de artistas, aprendices y grupos, considerando sus perfiles, desempeño, evolución profesional y participación en proyectos musicales. El acceso a esta sección varía según el rol del usuario, siendo más restrictivo para aprendices y artistas, y más completo para directores y managers de agencia.
 	
 	\subsection{Captación de Aprendices}
 	
 	Los aprendices son aspirantes a artistas que se encuentran en formación dentro de una agencia. Esta sección permite que diferentes agencias,capten a los aprendices que no esten asociados a ninguna agencia por el momento,quedando en proceso de selección
-	
+	 capten a los aprendices que no estén asociados a ninguna agencia por el momento, quedando en proceso de selección.
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.8\textwidth]{talentAprendiz.png}
@@ -651,7 +650,7 @@
 	\subsection{Captación de Artistas}
 	
 	La captación de artistas permite ofrecerles contratos a los artistas que por el momento no estan asociados a ninguna agencia mediante contrato
-	
+	án asociados a ninguna agencia mediante contrato.
 	El sistema permite registrar nuevos contratos con artistas siguiendo estos pasos:
 	(Similar con grupos)
 	
@@ -659,12 +658,12 @@
 		\item Acceder a la sección Talento desde la barra de navegación
 		\item Seleccionar la opción Artistas.
 		\item Hacer clic en Ofrecer Contrato en la fila del artisa que se quiere captar.
-		\item Completar el formulario con la información que se solicita
+		\item Completar el formulario con la información que se stolicita
 		\item Confirmar el registro.
 	\end{enumerate}
 	
 	Y así la agencia le ofrece un contrato a los artistas que ellos posteriormente,decidirán si aceptan o no.
-
+Así la agencia le ofrece un contrato a los artistas que ellos posteriormente 
 	\begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{TalentArtist.png}
@@ -674,7 +673,7 @@
 	\subsection{Captación de Grupos}
 	
 	La captación de grupos permite registrar la creacion de contratos con los grupos musicales ,al igual que como se dijo anteriormente con los artistas,ofreciendoles contratos,que también posteriormente los líderes de los grupos,aceptarán o rechazarán
-	
+	ón de contratos con los grupos musicales. Al igual que con los artistas, se les ofrecen contratos que posteriormente los líderes de los grupos aceptarán o rechazarán.
 	\begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{talentGroup.png}
@@ -713,7 +712,7 @@
 		\item Rechazada
 		\item Aprobada
 		\item Validaada
-		\item Completada
+		\item Compleada
 	\end{itemize}
 	
 	El estado de la solicitud puede ser actualizado únicamente por usuarios con los permisos correspondientes.
@@ -736,7 +735,7 @@
 	Los aprendices y artistas pueden consultar el estado de sus solicitudes en todo momento. Desde esta sección, el usuario puede:
 	
 	\begin{itemize}
-		\item Visualizar el listado de solicitudes en las que esta involucrado.
+		\item Visualizar el listado de solicitudes en las que está involucrado.
 		\item Consultar el estado actual de cada solicitud.
 		\item Aceptar o rechazar cada solicitud
 	\end{itemize}
@@ -857,7 +856,337 @@
 	\end{enumerate}
 	
 	Al cerrar sesión, el sistema finaliza la sesión activa y redirige al usuario a la pantalla de inicio de sesión, evitando accesos no autorizados.
+
+	\section{Salidas y Reportes del Sistema}
 	
+	El sistema K-POP World proporciona múltiples formatos de salida que permiten a los usuarios visualizar, analizar y exportar la información registrada. Esta sección describe los diferentes tipos de salidas disponibles en el sistema, incluyendo tablas de datos, gráficos, consultas especializadas y opciones de exportación.
+	
+	\subsection{Tablas de Datos}
+	
+	Las tablas de datos constituyen el formato principal para la presentación de listados de información detallada en el sistema. Todas las tablas implementan funcionalidades avanzadas que facilitan el análisis de datos.
+	
+	\subsubsection{Características de las Tablas}
+	
+	\begin{itemize}
+		\item \textbf{Ordenamiento}: Todas las columnas son ordenables, permitiendo clasificar los datos de forma ascendente o descendente.
+		\item \textbf{Filtrado}: Es posible filtrar datos según criterios específicos para reducir el conjunto de resultados.
+		\item \textbf{Paginación}: Las tablas grandes se dividen en páginas para mejorar el desempeño y legibilidad.
+		\item \textbf{Exportación}: Los datos mostrados en tabla pueden exportarse a formato PDF.
+	\end{itemize}
+	
+	\subsubsection{Tablas Principales del Sistema}
+	
+	El sistema implementa tablas para todas las entidades principales:
+	
+	\begin{itemize}
+		\item \textbf{Tabla de Agencias}: Muestra nombre, ubicación, fecha de fundación y contacto de cada agencia registrada.
+		\item \textbf{Tabla de Artistas}: Contiene nombre artístico, nombre real, grupo actual, estado (activo/inactivo), agencia y fecha de debut.
+		\item \textbf{Tabla de Aprendices}: Visualiza nombre, agencia actual, estado de entrenamiento, fecha de registro y evaluaciones más recientes.
+		\item \textbf{Tabla de Grupos}: Presenta nombre del grupo, concepto asociado, estado (activo/disuelto), número de integrantes y agencia.
+		\item \textbf{Tabla de Actividades}: Muestra fecha, tipo de actividad (concierto, promoción, grabación, etc.), lugar, participantes y responsable.
+		\item \textbf{Tabla de Ingresos}: Registra monto, fecha de ingreso, tipo de actividad generadora, responsable y distribución de ingresos.
+		\item \textbf{Tabla de Álbumes}: Contiene título, artista o grupo asociado, fecha de lanzamiento, número de canciones y estado de éxito.
+		\item \textbf{Tabla de Canciones}: Presenta título, productor, género, fecha de lanzamiento y posiciones en listas de popularidad.
+		\item \textbf{Tabla de Premios}: Muestra título del premio, álbum o canción asociada, academia o institución otorgadora y año.
+		\item \textbf{Tabla de Contratos}: Visualiza partes involucradas (agencia-artista o agencia-grupo), fechas de vigencia, estado y porcentaje de distribución de ingresos.
+		\item \textbf{Tabla de Listas de Popularidad}: Registra nombre de lista, año, canciones posicionadas y sus respectivas posiciones en rankings.
+	\end{itemize}
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{manual_img-018.png}
+	\caption{Ejemplo de Tabla de Datos con Información de Artistas}
+	\end{figure}
+	
+	\subsection{Gráficos y Visualizaciones}
+	
+	El sistema incorpora gráficos de diversos tipos que permiten visualizar tendencias, comparaciones y análisis de datos de forma intuitiva. Los gráficos son especialmente útiles para identificar patrones y tomar decisiones estratégicas.
+	
+	\subsubsection{Tipos de Gráficos Disponibles}
+	
+	\textbf{Gráficos de Barras}
+	
+	Utilizados para comparaciones entre categorías o períodos de tiempo:
+	
+	\begin{itemize}
+		\item \textbf{Artistas por Agencia}: Muestra la cantidad de artistas activos en cada agencia, permitiendo comparar el tamaño relativo de cada agencia.
+		\item \textbf{Ventas de Álbumes}: Visualiza las unidades vendidas de cada álbum lanzado, identificando los más exitosos.
+		\item \textbf{Ingresos por Tipo de Actividad}: Compara los ingresos generados por diferentes tipos de actividades (conciertos, promociones, colaboraciones, etc.).
+		\item \textbf{Distribución de Artistas por Estado}: Muestra cuántos artistas se encuentran en cada estado (activo, en pausa, retirado).
+	\end{itemize}
+	
+	\textbf{Gráficos de Líneas}
+	
+	Diseñados para mostrar tendencias y evolución en el tiempo:
+	
+	\begin{itemize}
+		\item \textbf{Evolución de Ingresos}: Visualiza la tendencia de ingresos mensuales o trimestrales, permitiendo identificar períodos de mayor o menor actividad.
+		\item \textbf{Crecimiento de Actividades}: Muestra el número de actividades registradas a lo largo del tiempo.
+		\item \textbf{Desempeño en Rankings}: Refleja cómo las posiciones de canciones en listas de popularidad evolucionan a través de los meses.
+		\item \textbf{Crecimiento de Popularidad}: Visualiza el crecimiento progresivo de popularidad de artistas y grupos en redes sociales o plataformas de streaming.
+	\end{itemize}
+	
+	\textbf{Gráficos de Torta}
+	
+	Utilizados para mostrar proporciones y distribuciones:
+	
+	\begin{itemize}
+		\item \textbf{Distribución de Ingresos}: Muestra el porcentaje de ingresos generado por cada artista o grupo.
+		\item \textbf{Composición de Grupos}: Visualiza la proporción de hombres y mujeres en cada grupo.
+		\item \textbf{Distribución por Concepto}: Muestra cuántos grupos están asociados a cada concepto creativo.
+		\item \textbf{Estados de Contratos}: Visualiza la proporción de contratos activos, renovación, finalizados y rescindidos.
+	\end{itemize}
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{populist.png}
+	\caption{Ejemplos de Gráficos: Barras, Líneas y Torta}
+	\end{figure}
+	
+	\subsection{Cálculos Estadísticos y Análisis}
+	
+	El sistema realiza cálculos automáticos que proporcionan información valiosa para la toma de decisiones:
+	
+	\subsubsection{Ingresos por Artista}
+	
+	Calcula el total de ingresos generados por un artista específico en un período determinado, distinguiendo entre:
+	
+	\begin{itemize}
+		\item \textbf{Ingresos grupales}: Generados por actividades realizadas como miembro de un grupo.
+		\item \textbf{Ingresos individuales}: Generados por actividades realizadas como solista.
+		\item \textbf{Total}: Suma de ingresos grupales e individuales.
+	\end{itemize}
+	
+	El usuario puede seleccionar un rango de fechas específico (día, semana, mes, trimestre o año) para filtrar los resultados.
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{manual_img-009.png}
+	\caption{Cálculo de Ingresos por Artista en Período Seleccionado}
+	\end{figure}
+	
+	\subsubsection{Análisis de Popularidad}
+	
+	El sistema calcula estadísticas sobre la posición promedio de canciones en listas de popularidad:
+	
+	\begin{itemize}
+		\item \textbf{Posición Promedio}: Calcula la posición media de una canción en una lista a lo largo del tiempo.
+		\item \textbf{Número de Semanas en Top}: Cuenta cuántas semanas o meses permaneció en el top 10, top 20, etc.
+		\item \textbf{Mejor Posición Alcanzada}: Identifica la posición más alta lograda en cada ranking.
+		\item \textbf{Tendencia}: Indica si la canción sube o baja en popularidad.
+	\end{itemize}
+	
+	\subsection{Consultas Especializadas}
+	
+	Las consultas especializadas proporcionan información consolidada que requiere procesamiento complejo de múltiples tablas y relaciones. Se acceden desde la sección ``Consultas Especializadas'' en el menú principal.
+	
+	\subsubsection{Consulta 1: Artistas Activos por Agencia}
+	
+	Muestra el listado completo de artistas activos asociados a una agencia específica.
+	
+	\textbf{Datos Mostrados}:
+	\begin{itemize}
+		\item Nombre artístico
+		\item Grupo actual (si pertenece a alguno)
+		\item Estado (activo, en pausa, debut próximo)
+		\item Fecha de debut
+		\item Número de contratos activos
+	\end{itemize}
+	
+	\textbf{Uso Típico}: Los managers pueden usar esta consulta para obtener un resumen de todos los artistas bajo su responsabilidad.
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{aprendizLista.png}
+	\caption{Resultado de Consulta 1: Artistas Activos por Agencia}
+	\end{figure}
+	
+	\subsubsection{Consulta 2: Actividades por Grupo}
+	
+	Proporciona el historial completo de actividades realizadas por un grupo específico en un rango de fechas seleccionable.
+	
+	\textbf{Datos Mostrados}:
+	\begin{itemize}
+		\item Fecha y hora de la actividad
+		\item Tipo de actividad (concierto, programa de TV, sesión de grabación, promoción, etc.)
+		\item Lugar donde se realizó
+		\item Número de asistentes o reproducciones
+		\item Ingresos generados
+		\item Responsable de la coordinación
+	\end{itemize}
+	
+	\textbf{Uso Típico}: Útil para analizar la productividad del grupo y planificar futuras actividades.
+	
+	\subsubsection{Consulta 3: Artistas con Debut y Contrato Activo}
+	
+	Identifica y lista todos los artistas que cumplen con dos condiciones: han realizado su debut (han sido miembros de un grupo) y cuentan con al menos un contrato activo con una agencia.
+	
+	\textbf{Datos Mostrados}:
+	\begin{itemize}
+		\item Nombre artístico y real
+		\item Grupo de debut y grupos posteriores
+		\item Agencia o agencias actuales
+		\item Fecha de inicio y vencimiento de contrato
+		\item Porcentaje de distribución de ingresos
+	\end{itemize}
+	
+	\textbf{Uso Típico}: Identificar artistas con potencial de crecimiento y que están actualmente bajo contrato.
+	
+	\subsubsection{Consulta 4: Ingresos por Artista en Período}
+	
+	Calcula el total de ingresos generados por un artista específico en un período personalizable, incluyendo tanto actividades grupales como individuales.
+	
+	\textbf{Funcionalidades}:
+	\begin{itemize}
+		\item Selección de rango de fechas (fecha inicio y fecha fin)
+		\item Desglose por tipo de actividad
+		\item Comparación con períodos anteriores
+		\item Visualización en gráfico de líneas o barras
+	\end{itemize}
+	
+	\textbf{Datos Mostrados}:
+	\begin{itemize}
+		\item Ingresos por actividad individual
+		\item Ingresos por actividad grupal
+		\item Total de ingresos
+		\item Promedio mensual
+	\end{itemize}
+	
+	\textbf{Uso Típico}: Análisis financiero de artistas para auditorías o reportes de rendimiento.
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{manual_img-009.png}
+	\caption{Visualización de Ingresos por Artista: Gráfico y Tabla}
+	\end{figure}
+	
+	\subsubsection{Consulta 5: Cambios de Agencia y Grupos}
+	
+	Proporciona un historial completo de los cambios de agencia y membresía en grupos de un artista a lo largo de su carrera.
+	
+	\textbf{Datos Mostrados}:
+	\begin{itemize}
+		\item Agencia anterior
+		\item Agencia actual
+		\item Fechas de cambio
+		\item Grupos de los que ha formado parte
+		\item Fechas de incorporación y salida de cada grupo
+		\item Razón del cambio (si está registrada)
+	\end{itemize}
+	
+	\textbf{Uso Típico}: Realizar un seguimiento de la evolución profesional de artistas y detectar patrones de movimiento entre agencias.
+	
+	\subsubsection{Consulta 6: Solistas de Grupos Disueltos con Álbum Exitoso}
+	
+	Identifica artistas que, tras la disolución de su grupo, desarrollaron una carrera exitosa como solistas, incluyendo aquellos que lanzaron álbumes con alto número de ventas.
+	
+	\textbf{Criterios de Búsqueda}:
+	\begin{itemize}
+		\item Fue miembro de un grupo que ha sido disuelto
+		\item Ha lanzado al menos un álbum como solista
+		\item El álbum alcanzó criterios de éxito (ej: más de 100,000 copias vendidas)
+	\end{itemize}
+	
+	\textbf{Datos Mostrados}:
+	\begin{itemize}
+		\item Nombre artístico del solista
+		\item Grupo de origen y fecha de disolución
+		\item Álbumes como solista
+		\item Copias vendidas de cada álbum
+		\item Posiciones en listas de popularidad
+		\item Premios obtenidos
+	\end{itemize}
+	
+	\textbf{Uso Típico}: Evaluar el impacto de rupturas de grupos en la carrera individual de sus miembros.
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{albumesList.png}
+	\caption{Resultado de Consulta 6: Solistas Exitosos ex-miembros de Grupos Disueltos}
+	\end{figure}
+	
+	\subsection{Exportación de Datos a PDF}
+	
+	El sistema permite exportar toda la información visualizada en tablas o gráficos a formato PDF, facilitando la generación de reportes, documentación y compartir información con stakeholders externos.
+	
+	\subsubsection{Características de Exportación}
+	
+	\begin{itemize}
+		\item \textbf{Formato PDF Profesional}: Los documentos generados incluyen encabezados, pie de página, fecha de generación y datos del usuario.
+		\item \textbf{Preservación de Filtros}: Los datos exportados respetan los filtros y ordenamientos aplicados en pantalla.
+		\item \textbf{Incluye Gráficos}: Si la vista contiene gráficos, estos se incluyen en el documento PDF.
+		\item \textbf{Tabla Formateada}: Las tablas se exportan con encabezados claramente diferenciados y filas alternadas para mejor legibilidad.
+	\end{itemize}
+	
+	\subsubsection{Cómo Exportar}
+	
+	Para exportar datos a PDF, el usuario debe:
+	
+	\begin{enumerate}
+		\item Navegar a la sección que desea exportar (tabla, gráfico o consulta especializada).
+		\item Aplicar filtros u ordenamientos si es necesario.
+		\item Localizar el botón ``Exportar a PDF'' (generalmente en la esquina superior derecha).
+		\item Hacer clic en el botón para iniciar la descarga.
+		\item El archivo PDF se descargará automáticamente al dispositivo del usuario.
+	\end{enumerate}
+	
+	\textbf{Nombre de Archivo}: Los PDFs se generan con nombres descriptivos que incluyen la entidad exportada y la fecha, ej: \texttt{artistas\_agencia\_XYZ\_27-01-2026.pdf}
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{contractList.png}
+	\caption{Botón de Exportación a PDF Visible en la Interfaz}
+	\end{figure}
+	
+	\subsection{Ejemplos Prácticos de Salidas}
+	
+	A continuación se presentan ejemplos de casos de uso comunes y las salidas del sistema asociadas:
+	
+	\subsubsection{Ejemplo 1: Reporte de Ingresos Mensuales}
+	
+	Un manager desea generar un reporte de ingresos de su agencia para el mes de enero de 2026.
+	
+	\begin{enumerate}
+		\item Accede a la sección ``Ingresos'' desde el menú principal.
+		\item Filtra por fecha de enero 2026.
+		\item Visualiza una tabla con todos los ingresos registrados en ese período.
+		\item Observa un gráfico de líneas mostrando la evolución diaria de ingresos.
+		\item Calcula totales y promedios que aparecen al pie de la tabla.
+		\item Exporta la tabla y gráfico a PDF para enviar al director.
+	\end{enumerate}
+	
+	\textbf{Salida Típica}: PDF con tabla de ingresos ordenada por fecha, gráfico de barras comparativas y resumen ejecutivo.
+	
+	\subsubsection{Ejemplo 2: Análisis de Popularidad de Canción}
+	
+	Un artista desea analizar el desempeño de su última canción en listas de popularidad.
+	
+	\begin{enumerate}
+		\item Accede a la sección ``Listas de Popularidad''.
+		\item Selecciona su canción del listado.
+		\item Visualiza un gráfico de líneas mostrando cómo su posición evoluciona cada semana.
+		\item Consulta la tabla detallada con posición exacta en cada ranking.
+		\item Calcula la posición promedio y número de semanas en top 10.
+	\end{enumerate}
+	
+	\textbf{Salida Típica}: Gráfico de evolución con tabla de posiciones por semana y estadísticas calculadas.
+	
+	\subsubsection{Ejemplo 3: Evaluación de Productividad de Grupo}
+	
+	Un director desea evaluar la productividad de un grupo durante el año 2025.
+	
+	\begin{enumerate}
+		\item Accede a ``Consultas Especializadas''.
+		\item Selecciona ``Actividades por Grupo''.
+		\item Elige el grupo y el rango de fechas (enero-diciembre 2025).
+		\item Sistema genera tabla con todas las actividades realizadas.
+		\item Visualiza gráfico de barras mostrando cantidad de actividades por mes.
+		\item Calcula ingresos totales generados durante el año.
+		\item Exporta el reporte completo a PDF.
+	\end{enumerate}
+	
+	\textbf{Salida Típica}: PDF con tabla detallada de actividades, gráfico de productividad mensual e ingresos totales.
+
 	\section{Consideraciones Finales}
 	
 	El sistema de gestión de agencias y grupos de K-pop proporciona una plataforma integral para la administración de información relacionada con la industria del entretenimiento musical coreano. El uso de roles permite garantizar un acceso controlado a las funcionalidades, mientras que la organización modular del sistema facilita su utilización de forma intuitiva.
