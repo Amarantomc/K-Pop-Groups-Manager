@@ -210,8 +210,18 @@ export class ArtistResponseDto {
     //   //   );
     //   // }
     // }
-    fromEntityForManager(artist: Artist): ArtistResponseDto | PromiseLike<ArtistResponseDto> {
-      throw new Error("Method not implemented.");
+    fromEntityForManager(artist: any): ArtistResponseDto  {
+      const activeContract = artist.Contrato?.[0];
+      const group=GroupResponseDTO.fromEntities(artist.GroupHistory!)
+        return new ArtistResponseDto(
+          artist.ApprenticeId,
+          artist.GroupId,
+          artist.ArtistName,
+          artist.DebutDate.toDateString(),
+          artist.Status.toString(),
+          activeContract?.Agencia?.id,
+          group
+        );
   }
   constructor(
     public readonly ApprenticeId: number,

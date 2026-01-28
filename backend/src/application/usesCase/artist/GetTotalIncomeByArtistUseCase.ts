@@ -12,15 +12,28 @@ export class GetTotalIncomeByArtistUseCase {
 
     async execute(data:RequestArtistWithIncomeDto):Promise<ArtistWithIncomeDto>{
         try {
+             const id={apprenticeId:data.apprenticeId,groupId:data.groupId} as any
+            const artist= await this.artistRepository.findById(id)
+            if(!artist){
+                throw new Error("Artist not found")
+            }
              
             let individualIncome= await this.artistRepository.getIndividualIncome(data)
             const groupsIncome= await this.artistRepository.getIncomeGeneratedInGroups(data)
-             
-            individualIncome.TotalIncome+=groupsIncome.TotalIncome
-            return individualIncome
+            if(!individualIncome && !groupsIncome){
+                throw new Error("Artist not have incomes yet")
+            }
+            if(!individualIncome){
+                return groupsIncome!
+            }
+            if(!groupsIncome){
+                return individualIncome!
+            }
+            individualIncome!.TotalIncome+=groupsIncome!.TotalIncome
+            return individualIncome!
             
         } catch (error) {
-             
+             console.log(error)
             throw error
         }
     }

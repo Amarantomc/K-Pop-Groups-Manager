@@ -17,8 +17,8 @@ export interface IArtistRepository extends IBaseRepository<Artist,CreateArtistDt
         findByAgency(id:number):Promise<Artist[]>
         getSoloArtists():Promise<Artist[]|null>
         getArtistsOnDebut(idAgency:number):Promise<ArtistOnDebutResponseDto[]|null>
-        getIndividualIncome(data:RequestArtistWithIncomeDto): Promise<ArtistWithIncomeDto>;
-        getIncomeGeneratedInGroups(data:RequestArtistWithIncomeDto): Promise<ArtistWithIncomeDto>;
+        getIndividualIncome(data:RequestArtistWithIncomeDto): Promise<ArtistWithIncomeDto|null>;
+        getIncomeGeneratedInGroups(data:RequestArtistWithIncomeDto): Promise<ArtistWithIncomeDto|null>;
         
         getBestAlbums(data:RequestArtistWithIncomeDto):Promise<ArtistWithSuccesDto[]|null>
         getBestSongs(data:RequestArtistWithIncomeDto):Promise<ArtistWithSuccesDto[]|null>
