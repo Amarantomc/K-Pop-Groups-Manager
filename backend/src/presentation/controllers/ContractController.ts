@@ -130,7 +130,7 @@ export class ContractController{
       
     async update(req:Request,res:Response){
         try {
-              const {id,agencyId,groupId,apprenticeId,startDate}=req.query
+              const {id,agencyId,groupId,apprenticeId,startDate}=req.body
               const newId={id:id,agencyId:agencyId,groupId:groupId,apprenticeId:apprenticeId,startDate:startDate}
             const contract=  await this.updateContractUseCase.execute(newId,req.body)
              res.status(201).json({
